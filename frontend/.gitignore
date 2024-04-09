@@ -1,0 +1,14 @@
+/node_modules
+/.pnp
+.pnp.js
+.env
+
+.DS_Store
+
+.vscode/
+.idea/
+/build
+
+tsconfig.tsbuildinfo
+
+npm-debug.log*
