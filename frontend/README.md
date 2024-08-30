@@ -1,22 +1,19 @@
-# Phaser Vite TypeScript Template
+# Phaser Vite TypeScript
 
-This is a Phaser 3 project template that uses Vite for bundling. It supports hot-reloading for quick development workflow, includes TypeScript support and scripts to generate production-ready builds.
-
-**[This Template is also available as a JavaScript version.](https://github.com/phaserjs/template-vite)**
+This is a Phaser 3 project that uses Vite for bundling. It supports hot-reloading for quick development workflow, includes TypeScript support and scripts to generate production-ready builds.
 
 ### Versions
 
 This template has been updated for:
 
 - [Phaser 3.80.1](https://github.com/phaserjs/phaser)
-- [Vite 5.2.11](https://github.com/vitejs/vite)
-- [TypeScript 5.4.5](https://github.com/microsoft/TypeScript)
-
-![screenshot](screenshot.png)
+- [TypeScript 5.4.3](https://github.com/microsoft/TypeScript)
+- [Vite 5.4.2](https://github.com/vitejs/vite)
 
 ## Requirements
 
 [Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+The Node version is: 20.8.1
 
 ## Available Commands
 
@@ -79,25 +76,6 @@ After you run the `npm run build` command, your code will be built into a single
 
 In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
 
-## Customizing the Template
-
 ### Vite
 
 If you want to customize your build, such as adding plugin (i.e. for loading CSS or fonts), you can modify the `vite/config.*.mjs` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json`. Please see the [Vite documentation](https://vitejs.dev/) for more information.
-
-## Join the Phaser Community!
-
-We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show-off your work 😄
-
-**Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
-**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
-**Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
-**Code:** 2000+ [Examples](https://labs.phaser.io)<br />
-**Read:** The [Phaser World](https://phaser.io/community/newsletter) Newsletter<br />
-
-Created by [Phaser Studio](mailto:support@phaser.io). Powered by coffee, anime, pixels and love.
-
-The Phaser logo and characters are &copy; 2011 - 2024 Phaser Studio Inc.
-
-All rights reserved.
