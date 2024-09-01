@@ -1,6 +1,5 @@
 import { Boot } from "./scenes/Boot";
-import { Game as MainGame } from "./scenes/Game";
-import { GameOver } from "./scenes/GameOver";
+import { Level1 } from "./scenes/Level1";
 import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
 
@@ -11,15 +10,15 @@ import { Game, Types } from "phaser";
 const config: Types.Core.GameConfig = {
   type: Phaser.CANVAS,
   pixelArt: false, // averiguar
-  backgroundColor: "#000000",
+  backgroundColor: "#000F00",
   scale: {
     parent: "game-container",
-    width: 1024,
-    height: 768,
+    width: 1920,
+    height: 1040,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
+  scene: [Boot, Preloader, MainMenu, Level1],
 };
 
 export default new Game(config);

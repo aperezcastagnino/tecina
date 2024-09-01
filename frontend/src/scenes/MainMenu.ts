@@ -1,32 +1,42 @@
-import { Scene, GameObjects } from "phaser";
+import { Scene } from "phaser";
+import { SceneKeys } from "./SceneKeys";
+import { AssetKeys } from "../assets/AssetKeys";
+import { TextButton } from "../common/TextButton";
 
 export class MainMenu extends Scene {
-  background: GameObjects.Image;
-  logo: GameObjects.Image;
-  title: GameObjects.Text;
+  startGameButton: TextButton;
 
   constructor() {
-    super("MainMenu");
+    super(SceneKeys.MAIN_MENU);
   }
 
   create() {
-    this.background = this.add.image(512, 384, "background");
+    console.log(`[${MainMenu.name}:created] INVOKED`);
+    this.add.image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU).setOrigin(0);
 
-    this.logo = this.add.image(512, 300, "logo");
+    const startGameButton = new TextButton(
+      this,
+      100,
+      100,
+      "Comenzar a jugar",
+      { color: "#0f0" },
+      () => this.startGame()
+    );
+    const loadPreviousGameButton = new TextButton(
+      this,
+      100,
+      200,
+      "Cargar partida",
+      { color: "#0f0" },
+      () => this.startGame()
+    );
 
-    this.title = this.add
-      .text(512, 460, "Main Menu", {
-        fontFamily: "Arial Black",
-        fontSize: 38,
-        color: "#ffffff",
-        stroke: "#000000",
-        strokeThickness: 8,
-        align: "center",
-      })
-      .setOrigin(0.5);
-
-    this.input.once("pointerdown", () => {
-      this.scene.start("Game");
-    });
+    this.add.existing(startGameButton);
+    this.add.existing(loadPreviousGameButton);
   }
+
+  startGame() {
+    this.scene.start(SceneKeys.LEVEL_1);
+  }
+
 }
