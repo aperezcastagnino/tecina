@@ -67,16 +67,7 @@ export class Preloader extends Scene {
     const frameRate = 1;
 
     this.anims.create({
-      key: DIRECTION.LEFT,
-      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
-        start: 3,
-        end: 5,
-      }),
-      frameRate: frameRate,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: DIRECTION.RIGHT,
+      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.LEFT}`,
       frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
         start: 9,
         end: 11,
@@ -85,7 +76,16 @@ export class Preloader extends Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: DIRECTION.UP,
+      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.RIGHT}`,
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
+        start: 3,
+        end: 5,
+      }),
+      frameRate: frameRate,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.UP}`,
       frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
         start: 0,
         end: 2,
@@ -94,7 +94,7 @@ export class Preloader extends Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: DIRECTION.DOWN,
+      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.DOWN}`,
       frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
         start: 6,
         end: 8,

@@ -1,3 +1,4 @@
+import { DIRECTION, Direction } from "../common/Direction";
 import { Coordinate } from "../types/Coordinate";
 
 export type CharacterConfig = {
@@ -11,7 +12,8 @@ export type CharacterConfig = {
 
 export class Character extends Phaser.GameObjects.Sprite {
   _scene: Phaser.Scene;
-  _direction: string;
+  _direction: Direction;
+  _isMoving: boolean;
   _collisionLayer: Phaser.Tilemaps.TilemapLayer;
 
   constructor(config: CharacterConfig) {
@@ -25,7 +27,20 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     this._scene = config.scene;
     this._direction = config.direction;
+    this._isMoving = false;
     this._collisionLayer = config.collisionLayer;
     this.scene.add.existing(this);
   }
+
+  _moveSprite(direction: Direction) {
+    this._direction = direction;
+  }
+
+
+  moveCharacter(direction: Direction) {
+
+
+    this._moveSprite(direction);
+  }
+
 }

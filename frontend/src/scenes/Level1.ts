@@ -4,9 +4,11 @@ import { AssetKeys } from "../assets/AssetKeys";
 import { Player } from "../levels/Player";
 import { DIRECTION } from "../common/Direction";
 import { TILE_SIZE } from "../config/Config";
+import { Controls } from "../utils/Controls";
 
 export class Level1 extends Scene {
   #player: Player;
+  #controls: Controls;
   camera: Phaser.Cameras.Scene2D.Camera;
 
   constructor() {
@@ -50,5 +52,16 @@ export class Level1 extends Scene {
       },
       collisionLayer: collisionLayer,
     });
+
+    this.#controls = new Controls(this);
+  }
+
+  update(time: number){
+    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
+    if (selectedDirection !== DIRECTION.NONE) {
+      this.#player.moveCharacter(selectedDirection);
+    }
+
+    this.#player.update(time);
   }
 }
