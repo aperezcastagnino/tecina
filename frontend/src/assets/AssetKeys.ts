@@ -14,4 +14,7 @@ export const AssetKeys = {
   CHARACTERS: {
     PLAYER: "player",
   },
+  UI_ASSET_KEYS:{
+    CURSOR:"CURSOR",
+  }
 };

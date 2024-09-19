@@ -5,11 +5,13 @@ import { Player } from "../levels/Player";
 import { DIRECTION } from "../common/Direction";
 import { TILE_SIZE } from "../config/Config";
 import { Controls } from "../utils/Controls";
+import { DialogUi } from "../utils/Dialog";
 
 export class Level1 extends Scene {
   #player: Player;
   #controls: Controls;
   camera: Phaser.Cameras.Scene2D.Camera;
+  #dialogUi : DialogUi;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -34,6 +36,9 @@ export class Level1 extends Scene {
     const groundLayer = map.createLayer(0, collisionTiles!);
     const elementsLayer = map.createLayer(1, collisionTiles!);
     const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
+    this.#dialogUi = new DialogUi(this);
+    this.#dialogUi.showDialogModal(["Primer mensaje", "segundo mensaje", "tercer mensaje", "cuarto mensaje"]);
+
     if (!collisionLayer) {
       console.error(
         `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`
@@ -57,11 +62,11 @@ export class Level1 extends Scene {
   }
 
   update(time: number){
-    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE) {
-      this.#player.moveCharacter(selectedDirection);
-    }
-
-    this.#player.update(time);
+      const selectedDirection = this.#controls.getDirectionKeyPressedDown();
+      if (selectedDirection !== DIRECTION.NONE) {
+        this.#player.moveCharacter(selectedDirection);
+      }  
+      this.#player.update(time);
   }
+  
 }
