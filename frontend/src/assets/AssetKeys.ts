@@ -12,6 +12,11 @@ export const AssetKeys = {
     COLLISION: "collision",
   },
   CHARACTERS: {
-    PLAYER: "player",
+    PLAYER: "PLAYER",
   },
+};
+
+
+export const DataAssetKeys = {
+  ANIMATIONS: "animations",
 };

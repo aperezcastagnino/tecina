@@ -9,7 +9,6 @@ import { Controls } from "../utils/Controls";
 export class Level1 extends Scene {
   #player: Player;
   #controls: Controls;
-  camera: Phaser.Cameras.Scene2D.Camera;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -17,8 +16,9 @@ export class Level1 extends Scene {
 
   create() {
     console.log(`[${Level1.name}:created] INVOKED`);
-    // this.camera = this.cameras.main;
-    // this.camera.setBackgroundColor(0x00ff00);
+
+    this.cameras.main.setBounds(0, 0, 1280, 2176);
+    // this.cameras.main.setZoom(0.8);
 
     const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const collisionTiles = map.addTilesetImage(
@@ -31,8 +31,8 @@ export class Level1 extends Scene {
       );
       return;
     }
-    const groundLayer = map.createLayer(0, collisionTiles!);
-    const elementsLayer = map.createLayer(1, collisionTiles!);
+    const _groundLayer = map.createLayer(0, collisionTiles!);
+    const _elementsLayer = map.createLayer(1, collisionTiles!);
     const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
     if (!collisionLayer) {
       console.error(
@@ -41,27 +41,39 @@ export class Level1 extends Scene {
       return;
     }
 
-    collisionLayer.setAlpha(0.7).setDepth(1);
+    collisionLayer.setAlpha(0).setDepth(2);
 
     this.#player = new Player({
       scene: this,
       direction: DIRECTION.DOWN,
       origin: {
-        x: 1 * TILE_SIZE,
-        y: 1 * TILE_SIZE,
+        x: 4 * TILE_SIZE,
+        y: 4 * TILE_SIZE,
       },
       collisionLayer: collisionLayer,
+      position: {
+        x: 4 * TILE_SIZE,
+        y: 4 * TILE_SIZE,
+      },
+      spriteGridMovementFinishedCallback: () => {
+        console.log(
+          `[${Level1.name}:create] sprite grid movement finished callback invoked`
+        );
+      },
     });
+    this.cameras.main.startFollow(this.#player.sprite);
 
     this.#controls = new Controls(this);
+
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
-  update(time: number){
-    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
+  update() {
+    const selectedDirection = this.#controls.getDirectionKeyJustPressed();
     if (selectedDirection !== DIRECTION.NONE) {
       this.#player.moveCharacter(selectedDirection);
     }
 
-    this.#player.update(time);
+    this.#player.update();
   }
 }

@@ -3,14 +3,21 @@ import { Direction, DIRECTION } from "../common/Direction";
 
 import { Character, CharacterConfig } from "./Character";
 
-type PlayerConfig = Omit<CharacterConfig, "texture" | "frame">;
+type PlayerConfig = Omit<CharacterConfig, "texture" | "idleFrameConfig">;
 
 export class Player extends Character {
   constructor(config: PlayerConfig) {
     super({
       ...config,
       texture: AssetKeys.CHARACTERS.PLAYER,
-      frame: 3,
+      origin: { x:0.9, y: 0.9},
+      idleFrameConfig: {
+        LEFT: 10,
+        RIGHT: 4,
+        DOWN: 7,
+        UP: 1,
+        NONE: 7,
+      }
     });
   }
 
@@ -19,22 +26,18 @@ export class Player extends Character {
 
     switch (this._direction) {
       case DIRECTION.DOWN:
-        (this as unknown as Phaser.Physics.Arcade.Sprite).setVelocity(-150, 0)
       case DIRECTION.LEFT:
       case DIRECTION.RIGHT:
       case DIRECTION.UP:
-        (this as unknown as Phaser.Physics.Arcade.Sprite).setVelocity(150, 0)
-
         if (
           !this.anims.isPlaying ||
           this.anims.currentAnim?.key !==
-            `${AssetKeys.CHARACTERS.PLAYER}_${this._direction}`
+            `PLAYER_${this._direction}`
         ) {
-          this.anims.play(`${AssetKeys.CHARACTERS.PLAYER}_${this._direction}`);
+          this.anims.play(`PLAYER_${this._direction}`);
         }
         break;
       case DIRECTION.NONE:
-        this.anims.stop();
         break;
     }
   }

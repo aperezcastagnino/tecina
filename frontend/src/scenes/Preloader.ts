@@ -1,8 +1,8 @@
 import { Scene } from "phaser";
 import { SceneKeys } from "./SceneKeys";
-import { AssetKeys } from "../assets/AssetKeys";
-import { DIRECTION } from "../common/Direction";
+import { AssetKeys, DataAssetKeys } from "../assets/AssetKeys";
 import { DebugConfig } from "../config/DebugConfig";
+import { getAnimations } from "../utils/DataUtils";
 
 export class Preloader extends Scene {
   constructor() {
@@ -45,6 +45,9 @@ export class Preloader extends Scene {
       }
     );
 
+    // load json data
+    this.load.json(DataAssetKeys.ANIMATIONS, "/data/animations.json");
+
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
@@ -54,7 +57,7 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.#createPlayerAnimations();
+    this.#createAnimations();
 
     this.scene.start(
       DebugConfig.DEBUG_MODE_ACTIVE
@@ -63,44 +66,20 @@ export class Preloader extends Scene {
     );
   }
 
-  #createPlayerAnimations() {
-    const frameRate = 1;
-
-    this.anims.create({
-      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.LEFT}`,
-      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
-        start: 9,
-        end: 11,
-      }),
-      frameRate: frameRate,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.RIGHT}`,
-      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
-        start: 3,
-        end: 5,
-      }),
-      frameRate: frameRate,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.UP}`,
-      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
-        start: 0,
-        end: 2,
-      }),
-      frameRate: frameRate,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: `${AssetKeys.CHARACTERS.PLAYER}_${DIRECTION.DOWN}`,
-      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
-        start: 6,
-        end: 8,
-      }),
-      frameRate: frameRate,
-      repeat: -1,
+  #createAnimations() {
+    const animations = getAnimations(this);
+    animations.forEach((animation) => {
+      const frames = animation.frames
+        ? this.anims.generateFrameNumbers(animation.assetKey, { frames: animation.frames })
+        : this.anims.generateFrameNumbers(animation.assetKey);
+      this.anims.create({
+        key: animation.key,
+        frames: frames,
+        frameRate: animation.frameRate,
+        repeat: animation.repeat,
+        delay: animation.delay,
+        yoyo: animation.yoyo,
+      });
     });
   }
 }

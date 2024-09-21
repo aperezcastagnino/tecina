@@ -5,6 +5,7 @@
     },
     "activeFile": "",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
         "": {
@@ -51,6 +52,7 @@
     "map.tileWidth": 16,
     "map.width": 120,
     "openFiles": [
+        "level1.tmx"
     ],
     "project": "tecina.tiled-project",
     "recentFiles": [
