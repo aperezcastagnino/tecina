@@ -4,8 +4,6 @@ import { AssetKeys } from "../assets/asset-keys";
 import { TextButton } from "../common/text-button";
 
 export class MainMenu extends Scene {
-  startGameButton: TextButton;
-
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
@@ -20,7 +18,7 @@ export class MainMenu extends Scene {
       100,
       "Comenzar a jugar",
       { color: "#0f0" },
-      () => this.startGame()
+      () => this.startGame(),
     );
     const loadPreviousGameButton = new TextButton(
       this,
@@ -28,7 +26,7 @@ export class MainMenu extends Scene {
       200,
       "Cargar partida",
       { color: "#0f0" },
-      () => this.startGame()
+      () => this.startGame(),
     );
 
     this.add.existing(startGameButton);
@@ -38,5 +36,4 @@ export class MainMenu extends Scene {
   startGame() {
     this.scene.start(SceneKeys.LEVEL_1);
   }
-
 }

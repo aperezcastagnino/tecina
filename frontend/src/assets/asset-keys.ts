@@ -7,8 +7,8 @@ export const AssetKeys = {
   },
   LEVELS: {
     TILESET: "tileset",
-    GROUND: 'ground',
-    ELEMENTS: 'elements',
+    GROUND: "ground",
+    ELEMENTS: "elements",
     COLLISION: "collision",
   },
   CHARACTERS: {
@@ -16,7 +16,6 @@ export const AssetKeys = {
     NPC: "NPC",
   },
 };
-
 
 export const DataAssetKeys = {
   ANIMATIONS: "animations",

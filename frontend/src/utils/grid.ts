@@ -1,10 +1,10 @@
-import { Direction, DIRECTION } from "../common/direction";
+import { type Direction, DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
-import { Coordinate } from "../types/coordinate";
+import type { Coordinate } from "../types/coordinate";
 
 export const getTargetPositionFromPositionAndDirection = (
   currentPosition: Coordinate,
-  direction: Direction
+  direction: Direction,
 ) => {
   const targetPosition = { ...currentPosition };
 
@@ -20,6 +20,8 @@ export const getTargetPositionFromPositionAndDirection = (
       break;
     case DIRECTION.RIGHT:
       targetPosition.x += TILE_SIZE;
+      break;
+    default:
       break;
   }
 

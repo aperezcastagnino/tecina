@@ -9,13 +9,32 @@
   "license": "MIT",
   "homepage": "https://github.com/aperezcastagnino/tecina#readme",
   "scripts": {
-    "dev": "vite --config vite/config.dev.mjs",
-    "build": "vite build --config vite/config.prod.mjs"
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "lint": "eslint . --ext .js --ext .jsx --ext .ts --ext .tsx && tsc",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write",
+    "checks": "npm run lint && npm run prettier:check",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "dependencies": {
-    "phaser": "^3.80.1"
+    "phaser": "^3.80.1",
+    "typescript-eslint": "^7.18.0"
   },
   "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-check-file": "^2.8.0",
+    "eslint-plugin-deprecation": "^3.0.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "3.3.3",
     "typescript": "^5.5.4",
     "vite": "^5.4.2"
   }

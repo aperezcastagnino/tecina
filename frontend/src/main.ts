@@ -1,9 +1,9 @@
+import { Game, type Types } from "phaser";
 import { GAME_DIMENSIONS } from "./config/config";
-import { Boot } from "./scenes/Boot";
-import { Level1 } from "./scenes/Level1";
-import { MainMenu } from "./scenes/MainMenu";
-import { Preloader } from "./scenes/Preloader";
-import { Game, Types } from "phaser";
+import { Boot } from "./scenes/boot";
+import { Level1 } from "./scenes/level1";
+import { MainMenu } from "./scenes/main-menu";
+import { Preloader } from "./scenes/preloader";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.CANVAS,

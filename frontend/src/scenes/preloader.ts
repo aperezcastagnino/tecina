@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys, DataAssetKeys } from "../assets/asset-keys";
 import { DebugConfig } from "../config/debug-config";
-import { getAnimations } from "../utils/DataUtils";
+import { getAnimations } from "../utils/data-utils";
 
 export class Preloader extends Scene {
   constructor() {
@@ -32,7 +32,7 @@ export class Preloader extends Scene {
 
     this.load.image(
       AssetKeys.BACKGROUNDS.MAIN_MENU,
-      `/backgrounds/main-menu-background.png`
+      `/backgrounds/main-menu-background.png`,
     );
 
     // load characters
@@ -42,7 +42,7 @@ export class Preloader extends Scene {
       {
         frameWidth: 64,
         frameHeight: 88,
-      }
+      },
     );
 
     // load json data
@@ -52,7 +52,7 @@ export class Preloader extends Scene {
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
       AssetKeys.LEVELS.TILESET,
-      `/tilesets/tileset_sunnysideworld_16px.png`
+      `/tilesets/tileset_sunnysideworld_16px.png`,
     );
   }
 
@@ -62,7 +62,7 @@ export class Preloader extends Scene {
     this.scene.start(
       DebugConfig.DEBUG_MODE_ACTIVE
         ? DebugConfig.FIRST_SCENE_TO_PLAY
-        : SceneKeys.MAIN_MENU
+        : SceneKeys.MAIN_MENU,
     );
   }
 
@@ -70,11 +70,13 @@ export class Preloader extends Scene {
     const animations = getAnimations(this);
     animations.forEach((animation) => {
       const frames = animation.frames
-        ? this.anims.generateFrameNumbers(animation.assetKey, { frames: animation.frames })
+        ? this.anims.generateFrameNumbers(animation.assetKey, {
+            frames: animation.frames,
+          })
         : this.anims.generateFrameNumbers(animation.assetKey);
       this.anims.create({
         key: animation.key,
-        frames: frames,
+        frames,
         frameRate: animation.frameRate,
         repeat: animation.repeat,
         delay: animation.delay,

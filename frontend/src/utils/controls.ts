@@ -2,7 +2,9 @@ import { DIRECTION } from "../common/direction";
 
 export class Controls {
   #scene: Phaser.Scene;
+
   #cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
+
   #lockPlayerInput: boolean;
 
   constructor(scene: Phaser.Scene) {

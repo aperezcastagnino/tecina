@@ -1,6 +1,8 @@
 export class TextButton extends Phaser.GameObjects.Text {
   #buttonHoverStyle: object | undefined;
+
   #buttonRestStyle: object | undefined;
+
   #buttonActiveStyle: object | undefined;
 
   constructor(
@@ -16,7 +18,7 @@ export class TextButton extends Phaser.GameObjects.Text {
   ) {
     super(scene, x, y, text, style);
     this.#buttonHoverStyle = buttonHoverStyle;
-    this.#buttonRestStyle = buttonRestStyle;;
+    this.#buttonRestStyle = buttonRestStyle;
     this.#buttonActiveStyle = buttonActiveStyle;
 
     this.setInteractive({ useHandCursor: true })
@@ -32,9 +34,11 @@ export class TextButton extends Phaser.GameObjects.Text {
   #enterButtonHoverState() {
     this.setStyle(this.#buttonHoverStyle ?? { fill: "#ff0" });
   }
+
   #enterButtonRestState() {
-    this.setStyle(this.#buttonRestStyle  ?? { fill: "#0f0" });
+    this.setStyle(this.#buttonRestStyle ?? { fill: "#0f0" });
   }
+
   #enterButtonActiveState() {
     this.setStyle(this.#buttonActiveStyle ?? { fill: "#0ff" });
   }

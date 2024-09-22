@@ -1,23 +1,26 @@
 import { AssetKeys } from "../assets/asset-keys";
-import { Direction, DIRECTION } from "../common/direction";
+import { type Direction, DIRECTION } from "../common/direction";
 
-import { Character, CharacterConfig } from "./character";
+import { Character, type CharacterConfig } from "./character";
 
-type PlayerConfig = Omit<CharacterConfig, "assetKey" | "idleFrameConfig" | "origin">;
+type PlayerConfig = Omit<
+  CharacterConfig,
+  "assetKey" | "idleFrameConfig" | "origin"
+>;
 
 export class Player extends Character {
   constructor(config: PlayerConfig) {
     super({
       ...config,
       assetKey: AssetKeys.CHARACTERS.PLAYER,
-      origin: { x:0.9, y: 0.9},
+      origin: { x: 0.9, y: 0.9 },
       idleFrameConfig: {
         LEFT: 10,
         RIGHT: 4,
         DOWN: 7,
         UP: 1,
         NONE: 7,
-      }
+      },
     });
 
     this.setScale(0.5);
@@ -33,13 +36,13 @@ export class Player extends Character {
       case DIRECTION.UP:
         if (
           !this.anims.isPlaying ||
-          this.anims.currentAnim?.key !==
-            `PLAYER_${this._direction}`
+          this.anims.currentAnim?.key !== `PLAYER_${this._direction}`
         ) {
           this.anims.play(`PLAYER_${this._direction}`);
         }
         break;
       case DIRECTION.NONE:
+      default:
         break;
     }
   }

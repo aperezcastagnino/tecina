@@ -1,6 +1,6 @@
-import { DIRECTION, Direction } from "../common/direction";
-import { Coordinate } from "../types/coordinate";
-import { getTargetPositionFromPositionAndDirection } from "../utils/Grid";
+import { DIRECTION, type Direction } from "../common/direction";
+import type { Coordinate } from "../types/coordinate";
+import { getTargetPositionFromPositionAndDirection } from "../utils/grid";
 
 type CharacterIdleFrameConfig = {
   LEFT: number;
@@ -23,13 +23,21 @@ export type CharacterConfig = {
 
 export class Character extends Phaser.GameObjects.Sprite {
   _scene: Phaser.Scene;
+
   _direction: Direction;
+
   _isMoving: boolean;
+
   _collisionLayer: Phaser.Tilemaps.TilemapLayer;
+
   _targetPosition: Coordinate;
+
   _previousTargetPosition: Coordinate;
+
   _spriteGridMovementFinishedCallback: () => void;
+
   _idleFrameConfig: CharacterIdleFrameConfig;
+
   _origin: Coordinate;
 
   constructor(config: CharacterConfig) {
@@ -78,7 +86,7 @@ export class Character extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    const idleFrame = this.anims.currentAnim?.frames[1].frame.name;
+    const idleFrame = this.anims.currentAnim?.frames[1]?.frame.name;
     this.anims.stop();
     if (!idleFrame) {
       return;
@@ -92,6 +100,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.setFrame(idleFrame);
         break;
       case DIRECTION.NONE:
+      default:
         break;
     }
   }
@@ -102,10 +111,13 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     const targetPosition = { ...this._targetPosition };
-    const updatedPosition = getTargetPositionFromPositionAndDirection(targetPosition, this._direction);
+    const updatedPosition = getTargetPositionFromPositionAndDirection(
+      targetPosition,
+      this._direction
+    );
 
     return this.#doesPositionCollideWithCollisionLayer(updatedPosition);
-    }
+  }
 
   _getIdleFrame() {
     return this._idleFrameConfig[

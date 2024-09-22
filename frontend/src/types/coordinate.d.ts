@@ -1,4 +1,4 @@
 export type Coordinate = {
-  x: number,
+  x: number;
   y: number;
-}
+};

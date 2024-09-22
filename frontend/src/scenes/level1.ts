@@ -4,12 +4,14 @@ import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
 import { DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
-import { Controls } from "../utils/Controls";
+import { Controls } from "../utils/controls";
 import { NPC } from "../characters/npc";
 
 export class Level1 extends Scene {
-  #player: Player;
-  #controls: Controls;
+  #player!: Player;
+
+  #controls!: Controls;
+
   #npcs: NPC[] = [];
 
   constructor() {
@@ -25,20 +27,23 @@ export class Level1 extends Scene {
     const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const collisionTiles = map.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET
+      AssetKeys.LEVELS.TILESET,
     );
     if (!collisionTiles) {
       console.error(
-        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`
+        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`,
       );
       return;
     }
-    const _groundLayer = map.createLayer(0, collisionTiles!);
-    const _elementsLayer = map.createLayer(1, collisionTiles!);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const groundLayer = map.createLayer(0, collisionTiles!);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const elementsLayer = map.createLayer(1, collisionTiles!);
     const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
     if (!collisionLayer) {
       console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`
+        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
       );
       return;
     }
@@ -53,10 +58,10 @@ export class Level1 extends Scene {
         x: 4 * TILE_SIZE,
         y: 4 * TILE_SIZE,
       },
-      collisionLayer: collisionLayer,
+      collisionLayer,
       spriteGridMovementFinishedCallback: () => {
         console.log(
-          `[${Level1.name}:create] sprite grid movement finished callback invoked`
+          `[${Level1.name}:create] sprite grid movement finished callback invoked`,
         );
       },
     });
@@ -78,16 +83,25 @@ export class Level1 extends Scene {
   }
 
   #createNPCs(map: Tilemaps.Tilemap) {
-    const npcLayers = map.getObjectLayerNames().filter((layerName) => layerName.includes("NPC"));
+    const npcLayers = map
+      .getObjectLayerNames()
+      .filter((layerName) => layerName.includes("NPC"));
     npcLayers.forEach((layerName) => {
       const layer = map.getObjectLayer(layerName);
       const npcObject = layer?.objects.find((object) => object.type === "npc");
 
-      if(!npcObject || npcObject.x === undefined || npcObject.y === undefined) {
+      if (
+        !npcObject ||
+        npcObject.x === undefined ||
+        npcObject.y === undefined
+      ) {
         return;
       }
 
-      const npcFrame = npcObject.properties.find((property: { name: string; }) => property.name === "frame")?.value || 0;
+      const npcFrame =
+        npcObject.properties.find(
+          (property: { name: string }) => property.name === "frame",
+        )?.value || 0;
 
       const npc = new NPC({
         scene: this,
@@ -100,13 +114,12 @@ export class Level1 extends Scene {
         collisionLayer: null,
         spriteGridMovementFinishedCallback: () => {
           console.log(
-            `[${Level1.name}:create] sprite grid movement finished callback invoked`
+            `[${Level1.name}:create] sprite grid movement finished callback invoked`,
           );
         },
       });
 
       this.#npcs.push(npc);
     });
-
   }
 }
