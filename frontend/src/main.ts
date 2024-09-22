@@ -1,11 +1,9 @@
+import { GAME_DIMENSIONS } from "./config/config";
 import { Boot } from "./scenes/Boot";
 import { Level1 } from "./scenes/Level1";
 import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
-
 import { Game, Types } from "phaser";
-
-//  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 
 const config: Types.Core.GameConfig = {
   type: Phaser.CANVAS,
@@ -13,8 +11,8 @@ const config: Types.Core.GameConfig = {
   backgroundColor: "#000F00",
   scale: {
     parent: "game-container",
-    width: 1920,
-    height: 1040,
+    width: GAME_DIMENSIONS.WIDTH,
+    height: GAME_DIMENSIONS.HEIGHT,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },

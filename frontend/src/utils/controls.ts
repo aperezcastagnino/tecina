@@ -1,4 +1,4 @@
-import { DIRECTION } from "../common/Direction";
+import { DIRECTION } from "../common/direction";
 
 export class Controls {
   #scene: Phaser.Scene;

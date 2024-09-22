@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
-import { SceneKeys } from "./SceneKeys";
-import { AssetKeys, DataAssetKeys } from "../assets/AssetKeys";
-import { DebugConfig } from "../config/DebugConfig";
+import { SceneKeys } from "./scene-keys";
+import { AssetKeys, DataAssetKeys } from "../assets/asset-keys";
+import { DebugConfig } from "../config/debug-config";
 import { getAnimations } from "../utils/DataUtils";
 
 export class Preloader extends Scene {

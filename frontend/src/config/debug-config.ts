@@ -1,4 +1,4 @@
-import { SceneKeys } from "../scenes/SceneKeys";
+import { SceneKeys } from "../scenes/scene-keys";
 
 export const DebugConfig = {
   DEBUG_MODE_ACTIVE: 1,

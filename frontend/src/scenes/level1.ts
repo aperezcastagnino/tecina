@@ -1,14 +1,16 @@
-import { Scene } from "phaser";
-import { SceneKeys } from "./SceneKeys";
-import { AssetKeys } from "../assets/AssetKeys";
-import { Player } from "../levels/Player";
-import { DIRECTION } from "../common/Direction";
-import { TILE_SIZE } from "../config/Config";
+import { Scene, Tilemaps } from "phaser";
+import { SceneKeys } from "./scene-keys";
+import { AssetKeys } from "../assets/asset-keys";
+import { Player } from "../characters/player";
+import { DIRECTION } from "../common/direction";
+import { TILE_SIZE } from "../config/config";
 import { Controls } from "../utils/Controls";
+import { NPC } from "../characters/npc";
 
 export class Level1 extends Scene {
   #player: Player;
   #controls: Controls;
+  #npcs: NPC[] = [];
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -42,19 +44,16 @@ export class Level1 extends Scene {
     }
 
     collisionLayer.setAlpha(0).setDepth(2);
+    this.#createNPCs(map);
 
     this.#player = new Player({
       scene: this,
       direction: DIRECTION.DOWN,
-      origin: {
-        x: 4 * TILE_SIZE,
-        y: 4 * TILE_SIZE,
-      },
-      collisionLayer: collisionLayer,
       position: {
         x: 4 * TILE_SIZE,
         y: 4 * TILE_SIZE,
       },
+      collisionLayer: collisionLayer,
       spriteGridMovementFinishedCallback: () => {
         console.log(
           `[${Level1.name}:create] sprite grid movement finished callback invoked`
@@ -69,11 +68,45 @@ export class Level1 extends Scene {
   }
 
   update() {
-    const selectedDirection = this.#controls.getDirectionKeyJustPressed();
+    // const selectedDirection = this.#controls.getDirectionKeyJustPressed();
+    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
     if (selectedDirection !== DIRECTION.NONE) {
       this.#player.moveCharacter(selectedDirection);
     }
 
     this.#player.update();
+  }
+
+  #createNPCs(map: Tilemaps.Tilemap) {
+    const npcLayers = map.getObjectLayerNames().filter((layerName) => layerName.includes("NPC"));
+    npcLayers.forEach((layerName) => {
+      const layer = map.getObjectLayer(layerName);
+      const npcObject = layer?.objects.find((object) => object.type === "npc");
+
+      if(!npcObject || npcObject.x === undefined || npcObject.y === undefined) {
+        return;
+      }
+
+      const npcFrame = npcObject.properties.find((property: { name: string; }) => property.name === "frame")?.value || 0;
+
+      const npc = new NPC({
+        scene: this,
+        position: {
+          x: npcObject.x,
+          y: npcObject.y - TILE_SIZE,
+        },
+        direction: DIRECTION.DOWN,
+        frame: parseInt(npcFrame, 10),
+        collisionLayer: null,
+        spriteGridMovementFinishedCallback: () => {
+          console.log(
+            `[${Level1.name}:create] sprite grid movement finished callback invoked`
+          );
+        },
+      });
+
+      this.#npcs.push(npc);
+    });
+
   }
 }

@@ -13,6 +13,7 @@ export const AssetKeys = {
   },
   CHARACTERS: {
     PLAYER: "PLAYER",
+    NPC: "NPC",
   },
 };
 

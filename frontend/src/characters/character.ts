@@ -1,5 +1,5 @@
-import { DIRECTION, Direction } from "../common/Direction";
-import { Coordinate } from "../types/Coordinate";
+import { DIRECTION, Direction } from "../common/direction";
+import { Coordinate } from "../types/coordinate";
 import { getTargetPositionFromPositionAndDirection } from "../utils/Grid";
 
 type CharacterIdleFrameConfig = {
@@ -13,7 +13,7 @@ type CharacterIdleFrameConfig = {
 export type CharacterConfig = {
   scene: Phaser.Scene;
   origin: Coordinate;
-  texture: string | Phaser.Textures.Texture;
+  assetKey: string | Phaser.Textures.Texture;
   direction: Direction;
   collisionLayer: Phaser.Tilemaps.TilemapLayer;
   position: Coordinate;
@@ -33,7 +33,7 @@ export class Character extends Phaser.GameObjects.Sprite {
   _origin: Coordinate;
 
   constructor(config: CharacterConfig) {
-    super(config.scene, config.origin.x, config.origin.y, config.texture);
+    super(config.scene, config.position.x, config.position.y, config.assetKey);
 
     this._scene = config.scene;
     this._direction = config.direction;
@@ -49,6 +49,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     this._spriteGridMovementFinishedCallback =
       config.spriteGridMovementFinishedCallback;
 
+    this.setOrigin(this._origin.x, this._origin.y);
     this.setFrame(this._getIdleFrame());
   }
 

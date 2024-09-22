@@ -1,4 +1,4 @@
-import { DataAssetKeys } from "../assets/AssetKeys";
+import { DataAssetKeys } from "../assets/asset-keys";
 import { Animation } from '../types/Animation';
 
 export const getAnimations = (scene: Phaser.Scene): Animation[] => {

@@ -1,15 +1,15 @@
-import { AssetKeys } from "../assets/AssetKeys";
-import { Direction, DIRECTION } from "../common/Direction";
+import { AssetKeys } from "../assets/asset-keys";
+import { Direction, DIRECTION } from "../common/direction";
 
-import { Character, CharacterConfig } from "./Character";
+import { Character, CharacterConfig } from "./character";
 
-type PlayerConfig = Omit<CharacterConfig, "texture" | "idleFrameConfig">;
+type PlayerConfig = Omit<CharacterConfig, "assetKey" | "idleFrameConfig" | "origin">;
 
 export class Player extends Character {
   constructor(config: PlayerConfig) {
     super({
       ...config,
-      texture: AssetKeys.CHARACTERS.PLAYER,
+      assetKey: AssetKeys.CHARACTERS.PLAYER,
       origin: { x:0.9, y: 0.9},
       idleFrameConfig: {
         LEFT: 10,
@@ -19,6 +19,8 @@ export class Player extends Character {
         NONE: 7,
       }
     });
+
+    this.setScale(0.5);
   }
 
   moveCharacter(direction: Direction) {

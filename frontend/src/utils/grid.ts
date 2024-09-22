@@ -1,6 +1,6 @@
-import { Direction, DIRECTION } from "../common/Direction";
-import { TILE_SIZE } from "../config/Config";
-import { Coordinate } from "../types/Coordinate";
+import { Direction, DIRECTION } from "../common/direction";
+import { TILE_SIZE } from "../config/config";
+import { Coordinate } from "../types/coordinate";
 
 export const getTargetPositionFromPositionAndDirection = (
   currentPosition: Coordinate,
