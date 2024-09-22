@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { AssetKeys, DataAssetKeys } from "../assets/asset-keys";
+import { AssetKeys } from "../assets/asset-keys";
 import { DebugConfig } from "../config/debug-config";
 import { getAnimations } from "../utils/data-utils";
 
@@ -46,7 +46,7 @@ export class Preloader extends Scene {
     );
 
     // load json data
-    this.load.json(DataAssetKeys.ANIMATIONS, "/data/animations.json");
+    this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
 
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);

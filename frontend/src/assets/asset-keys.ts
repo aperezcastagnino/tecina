@@ -15,8 +15,7 @@ export const AssetKeys = {
     PLAYER: "PLAYER",
     NPC: "NPC",
   },
-};
-
-export const DataAssetKeys = {
-  ANIMATIONS: "animations",
+  DATA: {
+    ANIMATIONS: "animations",
+  },
 };
