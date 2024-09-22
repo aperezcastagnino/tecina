@@ -23,7 +23,7 @@ export class Player extends Character {
       },
     });
 
-    this.setScale(0.5);
+    this.setScale(0.8);
   }
 
   moveCharacter(direction: Direction) {
