@@ -113,7 +113,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     const targetPosition = { ...this._targetPosition };
     const updatedPosition = getTargetPositionFromPositionAndDirection(
       targetPosition,
-      this._direction
+      this._direction,
     );
 
     return this.#doesPositionCollideWithCollisionLayer(updatedPosition);
@@ -142,7 +142,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     const updatedPosition = getTargetPositionFromPositionAndDirection(
       this._targetPosition,
-      this._direction
+      this._direction,
     );
 
     this._previousTargetPosition = { ...this._targetPosition };

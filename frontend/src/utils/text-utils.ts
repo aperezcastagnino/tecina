@@ -1,11 +1,16 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 type AnimateTextConfig = {
   delay?: number;
   callback?: Function;
-}
+};
 
-export const animateText = (scene: Phaser.Scene, target: Phaser.GameObjects.Text, text: string, config: AnimateTextConfig) => {
+export const animateText = (
+  scene: Phaser.Scene,
+  target: Phaser.GameObjects.Text,
+  text: string,
+  config: AnimateTextConfig,
+) => {
   const { delay = 25, callback } = config || {};
   let i = 0;
 
@@ -21,4 +26,4 @@ export const animateText = (scene: Phaser.Scene, target: Phaser.GameObjects.Text
     repeat: text.length - 1,
     delay,
   });
-}
+};

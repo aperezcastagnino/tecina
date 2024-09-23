@@ -1,3 +1,3 @@
 export const Colors = {
-  White: '#FFFFFF',
-}
+  White: "#FFFFFF",
+};
