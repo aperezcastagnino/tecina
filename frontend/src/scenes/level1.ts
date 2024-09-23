@@ -69,7 +69,12 @@ export class Level1 extends Scene {
     this.#controls = new Controls(this);
 
     this.#dialogUi = new DialogUi(this);
-    this.#dialogUi.showDialogModal(["Primer mensaje", "segundo mensaje", "tercer mensaje", "cuarto mensaje"]);
+    this.#dialogUi.showDialogModal([
+      "Primer mensaje",
+      "segundo mensaje",
+      "tercer mensaje",
+      "cuarto mensaje",
+    ]);
 
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }

@@ -20,5 +20,5 @@ export const AssetKeys = {
   },
   UI: {
     CURSOR: "cursor",
-  }
+  },
 };

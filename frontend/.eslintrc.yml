@@ -25,7 +25,8 @@ rules:
   linebreak-style: 0
   # Sometimes it's more convenient to have named exports even
   # though only one thing has to be exported.
-  import/prefer-default-export: "off"
+  import/prefer-default-export:
+    "off"
     # For Typescript this is needed since it can call out false negatives.
   # https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md#how-to-use
   # https://github.com/typescript-eslint/typescript-eslint/issues/2540#issuecomment-692505191
