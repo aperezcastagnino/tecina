@@ -6,6 +6,7 @@ import { DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../utils/controls";
 import { NPC } from "../characters/npc";
+import { DialogUi } from "../common/dialog-ui";
 
 export class Level1 extends Scene {
   #player!: Player;
@@ -13,6 +14,8 @@ export class Level1 extends Scene {
   #controls!: Controls;
 
   #npcs: NPC[] = [];
+
+  #dialogUi: DialogUi | undefined;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -68,6 +71,9 @@ export class Level1 extends Scene {
     this.cameras.main.startFollow(this.#player.sprite);
 
     this.#controls = new Controls(this);
+
+    this.#dialogUi = new DialogUi(this);
+    this.#dialogUi.showDialogModal(["Primer mensaje", "segundo mensaje", "tercer mensaje", "cuarto mensaje"]);
 
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }

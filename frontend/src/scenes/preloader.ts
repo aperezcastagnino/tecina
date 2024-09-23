@@ -54,6 +54,8 @@ export class Preloader extends Scene {
       AssetKeys.LEVELS.TILESET,
       `/tilesets/tileset_sunnysideworld_16px.png`,
     );
+
+    this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
   }
 
   create() {
