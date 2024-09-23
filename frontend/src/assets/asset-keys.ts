@@ -18,4 +18,7 @@ export const AssetKeys = {
   DATA: {
     ANIMATIONS: "animations",
   },
+  UI: {
+    CURSOR: "cursor",
+  }
 };
