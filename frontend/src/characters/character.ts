@@ -1,6 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import { DIRECTION, type Direction } from "../common/direction";
 import type { Coordinate } from "../types/coordinate";
-import { getTargetPositionFromPositionAndDirection } from "../utils/grid";
+import { getTargetPosition } from "../utils/grid";
 
 type CharacterIdleFrameConfig = {
   LEFT: number;
@@ -15,10 +16,11 @@ export type CharacterConfig = {
   origin: Coordinate;
   assetKey: string | Phaser.Textures.Texture;
   direction: Direction;
-  collisionLayer: Phaser.Tilemaps.TilemapLayer;
   position: Coordinate;
   idleFrameConfig: CharacterIdleFrameConfig;
-  spriteGridMovementFinishedCallback: () => void;
+  spriteGridMovementFinishedCallback?: () => void;
+  collisionLayer?: Phaser.Tilemaps.TilemapLayer;
+  otherCharactersToCheckForCollisionsWith?: Character[];
 };
 
 export class Character extends Phaser.GameObjects.Sprite {
@@ -28,17 +30,19 @@ export class Character extends Phaser.GameObjects.Sprite {
 
   _isMoving: boolean;
 
-  _collisionLayer: Phaser.Tilemaps.TilemapLayer;
+  _origin: Coordinate;
 
   _targetPosition: Coordinate;
 
   _previousTargetPosition: Coordinate;
 
-  _spriteGridMovementFinishedCallback: () => void;
+  _spriteGridMovementFinishedCallback?: () => void;
 
   _idleFrameConfig: CharacterIdleFrameConfig;
 
-  _origin: Coordinate;
+  _collisionLayer?: Phaser.Tilemaps.TilemapLayer;
+
+  _otherCharactersToCheckForCollisionsWith: Character[] = [];
 
   constructor(config: CharacterConfig) {
     super(config.scene, config.position.x, config.position.y, config.assetKey);
@@ -50,12 +54,14 @@ export class Character extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
 
     this._idleFrameConfig = config.idleFrameConfig;
-    this._origin = config.origin ? { ...config.origin } : { x: 0, y: 0 };
+    this._origin = config.origin ? config.origin : { x: 0, y: 0 };
 
-    this._targetPosition = { ...config.position };
-    this._previousTargetPosition = { ...config.position };
+    this._targetPosition = config.position;
+    this._previousTargetPosition = config.position;
     this._spriteGridMovementFinishedCallback =
       config.spriteGridMovementFinishedCallback;
+    this._otherCharactersToCheckForCollisionsWith =
+      config.otherCharactersToCheckForCollisionsWith || [];
 
     this.setOrigin(this._origin.x, this._origin.y);
     this.setFrame(this._getIdleFrame());
@@ -79,6 +85,10 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     this._moveSprite(direction);
+  }
+
+  addCharacterToCheckForCollisionsWith(character: Character) {
+    this._otherCharactersToCheckForCollisionsWith.push(character);
   }
 
   update() {
@@ -111,12 +121,15 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     const targetPosition = { ...this._targetPosition };
-    const updatedPosition = getTargetPositionFromPositionAndDirection(
+    const updatedPosition = getTargetPosition(
       targetPosition,
-      this._direction,
+      this._direction
     );
-
-    return this.#doesPositionCollideWithCollisionLayer(updatedPosition);
+;
+    return (
+      this.#doesPositionCollideWithCollisionLayer(updatedPosition) ||
+      this.#doesPositionCollideWithOtherCharacter(updatedPosition)
+    );
   }
 
   _getIdleFrame() {
@@ -140,9 +153,9 @@ export class Character extends Phaser.GameObjects.Sprite {
       return;
     }
 
-    const updatedPosition = getTargetPositionFromPositionAndDirection(
+    const updatedPosition = getTargetPosition(
       this._targetPosition,
-      this._direction,
+      this._direction
     );
 
     this._previousTargetPosition = { ...this._targetPosition };
@@ -182,5 +195,22 @@ export class Character extends Phaser.GameObjects.Sprite {
     const tile = this._collisionLayer.getTileAtWorldXY(x, y, true);
 
     return tile.index !== -1;
+  }
+
+  #doesPositionCollideWithOtherCharacter(position: Coordinate) {
+    const { x, y } = position;
+    debugger
+    if (this._otherCharactersToCheckForCollisionsWith.length === 0) {
+      return false;
+    }
+debugger;
+    const collidesWithACharacter =
+      this._otherCharactersToCheckForCollisionsWith.some((character) => (
+          (character._targetPosition.x === x &&
+            character._targetPosition.y === y) ||
+          (character._previousTargetPosition.x === x &&
+            character._previousTargetPosition.y === y)
+        ));
+    return collidesWithACharacter;
   }
 }

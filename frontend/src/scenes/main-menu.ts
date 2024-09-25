@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { TextButton } from "../common/text-button";
+import { TextButton } from "../common-ui/text-button";
 
 export class MainMenu extends Scene {
   constructor() {

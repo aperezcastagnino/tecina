@@ -2,7 +2,7 @@ import { type Direction, DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
 import type { Coordinate } from "../types/coordinate";
 
-export const getTargetPositionFromPositionAndDirection = (
+export const getTargetPosition = (
   currentPosition: Coordinate,
   direction: Direction,
 ) => {

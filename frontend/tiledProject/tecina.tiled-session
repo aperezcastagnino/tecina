@@ -22,11 +22,11 @@
             "scaleInDock": 1
         },
         "level1.tmx": {
-            "scale": 0.75,
+            "scale": 1,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 725.3333333333333,
-                "y": 821.3333333333333
+                "x": 1143.5,
+                "y": 429
             }
         },
         "level1.tmx#BasicPlains-tileset": {
@@ -44,6 +44,7 @@
     },
     "last.exportedFilePath": "/home/pei/repos/tesis/tecina/frontend/tiledProject",
     "last.imagePath": "/home/pei/repos/tesis/tecina/frontend/tiledProject/tilesets",
+    "last.objectTypesPath": "/home/pei/repos/tesis/tecina/frontend/tiledProject/custom_types.json",
     "map.height": 65,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
@@ -52,9 +53,9 @@
     "map.tileWidth": 16,
     "map.width": 120,
     "openFiles": [
-        "level1.tmx"
     ],
     "project": "tecina.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "level1.tmx"
     ],
