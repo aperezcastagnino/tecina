@@ -22,8 +22,6 @@ export const AssetKeys = {
     CURSOR: "cursor",
   },
   HEALTH_BAR: {
-    LEFT_GREEN: 'LEFT_GREEN',
-
     MIDDLE_GREEN: 'MIDDLE_GREEN',
     MIDDLE_YELLOW: 'MIDDLE_YELLOW',
     MIDDLE_RED: 'MIDDLE_RED',

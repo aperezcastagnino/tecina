@@ -7,7 +7,6 @@ export class HealthBar {
 
     _scene: Phaser.Scene;
 
-    _leftCap!: Phaser.GameObjects.Image;
     _middle_green!: Phaser.GameObjects.Image;
     _middle_yellow!: Phaser.GameObjects.Image;
     _middle_red!: Phaser.GameObjects.Image;
