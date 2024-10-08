@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
-import { getTargetPosition } from "../utils/grid";
+import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
@@ -8,7 +8,7 @@ import { NPC } from "../characters/npc";
 import { DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
-import { DialogUi } from "../common-ui/dialog-ui";
+import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
 
 const CUSTOM_TILED_TYPES = {
@@ -28,7 +28,7 @@ export class Level1 extends Scene {
 
   #controls!: Controls;
 
-  #dialogUi: DialogUi | undefined;
+  #dialogUi: Dialog | undefined;
 
   #awards!: Awards;
 
@@ -39,7 +39,6 @@ export class Level1 extends Scene {
   }
 
   create() {
-    console.log(`[${Level1.name}:created] INVOKED`);
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -75,13 +74,19 @@ export class Level1 extends Scene {
         y: 2 * TILE_SIZE,
       },
       collisionLayer,
-      otherCharactersToCheckForCollisionsWith: this.#npcs,
     });
     this.cameras.main.startFollow(this.#player.sprite);
 
     this.#controls = new Controls(this);
-    this.#dialogUi = new DialogUi(this);
+    this.#dialogUi = new Dialog(this);
     this.#createNPCs(map);
+
+    this.#dialogUi?.setMessages([
+      "Hello",
+      "How are you?",
+      "Are you well?",
+      "Goodbye",
+    ]);
 
     this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.#awards = new Awards({
@@ -105,11 +110,12 @@ export class Level1 extends Scene {
       this.#player.moveCharacter(selectedDirection);
     }
 
+    this.#player.update();
+
     if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
       this.#handlePlayerInteraction();
     }
 
-    this.#player.update();
     this.#npcs.forEach((npc) => npc.update());
   }
 
@@ -146,7 +152,7 @@ export class Level1 extends Scene {
 
       const npc = new NPC({
         scene: this,
-        position: { x: 242, y: 52 },
+        position: { x: 6 * TILE_SIZE, y: 3 * TILE_SIZE },
         direction: DIRECTION.DOWN,
         frame: parseInt(npcFrame, 10),
         messages: npcMessages,
@@ -155,35 +161,28 @@ export class Level1 extends Scene {
 
       this.#npcs.push(npc);
     });
+
+    this.#player.setCaractersToCollideWith(this.#npcs);
   }
 
   #handlePlayerInteraction() {
     if (this.#dialogUi) {
-      if (this.#dialogUi.isAnimationPlaying) {
-        return;
-      }
-
-      if (this.#dialogUi.isVisible && this.#dialogUi.moreMessagesToShow) {
+      if (this.#dialogUi.isVisible) {
         this.#dialogUi.showNextMessage();
         return;
       }
 
       const { x, y } = this.#player.sprite;
-      const targetPosition = getTargetPosition(
+      const targetPosition = getNextPosition(
         { x, y },
         this.#player.direction
       );
 
-      // const nearbyNpc = this.#npcs.find(
-      //   (npc) =>
-      //     npc.sprite.x === targetPosition.x && npc.sprite.y === targetPosition.y
-      // );
-
-      const nearbyNpc = this.#npcs[0];
+      const nearbyNpc = this.#npcs.find((npc) => arePositionsNear(npc.sprite, targetPosition));
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;
-        this.#dialogUi.showDialogModal(nearbyNpc.messages);
+        this.#dialogUi.show();
       }
     }
   }

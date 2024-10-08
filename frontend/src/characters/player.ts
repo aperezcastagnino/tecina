@@ -26,6 +26,10 @@ export class Player extends Character {
     this.setScale(0.8);
   }
 
+  setCaractersToCollideWith(characters: Character[]) {
+    this._otherCharactersToCheckForCollisionsWith = characters;
+  }
+
   moveCharacter(direction: Direction) {
     super.moveCharacter(direction);
 

@@ -9,7 +9,6 @@ export class MainMenu extends Scene {
   }
 
   create() {
-    console.log(`[${MainMenu.name}:created] INVOKED`);
     this.add.image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU).setOrigin(0);
 
     const startGameButton = new TextButton(

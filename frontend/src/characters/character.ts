@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { DIRECTION, type Direction } from "../common/direction";
 import type { Coordinate } from "../types/coordinate";
-import { getTargetPosition } from "../utils/grid";
+import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 
 type CharacterIdleFrameConfig = {
   LEFT: number;
@@ -30,8 +30,6 @@ export class Character extends Phaser.GameObjects.Sprite {
 
   _isMoving: boolean;
 
-  _origin: Coordinate;
-
   _targetPosition: Coordinate;
 
   _previousTargetPosition: Coordinate;
@@ -54,7 +52,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
 
     this._idleFrameConfig = config.idleFrameConfig;
-    this._origin = config.origin ? config.origin : { x: 0, y: 0 };
 
     this._targetPosition = config.position;
     this._previousTargetPosition = config.position;
@@ -63,7 +60,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     this._otherCharactersToCheckForCollisionsWith =
       config.otherCharactersToCheckForCollisionsWith || [];
 
-    this.setOrigin(this._origin.x, this._origin.y);
     this.setFrame(this._getIdleFrame());
   }
 
@@ -115,23 +111,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
   }
 
-  _isBlockingTile() {
-    if (this._direction === DIRECTION.NONE) {
-      return false;
-    }
-
-    const targetPosition = { ...this._targetPosition };
-    const updatedPosition = getTargetPosition(
-      targetPosition,
-      this._direction
-    );
-;
-    return (
-      this.#doesPositionCollideWithCollisionLayer(updatedPosition) ||
-      this.#doesPositionCollideWithOtherCharacter(updatedPosition)
-    );
-  }
-
   _getIdleFrame() {
     return this._idleFrameConfig[
       this._direction as keyof CharacterIdleFrameConfig
@@ -148,12 +127,25 @@ export class Character extends Phaser.GameObjects.Sprite {
     this.#handleSpriteMovement();
   }
 
+  _isBlockingTile() {
+    if (this._direction === DIRECTION.NONE) {
+      return false;
+    }
+
+    const updatedPosition = getNextPosition(this._targetPosition, this._direction);
+
+    return (
+      this.#isPositionCollideWithCollisionLayer(updatedPosition) ||
+      this.#isPositionCollideWithOtherCharacter(updatedPosition)
+    );
+  }
+
   #handleSpriteMovement() {
     if (this._direction === DIRECTION.NONE) {
       return;
     }
 
-    const updatedPosition = getTargetPosition(
+    const updatedPosition = getNextPosition(
       this._targetPosition,
       this._direction
     );
@@ -186,31 +178,28 @@ export class Character extends Phaser.GameObjects.Sprite {
     });
   }
 
-  #doesPositionCollideWithCollisionLayer(position: Coordinate) {
+  #isPositionCollideWithCollisionLayer(position: Coordinate) {
     if (!this._collisionLayer) {
       return false;
     }
 
-    const { x, y } = position;
-    const tile = this._collisionLayer.getTileAtWorldXY(x, y, true);
-
+    const tile = this._collisionLayer.getTileAtWorldXY(
+      position.x,
+      position.y,
+      true
+    );
     return tile.index !== -1;
   }
 
-  #doesPositionCollideWithOtherCharacter(position: Coordinate) {
-    const { x, y } = position;
-    debugger
+  #isPositionCollideWithOtherCharacter(position: Coordinate) {
     if (this._otherCharactersToCheckForCollisionsWith.length === 0) {
       return false;
     }
-debugger;
-    const collidesWithACharacter =
-      this._otherCharactersToCheckForCollisionsWith.some((character) => (
-          (character._targetPosition.x === x &&
-            character._targetPosition.y === y) ||
-          (character._previousTargetPosition.x === x &&
-            character._previousTargetPosition.y === y)
-        ));
-    return collidesWithACharacter;
+
+    return this._otherCharactersToCheckForCollisionsWith.some(
+      (character) =>
+        arePositionsNear(position, character._targetPosition) ||
+        arePositionsNear(position, character._previousTargetPosition)
+    );
   }
 }

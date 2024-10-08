@@ -18,7 +18,7 @@ export class NPC extends Character {
     super({
       ...config,
       assetKey: AssetKeys.CHARACTERS.NPC,
-      origin: { x: 0, y: 0 },
+      origin: { x: 2, y: 2 },
       idleFrameConfig: {
         DOWN: config.frame,
         UP: config.frame + 1,
@@ -30,7 +30,7 @@ export class NPC extends Character {
 
     this.#messages = config.messages;
     this.#talkingToPlayer = false;
-    this.setScale(3);
+    this.setScale(3.5);
   }
 
   get messages() {
@@ -48,16 +48,16 @@ export class NPC extends Character {
   facePlayer(playerDirection: Direction) {
     switch (playerDirection) {
       case DIRECTION.DOWN:
-        this.setFrame(this._idleFrameConfig.UP).setFlipX(false);
+        this.setFrame(this._idleFrameConfig.UP);
         break;
       case DIRECTION.LEFT:
-        this.setFrame(this._idleFrameConfig.RIGHT).setFlipX(false);
+        this.setFrame(this._idleFrameConfig.RIGHT);
         break;
       case DIRECTION.RIGHT:
         this.setFrame(this._idleFrameConfig.LEFT).setFlipX(true);
         break;
       case DIRECTION.UP:
-        this.setFrame(this._idleFrameConfig.DOWN).setFlipX(false);
+        this.setFrame(this._idleFrameConfig.DOWN);
         break;
       case DIRECTION.NONE:
       default:
