@@ -1,6 +1,6 @@
-import { FontSize, PRIMARY_FONT_FAMILY } from "./../assets/fonts";
-import { AssetKeys } from "./../assets/asset-keys";
-import { Colors } from "./../assets/colors";
+import { FontSize, PRIMARY_FONT_FAMILY } from "../assets/fonts";
+import { AssetKeys } from "../assets/asset-keys";
+import { Colors } from "../assets/colors";
 
 export class HealthBar {
 
@@ -10,7 +10,6 @@ export class HealthBar {
     _middle_green!: Phaser.GameObjects.Image;
     _middle_yellow!: Phaser.GameObjects.Image;
     _middle_red!: Phaser.GameObjects.Image;
-
     _middleShadow!: Phaser.GameObjects.Image;
 
     _scaleY!:number;
