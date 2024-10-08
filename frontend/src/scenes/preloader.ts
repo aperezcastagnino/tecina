@@ -58,11 +58,19 @@ export class Preloader extends Scene {
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
 
     // HealthBar
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_SHADOW, '/healthBar/BarBackground.png')
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_GREEN, '/healthBar/GreenBar.png')
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_YELLOW, '/healthBar/YellowBar.png')
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, '/healthBar/RedBar.png')
-
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
+      "/healthBar/BarBackground.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
+      "/healthBar/GreenBar.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_YELLOW,
+      "/healthBar/YellowBar.png",
+    );
+    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, "/healthBar/RedBar.png");
   }
 
   create() {
