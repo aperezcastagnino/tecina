@@ -30,7 +30,7 @@ export class HealthBar {
     this._fullWidth = 300;
 
     // si la imagen es de un tamaño adecuado, no esta bien poner esto, capaz se puede renderizar la imagen correctamente
-    this._fullHeight = 300; 
+    this._fullHeight = 300;
 
     const x = 100;
     const y = 40;
@@ -52,7 +52,7 @@ export class HealthBar {
     this._createBarShadowImages(x, y);
     this._createBarImages(x, y);
   }
-  
+
   _createBarShadowImages(x: number, y: number) {
     this._middleShadow = this._scene.add
       .image(x, y, AssetKeys.HEALTH_BAR.MIDDLE_SHADOW)
