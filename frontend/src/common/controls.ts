@@ -1,4 +1,4 @@
-import { DIRECTION } from "./direction";
+import { DIRECTION, SPECIAL_KEYS } from "./direction";
 
 export class Controls {
   #scene: Phaser.Scene;
@@ -33,6 +33,29 @@ export class Controls {
       return false;
     }
     return Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift);
+  }
+
+  getKeyPressed() {
+    let keyPressed = DIRECTION.NONE;
+    if (this.#cursorKeys === undefined) {
+      return keyPressed;
+    }
+
+    if (this.#cursorKeys.left.isDown) {
+      keyPressed = DIRECTION.LEFT;
+    } else if (this.#cursorKeys.right.isDown) {
+      keyPressed = DIRECTION.RIGHT;
+    } else if (this.#cursorKeys.up.isDown) {
+      keyPressed = DIRECTION.UP;
+    } else if (this.#cursorKeys.down.isDown) {
+      keyPressed = DIRECTION.DOWN;
+    } else if (this.#cursorKeys.space.isDown) {
+      keyPressed = SPECIAL_KEYS.SPACE;
+    } else if (this.#cursorKeys.shift.isDown) {
+      keyPressed = SPECIAL_KEYS.SHIFT;
+    }
+
+    return keyPressed;
   }
 
   getDirectionKeyJustPressed() {

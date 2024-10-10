@@ -10,6 +10,7 @@ import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
+import { DialogWithOptions } from "../common-ui/dialog-with-options";
 
 const CUSTOM_TILED_TYPES = {
   NPC: "npc",
@@ -28,14 +29,17 @@ export class Level1 extends Scene {
 
   #controls!: Controls;
 
-  #dialogUi: Dialog | undefined;
+  #dialog: Dialog | undefined;
+
+  #dialogWithOptions: DialogWithOptions | undefined;
 
   #awards!: Awards;
 
-  #npcs: NPC[] = [];
+  #npcs: NPC[];
 
   constructor() {
     super(SceneKeys.LEVEL_1);
+    this.#npcs = [];
   }
 
   create() {
@@ -75,19 +79,26 @@ export class Level1 extends Scene {
       },
       collisionLayer,
     });
-    this.cameras.main.startFollow(this.#player.sprite);
-
-    this.#controls = new Controls(this);
-    this.#dialogUi = new Dialog(this);
     this.#createNPCs(map);
 
-    this.#dialogUi?.setMessages([
+    this.#controls = new Controls(this);
+    this.#dialog = new Dialog({ scene: this });
+    this.#dialogWithOptions = new DialogWithOptions(this,
+      "esto es la pregunta",
+      ["How are you?", "Are you well?", "he", "ho"],
+      () => {},
+    );
+
+    this.#dialog?.setMessages([
       "Hello",
       "How are you?",
       "Are you well?",
       "Goodbye",
     ]);
 
+    // this.#dialog.show();
+
+    this.cameras.main.startFollow(this.#player.sprite);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.#awards = new Awards({
       scene: this,
@@ -106,17 +117,24 @@ export class Level1 extends Scene {
 
   update() {
     const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE) {
+    if (selectedDirection !== DIRECTION.NONE && !this.#dialogWithOptions?.isVisible) {
       this.#player.moveCharacter(selectedDirection);
     }
-
-    this.#player.update();
 
     if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
       this.#handlePlayerInteraction();
     }
 
+    if (this.#controls.wasShiftPressed()) {
+      this.#dialogWithOptions!.showMainMenu();
+    }
+
+    this.#player.update();
     this.#npcs.forEach((npc) => npc.update());
+
+    if (this.#dialogWithOptions?.isVisible) {
+      this.#dialogWithOptions!.handlePlayerInput(this.#controls.getKeyPressed());
+    }
   }
 
   #createNPCs(map: Phaser.Tilemaps.Tilemap) {
@@ -166,9 +184,9 @@ export class Level1 extends Scene {
   }
 
   #handlePlayerInteraction() {
-    if (this.#dialogUi) {
-      if (this.#dialogUi.isVisible) {
-        this.#dialogUi.showNextMessage();
+    if (this.#dialog) {
+      if (this.#dialog.isVisible) {
+        this.#dialog.showNextMessage();
         return;
       }
 
@@ -182,7 +200,8 @@ export class Level1 extends Scene {
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;
-        this.#dialogUi.show();
+        debugger
+        this.#dialog.show();
       }
     }
   }

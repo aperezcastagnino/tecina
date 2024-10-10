@@ -7,3 +7,8 @@ export const DIRECTION = {
   DOWN: "DOWN",
   NONE: "NONE",
 };
+
+export const SPECIAL_KEYS = {
+  SPACE: "SPACE",
+  SHIFT: "SHIFT",
+};
