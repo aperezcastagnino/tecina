@@ -1,4 +1,4 @@
-import { DIRECTION, SPECIAL_KEYS } from "./direction";
+import { DIRECTION, SPECIAL_KEYS, type Direction, type PlayerKeys } from "./player-keys";
 
 export class Controls {
   #scene: Phaser.Scene;
@@ -21,21 +21,21 @@ export class Controls {
     this.#lockPlayerInput = val;
   }
 
-  wasSpaceKeyPressed() {
+  wasSpaceKeyPressed(): boolean {
     if (this.#cursorKeys === undefined) {
       return false;
     }
     return Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space);
   }
 
-  wasShiftPressed() {
+  wasShiftPressed(): boolean {
     if (this.#cursorKeys === undefined) {
       return false;
     }
     return Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift);
   }
 
-  getKeyPressed() {
+  getKeyPressed(): PlayerKeys {
     let keyPressed = DIRECTION.NONE;
     if (this.#cursorKeys === undefined) {
       return keyPressed;
@@ -58,7 +58,7 @@ export class Controls {
     return keyPressed;
   }
 
-  getDirectionKeyJustPressed() {
+  getDirectionKeyJustPressed(): Direction {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE;
     }
@@ -77,7 +77,7 @@ export class Controls {
     return selectedDirection;
   }
 
-  getDirectionKeyPressedDown() {
+  getDirectionKeyPressedDown(): Direction  {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE;
     }

@@ -1,5 +1,5 @@
 import { AssetKeys } from "../assets/asset-keys";
-import { type Direction, DIRECTION } from "../common/direction";
+import { type Direction, DIRECTION } from "../common/player-keys";
 
 import { Character, type CharacterConfig } from "./character";
 

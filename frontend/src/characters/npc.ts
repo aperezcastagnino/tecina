@@ -1,6 +1,6 @@
 import { Character, type CharacterConfig } from "./character.js";
 import { AssetKeys } from "../assets/asset-keys";
-import { DIRECTION, type Direction } from "../common/direction";
+import { DIRECTION, type Direction } from "../common/player-keys.js";
 
 type NPCConfig = Omit<
   CharacterConfig,

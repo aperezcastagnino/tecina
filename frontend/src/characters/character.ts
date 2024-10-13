@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { DIRECTION, type Direction } from "../common/direction";
+import { DIRECTION, type Direction } from "../common/player-keys";
 import type { Coordinate } from "../types/coordinate";
 import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 

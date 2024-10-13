@@ -1,4 +1,4 @@
-import { type Direction, DIRECTION } from "../common/direction";
+import { type Direction, DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
 import type { Coordinate } from "../types/coordinate";
 

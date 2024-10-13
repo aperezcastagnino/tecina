@@ -3,7 +3,6 @@ import { PRIMARY_FONT_FAMILY, FontSize } from "../assets/fonts";
 import { animateText } from "../utils/text-utils";
 import { DialogColors } from "../assets/colors";
 import { AssetKeys } from "../assets/asset-keys";
-import type { UIObject } from "./ui-object";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -44,7 +43,8 @@ export class Dialog {
     this._scene = config.scene;
     this._padding = config.padding || 60;
     this._height = config.height || 200;
-    this._width = config.width || this._scene.cameras.main.width - this._padding * 2;
+    this._width =
+      config.width || this._scene.cameras.main.width - this._padding * 2;
     this._messagesToShow = [];
     this._backupMessages = [];
     this.isVisible = false;
@@ -62,7 +62,7 @@ export class Dialog {
     this._uiText = this._scene.add.text(18, 12, "", {
       ...{
         fontFamily: PRIMARY_FONT_FAMILY,
-        color: 'black',
+        color: "black",
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 0 },
       },
@@ -74,9 +74,8 @@ export class Dialog {
 
     const startX = this._padding;
     const startY =
-    this._scene.cameras.main.height - this._height - this._padding / 4;
+      this._scene.cameras.main.height - this._height - this._padding / 4;
     this._container.setPosition(startX, startY);
-debugger
     this.#createPlayerInputCursor();
   }
 
@@ -86,7 +85,7 @@ debugger
 
   setMessages(messages: string[]): void {
     this._backupMessages = [...messages];
-  };
+  }
 
   hide(): void {
     this._userInputCursorTween.pause();
@@ -95,7 +94,6 @@ debugger
   }
 
   show(): void {
-    debugger
     this._container.setAlpha(1);
     this.isVisible = true;
     this._messagesToShow = [...this._backupMessages];
@@ -103,23 +101,25 @@ debugger
   }
 
   showNextMessage(): void {
-    if (this.isVisible && this._messagesToShow.length === 0 ) {
-      debugger
+    if (this.isVisible && this._messagesToShow.length === 0) {
       this.hide();
       return;
     }
 
-    if (this._messagesToShow.length === 0 ) {
+    if (this._messagesToShow.length === 0) {
       return;
     }
 
     this._uiText.setText("").setAlpha(1);
-    animateText(this._scene, this._uiText, this._messagesToShow.shift() || "", {
-      delay: 10,
-      callback: () => {
+    animateText(
+      this._scene,
+      this._uiText,
+      this._messagesToShow.shift() || "",
+      10,
+      () => {
         this.textAnimationPlaying = false;
-      },
-    });
+      }
+    );
     this.textAnimationPlaying = true;
   }
 
@@ -128,7 +128,7 @@ debugger
     this._userInputCursor = this._scene.add.image(
       this._width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR,
+      AssetKeys.UI.CURSOR
     );
     this._userInputCursor.setAngle(90).setScale(4.5, 2);
     this._userInputCursorTween = this._scene.add.tween({

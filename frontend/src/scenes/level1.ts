@@ -5,7 +5,7 @@ import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
 import { NPC } from "../characters/npc";
-import { DIRECTION } from "../common/direction";
+import { DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
@@ -96,6 +96,8 @@ export class Level1 extends Scene {
       "Goodbye",
     ]);
 
+    this.#dialogWithOptions.show();
+
     // this.#dialog.show();
 
     this.cameras.main.startFollow(this.#player.sprite);
@@ -126,7 +128,7 @@ export class Level1 extends Scene {
     }
 
     if (this.#controls.wasShiftPressed()) {
-      this.#dialogWithOptions!.showMainMenu();
+      this.#dialogWithOptions!.show();
     }
 
     this.#player.update();
@@ -200,7 +202,6 @@ export class Level1 extends Scene {
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;
-        debugger
         this.#dialog.show();
       }
     }

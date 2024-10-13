@@ -1,17 +1,12 @@
 import Phaser from "phaser";
 
-type AnimateTextConfig = {
-  delay?: number;
-  callback?: Function;
-};
-
 export const animateText = (
   scene: Phaser.Scene,
   target: Phaser.GameObjects.Text,
   text: string,
-  config: AnimateTextConfig,
+  delay: number = 25,
+  callback?: () => void
 ) => {
-  const { delay = 25, callback } = config || {};
   let i = 0;
   scene.time.addEvent({
     callback: () => {
