@@ -21,4 +21,21 @@ export const AssetKeys = {
   UI: {
     CURSOR: "cursor",
   },
+  AWARDS: {
+    STAR_AWARD: {
+      NAME: "STAR_AWARD",
+      frameWidth: 256,
+      frameHeight: 256,
+    },
+    HALLOWEEN_EYE_AWARD: {
+      NAME: "HALLOWEEN_EYE_AWARD",
+      frameWidth: 150,
+      frameHeight: 150,
+    },
+    HALLOWEEN_PUMPKIN_AWARD: {
+      NAME: "HALLOWEEN_PUMPKIN_AWARD",
+      frameWidth: 150,
+      frameHeight: 150,
+    },
+  },
 };

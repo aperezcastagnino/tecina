@@ -56,6 +56,36 @@ export class Preloader extends Scene {
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
+    this.load.spritesheet(
+      AssetKeys.AWARDS.STAR_AWARD.NAME,
+      "/awards/Star.png",
+      {
+        frameWidth: 256,
+        frameHeight: 256,
+        startFrame: 0,
+        endFrame: 29,
+      },
+    );
+    this.load.spritesheet(
+      AssetKeys.AWARDS.HALLOWEEN_EYE_AWARD.NAME,
+      "/awards/anim_eye.png",
+      {
+        frameWidth: 150,
+        frameHeight: 150,
+        startFrame: 0,
+        endFrame: 15,
+      },
+    );
+    this.load.spritesheet(
+      AssetKeys.AWARDS.HALLOWEEN_PUMPKIN_AWARD.NAME,
+      "/awards/anim_pumpkin.png",
+      {
+        frameWidth: 150,
+        frameHeight: 150,
+        startFrame: 0,
+        endFrame: 15,
+      },
+    );
   }
 
   create() {
