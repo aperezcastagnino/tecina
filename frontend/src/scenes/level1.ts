@@ -80,7 +80,6 @@ export class Level1 extends Scene {
     ]);
 
     this.cameras.main.fadeIn(1000, 0, 0, 0);
-    const numberOfAnims = 2;
     this.#awards = new Awards({
       scene: this,
       width: this.cameras.main.width - 50,
@@ -93,7 +92,7 @@ export class Level1 extends Scene {
         frameHeight: AssetKeys.AWARDS.STAR_AWARD.frameHeight,
       },
     });
-    this.#awards.setAwardsCount(numberOfAnims);
+    this.#awards.setAwardsCount(2);
   }
 
   update() {
@@ -101,9 +100,6 @@ export class Level1 extends Scene {
     const selectedDirection = this.#controls.getDirectionKeyPressedDown();
     if (selectedDirection !== DIRECTION.NONE) {
       this.#player.moveCharacter(selectedDirection);
-    }
-    if (this.#controls.wasSpaceKeyPressed()) {
-      this.#awards.setAwardsCount(Math.floor(Math.random() * (10 - 1 + 1)) + 1);
     }
 
     this.#player.update();
