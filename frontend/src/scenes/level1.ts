@@ -8,84 +8,89 @@ import { Controls } from "../utils/controls";
 import { DialogUi } from "../common/dialog-ui";
 
 export class Level1 extends Scene {
-  #player!: Player;
-
-  #controls!: Controls;
-
-  #dialogUi: DialogUi | undefined;
+  private player!: Phaser.Physics.Arcade.Sprite;
+  private tilemap!: Phaser.Tilemaps.Tilemap;
+  private tileset!: Phaser.Tilemaps.Tileset|null;
+  private collisionLayer!: Phaser.Tilemaps.TilemapLayer|null;
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable para almacenar las teclas
 
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
+  preload(){
+
+  }
+
   create() {
-    console.log(`[${Level1.name}:created] INVOKED`);
+    
+    this.tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
 
-    this.cameras.main.setBounds(0, 0, 1280, 2176);
-    // this.cameras.main.setZoom(0.8);
+    // Vincular el tileset con el nombre que se usó en Tiled
+    this.tileset = this.tilemap.addTilesetImage(AssetKeys.LEVELS.TILESET.TILESETIMAGE, AssetKeys.LEVELS.TILESET.KEY);
 
-    const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
-    const collisionTiles = map.addTilesetImage(
-      "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET,
-    );
-    if (!collisionTiles) {
-      console.error(
-        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`,
-      );
-      return;
-    }
+    // Crear las capas del mapa
+    const fondoLayer = this.tilemap.createLayer('ground', this.tileset!, 0, 0);
+    this.collisionLayer = this.tilemap.createLayer('elements', this.tileset!, 0, 0);
+    
+    // Habilitar la colisión en la capa 'Colision'
+    this.collisionLayer!.setCollisionByProperty({ colisionable: true });
+    this.createPlayer()
+    this.physics.add.collider(this.player, this.collisionLayer!);
+    this.collisionLayer!.setCollisionByExclusion([-1]);
+    this.cursors = this.input.keyboard!.createCursorKeys(); // Carga las teclas del cursor (flechas)
+    this.player.body!.setMaxSpeed(100); // Velocidad máxima
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const groundLayer = map.createLayer(0, collisionTiles!);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const elementsLayer = map.createLayer(1, collisionTiles!);
-    const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
-    if (!collisionLayer) {
-      console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
-      );
-      return;
-    }
-
-    collisionLayer.setAlpha(0).setDepth(2);
-
-    this.#player = new Player({
-      scene: this,
-      direction: DIRECTION.DOWN,
-      position: {
-        x: 4 * TILE_SIZE,
-        y: 4 * TILE_SIZE,
-      },
-      collisionLayer,
-      spriteGridMovementFinishedCallback: () => {
-        console.log(
-          `[${Level1.name}:create] sprite grid movement finished callback invoked`,
-        );
-      },
+  createPlayer(){
+    this.player = this.physics.add.sprite(100, 100, AssetKeys.CHARACTERS.PLAYER);
+    this.anims.create({
+      key: 'walk-right',
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, { start: 3, end: 5 }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1 // Repetir indefinidamente
     });
-    this.cameras.main.startFollow(this.#player.sprite);
-
-    this.#controls = new Controls(this);
-
-    this.#dialogUi = new DialogUi(this);
-    this.#dialogUi.showDialogModal([
-      "Primer mensaje",
-      "segundo mensaje",
-      "tercer mensaje",
-      "cuarto mensaje",
-    ]);
-
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
+    this.anims.create({
+      key: 'walk-left',
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, { start: 9, end: 11 }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1 // Repetir indefinidamente
+    });
+    this.anims.create({
+      key: 'walk-up',
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, { start: 0, end: 2 }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1 // Repetir indefinidamente
+    });
+    this.anims.create({
+      key: 'walk-down',
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, { start: 6, end: 8 }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1 // Repetir indefinidamente
+    });
   }
 
   update() {
-    // const selectedDirection = this.#controls.getDirectionKeyJustPressed();
-    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE) {
-      this.#player.moveCharacter(selectedDirection);
+    const velocity = 100;
+    if(this.cursors.left.isDown){
+      this.player.setVelocityX(-velocity);
+      this.player.anims.play('walk-left', true);
     }
+    else if(this.cursors.right.isDown){
+      this.player.setVelocityX(velocity);
+      this.player.anims.play('walk-right', true);
+    }
+    else if(this.cursors.up.isDown){
+      this.player.setVelocityY(-velocity);
+      this.player.anims.play('walk-up', true);
+    } else if(this.cursors.down.isDown){
+      this.player.setVelocityY(velocity);
+      this.player.anims.play('walk-down', true);
+    }
+    else{
+            this.player.setVelocity(0);
+          this.player.anims.stop();
 
-    this.#player.update();
+    }
   }
 }

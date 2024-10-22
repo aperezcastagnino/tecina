@@ -9,6 +9,13 @@ const config: Types.Core.GameConfig = {
   type: Phaser.CANVAS,
   pixelArt: false, // averiguar
   backgroundColor: "#000F00",
+  physics: {
+    default: 'arcade', // Motor de físicas arcade
+    arcade: {
+      gravity: { y: 0, x:0 }, // Sin gravedad en el juego (es un top-down)
+      debug: false, // Activa o desactiva el modo de depuración (útil para ver las colisiones)
+    },
+  },
   scale: {
     parent: "game-container",
     width: GAME_DIMENSIONS.WIDTH,

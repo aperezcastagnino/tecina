@@ -6,7 +6,10 @@ export const AssetKeys = {
     LEVEL_1: "level1",
   },
   LEVELS: {
-    TILESET: "tileset",
+    TILESET: {
+      KEY: "tileset",
+      TILESETIMAGE:"tileset_sunnysideworld"
+    },
     GROUND: "ground",
     ELEMENTS: "elements",
     COLLISION: "collision",
