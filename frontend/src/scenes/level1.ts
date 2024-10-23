@@ -86,10 +86,10 @@ export class Level1 extends Scene {
       padding: 10,
       scale: 0.5,
       frameRate: 20,
-      assetKey: AssetKeys.AWARDS.STAR_AWARD.NAME,
+      assetKey: AssetKeys.UI.AWARD.NAME,
       spriteConfig: {
-        frameWidth: AssetKeys.AWARDS.STAR_AWARD.frameWidth,
-        frameHeight: AssetKeys.AWARDS.STAR_AWARD.frameHeight,
+        frameWidth: AssetKeys.UI.AWARD.frameWidth,
+        frameHeight: AssetKeys.UI.AWARD.frameHeight,
       },
     });
     this.#awards.setAwardsCount(2);

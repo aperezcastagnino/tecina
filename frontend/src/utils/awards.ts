@@ -30,7 +30,7 @@ export class Awards {
     this._assetKey = config.assetKey;
     this._frameRate = config.frameRate;
     this._padding = config.padding;
-    this.keyAnim = "keyAnim";
+    this.keyAnim = "AwardsKeyAnim";
     this._scene.anims.create({
       key: this.keyAnim,
       frames: this._scene.anims.generateFrameNumbers(this._assetKey),
