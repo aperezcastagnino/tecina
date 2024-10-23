@@ -56,6 +56,12 @@ export class Preloader extends Scene {
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
+    this.load.spritesheet(AssetKeys.UI.AWARD.NAME, "/awards/star.png", {
+      frameWidth: AssetKeys.UI.AWARD.frameWidth,
+      frameHeight: AssetKeys.UI.AWARD.frameHeight,
+      startFrame: AssetKeys.UI.AWARD.startFrame,
+      endFrame: AssetKeys.UI.AWARD.endFrame,
+    });
   }
 
   create() {

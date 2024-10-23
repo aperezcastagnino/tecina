@@ -6,6 +6,7 @@ import { DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../utils/controls";
 import { DialogUi } from "../common/dialog-ui";
+import { Awards } from "../utils/awards";
 
 export class Level1 extends Scene {
   #player!: Player;
@@ -13,6 +14,8 @@ export class Level1 extends Scene {
   #controls!: Controls;
 
   #dialogUi: DialogUi | undefined;
+
+  #awards!: Awards;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -77,6 +80,19 @@ export class Level1 extends Scene {
     ]);
 
     this.cameras.main.fadeIn(1000, 0, 0, 0);
+    this.#awards = new Awards({
+      scene: this,
+      width: this.cameras.main.width - 50,
+      padding: 10,
+      scale: 0.5,
+      frameRate: 20,
+      assetKey: AssetKeys.UI.AWARD.NAME,
+      spriteConfig: {
+        frameWidth: AssetKeys.UI.AWARD.frameWidth,
+        frameHeight: AssetKeys.UI.AWARD.frameHeight,
+      },
+    });
+    this.#awards.setAwardsCount(2);
   }
 
   update() {
