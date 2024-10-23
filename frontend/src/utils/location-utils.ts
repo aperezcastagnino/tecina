@@ -32,7 +32,6 @@ export const arePositionsNear = (
   position1: Coordinate,
   position2: Coordinate,
   threshold: number = TILE_SIZE / 2,
-) => (
-    Math.abs(position1.x - position2.x) < threshold &&
-    Math.abs(position1.y - position2.y) < threshold
-  );
+) =>
+  Math.abs(position1.x - position2.x) < threshold &&
+  Math.abs(position1.y - position2.y) < threshold;

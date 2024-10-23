@@ -4,9 +4,7 @@ import { DIRECTION, type Direction } from "../common/player-keys.js";
 
 type NPCConfig = Omit<
   CharacterConfig,
-  | "assetKey"
-  | "idleFrameConfig"
-  | "origin"
+  "assetKey" | "idleFrameConfig" | "origin"
 > & { frame: number; messages: string[] };
 
 export class NPC extends Character {
@@ -25,7 +23,7 @@ export class NPC extends Character {
         NONE: config.frame,
         LEFT: config.frame + 2,
         RIGHT: config.frame + 2,
-      }
+      },
     });
 
     this.#messages = config.messages;

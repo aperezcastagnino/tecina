@@ -132,7 +132,10 @@ export class Character extends Phaser.GameObjects.Sprite {
       return false;
     }
 
-    const updatedPosition = getNextPosition(this._targetPosition, this._direction);
+    const updatedPosition = getNextPosition(
+      this._targetPosition,
+      this._direction,
+    );
 
     return (
       this.#isPositionCollideWithCollisionLayer(updatedPosition) ||
@@ -147,7 +150,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     const updatedPosition = getNextPosition(
       this._targetPosition,
-      this._direction
+      this._direction,
     );
 
     this._previousTargetPosition = { ...this._targetPosition };
@@ -186,7 +189,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     const tile = this._collisionLayer.getTileAtWorldXY(
       position.x,
       position.y,
-      true
+      true,
     );
     return tile.index !== -1;
   }
@@ -199,7 +202,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     return this._otherCharactersToCheckForCollisionsWith.some(
       (character) =>
         arePositionsNear(position, character._targetPosition) ||
-        arePositionsNear(position, character._previousTargetPosition)
+        arePositionsNear(position, character._previousTargetPosition),
     );
   }
 }

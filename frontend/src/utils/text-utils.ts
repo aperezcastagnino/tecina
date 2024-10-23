@@ -5,7 +5,7 @@ export const animateText = (
   target: Phaser.GameObjects.Text,
   text: string,
   delay: number = 25,
-  callback?: () => void
+  callback?: () => void,
 ) => {
   let i = 0;
   scene.time.addEvent({

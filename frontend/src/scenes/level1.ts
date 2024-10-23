@@ -49,11 +49,11 @@ export class Level1 extends Scene {
     const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const collisionTiles = map.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET
+      AssetKeys.LEVELS.TILESET,
     );
     if (!collisionTiles) {
       console.error(
-        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`
+        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`,
       );
       return;
     }
@@ -64,7 +64,7 @@ export class Level1 extends Scene {
     const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
     if (!collisionLayer) {
       console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`
+        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
       );
       return;
     }
@@ -83,11 +83,6 @@ export class Level1 extends Scene {
 
     this.#controls = new Controls(this);
     this.#dialog = new Dialog({ scene: this });
-    this.#dialogWithOptions = new DialogWithOptions(this,
-      "esto es la pregunta",
-      ["How are you?", "Are you well?", "he", "ho"],
-      () => {},
-    );
 
     this.#dialog?.setMessages([
       "Hello",
@@ -95,10 +90,12 @@ export class Level1 extends Scene {
       "Are you well?",
       "Goodbye",
     ]);
-
-    this.#dialogWithOptions.show();
-
-    // this.#dialog.show();
+    this.#dialogWithOptions = new DialogWithOptions({
+      scene: this,
+      statement: "esto es la pregunta",
+      options: ["How are you?", "Are you well?", "he", "ho"],
+      callback: () => {},
+    });
 
     this.cameras.main.startFollow(this.#player.sprite);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
@@ -119,7 +116,10 @@ export class Level1 extends Scene {
 
   update() {
     const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE && !this.#dialogWithOptions?.isVisible) {
+    if (
+      selectedDirection !== DIRECTION.NONE &&
+      !this.#dialogWithOptions?.isVisible
+    ) {
       this.#player.moveCharacter(selectedDirection);
     }
 
@@ -135,7 +135,9 @@ export class Level1 extends Scene {
     this.#npcs.forEach((npc) => npc.update());
 
     if (this.#dialogWithOptions?.isVisible) {
-      this.#dialogWithOptions!.handlePlayerInput(this.#controls.getKeyPressed());
+      this.#dialogWithOptions!.handlePlayerInput(
+        this.#controls.getKeyPressed(),
+      );
     }
   }
 
@@ -149,7 +151,7 @@ export class Level1 extends Scene {
     npcLayers.forEach((layerName) => {
       const layer = map.getObjectLayer(layerName);
       const npcObject = layer?.objects.find(
-        (obj) => obj.type === CUSTOM_TILED_TYPES.NPC
+        (obj) => obj.type === CUSTOM_TILED_TYPES.NPC,
       );
       if (
         !npcObject ||
@@ -161,12 +163,12 @@ export class Level1 extends Scene {
 
       const npcFrame =
         npcObject.properties?.find(
-          (prop: any) => prop.name === TILED_NPC_PROPERTY.FRAME
+          (prop: any) => prop.name === TILED_NPC_PROPERTY.FRAME,
         )?.value || 0;
 
       const npcMessagesSTRING =
         npcObject.properties?.find(
-          (prop: any) => prop.name === TILED_NPC_PROPERTY.MESSAGES
+          (prop: any) => prop.name === TILED_NPC_PROPERTY.MESSAGES,
         )?.value || "";
       const npcMessages = npcMessagesSTRING.split("::");
 
@@ -193,12 +195,11 @@ export class Level1 extends Scene {
       }
 
       const { x, y } = this.#player.sprite;
-      const targetPosition = getNextPosition(
-        { x, y },
-        this.#player.direction
-      );
+      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
 
-      const nearbyNpc = this.#npcs.find((npc) => arePositionsNear(npc.sprite, targetPosition));
+      const nearbyNpc = this.#npcs.find((npc) =>
+        arePositionsNear(npc.sprite, targetPosition),
+      );
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;

@@ -3,6 +3,7 @@ import { PRIMARY_FONT_FAMILY, FontSize } from "../assets/fonts";
 import { animateText } from "../utils/text-utils";
 import { DialogColors } from "../assets/colors";
 import { AssetKeys } from "../assets/asset-keys";
+import type { UIDialogInterface } from "./interfaces/ui-dialog-interface";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -14,39 +15,39 @@ export type DialogConfig = {
   backgroundColor?: number;
 };
 
-export class Dialog {
-  _scene: Phaser.Scene;
+export class Dialog implements UIDialogInterface {
+  #scene: Phaser.Scene;
 
-  _height: number;
+  #height: number;
 
-  _width: number;
+  #width: number;
 
-  _padding: number;
+  #padding: number;
 
-  _container!: Phaser.GameObjects.Container;
+  #container!: Phaser.GameObjects.Container;
 
-  _userInputCursor!: Phaser.GameObjects.Image;
+  #userInputCursor!: Phaser.GameObjects.Image;
 
-  _userInputCursorTween!: Phaser.Tweens.Tween;
+  #userInputCursorTween!: Phaser.Tweens.Tween;
 
-  _uiText!: Phaser.GameObjects.Text;
+  #uiText!: Phaser.GameObjects.Text;
 
-  _messagesToShow: string[];
+  #messagesToShow: string[];
 
-  _backupMessages: string[];
+  #backupMessages: string[];
 
   isVisible: boolean;
 
   textAnimationPlaying: boolean;
 
   constructor(config: DialogConfig) {
-    this._scene = config.scene;
-    this._padding = config.padding || 60;
-    this._height = config.height || 200;
-    this._width =
-      config.width || this._scene.cameras.main.width - this._padding * 2;
-    this._messagesToShow = [];
-    this._backupMessages = [];
+    this.#scene = config.scene;
+    this.#height = config.height || 200;
+    this.#padding = config.padding || 60;
+    this.#width =
+      config.width || this.#scene.cameras.main.width - this.#padding * 2;
+    this.#messagesToShow = [];
+    this.#backupMessages = [];
     this.isVisible = false;
     this.textAnimationPlaying = false;
 
@@ -55,83 +56,83 @@ export class Dialog {
   }
 
   _createUI() {
-    const panel = this._scene.add
-      .rectangle(0, 0, this._width, this._height, 0xffffff, 0.9)
+    const panel = this.#scene.add
+      .rectangle(0, 0, this.#width, this.#height, 0xffffff, 0.9)
       .setOrigin(0)
       .setStrokeStyle(8, DialogColors.border, 1);
-    this._uiText = this._scene.add.text(18, 12, "", {
+    this.#uiText = this.#scene.add.text(18, 12, "", {
       ...{
         fontFamily: PRIMARY_FONT_FAMILY,
         color: "black",
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 0 },
       },
-      ...{ wordWrap: { width: this._width - 18 } },
+      ...{ wordWrap: { width: this.#width - 18 } },
     });
 
-    this._container = this._scene.add.container(0, 0, [panel]);
-    this._container.add(this._uiText);
+    this.#container = this.#scene.add.container(0, 0, [panel]);
+    this.#container.add(this.#uiText);
 
-    const startX = this._padding;
+    const startX = this.#padding;
     const startY =
-      this._scene.cameras.main.height - this._height - this._padding / 4;
-    this._container.setPosition(startX, startY);
+      this.#scene.cameras.main.height - this.#height - this.#padding / 4;
+    this.#container.setPosition(startX, startY);
     this.#createPlayerInputCursor();
   }
 
   get moreMessagesToShow(): boolean {
-    return this._messagesToShow.length > 0;
+    return this.#messagesToShow.length > 0;
   }
 
   setMessages(messages: string[]): void {
-    this._backupMessages = [...messages];
-  }
-
-  hide(): void {
-    this._userInputCursorTween.pause();
-    this._container.setAlpha(0);
-    this.isVisible = false;
+    this.#backupMessages = [...messages];
   }
 
   show(): void {
-    this._container.setAlpha(1);
+    this.#container.setAlpha(1);
     this.isVisible = true;
-    this._messagesToShow = [...this._backupMessages];
+    this.#messagesToShow = [...this.#backupMessages];
     this.showNextMessage();
   }
 
+  hide(): void {
+    this.#userInputCursorTween.pause();
+    this.#container.setAlpha(0);
+    this.isVisible = false;
+  }
+
   showNextMessage(): void {
-    if (this.isVisible && this._messagesToShow.length === 0) {
+    if (this.isVisible && this.#messagesToShow.length === 0) {
       this.hide();
       return;
     }
 
-    if (this._messagesToShow.length === 0) {
+    if (this.#messagesToShow.length === 0) {
       return;
     }
 
-    this._uiText.setText("").setAlpha(1);
+    this.#uiText.setText("").setAlpha(1);
     animateText(
-      this._scene,
-      this._uiText,
-      this._messagesToShow.shift() || "",
+      this.#scene,
+      this.#uiText,
+      this.#messagesToShow.shift() || "",
       10,
       () => {
         this.textAnimationPlaying = false;
-      }
+      },
     );
     this.textAnimationPlaying = true;
   }
 
   #createPlayerInputCursor(): void {
-    const yPosition = this._height - 24;
-    this._userInputCursor = this._scene.add.image(
-      this._width - 20,
+    const yPosition = this.#height - 24;
+    this.#userInputCursor = this.#scene.add.image(
+      this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR
+      AssetKeys.UI.CURSOR,
     );
-    this._userInputCursor.setAngle(90).setScale(4.5, 2);
-    this._userInputCursorTween = this._scene.add.tween({
+    this.#userInputCursor.setAngle(90).setScale(4.5, 2);
+    this.#userInputCursorTween = this.#scene.add.tween({
       delay: 0,
       duration: 500,
       repeat: -1,
@@ -140,9 +141,9 @@ export class Dialog {
         start: yPosition,
         to: yPosition + 6,
       },
-      targets: this._userInputCursor,
+      targets: this.#userInputCursor,
     });
     // this._userInputCursorTween.pause();
-    this._container.add(this._userInputCursor);
+    this.#container.add(this.#userInputCursor);
   }
 }

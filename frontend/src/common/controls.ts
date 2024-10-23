@@ -1,4 +1,9 @@
-import { DIRECTION, SPECIAL_KEYS, type Direction, type PlayerKeys } from "./player-keys";
+import {
+  DIRECTION,
+  SPECIAL_KEYS,
+  type Direction,
+  type PlayerKeys,
+} from "./player-keys";
 
 export class Controls {
   #scene: Phaser.Scene;
@@ -77,7 +82,7 @@ export class Controls {
     return selectedDirection;
   }
 
-  getDirectionKeyPressedDown(): Direction  {
+  getDirectionKeyPressedDown(): Direction {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE;
     }

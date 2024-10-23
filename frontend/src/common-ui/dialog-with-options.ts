@@ -9,36 +9,36 @@ import {
   type Direction,
   type PlayerKeys,
 } from "../common/player-keys";
+import type { UIDialogInterface } from "./interfaces/ui-dialog-interface";
+import { type DialogConfig } from "./dialog";
 
 const MENU_CURSOR_POS = {
   x: 42,
   y: 38,
 };
 
-export const TEXT_STYLE = {
+export const DIALOG_TEXT_STYLE = {
   fontFamily: PRIMARY_FONT_FAMILY,
   color: Colors.White,
   fontSize: FontSize.EXTRA_LARGE,
 };
 
-export class DialogWithOptions {
-  #scene: Phaser.Scene;
+export type DialogWithOptionsConfig = {
+  statement: string;
+  options: string[];
+  callback: (index: number, option: string) => void;
+} & DialogConfig;
 
-  #padding: number;
+export class DialogWithOptions implements UIDialogInterface {
+  #scene: Phaser.Scene;
 
   #height: number;
 
-  #isVisible: boolean = false;
+  #width: number;
+
+  #padding: number;
 
   #cursor!: Phaser.GameObjects.Image;
-
-  #userInputCursorTween!: Phaser.Tweens.Tween;
-
-  #textAnimationPlaying: boolean;
-
-  #messagesToShow: string[];
-
-  #battleTextGameObjectLine1!: Phaser.GameObjects.Text;
 
   #container!: Phaser.GameObjects.Container;
 
@@ -68,56 +68,35 @@ export class DialogWithOptions {
 
   #statementTextLength: number;
 
-  constructor(
-    scene: Phaser.Scene,
-    statement: string,
-    options: string[],
-    callback: (index: number, option: string) => void
-  ) {
-    this.#scene = scene;
-    this.#padding = 60;
-    this.#height = 200;
-    this.#statement = statement;
-    this.#messagesToShow = [];
-    this.#options = options;
-    this.#textAnimationPlaying = false;
-    this.#statementTextLength = 500;
-    this.createUI();
+  isVisible: boolean;
+
+  textAnimationPlaying: boolean;
+
+  constructor(config: DialogWithOptionsConfig) {
+    this.#scene = config.scene;
+    this.#height = config.height || 200;
+    this.#padding = config.padding || 60;
+    this.#width =
+      config.width || this.#scene.cameras.main.width - this.#padding * 2;
+    this.#statement = config.statement;
+    this.#statementTextLength = 600;
+    this.#options = config.options;
     this.#selectedMenuOptionIndex = 0;
     this.#isUpperMenuOption = 0;
     this.#isRightMenuOption = 0;
-    this.#callback = callback;
+    this.#callback = config.callback;
+    this.isVisible = false;
+    this.textAnimationPlaying = false;
+
+    this._createUI();
   }
 
-  get isVisible() {
-    return this.#isVisible;
-  }
-
-  get isAnimationPlaying() {
-    return this.#textAnimationPlaying;
-  }
-
-  get moreMessagesToShow() {
-    return this.#messagesToShow.length > 0;
-  }
-
-  hide() {
-    this.#container.setAlpha(0);
-    this.#isVisible = false;
-  }
-
-  show() {
-    this.#container.setAlpha(1);
-    this.#execAnimation();
-    this.#isVisible = true;
-  }
-
-  createUI() {
+  _createUI() {
     const containerStartX = this.#padding;
     const containerStartY =
       this.#scene.cameras.main.height - this.#height - this.#padding / 4;
     const optionTextLength = 400;
-    this.#textAnimationPlaying = true;
+    this.textAnimationPlaying = true;
 
     const containerBackground = this.#scene.add
       .rectangle(
@@ -126,42 +105,47 @@ export class DialogWithOptions {
         this.#scene.cameras.main.width - this.#padding * 2,
         this.#height,
         DialogColors.main,
-        1
+        1,
       )
       .setOrigin(0)
       .setStrokeStyle(8, DialogColors.border, 1);
 
-    this.#statementUI = this.#scene.add.text(this.#padding, 55, "", TEXT_STYLE);
+    this.#statementUI = this.#scene.add.text(
+      this.#padding,
+      55,
+      "",
+      DIALOG_TEXT_STYLE,
+    );
 
     this.#firstOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       22,
       "",
-      TEXT_STYLE
+      DIALOG_TEXT_STYLE,
     );
     this.#secondOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       22,
       "",
-      TEXT_STYLE
+      DIALOG_TEXT_STYLE,
     );
     this.#thirdOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      TEXT_STYLE
+      DIALOG_TEXT_STYLE,
     );
     this.#thirdOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      TEXT_STYLE
+      DIALOG_TEXT_STYLE,
     );
     this.#fourthOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       80,
       "",
-      TEXT_STYLE
+      DIALOG_TEXT_STYLE,
     );
 
     this.#cursor = this.#scene.add
@@ -169,7 +153,7 @@ export class DialogWithOptions {
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
         AssetKeys.UI.CURSOR,
-        0
+        0,
       )
       .setOrigin(0.5)
       .setScale(2.5);
@@ -187,14 +171,29 @@ export class DialogWithOptions {
       .setAlpha(0);
   }
 
+  show(): void {
+    this.#container.setAlpha(1);
+    this.isVisible = true;
+    this.#execAnimation();
+  }
+
+  hide(): void {
+    this.#container.setAlpha(0);
+    this.isVisible = false;
+  }
+
   playInputCursorAnimation() {
-    this.#cursor.setPosition(
-      this.#battleTextGameObjectLine1.displayWidth +
-        this.#cursor.displayWidth * 2.7,
-      this.#cursor.y
-    );
+    this.#cursor.setPosition(this.#cursor.displayWidth * 2.7, this.#cursor.y);
     this.#cursor.setAlpha(1);
-    this.#userInputCursorTween.restart();
+  }
+
+  handlePlayerInput(keyPressed: PlayerKeys) {
+    if (keyPressed === PLAYER_KEYS.NONE) return;
+    if (keyPressed === PLAYER_KEYS.SPACE) {
+      this.#handleSelectedOption();
+    } else {
+      this.#moveMenuCursor(keyPressed);
+    }
   }
 
   #execAnimation() {
@@ -206,7 +205,7 @@ export class DialogWithOptions {
     const delay = 10;
 
     animateText(this.#scene, this.#statementUI, this.#statement, delay, () => {
-      this.#textAnimationPlaying = false;
+      this.textAnimationPlaying = false;
     });
 
     animateText(
@@ -215,8 +214,8 @@ export class DialogWithOptions {
       this.#options[0] || "",
       delay,
       () => {
-        this.#textAnimationPlaying = false;
-      }
+        this.textAnimationPlaying = false;
+      },
     );
     animateText(
       this.#scene,
@@ -224,8 +223,8 @@ export class DialogWithOptions {
       this.#options[1] || "",
       delay,
       () => {
-        this.#textAnimationPlaying = false;
-      }
+        this.textAnimationPlaying = false;
+      },
     );
     animateText(
       this.#scene,
@@ -233,8 +232,8 @@ export class DialogWithOptions {
       this.#options[2] || "",
       delay,
       () => {
-        this.#textAnimationPlaying = false;
-      }
+        this.textAnimationPlaying = false;
+      },
     );
     animateText(
       this.#scene,
@@ -242,18 +241,9 @@ export class DialogWithOptions {
       this.#options[3] || "",
       delay,
       () => {
-        this.#textAnimationPlaying = false;
-      }
+        this.textAnimationPlaying = false;
+      },
     );
-  }
-
-  handlePlayerInput(keyPressed: PlayerKeys) {
-    if (keyPressed === PLAYER_KEYS.NONE) return;
-    if (keyPressed === PLAYER_KEYS.SPACE) {
-      this.#handleSelectedOption();
-    } else {
-      this.#moveMenuCursor(keyPressed);
-    }
   }
 
   #moveMenuCursor(direction: Direction) {
@@ -281,8 +271,8 @@ export class DialogWithOptions {
     this.#selectedMenuOption =
       this.#isUpperMenuOption * 2 + this.#isRightMenuOption * 2;
 
-    const x = 70 + this.#statementTextLength + 400 * this.#isRightMenuOption;
-    const y = 35 + this.#isUpperMenuOption * 60;
+    const x = 40 + this.#statementTextLength + 400 * this.#isRightMenuOption;
+    const y = 40 + this.#isUpperMenuOption * 60;
     this.#cursor.setPosition(x, y);
   }
 

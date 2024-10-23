@@ -31,8 +31,8 @@
       "config/*": ["config/*"],
       "scene/*": ["scene/*"],
       "types/*": ["types/*"],
-      "utils/*": ["utils/*"],
-    },
+      "utils/*": ["utils/*"]
+    }
   },
   "include": ["src"]
 }
