@@ -1,29 +1,48 @@
 import { Scene } from "phaser";
+import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
+import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
-import { DIRECTION } from "../common/direction";
+import { NPC } from "../characters/npc";
+import { DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
-import { Controls } from "../utils/controls";
-import { DialogUi } from "../common/dialog-ui";
+import { Controls } from "../common/controls";
+import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
+import { DialogWithOptions } from "../common-ui/dialog-with-options";
+
+const CUSTOM_TILED_TYPES = {
+  NPC: "npc",
+  NPC_PATH: "npc_path",
+};
+
+const TILED_NPC_PROPERTY = {
+  IS_SPAWN_POINT: "is_spawn_point",
+  MOVEMENT_PATTERN: "movement_pattern",
+  MESSAGES: "messages",
+  FRAME: "frame",
+};
 
 export class Level1 extends Scene {
   #player!: Player;
 
   #controls!: Controls;
 
-  #dialogUi: DialogUi | undefined;
+  #dialog: Dialog | undefined;
+
+  #dialogWithOptions: DialogWithOptions | undefined;
 
   #awards!: Awards;
 
+  #npcs: NPC[];
+
   constructor() {
     super(SceneKeys.LEVEL_1);
+    this.#npcs = [];
   }
 
   create() {
-    console.log(`[${Level1.name}:created] INVOKED`);
-
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -38,7 +57,6 @@ export class Level1 extends Scene {
       );
       return;
     }
-
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const groundLayer = map.createLayer(0, collisionTiles!);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -50,35 +68,36 @@ export class Level1 extends Scene {
       );
       return;
     }
-
-    collisionLayer.setAlpha(0).setDepth(2);
+    collisionLayer.setAlpha(DEBUG_MODE_ACTIVE ? 0.7 : 0).setDepth(2);
 
     this.#player = new Player({
       scene: this,
       direction: DIRECTION.DOWN,
       position: {
-        x: 4 * TILE_SIZE,
-        y: 4 * TILE_SIZE,
+        x: 2 * TILE_SIZE,
+        y: 2 * TILE_SIZE,
       },
       collisionLayer,
-      spriteGridMovementFinishedCallback: () => {
-        console.log(
-          `[${Level1.name}:create] sprite grid movement finished callback invoked`,
-        );
-      },
     });
-    this.cameras.main.startFollow(this.#player.sprite);
+    this.#createNPCs(map);
 
     this.#controls = new Controls(this);
+    this.#dialog = new Dialog({ scene: this });
 
-    this.#dialogUi = new DialogUi(this);
-    this.#dialogUi.showDialogModal([
-      "Primer mensaje",
-      "segundo mensaje",
-      "tercer mensaje",
-      "cuarto mensaje",
+    this.#dialog?.setMessages([
+      "Hello",
+      "How are you?",
+      "Are you well?",
+      "Goodbye",
     ]);
+    this.#dialogWithOptions = new DialogWithOptions({
+      scene: this,
+      statement: "esto es la pregunta",
+      options: ["How are you?", "Are you well?", "he", "ho"],
+      callback: () => {},
+    });
 
+    this.cameras.main.startFollow(this.#player.sprite);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.#awards = new Awards({
       scene: this,
@@ -96,12 +115,96 @@ export class Level1 extends Scene {
   }
 
   update() {
-    // const selectedDirection = this.#controls.getDirectionKeyJustPressed();
     const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (selectedDirection !== DIRECTION.NONE) {
+    if (
+      selectedDirection !== DIRECTION.NONE &&
+      !this.#dialogWithOptions?.isVisible
+    ) {
       this.#player.moveCharacter(selectedDirection);
     }
 
+    if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
+      this.#handlePlayerInteraction();
+    }
+
+    if (this.#controls.wasShiftPressed()) {
+      this.#dialogWithOptions!.show();
+    }
+
     this.#player.update();
+    this.#npcs.forEach((npc) => npc.update());
+
+    if (this.#dialogWithOptions?.isVisible) {
+      this.#dialogWithOptions!.handlePlayerInput(
+        this.#controls.getKeyPressed(),
+      );
+    }
+  }
+
+  #createNPCs(map: Phaser.Tilemaps.Tilemap) {
+    this.#npcs = [];
+
+    const npcLayers = map
+      .getObjectLayerNames()
+      .filter((layerName) => layerName.includes("NPC"));
+
+    npcLayers.forEach((layerName) => {
+      const layer = map.getObjectLayer(layerName);
+      const npcObject = layer?.objects.find(
+        (obj) => obj.type === CUSTOM_TILED_TYPES.NPC,
+      );
+      if (
+        !npcObject ||
+        npcObject.x === undefined ||
+        npcObject.y === undefined
+      ) {
+        return;
+      }
+
+      const npcFrame =
+        npcObject.properties?.find(
+          (prop: any) => prop.name === TILED_NPC_PROPERTY.FRAME,
+        )?.value || 0;
+
+      const npcMessagesSTRING =
+        npcObject.properties?.find(
+          (prop: any) => prop.name === TILED_NPC_PROPERTY.MESSAGES,
+        )?.value || "";
+      const npcMessages = npcMessagesSTRING.split("::");
+
+      const npc = new NPC({
+        scene: this,
+        position: { x: 6 * TILE_SIZE, y: 3 * TILE_SIZE },
+        direction: DIRECTION.DOWN,
+        frame: parseInt(npcFrame, 10),
+        messages: npcMessages,
+        otherCharactersToCheckForCollisionsWith: [this.#player],
+      });
+
+      this.#npcs.push(npc);
+    });
+
+    this.#player.setCaractersToCollideWith(this.#npcs);
+  }
+
+  #handlePlayerInteraction() {
+    if (this.#dialog) {
+      if (this.#dialog.isVisible) {
+        this.#dialog.showNextMessage();
+        return;
+      }
+
+      const { x, y } = this.#player.sprite;
+      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
+
+      const nearbyNpc = this.#npcs.find((npc) =>
+        arePositionsNear(npc.sprite, targetPosition),
+      );
+      if (nearbyNpc) {
+        nearbyNpc.facePlayer(this.#player.direction);
+        nearbyNpc.isTalkingToPlayer = true;
+        this.#dialog.show();
+      }
+    }
   }
 }

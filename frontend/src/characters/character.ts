@@ -1,6 +1,7 @@
-import { DIRECTION, type Direction } from "../common/direction";
+/* eslint-disable no-underscore-dangle */
+import { DIRECTION, type Direction } from "../common/player-keys";
 import type { Coordinate } from "../types/coordinate";
-import { getTargetPositionFromPositionAndDirection } from "../utils/grid";
+import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 
 type CharacterIdleFrameConfig = {
   LEFT: number;
@@ -15,10 +16,11 @@ export type CharacterConfig = {
   origin: Coordinate;
   assetKey: string | Phaser.Textures.Texture;
   direction: Direction;
-  collisionLayer: Phaser.Tilemaps.TilemapLayer;
   position: Coordinate;
   idleFrameConfig: CharacterIdleFrameConfig;
-  spriteGridMovementFinishedCallback: () => void;
+  spriteGridMovementFinishedCallback?: () => void;
+  collisionLayer?: Phaser.Tilemaps.TilemapLayer;
+  otherCharactersToCheckForCollisionsWith?: Character[];
 };
 
 export class Character extends Phaser.GameObjects.Sprite {
@@ -28,17 +30,17 @@ export class Character extends Phaser.GameObjects.Sprite {
 
   _isMoving: boolean;
 
-  _collisionLayer: Phaser.Tilemaps.TilemapLayer;
-
   _targetPosition: Coordinate;
 
   _previousTargetPosition: Coordinate;
 
-  _spriteGridMovementFinishedCallback: () => void;
+  _spriteGridMovementFinishedCallback?: () => void;
 
   _idleFrameConfig: CharacterIdleFrameConfig;
 
-  _origin: Coordinate;
+  _collisionLayer?: Phaser.Tilemaps.TilemapLayer;
+
+  _otherCharactersToCheckForCollisionsWith: Character[] = [];
 
   constructor(config: CharacterConfig) {
     super(config.scene, config.position.x, config.position.y, config.assetKey);
@@ -50,14 +52,14 @@ export class Character extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
 
     this._idleFrameConfig = config.idleFrameConfig;
-    this._origin = config.origin ? { ...config.origin } : { x: 0, y: 0 };
 
-    this._targetPosition = { ...config.position };
-    this._previousTargetPosition = { ...config.position };
+    this._targetPosition = config.position;
+    this._previousTargetPosition = config.position;
     this._spriteGridMovementFinishedCallback =
       config.spriteGridMovementFinishedCallback;
+    this._otherCharactersToCheckForCollisionsWith =
+      config.otherCharactersToCheckForCollisionsWith || [];
 
-    this.setOrigin(this._origin.x, this._origin.y);
     this.setFrame(this._getIdleFrame());
   }
 
@@ -79,6 +81,10 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     this._moveSprite(direction);
+  }
+
+  addCharacterToCheckForCollisionsWith(character: Character) {
+    this._otherCharactersToCheckForCollisionsWith.push(character);
   }
 
   update() {
@@ -105,20 +111,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
   }
 
-  _isBlockingTile() {
-    if (this._direction === DIRECTION.NONE) {
-      return false;
-    }
-
-    const targetPosition = { ...this._targetPosition };
-    const updatedPosition = getTargetPositionFromPositionAndDirection(
-      targetPosition,
-      this._direction,
-    );
-
-    return this.#doesPositionCollideWithCollisionLayer(updatedPosition);
-  }
-
   _getIdleFrame() {
     return this._idleFrameConfig[
       this._direction as keyof CharacterIdleFrameConfig
@@ -135,12 +127,28 @@ export class Character extends Phaser.GameObjects.Sprite {
     this.#handleSpriteMovement();
   }
 
+  _isBlockingTile() {
+    if (this._direction === DIRECTION.NONE) {
+      return false;
+    }
+
+    const updatedPosition = getNextPosition(
+      this._targetPosition,
+      this._direction,
+    );
+
+    return (
+      this.#isPositionCollideWithCollisionLayer(updatedPosition) ||
+      this.#isPositionCollideWithOtherCharacter(updatedPosition)
+    );
+  }
+
   #handleSpriteMovement() {
     if (this._direction === DIRECTION.NONE) {
       return;
     }
 
-    const updatedPosition = getTargetPositionFromPositionAndDirection(
+    const updatedPosition = getNextPosition(
       this._targetPosition,
       this._direction,
     );
@@ -173,14 +181,28 @@ export class Character extends Phaser.GameObjects.Sprite {
     });
   }
 
-  #doesPositionCollideWithCollisionLayer(position: Coordinate) {
+  #isPositionCollideWithCollisionLayer(position: Coordinate) {
     if (!this._collisionLayer) {
       return false;
     }
 
-    const { x, y } = position;
-    const tile = this._collisionLayer.getTileAtWorldXY(x, y, true);
-
+    const tile = this._collisionLayer.getTileAtWorldXY(
+      position.x,
+      position.y,
+      true,
+    );
     return tile.index !== -1;
+  }
+
+  #isPositionCollideWithOtherCharacter(position: Coordinate) {
+    if (this._otherCharactersToCheckForCollisionsWith.length === 0) {
+      return false;
+    }
+
+    return this._otherCharactersToCheckForCollisionsWith.some(
+      (character) =>
+        arePositionsNear(position, character._targetPosition) ||
+        arePositionsNear(position, character._previousTargetPosition),
+    );
   }
 }

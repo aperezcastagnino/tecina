@@ -1,4 +1,9 @@
-import { DIRECTION } from "../common/direction";
+import {
+  DIRECTION,
+  SPECIAL_KEYS,
+  type Direction,
+  type PlayerKeys,
+} from "./player-keys";
 
 export class Controls {
   #scene: Phaser.Scene;
@@ -21,21 +26,44 @@ export class Controls {
     this.#lockPlayerInput = val;
   }
 
-  wasSpaceKeyPressed() {
+  wasSpaceKeyPressed(): boolean {
     if (this.#cursorKeys === undefined) {
       return false;
     }
     return Phaser.Input.Keyboard.JustDown(this.#cursorKeys.space);
   }
 
-  wasShiftPressed() {
+  wasShiftPressed(): boolean {
     if (this.#cursorKeys === undefined) {
       return false;
     }
     return Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift);
   }
 
-  getDirectionKeyJustPressed() {
+  getKeyPressed(): PlayerKeys {
+    let keyPressed = DIRECTION.NONE;
+    if (this.#cursorKeys === undefined) {
+      return keyPressed;
+    }
+
+    if (this.#cursorKeys.left.isDown) {
+      keyPressed = DIRECTION.LEFT;
+    } else if (this.#cursorKeys.right.isDown) {
+      keyPressed = DIRECTION.RIGHT;
+    } else if (this.#cursorKeys.up.isDown) {
+      keyPressed = DIRECTION.UP;
+    } else if (this.#cursorKeys.down.isDown) {
+      keyPressed = DIRECTION.DOWN;
+    } else if (this.#cursorKeys.space.isDown) {
+      keyPressed = SPECIAL_KEYS.SPACE;
+    } else if (this.#cursorKeys.shift.isDown) {
+      keyPressed = SPECIAL_KEYS.SHIFT;
+    }
+
+    return keyPressed;
+  }
+
+  getDirectionKeyJustPressed(): Direction {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE;
     }
@@ -54,7 +82,7 @@ export class Controls {
     return selectedDirection;
   }
 
-  getDirectionKeyPressedDown() {
+  getDirectionKeyPressedDown(): Direction {
     if (this.#cursorKeys === undefined) {
       return DIRECTION.NONE;
     }
