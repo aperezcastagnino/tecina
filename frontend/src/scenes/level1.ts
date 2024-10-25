@@ -47,7 +47,6 @@ export class Level1 extends Scene {
   }
 
   create() {
-
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 

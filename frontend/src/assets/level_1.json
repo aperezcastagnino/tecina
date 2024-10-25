@@ -16,24 +16,15 @@
     {
       "id": "d-1",
       "description": "primer dialogo",
-      "statements": [
-        "esto es un ejemplo de un dialogo"
-      ]
+      "statements": ["esto es un ejemplo de un dialogo"]
     }
   ],
   "dialogWithOptions": [
     {
       "id": "dwo-1",
       "description": "primer dialogo",
-      "statements": [
-        "esto debe ser una pregunta?"
-      ],
-      "options": [
-        "opcion 1",
-        "opcion 2",
-        "opcion 3",
-        "opcion 4"
-      ],
+      "statements": ["esto debe ser una pregunta?"],
+      "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
       "correctOption": "opcion 1"
     }
   ]
