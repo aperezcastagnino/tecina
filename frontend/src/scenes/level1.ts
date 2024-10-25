@@ -12,7 +12,7 @@ import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
 import { DialogWithOptions } from "../common-ui/dialog-with-options";
-import dialogData from "../assets/level_1.json";
+import dialogData from "../assets/levels/level_1.json";
 
 const CUSTOM_TILED_TYPES = {
   NPC: "npc",
