@@ -13,37 +13,21 @@ export class Level1 extends Scene {
   private tileset!: Phaser.Tilemaps.Tileset|null;
   private collisionLayer!: Phaser.Tilemaps.TilemapLayer|null;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable para almacenar las teclas
+  private waitingSpaceKeyboard!:boolean;
+  private objectsToDispose!: Phaser.GameObjects.Sprite[]; // Cambiamos a un array
+  private spriteName!: string; // Cambiamos a un array
 
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
   preload(){
-
-  }
-
-  create() {
-    
-    this.tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
-
-    // Vincular el tileset con el nombre que se usó en Tiled
-    this.tileset = this.tilemap.addTilesetImage(AssetKeys.LEVELS.TILESET.TILESETIMAGE, AssetKeys.LEVELS.TILESET.KEY);
-
-    // Crear las capas del mapa
-    const fondoLayer = this.tilemap.createLayer('ground', this.tileset!, 0, 0);
-    this.collisionLayer = this.tilemap.createLayer('elements', this.tileset!, 0, 0);
-    
-    // Habilitar la colisión en la capa 'Colision'
-    this.collisionLayer!.setCollisionByProperty({ colisionable: true });
-    this.createPlayer()
-    this.physics.add.collider(this.player, this.collisionLayer!);
-    this.collisionLayer!.setCollisionByExclusion([-1]);
-    this.cursors = this.input.keyboard!.createCursorKeys(); // Carga las teclas del cursor (flechas)
-    this.player.body!.setMaxSpeed(100); // Velocidad máxima
-  }
-
-  createPlayer(){
-    this.player = this.physics.add.sprite(100, 100, AssetKeys.CHARACTERS.PLAYER);
+    this.anims.create({
+      key: 'KeyAnim',
+      frames: this.anims.generateFrameNumbers(AssetKeys.UI.HALLOWEEN_EYE_AWARD.NAME),
+      frameRate: 30,
+      repeat: -1,
+    });
     this.anims.create({
       key: 'walk-right',
       frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, { start: 3, end: 5 }), // Asume que los frames 0 a 3 son la animación
@@ -70,7 +54,52 @@ export class Level1 extends Scene {
     });
   }
 
+  create() {
+    this.waitingSpaceKeyboard = false;
+    this.tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
+
+    // Vincular el tileset con el nombre que se usó en Tiled
+    this.tileset = this.tilemap.addTilesetImage(AssetKeys.LEVELS.TILESET.TILESETIMAGE, AssetKeys.LEVELS.TILESET.KEY);
+
+    // Crear las capas del mapa
+    const fondoLayer = this.tilemap.createLayer('ground', this.tileset!, 0, 0);
+    this.collisionLayer = this.tilemap.createLayer('elements', this.tileset!, 0, 0);
+    
+    // Habilitar la colisión en la capa 'Colision'
+    this.collisionLayer!.setCollisionByProperty({ colisionable: true });
+    this.createPlayer()
+    this.physics.add.collider(this.player, this.collisionLayer!);
+    this.collisionLayer!.setCollisionByExclusion([-1]);
+    this.cursors = this.input.keyboard!.createCursorKeys(); // Carga las teclas del cursor (flechas)
+    var capaObjetos = this.tilemap.objects.find( f => f.name =='Capa de Objetos 1'); // Accede a la capa de objetos
+    this.objectsToDispose = [];
+    
+    var sprite = null;
+    capaObjetos!.objects.forEach((objeto, index)=>{
+      sprite = this.physics.add.sprite(objeto.x!, objeto.y!, AssetKeys.CHARACTERS.NPC);
+      sprite.setOrigin(0.5, 0.5);
+
+      sprite.name='Key-'+index
+      sprite.setImmovable(true)
+      sprite.anims.play('KeyAnim',true);
+      sprite.body.setSize(AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameWidth, AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameHeight);
+
+      this.objectsToDispose.push(sprite);
+      this.physics.add.collider(this.player, sprite, (a,b) =>{ 
+        if(this.cursors.space.isDown){
+          b.destroy();
+        }
+      })
+  });
+  }
+
+  createPlayer(){
+    this.player = this.physics.add.sprite(100, 100, AssetKeys.CHARACTERS.PLAYER);
+  }
+
+  
   update() {
+    // Verificamos si el jugador está tocando algún objeto a ocultar
     const velocity = 100;
     if(this.cursors.left.isDown){
       this.player.setVelocityX(-velocity);

@@ -6,7 +6,7 @@ import { MainMenu } from "./scenes/main-menu";
 import { Preloader } from "./scenes/preloader";
 
 const config: Types.Core.GameConfig = {
-  type: Phaser.CANVAS,
+  type: Phaser.WEBGL,
   pixelArt: false, // averiguar
   backgroundColor: "#000F00",
   physics: {

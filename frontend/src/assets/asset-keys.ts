@@ -23,5 +23,10 @@ export const AssetKeys = {
   },
   UI: {
     CURSOR: "cursor",
+    HALLOWEEN_EYE_AWARD: {
+      NAME: "HALLOWEEN_EYE_AWARD",
+      frameWidth: 150,
+      frameHeight: 150,
+    },
   },
 };

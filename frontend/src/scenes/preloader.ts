@@ -51,11 +51,22 @@ export class Preloader extends Scene {
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
-      AssetKeys.LEVELS.TILESET,
+      AssetKeys.LEVELS.TILESET.KEY,
       `/tilesets/tileset_sunnysideworld_16px.png`,
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
+
+    this.load.spritesheet(
+      AssetKeys.UI.HALLOWEEN_EYE_AWARD.NAME,
+      "/objects/anim_eye.png",
+      {
+        frameWidth: 150,
+        frameHeight: 150,
+        startFrame: 0,
+        endFrame: 15,
+      },
+    );
   }
 
   create() {
