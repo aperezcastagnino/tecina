@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import type { LevelData } from "types/text";
 import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
 import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
@@ -11,6 +12,7 @@ import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
 import { DialogWithOptions } from "../common-ui/dialog-with-options";
+import dialogData from "../assets/level_1.json";
 
 const CUSTOM_TILED_TYPES = {
   NPC: "npc",
@@ -37,12 +39,15 @@ export class Level1 extends Scene {
 
   #npcs: NPC[];
 
+  #levelData: LevelData = dialogData;
+
   constructor() {
     super(SceneKeys.LEVEL_1);
     this.#npcs = [];
   }
 
   create() {
+
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -84,16 +89,12 @@ export class Level1 extends Scene {
     this.#controls = new Controls(this);
     this.#dialog = new Dialog({ scene: this });
 
-    this.#dialog?.setMessages([
-      "Hello",
-      "How are you?",
-      "Are you well?",
-      "Goodbye",
-    ]);
+    this.#dialog?.setMessages(this.#levelData.npcs[0]!.statements);
     this.#dialogWithOptions = new DialogWithOptions({
       scene: this,
-      statement: "esto es la pregunta",
-      options: ["How are you?", "Are you well?", "he", "ho"],
+      statement: this.#levelData.dialogWithOptions[0]!.statements[0]!,
+      options: this.#levelData.dialogWithOptions[0]!.options,
+      correctOption: this.#levelData.dialogWithOptions[0]!.correctOption,
       callback: () => {},
     });
 

@@ -26,6 +26,7 @@ export const DIALOG_TEXT_STYLE = {
 export type DialogWithOptionsConfig = {
   statement: string;
   options: string[];
+  correctOption: string;
   callback: (index: number, option: string) => void;
 } & DialogConfig;
 
@@ -58,6 +59,8 @@ export class DialogWithOptions implements UIDialogInterface {
 
   #options: string[];
 
+  #correctOption: string;
+
   #selectedMenuOption: any;
 
   #isRightMenuOption: number;
@@ -81,6 +84,7 @@ export class DialogWithOptions implements UIDialogInterface {
     this.#statement = config.statement;
     this.#statementTextLength = 600;
     this.#options = config.options;
+    this.#correctOption = config.correctOption;
     this.#selectedMenuOptionIndex = 0;
     this.#isUpperMenuOption = 0;
     this.#isRightMenuOption = 0;

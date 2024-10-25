@@ -1,0 +1,40 @@
+{
+  "title": "Level 1",
+  "npcs": [
+    {
+      "id": "npc-1-1",
+      "description": "primer dialogo del primer npc",
+      "statements": [
+        "Hello, I am the first NPC",
+        "I am here to help you",
+        "I will give you a hint",
+        "You need to find the key to open the door"
+      ]
+    }
+  ],
+  "dialog": [
+    {
+      "id": "d-1",
+      "description": "primer dialogo",
+      "statements": [
+        "esto es un ejemplo de un dialogo"
+      ]
+    }
+  ],
+  "dialogWithOptions": [
+    {
+      "id": "dwo-1",
+      "description": "primer dialogo",
+      "statements": [
+        "esto debe ser una pregunta?"
+      ],
+      "options": [
+        "opcion 1",
+        "opcion 2",
+        "opcion 3",
+        "opcion 4"
+      ],
+      "correctOption": "opcion 1"
+    }
+  ]
+}
