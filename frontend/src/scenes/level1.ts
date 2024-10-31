@@ -12,7 +12,7 @@ import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
 import { Awards } from "../utils/awards";
 import { DialogWithOptions } from "../common-ui/dialog-with-options";
-import dialogData from "../assets/levels/level_1.json";
+import dialogData from "../assets/dialogs-data/level-1.json";
 
 const CUSTOM_TILED_TYPES = {
   NPC: "npc",
@@ -93,7 +93,6 @@ export class Level1 extends Scene {
       scene: this,
       statement: this.#levelData.dialogWithOptions[0]!.statements[0]!,
       options: this.#levelData.dialogWithOptions[0]!.options,
-      correctOption: this.#levelData.dialogWithOptions[0]!.correctOption,
       callback: () => {},
     });
 
