@@ -1,4 +1,4 @@
-import type { AwardConfig } from "common/comon-ui-config";
+import type { AwardConfig } from "common-ui/config";
 
 export class Awards {
   private _scene: Phaser.Scene;
