@@ -61,7 +61,7 @@ export class MapLogicalGenerator {
       this.#map[this.#row - 1]![j] = 1;
     }
 
-    // Second border
+    // Second border with random values
     for (let i = 1; i < this.#row - 1; i += 1) {
       this.#map[i]![1] = Math.floor(Math.random() * 2);
       this.#map[i]![this.#column - 2] = Math.floor(Math.random() * 2);
@@ -75,7 +75,7 @@ export class MapLogicalGenerator {
 
   fill_map() {
     const mapTiles = [0, 2, 3, 4, 5, 6, 8, 9];
-    const frequency = [1, 20, 0, 1, 0, 0, 0, 1];
+    const frequency = [1, 20, 0, 1, 0, 0, 0, 1]; // This is in order with mapTiles
 
     const cumulativeFrequency =
       MapLogicalGenerator.calculateCumulativeFrequency(frequency);
@@ -100,12 +100,12 @@ export class MapLogicalGenerator {
     const cumulativeFrequency = [];
     let total = 0;
 
-    frequency.reduce((acc, weight) => {
-      total = acc + weight;
+    frequency.reduce((acc, weight) => { // this is the same as the for loop
+      total = acc + weight; // total is the sum of all the weights
       cumulativeFrequency.push(total);
       return total;
     }, 0);
-    cumulativeFrequency.push(total);
+    cumulativeFrequency.push(total); // cumulativeFrequency is the sum of all the weights
     return cumulativeFrequency;
   }
 
