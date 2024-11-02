@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { MapGenerator } from "./map-generation";
+import { MapLogicalGenerator } from "./map-logical-generation";
 
-const mapGenerator = new MapGenerator(50, 50);
-const generatedMap = mapGenerator.run();
+const mapLogicalGenerator = new MapLogicalGenerator(50, 50);
+const generatedMap = mapLogicalGenerator.run();
 
 const colors: { [key: number]: number } = {
   1: 0x05aec8, // blue for 1
@@ -29,7 +29,7 @@ export function createBoard(
   const startY = scene.scale.height - rows * blockSize;
 
   for (let n = 0; n < rows; n += 1) {
-    for (let m = 0; m < columns; m+=1) {
+    for (let m = 0; m < columns; m += 1) {
       const hexa = map[n]?.[m] ?? 0;
       const color = colors[hexa] || 0xffffff;
 
@@ -47,13 +47,12 @@ export function createBoard(
   }
 }
 
-export class MyGameScene extends Phaser.Scene {
+export class MapLevel extends Phaser.Scene {
   constructor() {
     super({ key: "MyGameScene" });
   }
 
   preload() {
-    
     this.load.image("blue", "assets/tree.png"); // in progress
   }
 
@@ -66,7 +65,7 @@ const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 1500,
   height: 1500,
-  scene: MyGameScene,
+  scene: MapLevel,
 };
 
 function initializeGame() {
