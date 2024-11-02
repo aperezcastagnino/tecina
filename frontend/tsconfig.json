@@ -22,7 +22,17 @@
     "strict": true,
     "target": "es2015",
     "types": ["vite/client"],
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "assets/*": ["assets/*"],
+      "characters/*": ["characters/*"],
+      "common/*": ["common/*"],
+      "common-ui/*": ["common-ui/*"],
+      "config/*": ["config/*"],
+      "scene/*": ["scene/*"],
+      "types/*": ["types/*"],
+      "utils/*": ["utils/*"]
+    }
   },
   "include": ["src"]
 }

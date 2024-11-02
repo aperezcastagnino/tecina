@@ -566,6 +566,7 @@
       ],
       "height": 65,
       "id": 1,
+      "locked": true,
       "name": "ground",
       "opacity": 1,
       "type": "tilelayer",
@@ -933,6 +934,7 @@
       ],
       "height": 65,
       "id": 2,
+      "locked": true,
       "name": "elements",
       "opacity": 1,
       "type": "tilelayer",
@@ -1292,6 +1294,7 @@
       ],
       "height": 65,
       "id": 3,
+      "locked": true,
       "name": "collision",
       "opacity": 1,
       "type": "tilelayer",
@@ -1299,10 +1302,62 @@
       "width": 120,
       "x": 0,
       "y": 0
+    },
+    {
+      "id": 4,
+      "layers": [
+        {
+          "class": "npc",
+          "draworder": "topdown",
+          "id": 5,
+          "name": "NPC1",
+          "objects": [
+            {
+              "height": 59,
+              "id": 3,
+              "name": "npc",
+              "properties": [
+                {
+                  "name": "messages",
+                  "type": "string",
+                  "value": "hola jefe"
+                }
+              ],
+              "rotation": 0,
+              "type": "npc",
+              "visible": true,
+              "width": 123,
+              "x": 366068,
+              "y": 85468
+            }
+          ],
+          "opacity": 1,
+          "parallaxx": 320,
+          "parallaxy": 200,
+          "properties": [
+            {
+              "name": "messages",
+              "type": "string",
+              "value": "hola que hace"
+            }
+          ],
+          "tintcolor": "#aa0000",
+          "type": "objectgroup",
+          "visible": true,
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "name": "NPCs",
+      "opacity": 1,
+      "type": "group",
+      "visible": true,
+      "x": 0,
+      "y": 0
     }
   ],
-  "nextlayerid": 4,
-  "nextobjectid": 1,
+  "nextlayerid": 6,
+  "nextobjectid": 6,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.11.0",

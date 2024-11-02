@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { TextButton } from "../common/text-button";
+import { TextButton } from "../common-ui/text-button";
 
 export class MainMenu extends Scene {
   constructor() {
@@ -9,7 +9,6 @@ export class MainMenu extends Scene {
   }
 
   create() {
-    console.log(`[${MainMenu.name}:created] INVOKED`);
     this.add.image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU).setOrigin(0);
 
     const startGameButton = new TextButton(

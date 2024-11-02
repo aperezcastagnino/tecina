@@ -20,5 +20,12 @@ export const AssetKeys = {
   },
   UI: {
     CURSOR: "cursor",
+    AWARD: {
+      NAME: "AWARD",
+      frameWidth: 256,
+      frameHeight: 256,
+      startFrame: 0,
+      endFrame: 29,
+    },
   },
 };

@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
+import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "../config/debug-config";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { DebugConfig } from "../config/debug-config";
 import { getAnimations } from "../utils/data-utils";
 
 export class Preloader extends Scene {
@@ -9,22 +9,22 @@ export class Preloader extends Scene {
     super(SceneKeys.PRELOADER);
   }
 
-  // init() {
-  //   //  We loaded this image in our Boot Scene, so we can display it here
-  //   this.add.image(512, 384, "background");
+  init() {
+    //  We loaded this image in our Boot Scene, so we can display it here
+    this.add.image(512, 384, "background");
 
-  //   //  A simple progress bar. This is the outline of the bar.
-  //   this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+    //  A simple progress bar. This is the outline of the bar.
+    this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
 
-  //   //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-  //   const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+    //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
+    const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
 
-  //   //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
-  //   this.load.on("progress", (progress: number) => {
-  //     //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-  //     bar.width = 4 + 460 * progress;
-  //   });
-  // }
+    //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
+    this.load.on("progress", (progress: number) => {
+      //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
+      bar.width = 4 + 460 * progress;
+    });
+  }
 
   preload() {
     console.log(`[${Preloader.name}:preload] INVOKED`);
@@ -44,6 +44,14 @@ export class Preloader extends Scene {
         frameHeight: 88,
       },
     );
+    this.load.spritesheet(
+      AssetKeys.CHARACTERS.NPC,
+      `characters/characters.png`,
+      {
+        frameWidth: 16,
+        frameHeight: 16,
+      },
+    );
 
     // load json data
     this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
@@ -56,15 +64,19 @@ export class Preloader extends Scene {
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
+    this.load.spritesheet(AssetKeys.UI.AWARD.NAME, "/awards/star.png", {
+      frameWidth: AssetKeys.UI.AWARD.frameWidth,
+      frameHeight: AssetKeys.UI.AWARD.frameHeight,
+      startFrame: AssetKeys.UI.AWARD.startFrame,
+      endFrame: AssetKeys.UI.AWARD.endFrame,
+    });
   }
 
   create() {
     this.#createAnimations();
 
     this.scene.start(
-      DebugConfig.DEBUG_MODE_ACTIVE
-        ? DebugConfig.FIRST_SCENE_TO_PLAY
-        : SceneKeys.MAIN_MENU,
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
   }
 
