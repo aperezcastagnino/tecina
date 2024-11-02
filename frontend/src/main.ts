@@ -3,6 +3,7 @@ import { GAME_DIMENSIONS } from "./config/config";
 import { Boot } from "./scenes/boot";
 import { Level1 } from "./scenes/level1";
 import { MainMenu } from "./scenes/main-menu";
+import { MapLevel } from "./scenes/map-level";
 import { Preloader } from "./scenes/preloader";
 
 const config: Types.Core.GameConfig = {
@@ -16,7 +17,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, Level1],
+  scene: [Boot, Preloader, MainMenu, Level1, MapLevel],
 };
 
 export default new Game(config);

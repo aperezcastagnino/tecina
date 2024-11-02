@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { MapLogicalGenerator } from "./map-logical-generation";
+import { blockSize } from '../constants';
 
 const mapLogicalGenerator = new MapLogicalGenerator(50, 50);
 const generatedMap = mapLogicalGenerator.run();
@@ -22,8 +23,8 @@ export function createBoard(
   map: number[][],
   blockSize: number,
 ) {
-  const rows = map.length; 
-  const columns = map[0]?.length || 0; 
+  const rows = map.length;
+  const columns = map[0]?.length || 0;
 
   // Calculates the start position of the board
   const startX = scene.scale.width - columns * blockSize;
@@ -59,8 +60,9 @@ export class MapLevel extends Phaser.Scene {
     this.load.image("blue", "assets/tree.png"); // in progress
   }
 
-  create() { // the size of each block is defined here
-    createBoard(this, generatedMap, 30);
+  create() {
+    // the size of each block is defined here
+    createBoard(this, generatedMap, blockSize);
   }
 }
 

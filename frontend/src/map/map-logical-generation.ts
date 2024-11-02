@@ -1,3 +1,5 @@
+import { mapTiles, frequency } from "../constants";
+
 export class MapLogicalGenerator {
   #map: number[][] = [];
 
@@ -74,11 +76,7 @@ export class MapLogicalGenerator {
   }
 
   fill_map() {
-    const mapTiles = [0, 2, 3, 4, 5, 6, 8, 9];
-    const frequency = [1, 20, 0, 1, 0, 0, 0, 1]; // This is in order with mapTiles
-
-    const cumulativeFrequency =
-      MapLogicalGenerator.calculateCumulativeFrequency(frequency);
+    const cumulativeFrequency = this.calculateCumulativeFrequency(frequency);
 
     for (let i = 0; i < this.#row; i += 1) {
       for (let j = 0; j < this.#column; j += 1) {
@@ -86,7 +84,7 @@ export class MapLogicalGenerator {
           const randomValue =
             Math.random() *
             cumulativeFrequency[cumulativeFrequency.length - 1]!;
-          const selectedIndex = MapLogicalGenerator.getSelectedIndex(
+          const selectedIndex = this.getSelectedIndex(
             cumulativeFrequency,
             randomValue,
           );
@@ -96,11 +94,12 @@ export class MapLogicalGenerator {
     }
   }
 
-  private static calculateCumulativeFrequency(frequency: number[]) {
+  private calculateCumulativeFrequency(frequencies: number[]) {
     const cumulativeFrequency = [];
     let total = 0;
 
-    frequency.reduce((acc, weight) => { // this is the same as the for loop
+    frequencies.reduce((acc, weight) => {
+      // this is the same as the for loop
       total = acc + weight; // total is the sum of all the weights
       cumulativeFrequency.push(total);
       return total;
@@ -109,10 +108,7 @@ export class MapLogicalGenerator {
     return cumulativeFrequency;
   }
 
-  private static getSelectedIndex(
-    cumulativeFrequency: number[],
-    randomValue: number,
-  ) {
+  private getSelectedIndex(cumulativeFrequency: number[], randomValue: number) {
     return cumulativeFrequency.findIndex((weight) => randomValue < weight);
   }
 
@@ -125,6 +121,3 @@ export class MapLogicalGenerator {
     return this.#map;
   }
 }
-
-const mapLogicalGenerator = new MapLogicalGenerator(10, 10);
-export { mapLogicalGenerator };
