@@ -13,8 +13,7 @@ export type DialogDataCollection = {
   dialogsWithOptions: DialogWithOptionsData[];
 };
 
-
 export type LevelData = {
   title: string;
-  dialogs: DialogDataCollection
+  dialogs: DialogDataCollection;
 };

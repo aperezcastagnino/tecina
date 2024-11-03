@@ -50,7 +50,6 @@ export class Level1 extends Scene {
     this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
     console.log(this.#levelData);
 
-
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
