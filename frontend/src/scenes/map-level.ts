@@ -5,7 +5,6 @@ import { mapColors } from "../assets/colors";
 import { MapLogicalGenerator } from "../map/map-logical-generation";
 import { TILE_SIZE } from "../config/config";
 
-
 const mapLogicalGenerator = new MapLogicalGenerator(mapWidth, mapHeight);
 const map = mapLogicalGenerator.run();
 

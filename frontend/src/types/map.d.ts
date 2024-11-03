@@ -1,5 +1,4 @@
 export type MapType = {
-
   blockSize: number;
 
   mapTiles: number[][];
@@ -9,5 +8,4 @@ export type MapType = {
   mapWidth: number;
 
   mapHeight: number;
-
 };

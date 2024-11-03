@@ -1,7 +1,6 @@
 import type { MapType } from "types/map";
-import { mapTiles, frequency, mapWidth, mapHeight  } from "../assets/constants";
+import { mapTiles, frequency, mapWidth, mapHeight } from "../assets/constants";
 import { TILE_SIZE } from "../config/config";
-
 
 export class MapLogicalGenerator {
   #map: MapType = {
@@ -25,10 +24,12 @@ export class MapLogicalGenerator {
   create_empty_map() {
     this.#map = {
       blockSize: TILE_SIZE,
-      mapTiles: new Array(this.#row).fill([]).map(() => new Array(this.#column).fill(0)),
+      mapTiles: new Array(this.#row)
+        .fill([])
+        .map(() => new Array(this.#column).fill(0)),
       frequency: [],
       mapWidth,
-      mapHeight
+      mapHeight,
     };
     for (let i = 0; i < this.#row; i += 1) {
       this.#map.mapTiles[i] = new Array(this.#column).fill(0);
