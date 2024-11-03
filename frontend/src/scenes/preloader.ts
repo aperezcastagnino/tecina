@@ -57,7 +57,7 @@ export class Preloader extends Scene {
     this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
 
     // level 1
-    this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
+    this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_2, `/maps/level1.json`);
     this.load.image(
       AssetKeys.LEVELS.TILESET,
       `/tilesets/tileset_sunnysideworld_16px.png`,

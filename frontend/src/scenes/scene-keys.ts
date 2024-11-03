@@ -3,6 +3,7 @@ export const SceneKeys = {
   PRELOADER: "PRELOADER",
   MAIN_MENU: "MAIN_MENU",
   LEVEL_1: "LEVEL_1",
+  LEVEL_2: "LEVEL_2",
   MAIN_GAME: "MAIN_GAME",
   GAME_OVER: "GAME_OVER",
   MAP_LEVEL: "MAP_LEVEL",

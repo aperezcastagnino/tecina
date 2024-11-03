@@ -4,6 +4,7 @@ export const AssetKeys = {
   },
   MAPS: {
     LEVEL_1: "level1",
+    LEVEL_2: "level2"
   },
   LEVELS: {
     TILESET: "tileset",
