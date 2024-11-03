@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
-import type { LevelData } from "types/text";
+import type { LevelData } from "types/level-data";
+import { loadLevelData } from "../utils/data-util";
 import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
 import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
@@ -10,9 +11,8 @@ import { DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
-import { Awards } from "../utils/awards";
+import { Awards } from "../common-ui/awards";
 import { DialogWithOptions } from "../common-ui/dialog-with-options";
-import dialogData from "../assets/dialogs-data/level-1.json";
 
 const CUSTOM_TILED_TYPES = {
   NPC: "npc",
@@ -39,7 +39,7 @@ export class Level1 extends Scene {
 
   #npcs: NPC[];
 
-  #levelData: LevelData = dialogData;
+  #levelData: LevelData | undefined;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -47,6 +47,10 @@ export class Level1 extends Scene {
   }
 
   create() {
+    this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
+    console.log(this.#levelData);
+
+
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -86,13 +90,14 @@ export class Level1 extends Scene {
     this.#createNPCs(map);
 
     this.#controls = new Controls(this);
-    this.#dialog = new Dialog({ scene: this });
+    this.#dialog = new Dialog({ scene: this, data: this.#levelData.dialogs });
 
-    this.#dialog?.setMessages(this.#levelData.npcs[0]!.statements);
+    this.#dialog?.setMessages(this.#levelData.dialogs.npcs[0]![0]!.statements);
     this.#dialogWithOptions = new DialogWithOptions({
       scene: this,
-      statement: this.#levelData.dialogWithOptions[0]!.statements[0]!,
-      options: this.#levelData.dialogWithOptions[0]!.options,
+      data: this.#levelData.dialogs,
+      statement: this.#levelData.dialogs.dialogsWithOptions[0]!.statements[0]!,
+      options: this.#levelData.dialogs.dialogsWithOptions[0]!.options,
       callback: () => {},
     });
 

@@ -1,7 +1,7 @@
 {
   "title": "Level 1",
   "npcs": [
-    {
+    [    {
       "id": "npc-1-1",
       "description": "primer dialogo del primer npc",
       "statements": [
@@ -10,7 +10,18 @@
         "I will give you a hint",
         "You need to find the key to open the door"
       ]
-    }
+    },
+    {
+      "id": "npc-1-2",
+      "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
+      "statements": [
+        "Hello! It's me again",
+        "I hope you find the key soon",
+        "Good luck!"
+      ]
+    }]
+
+
   ],
   "dialog": [
     {

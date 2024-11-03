@@ -1,12 +1,14 @@
 import Phaser from "phaser";
+import type { DialogDataCollection } from "../types/level-data";
+import { animateText } from "../utils/animation-utils";
 import { PRIMARY_FONT_FAMILY, FontSize } from "../assets/fonts";
-import { animateText } from "../utils/text-utils";
 import { DialogColors } from "../assets/colors";
 import { AssetKeys } from "../assets/asset-keys";
 import type { UIDialogInterface } from "./interfaces/ui-dialog-interface";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
+  data: DialogDataCollection;
   height?: number;
   width?: number;
   padding?: number;
@@ -17,6 +19,8 @@ export type DialogConfig = {
 
 export class Dialog implements UIDialogInterface {
   #scene: Phaser.Scene;
+
+  #data: DialogDataCollection;
 
   #height: number;
 
@@ -42,6 +46,7 @@ export class Dialog implements UIDialogInterface {
 
   constructor(config: DialogConfig) {
     this.#scene = config.scene;
+    this.#data = config.data;
     this.#height = config.height || 200;
     this.#padding = config.padding || 60;
     this.#width =
