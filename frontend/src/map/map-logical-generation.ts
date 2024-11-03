@@ -1,4 +1,4 @@
-import { mapTiles, frequency } from "../constants";
+import { mapTiles, frequency } from "../assets/constants";
 
 export class MapLogicalGenerator {
   #map: number[][] = [];
@@ -75,6 +75,24 @@ export class MapLogicalGenerator {
     }
   }
 
+  calculateCumulativeFrequency(frequencies: number[]) {
+    const cumulativeFrequency = [];
+    let total = 0;
+
+    frequencies.reduce((acc, weight) => {
+      // this is the same as the for loop
+      total = acc + weight; // total is the sum of all the weights
+      cumulativeFrequency.push(total);
+      return total;
+    }, 0);
+    cumulativeFrequency.push(total); // cumulativeFrequency is the sum of all the weights
+    return cumulativeFrequency;
+  }
+
+  getSelectedIndex(cumulativeFrequency: number[], randomValue: number) {
+    return cumulativeFrequency.findIndex((weight) => randomValue < weight);
+  }
+
   fill_map() {
     const cumulativeFrequency = this.calculateCumulativeFrequency(frequency);
 
@@ -92,24 +110,6 @@ export class MapLogicalGenerator {
         }
       }
     }
-  }
-
-  private calculateCumulativeFrequency(frequencies: number[]) {
-    const cumulativeFrequency = [];
-    let total = 0;
-
-    frequencies.reduce((acc, weight) => {
-      // this is the same as the for loop
-      total = acc + weight; // total is the sum of all the weights
-      cumulativeFrequency.push(total);
-      return total;
-    }, 0);
-    cumulativeFrequency.push(total); // cumulativeFrequency is the sum of all the weights
-    return cumulativeFrequency;
-  }
-
-  private getSelectedIndex(cumulativeFrequency: number[], randomValue: number) {
-    return cumulativeFrequency.findIndex((weight) => randomValue < weight);
   }
 
   run() {
