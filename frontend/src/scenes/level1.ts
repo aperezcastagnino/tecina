@@ -49,7 +49,6 @@ export class Level1 extends Scene {
   create() {
     this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
     console.log(this.#levelData);
-
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -91,14 +90,13 @@ export class Level1 extends Scene {
     this.#controls = new Controls(this);
     this.#dialog = new Dialog({ scene: this, data: this.#levelData.dialogs });
 
-    this.#dialog?.setMessages(this.#levelData.dialogs.npcs[0]![0]!.statements);
-    this.#dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: this.#levelData.dialogs,
-      statement: this.#levelData.dialogs.dialogsWithOptions[0]!.statements[0]!,
-      options: this.#levelData.dialogs.dialogsWithOptions[0]!.options,
-      callback: () => {},
-    });
+    // this.#dialogWithOptions = new DialogWithOptions({
+    //   scene: this,
+    //   data: this.#levelData.dialogs,
+    //   statement: this.#levelData.dialogs.dialogsWithOptions[0]!.statements[0]!,
+    //   options: this.#levelData.dialogs.dialogsWithOptions[0]!.options,
+    //   callback: () => {},
+    // });
 
     this.cameras.main.startFollow(this.#player.sprite);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
@@ -131,7 +129,7 @@ export class Level1 extends Scene {
     }
 
     if (this.#controls.wasShiftPressed()) {
-      this.#dialogWithOptions!.show();
+      this.#dialog?.setMessageComplete('npc-1-1');
     }
 
     this.#player.update();
@@ -206,7 +204,7 @@ export class Level1 extends Scene {
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;
-        this.#dialog.show();
+        this.#dialog.show('npc-1-1');
       }
     }
   }

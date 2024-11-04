@@ -4,11 +4,17 @@ export type DialogData = {
   statements: string[];
   options: string[] | undefined;
   correctOption: string | undefined;
-  showed: boolean | undefined;
+  completed: boolean | undefined;
+};
+
+export type DialogDataNPC = {
+  id: string;
+  description: string | undefined;
+  dialogs: DialogData[];
 };
 
 export type DialogDataCollection = {
-  npcs: DialogData[][];
+  npcs: DialogDataNPC[];
   simpleDialogs: DialogData[];
   dialogsWithOptions: DialogWithOptionsData[];
 };

@@ -1,10 +1,9 @@
 import Phaser from "phaser";
-import type { DialogDataCollection } from "../types/level-data";
+import type { DialogData, DialogDataCollection } from "../types/level-data";
 import { animateText } from "../utils/animation-utils";
 import { PRIMARY_FONT_FAMILY, FontSize } from "../assets/fonts";
 import { DialogColors } from "../assets/colors";
 import { AssetKeys } from "../assets/asset-keys";
-import type { UIDialogInterface } from "./interfaces/ui-dialog-interface";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -17,7 +16,7 @@ export type DialogConfig = {
   backgroundColor?: number;
 };
 
-export class Dialog implements UIDialogInterface {
+export class Dialog {
   #scene: Phaser.Scene;
 
   #data: DialogDataCollection;
@@ -38,7 +37,7 @@ export class Dialog implements UIDialogInterface {
 
   #messagesToShow: string[];
 
-  #backupMessages: string[];
+  #messagesToShowBackup: string[];
 
   isVisible: boolean;
 
@@ -52,7 +51,7 @@ export class Dialog implements UIDialogInterface {
     this.#width =
       config.width || this.#scene.cameras.main.width - this.#padding * 2;
     this.#messagesToShow = [];
-    this.#backupMessages = [];
+    this.#messagesToShowBackup = [];
     this.isVisible = false;
     this.textAnimationPlaying = false;
 
@@ -85,19 +84,15 @@ export class Dialog implements UIDialogInterface {
     this.#createPlayerInputCursor();
   }
 
-  get moreMessagesToShow(): boolean {
-    return this.#messagesToShow.length > 0;
-  }
-
-  setMessages(messages: string[]): void {
-    this.#backupMessages = [...messages];
-  }
-
-  show(): void {
+  show(npc_id?: string): void {
     this.#container.setAlpha(1);
     this.isVisible = true;
-    this.#messagesToShow = [...this.#backupMessages];
-    this.showNextMessage();
+
+    if (npc_id) {
+      this.#handleNPCDialogs(npc_id);
+    } else {
+      this.#handleDialogData();
+    }
   }
 
   hide(): void {
@@ -108,6 +103,7 @@ export class Dialog implements UIDialogInterface {
 
   showNextMessage(): void {
     if (this.isVisible && this.#messagesToShow.length === 0) {
+      this.#messagesToShow = this.#messagesToShowBackup;
       this.hide();
       return;
     }
@@ -124,7 +120,7 @@ export class Dialog implements UIDialogInterface {
       10,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     this.textAnimationPlaying = true;
   }
@@ -134,7 +130,7 @@ export class Dialog implements UIDialogInterface {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR,
+      AssetKeys.UI.CURSOR
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({
@@ -151,4 +147,45 @@ export class Dialog implements UIDialogInterface {
     // this._userInputCursorTween.pause();
     this.#container.add(this.#userInputCursor);
   }
-}
+
+  #handleNPCDialogs(npcId: string): void {
+    const npcDialogs = this.#findDialogsByNpcId(npcId);
+    this.#handleDialogData(npcDialogs);
+  }
+
+  #handleDialogData(dialogs?: DialogData[]): void  {
+    const dialogsToUse = dialogs || this.#data.simpleDialogs
+    const dialog = this.#findMessageInCompleted(dialogsToUse);
+
+    if (!dialog) {
+      console.error("No dialogs not shown were found.");
+      this.hide();
+      return;
+    }
+
+  this.#messagesToShowBackup = [...dialog.statements];
+    this.#messagesToShow = [...dialog.statements];
+    this.showNextMessage();
+  }
+
+
+  #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
+    return this.#data.npcs?.find((npc) => npc.dialogs?.some((dialog) => dialog.id === npcId))?.dialogs;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
+    return dialogs?.find((dialog) => !dialog.completed);
+  }
+
+  setMessageComplete(npcId?: string): void {
+    let dialog;
+    if (npcId) {
+      const npcDialogs = this.#findDialogsByNpcId(npcId);
+      dialog = this.#findMessageInCompleted(npcDialogs);
+    } else {
+      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
+    }
+    dialog!.completed = true;
+  };
+};
