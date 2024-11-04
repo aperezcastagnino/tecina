@@ -129,7 +129,7 @@ export class Level1 extends Scene {
     }
 
     if (this.#controls.wasShiftPressed()) {
-      this.#dialog?.setMessageComplete('npc-1-1');
+      this.#dialog?.setMessageComplete("npc-1-1");
     }
 
     this.#player.update();
@@ -204,7 +204,7 @@ export class Level1 extends Scene {
       if (nearbyNpc) {
         nearbyNpc.facePlayer(this.#player.direction);
         nearbyNpc.isTalkingToPlayer = true;
-        this.#dialog.show('npc-1-1');
+        this.#dialog.show("npc-1-1");
       }
     }
   }

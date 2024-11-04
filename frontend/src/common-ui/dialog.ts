@@ -120,7 +120,7 @@ export class Dialog {
       10,
       () => {
         this.textAnimationPlaying = false;
-      }
+      },
     );
     this.textAnimationPlaying = true;
   }
@@ -130,7 +130,7 @@ export class Dialog {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR
+      AssetKeys.UI.CURSOR,
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({
@@ -153,8 +153,8 @@ export class Dialog {
     this.#handleDialogData(npcDialogs);
   }
 
-  #handleDialogData(dialogs?: DialogData[]): void  {
-    const dialogsToUse = dialogs || this.#data.simpleDialogs
+  #handleDialogData(dialogs?: DialogData[]): void {
+    const dialogsToUse = dialogs || this.#data.simpleDialogs;
     const dialog = this.#findMessageInCompleted(dialogsToUse);
 
     if (!dialog) {
@@ -163,14 +163,15 @@ export class Dialog {
       return;
     }
 
-  this.#messagesToShowBackup = [...dialog.statements];
+    this.#messagesToShowBackup = [...dialog.statements];
     this.#messagesToShow = [...dialog.statements];
     this.showNextMessage();
   }
 
-
   #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
-    return this.#data.npcs?.find((npc) => npc.dialogs?.some((dialog) => dialog.id === npcId))?.dialogs;
+    return this.#data.npcs?.find((npc) =>
+      npc.dialogs?.some((dialog) => dialog.id === npcId),
+    )?.dialogs;
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -187,5 +188,5 @@ export class Dialog {
       dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
     }
     dialog!.completed = true;
-  };
-};
+  }
+}
