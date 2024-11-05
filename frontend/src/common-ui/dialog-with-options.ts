@@ -9,8 +9,8 @@ import {
   type Direction,
   type PlayerKeys,
 } from "../common/player-keys";
-import type { UIDialogInterface } from "./interfaces/ui-dialog-interface";
 import type { DialogConfig } from "./dialog";
+import type { DialogData, DialogDataCollection } from "../types/level-data";
 
 const MENU_CURSOR_POS = {
   x: 42,
@@ -24,13 +24,13 @@ export const DIALOG_TEXT_STYLE = {
 };
 
 export type DialogWithOptionsConfig = {
-  statement: string;
-  options: string[];
-  callback: (index: number, option: string) => void;
+  callback: (option: string) => void;
 } & DialogConfig;
 
-export class DialogWithOptions implements UIDialogInterface {
+export class DialogWithOptions {
   #scene: Phaser.Scene;
+
+  #data: DialogDataCollection;
 
   #height: number;
 
@@ -62,7 +62,7 @@ export class DialogWithOptions implements UIDialogInterface {
 
   #isRightMenuOption: number;
 
-  #callback: (index: number, option: string) => void;
+  #callback: (optionSelected: string) => void;
 
   #statement: string;
 
@@ -74,13 +74,14 @@ export class DialogWithOptions implements UIDialogInterface {
 
   constructor(config: DialogWithOptionsConfig) {
     this.#scene = config.scene;
+    this.#data = config.data;
     this.#height = config.height || 200;
     this.#padding = config.padding || 60;
     this.#width =
       config.width || this.#scene.cameras.main.width - this.#padding * 2;
-    this.#statement = config.statement;
+    this.#statement = "";
     this.#statementTextLength = 600;
-    this.#options = config.options;
+    this.#options = [];
     this.#selectedMenuOptionIndex = 0;
     this.#isUpperMenuOption = 0;
     this.#isRightMenuOption = 0;
@@ -91,7 +92,7 @@ export class DialogWithOptions implements UIDialogInterface {
     this._createUI();
   }
 
-  _createUI() {
+  _createUI(): void {
     const containerStartX = this.#padding;
     const containerStartY =
       this.#scene.cameras.main.height - this.#height - this.#padding / 4;
@@ -105,7 +106,7 @@ export class DialogWithOptions implements UIDialogInterface {
         this.#scene.cameras.main.width - this.#padding * 2,
         this.#height,
         DialogColors.main,
-        1,
+        1
       )
       .setOrigin(0)
       .setStrokeStyle(8, DialogColors.border, 1);
@@ -114,38 +115,38 @@ export class DialogWithOptions implements UIDialogInterface {
       this.#padding,
       55,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
 
     this.#firstOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       22,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#secondOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       22,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#thirdOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#thirdOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#fourthOptionUI = this.#scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
 
     this.#cursor = this.#scene.add
@@ -153,7 +154,7 @@ export class DialogWithOptions implements UIDialogInterface {
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
         AssetKeys.UI.CURSOR,
-        0,
+        0
       )
       .setOrigin(0.5)
       .setScale(2.5);
@@ -171,10 +172,13 @@ export class DialogWithOptions implements UIDialogInterface {
       .setAlpha(0);
   }
 
-  show(): void {
-    this.#container.setAlpha(1);
-    this.isVisible = true;
-    this.#execAnimation();
+  show(npcId: string): void {
+    if (npcId) {
+      this.#container.setAlpha(1);
+      this.isVisible = true;
+      const npcDialogs = this.#findDialogsByNpcId(npcId);
+      this.#handleDialogData(npcDialogs);
+    }
   }
 
   hide(): void {
@@ -215,7 +219,7 @@ export class DialogWithOptions implements UIDialogInterface {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     animateText(
       this.#scene,
@@ -224,7 +228,7 @@ export class DialogWithOptions implements UIDialogInterface {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     animateText(
       this.#scene,
@@ -233,7 +237,7 @@ export class DialogWithOptions implements UIDialogInterface {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     animateText(
       this.#scene,
@@ -242,7 +246,7 @@ export class DialogWithOptions implements UIDialogInterface {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
   }
 
@@ -278,7 +282,47 @@ export class DialogWithOptions implements UIDialogInterface {
 
   #handleSelectedOption() {
     this.#selectedMenuOption = this.#options[this.#selectedMenuOptionIndex];
-    this.#callback(this.#selectedMenuOptionIndex, this.#selectedMenuOption);
+    this.#callback(this.#selectedMenuOption);
     this.hide();
+  }
+
+  #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
+    return this.#data.npcs?.find((npc) => npc.id === npcId)?.dialogs;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
+    return dialogs?.find(
+      (dialog) =>
+        !dialog.completed && (dialog.options && dialog.options.length > 0)
+    );
+  }
+
+  #handleDialogData(dialogs?: DialogData[]): void {
+    const dialogsToUse = dialogs || this.#data.simpleDialogs;
+    const dialog = this.#findMessageInCompleted(dialogsToUse);
+
+    if (!dialog) {
+      console.error("No dialogs not shown were found.");
+      this.hide();
+      return;
+    }
+
+    const [firstStatement = ""] = dialog.statements;
+    this.#statement = firstStatement;
+    this.#options = dialog.options!;
+    this.#execAnimation();
+  }
+
+  setMessageComplete(npcId?: string): void {
+    let dialog;
+    if (npcId) {
+      const npcDialogs = this.#findDialogsByNpcId(npcId);
+      dialog = this.#findMessageInCompleted(npcDialogs);
+    } else {
+      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
+    }
+
+    dialog!.completed = true;
   }
 }

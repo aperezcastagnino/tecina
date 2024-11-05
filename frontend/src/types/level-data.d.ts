@@ -4,6 +4,7 @@ export type DialogData = {
   statements: string[];
   options: string[] | undefined;
   correctOption: string | undefined;
+  showed: boolean | undefined;
   completed: boolean | undefined;
 };
 
@@ -16,7 +17,6 @@ export type DialogDataNPC = {
 export type DialogDataCollection = {
   npcs: DialogDataNPC[];
   simpleDialogs: DialogData[];
-  dialogsWithOptions: DialogWithOptionsData[];
 };
 
 export type LevelData = {

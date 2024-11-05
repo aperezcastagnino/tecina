@@ -59,7 +59,7 @@ export class Dialog {
     this.hide();
   }
 
-  _createUI() {
+  _createUI(): void {
     const panel = this.#scene.add
       .rectangle(0, 0, this.#width, this.#height, 0xffffff, 0.9)
       .setOrigin(0)
@@ -84,12 +84,12 @@ export class Dialog {
     this.#createPlayerInputCursor();
   }
 
-  show(npc_id?: string): void {
+  show(npcId?: string): void {
     this.#container.setAlpha(1);
     this.isVisible = true;
 
-    if (npc_id) {
-      this.#handleNPCDialogs(npc_id);
+    if (npcId) {
+      this.#handleNPCDialogs(npcId);
     } else {
       this.#handleDialogData();
     }
@@ -120,7 +120,7 @@ export class Dialog {
       10,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     this.textAnimationPlaying = true;
   }
@@ -130,7 +130,7 @@ export class Dialog {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR,
+      AssetKeys.UI.CURSOR
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({
@@ -163,20 +163,21 @@ export class Dialog {
       return;
     }
 
+    dialog.showed = true;
     this.#messagesToShowBackup = [...dialog.statements];
     this.#messagesToShow = [...dialog.statements];
     this.showNextMessage();
   }
 
   #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
-    return this.#data.npcs?.find((npc) =>
-      npc.dialogs?.some((dialog) => dialog.id === npcId),
-    )?.dialogs;
+    return this.#data.npcs?.find((npc) => npc.id === npcId)?.dialogs;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
-    return dialogs?.find((dialog) => !dialog.completed);
+    return dialogs?.find(
+      (dialog) =>
+        !dialog.completed && (!dialog.options || dialog.options.length === 0)
+    );
   }
 
   setMessageComplete(npcId?: string): void {
@@ -187,6 +188,10 @@ export class Dialog {
     } else {
       dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
     }
-    dialog!.completed = true;
+
+    if (dialog!.showed) {
+      dialog!.completed = true;
+      dialog!.showed = false;
+    }
   }
 }

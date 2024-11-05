@@ -90,13 +90,13 @@ export class Level1 extends Scene {
     this.#controls = new Controls(this);
     this.#dialog = new Dialog({ scene: this, data: this.#levelData.dialogs });
 
-    // this.#dialogWithOptions = new DialogWithOptions({
-    //   scene: this,
-    //   data: this.#levelData.dialogs,
-    //   statement: this.#levelData.dialogs.dialogsWithOptions[0]!.statements[0]!,
-    //   options: this.#levelData.dialogs.dialogsWithOptions[0]!.options,
-    //   callback: () => {},
-    // });
+    this.#dialogWithOptions = new DialogWithOptions({
+      scene: this,
+      data: this.#levelData.dialogs,
+      callback: (optionSelected: string) => {
+        console.log("Option selected: ", optionSelected);
+      },
+    });
 
     this.cameras.main.startFollow(this.#player.sprite);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
@@ -129,7 +129,8 @@ export class Level1 extends Scene {
     }
 
     if (this.#controls.wasShiftPressed()) {
-      this.#dialog?.setMessageComplete("npc-1-1");
+      this.#dialog?.setMessageComplete("npc-1");
+      this.#dialogWithOptions?.show("npc-1");
     }
 
     this.#player.update();
@@ -139,6 +140,27 @@ export class Level1 extends Scene {
       this.#dialogWithOptions!.handlePlayerInput(
         this.#controls.getKeyPressed(),
       );
+    }
+  }
+
+  #handlePlayerInteraction() {
+    if (this.#dialog) {
+      if (this.#dialog.isVisible) {
+        this.#dialog.showNextMessage();
+        return;
+      }
+
+      const { x, y } = this.#player.sprite;
+      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
+
+      const nearbyNpc = this.#npcs.find((npc) =>
+        arePositionsNear(npc.sprite, targetPosition),
+      );
+      if (nearbyNpc) {
+        nearbyNpc.facePlayer(this.#player.direction);
+        nearbyNpc.isTalkingToPlayer = true;
+        this.#dialog.show("npc-1");
+      }
     }
   }
 
@@ -186,26 +208,5 @@ export class Level1 extends Scene {
     });
 
     this.#player.setCaractersToCollideWith(this.#npcs);
-  }
-
-  #handlePlayerInteraction() {
-    if (this.#dialog) {
-      if (this.#dialog.isVisible) {
-        this.#dialog.showNextMessage();
-        return;
-      }
-
-      const { x, y } = this.#player.sprite;
-      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
-
-      const nearbyNpc = this.#npcs.find((npc) =>
-        arePositionsNear(npc.sprite, targetPosition),
-      );
-      if (nearbyNpc) {
-        nearbyNpc.facePlayer(this.#player.direction);
-        nearbyNpc.isTalkingToPlayer = true;
-        this.#dialog.show("npc-1-1");
-      }
-    }
   }
 }

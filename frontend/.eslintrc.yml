@@ -30,6 +30,7 @@ rules:
     # For Typescript this is needed since it can call out false negatives.
   # https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md#how-to-use
   # https://github.com/typescript-eslint/typescript-eslint/issues/2540#issuecomment-692505191
+  class-methods-use-this: "off"
   no-use-before-define: "off"
   "@typescript-eslint/type-annotation-spacing": error
   check-file/filename-naming-convention:

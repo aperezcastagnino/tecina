@@ -7,7 +7,7 @@
         "description": "primer npc",
         "dialogs": [
           {
-            "id": "npc-1-1",
+            "id": "npc-1-d-1",
             "description": "primer dialogo",
             "statements": [
               "Hello, I am the first NPC",
@@ -17,13 +17,20 @@
             ]
           },
           {
-            "id": "npc-1-2",
+            "id": "npc-1-d-2",
             "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
             "statements": [
               "Hello! It's me again",
               "I hope you find the key soon",
               "Good luck!"
             ]
+          },
+          {
+            "id": "npc-1-dwo-1",
+            "description": "primer dialogo",
+            "statements": ["esto debe ser una pregunta?"],
+            "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
+            "correctOption": "opcion 1"
           }
         ]
       }
@@ -42,15 +49,6 @@
         "id": "d-2",
         "description": "primer dialogo",
         "statements": ["esto es otro dialogo", "con dos partes"]
-      }
-    ],
-    "dialogWithOptions": [
-      {
-        "id": "dwo-1",
-        "description": "primer dialogo",
-        "statements": ["esto debe ser una pregunta?"],
-        "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
-        "correctOption": "opcion 1"
       }
     ]
   }
