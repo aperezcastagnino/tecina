@@ -120,7 +120,7 @@ export class Dialog {
       10,
       () => {
         this.textAnimationPlaying = false;
-      }
+      },
     );
     this.textAnimationPlaying = true;
   }
@@ -130,7 +130,7 @@ export class Dialog {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR
+      AssetKeys.UI.CURSOR,
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({
@@ -176,7 +176,7 @@ export class Dialog {
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
     return dialogs?.find(
       (dialog) =>
-        !dialog.completed && (!dialog.options || dialog.options.length === 0)
+        !dialog.completed && (!dialog.options || dialog.options.length === 0),
     );
   }
 
