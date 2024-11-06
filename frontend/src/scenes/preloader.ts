@@ -27,7 +27,6 @@ export class Preloader extends Scene {
   }
 
   preload() {
-    console.log(`[${Preloader.name}:preload] INVOKED`);
     this.load.setPath("assets");
 
     this.load.image(
@@ -50,6 +49,17 @@ export class Preloader extends Scene {
       {
         frameWidth: 16,
         frameHeight: 16,
+      },
+    );
+
+    this.load.spritesheet(
+      AssetKeys.UI.AWARD.NAME,
+      "/objects/anim_eye.png",
+      {
+        frameWidth: 150,
+        frameHeight: 150,
+        startFrame: 0,
+        endFrame: 15,
       },
     );
 

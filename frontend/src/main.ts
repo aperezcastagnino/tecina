@@ -6,9 +6,16 @@ import { MainMenu } from "./scenes/main-menu";
 import { Preloader } from "./scenes/preloader";
 
 const config: Types.Core.GameConfig = {
-  type: Phaser.CANVAS,
-  pixelArt: false, // averiguar
+  type: Phaser.WEBGL,
+  pixelArt: false,
   backgroundColor: "#000F00",
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 0, x:0 },
+      debug: false,
+    },
+  },
   scale: {
     parent: "game-container",
     width: GAME_DIMENSIONS.WIDTH,

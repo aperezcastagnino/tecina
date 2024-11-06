@@ -1,52 +1,64 @@
+import type { Coordinate } from "types/coordinate";
+import { DIRECTION, type Direction } from "../common/player-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { type Direction, DIRECTION } from "../common/player-keys";
 
-import { Character, type CharacterConfig } from "./character";
+type PlayerConfig = {
+  scene: Phaser.Scene;
+  position: Coordinate;
+  maxVelocity: number;
+  frame?: string | number;
+};
 
-type PlayerConfig = Omit<
-  CharacterConfig,
-  "assetKey" | "idleFrameConfig" | "origin"
->;
+export class Player extends Phaser.Physics.Arcade.Sprite {
+  #direction: Direction;
 
-export class Player extends Character {
+  #velocity: number;
+
   constructor(config: PlayerConfig) {
-    super({
-      ...config,
-      assetKey: AssetKeys.CHARACTERS.PLAYER,
-      origin: { x: 0.9, y: 0.9 },
-      idleFrameConfig: {
-        LEFT: 10,
-        RIGHT: 4,
-        DOWN: 7,
-        UP: 1,
-        NONE: 7,
-      },
-    });
+    super(
+      config.scene,
+      config.position.x,
+      config.position.y,
+      AssetKeys.CHARACTERS.PLAYER,
+      config.frame
+    );
 
+    config.scene.add.existing(this);
+    config.scene.physics.add.existing(this);
+    this.setCollideWorldBounds(true);
+
+    (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(100);
+    this.#direction = DIRECTION.NONE;
+    this.#velocity = config.maxVelocity;
     this.setScale(0.8);
   }
 
-  setCaractersToCollideWith(characters: Character[]) {
-    this._otherCharactersToCheckForCollisionsWith = characters;
-  }
-
-  moveCharacter(direction: Direction) {
-    super.moveCharacter(direction);
-
-    switch (this._direction) {
-      case DIRECTION.DOWN:
-      case DIRECTION.LEFT:
-      case DIRECTION.RIGHT:
+  move(direction: Direction) {
+    switch (direction) {
       case DIRECTION.UP:
-        if (
-          !this.anims.isPlaying ||
-          this.anims.currentAnim?.key !== `PLAYER_${this._direction}`
-        ) {
-          this.anims.play(`PLAYER_${this._direction}`);
-        }
+        this.setVelocity(0, -this.#velocity);
+        this.#direction = DIRECTION.UP;
+        this.anims.play(`PLAYER_${this.#direction}`, true);
+        break;
+      case DIRECTION.DOWN:
+        this.setVelocity(0, this.#velocity);
+        this.#direction = DIRECTION.DOWN;
+        this.anims.play(`PLAYER_${this.#direction}`, true);
+        break;
+      case DIRECTION.LEFT:
+        this.setVelocity(-this.#velocity, 0);
+        this.#direction = DIRECTION.LEFT;
+        this.anims.play(`PLAYER_${this.#direction}`, true);
+        break;
+      case DIRECTION.RIGHT:
+        this.setVelocity(this.#velocity, 0);
+        this.#direction = DIRECTION.RIGHT;
+        this.anims.play(`PLAYER_${this.#direction}`, true);
         break;
       case DIRECTION.NONE:
       default:
+        this.setVelocity(0);
+        this.anims.stop();
         break;
     }
   }
