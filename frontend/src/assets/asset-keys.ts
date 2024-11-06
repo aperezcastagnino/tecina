@@ -20,12 +20,30 @@ export const AssetKeys = {
   },
   UI: {
     CURSOR: "cursor",
-    AWARD: {
-      NAME: "AWARD",
-      frameWidth: 256,
-      frameHeight: 256,
-      startFrame: 0,
-      endFrame: 29,
+    AWARD:{
+      STAR:{
+        NAME: "AWARD",
+        frameWidth: 256,
+        frameHeight: 256,
+        startFrame: 0,
+        endFrame: 29,
+      },
+      EYE:{
+        NAME: "AWARDEYE",
+        frameWidth: 150,
+        frameHeight: 150,
+        startFrame: 0,
+        endFrame: 16,
+      }
     },
-  },
+    NPCS: {
+      BASKETMAN:{
+        NAME:"BASKETMAN",
+        frameWidth: 51,
+        frameHeight: 105,
+        startFrame: 0,
+        endFrame: 9,
+      }
+    }
+  }
 };

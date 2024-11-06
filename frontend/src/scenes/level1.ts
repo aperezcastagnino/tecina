@@ -37,8 +37,8 @@ export class Level1 extends Scene {
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
-    const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
-    const tileset = map.addTilesetImage(
+    const tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
+    const tileset = tilemap.addTilesetImage(
       "tileset_sunnysideworld",
       AssetKeys.LEVELS.TILESET
     );
@@ -48,8 +48,8 @@ export class Level1 extends Scene {
       );
       return;
     }
-    map.createLayer(AssetKeys.LEVELS.GROUND, tileset);
-    const collisionLayer = map.createLayer(AssetKeys.LEVELS.ELEMENTS, tileset);
+    tilemap.createLayer(AssetKeys.LEVELS.GROUND, tileset);
+    const collisionLayer = tilemap.createLayer(AssetKeys.LEVELS.ELEMENTS, tileset);
     if (!collisionLayer) {
       console.error(
         `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`
@@ -70,6 +70,9 @@ export class Level1 extends Scene {
     this.physics.add.collider(this.#player, collisionLayer);
 
     // this.#createNPCs(map);
+    const npcsLayer = tilemap.objects.find(f => f.name === 'objs_npcs');
+    const awardsLayer = tilemap.objects.find(f => f.name === 'objs_awards');
+
 
     this.#controls = new Controls(this);
 
@@ -104,7 +107,7 @@ export class Level1 extends Scene {
   }
 
   update() {
-    const directionSelected = this.#controls.getDirectionKeyPressedDown();
+    const directionSelected = this.#controls.getDirectionKeyPressed();
     this.#player.move(directionSelected);
 
     // if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
