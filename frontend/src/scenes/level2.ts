@@ -1,11 +1,10 @@
 import type { MapType } from "types/map";
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { TILE_SIZE, defaultVelocity } from "../config/config";
+import { TILE_SIZE, DEFAULT_VELOCITY } from "../config/config";
 import { Controls } from "../common/controls";
-import { mapWidth, mapHeight } from "../config/map-config";
-import { mapColors } from "../assets/colors";
-import { MapLogicalGenerator } from "../map/map-logical-generation";
+import { MAP_WIDTH, MAP_HEIGHT, MAP_COLORS } from "../config/map-config";
+import { MapLogicalGenerator } from "../common/map/map-logical-generation";
 import { AssetKeys } from "../assets/asset-keys";
 // import { Player } from "../characters/player";
 // import { Controls } from "../utils/controls";
@@ -78,7 +77,7 @@ export class Level2 extends Scene {
     this.collisionGroup = this.physics.add.staticGroup();
 
     // Generate the logical map
-    const mapLogicalGenerator = new MapLogicalGenerator(mapWidth, mapHeight);
+    const mapLogicalGenerator = new MapLogicalGenerator(MAP_WIDTH, MAP_HEIGHT);
     this.map = mapLogicalGenerator.generate();
 
     const rows = this.map.mapTiles.length;
@@ -93,7 +92,7 @@ export class Level2 extends Scene {
     for (let n = 0; n < rows; n += 1) {
       for (let m = 0; m < columns; m += 1) {
         const hexa = this.map.mapTiles[n]?.[m] ?? 0; // Get the tile value
-        const color = mapColors[hexa] || 0xffffff; // Get the tile color
+        const color = MAP_COLORS[hexa] || 0xffffff; // Get the tile color
 
         // Calculate the tile position
         const x = startX + m * TILE_SIZE;
@@ -129,7 +128,6 @@ export class Level2 extends Scene {
   }
 
   createPlayer() {
-    console.log(this.map.startRow,      this.map.startColumn    )
     this.player = this.physics.add.sprite(
       (this.map.startColumn + 1 ) *100 + 45, // the 45 depends on the asset
       this.map.startRow * 100 - 30, // the 30 depends on the asset
@@ -139,7 +137,7 @@ export class Level2 extends Scene {
 
   update() {
     // Check if the player is touching any object to hide
-    const velocity = defaultVelocity;
+    const velocity = DEFAULT_VELOCITY;
     if (this.cursors.left.isDown) {
       this.player.setVelocityX(-velocity);
       this.player.anims.play("walk-left", true);

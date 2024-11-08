@@ -1,10 +1,10 @@
 import Phaser from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { mapWidth, mapHeight, mapColors } from "../config/map-config";
+import { MAP_WIDTH, MAP_HEIGHT, MAP_COLORS } from "../config/map-config";
 import { MapLogicalGenerator } from "../common/map/map-logical-generation";
 import { TILE_SIZE } from "../config/config";
 
-const mapLogicalGenerator = new MapLogicalGenerator(mapWidth, mapHeight);
+const mapLogicalGenerator = new MapLogicalGenerator(MAP_WIDTH, MAP_HEIGHT);
 const map = mapLogicalGenerator.generate();
 
 export class MapLevel extends Phaser.Scene {
@@ -23,7 +23,7 @@ export class MapLevel extends Phaser.Scene {
     for (let row = 0; row < rows; row += 1) {
       for (let column = 0; column < columns; column += 1) {
         const hexa = map.mapTiles[row]![column] ?? 0; // Get the value of the logical map
-        const color = mapColors[hexa] || 0xffffff; // Get the color
+        const color = MAP_COLORS[hexa] || 0xffffff; // Get the color
 
         // Calculate the position of the cell
         const x = startX + column * TILE_SIZE + TILE_SIZE / 2;

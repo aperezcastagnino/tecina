@@ -1,9 +1,9 @@
 import type { MapType } from "types/map";
 import {
-  mapTiles,
-  frequency,
-  mapWidth,
-  mapHeight,
+  MAP_TILES,
+  FREQUENCY,
+  MAP_WIDTH,
+  MAP_HEIGHT,
 } from "../../config/map-config";
 import { TILE_SIZE } from "../../config/config";
 
@@ -28,30 +28,36 @@ export class MapLogicalGenerator {
         .fill([])
         .map(() => new Array(this.#column).fill(0)),
       frequency: [],
-      mapWidth,
-      mapHeight,
+      mapWidth: MAP_WIDTH,
+      mapHeight: MAP_HEIGHT,
+      startRow: 0,
+      startColumn: 0,
+      finishRow: this.#row - 1,
+      finishColumn: this.#column - 1,
     };
     return this.#map;
   }
 
   #addPath() {
     let x = Math.floor(this.#row / 2);
-    let y = 0;
+    let y = 2;
 
-    this.#map.mapTiles[x]![y] = 7;
+    this.#map.startColumn = y;
+    this.#map.startRow = x;
+    this.#map.mapTiles[x]![y] = 4;
 
-    while (y < this.#column - 1) {
-      const direction = Math.floor(Math.random() * 3); // Randomly choose a direction
+    while (y < this.#column - 3) {
+      const direction = Math.floor(Math.random() * 2); // Randomly choose a direction
 
       if (direction === 0 && x > 0) {
         x -= 1; // 0 means up
       } else if (direction === 1 && x < this.#row - 1) {
         x += 1; // 1 means down
       }
-      if (x >= 0 && x < this.#row && y >= 0 && y < this.#column) {
+      if (x >= 3 && x < this.#row - 3 && y >= 0 && y < this.#column) {
         // keeps it inside x and y
         this.#map.mapTiles[x]![y] = 7; // keep track of where you have been
-        y += 1; // Always move down
+        y += 1; // Always move right
         this.#map.mapTiles[x]![y] = 7;
       }
     }
@@ -101,7 +107,7 @@ export class MapLogicalGenerator {
     // if the frequency is [5, 10, 20] the cumulative frequency is [5, 15, 35]
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const weight of frequency) {
+    for (const weight of FREQUENCY) {
       total += weight;
       cumulativeFrequency.push(total);
     }
@@ -122,7 +128,7 @@ export class MapLogicalGenerator {
           );
 
           // We fill the map with the selected number
-          this.#map.mapTiles[i]![j] = mapTiles[selectedIndex]!;
+          this.#map.mapTiles[i]![j] = MAP_TILES[selectedIndex]!;
         }
       }
     }

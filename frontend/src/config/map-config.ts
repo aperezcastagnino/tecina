@@ -1,11 +1,11 @@
 // Map generation
-export const mapTiles = [0, 2, 3, 1, 5, 6, 8, 9];
-export const frequency = [5, 25, 0, 5, 2, 0, 0, 1];
+export const MAP_TILES = [0, 2, 3, 1, 5, 6, 8, 9];
+export const FREQUENCY = [5, 25, 0, 5, 2, 0, 0, 1];
 
-export const mapWidth = 19;
-export const mapHeight = 40;
+export const MAP_WIDTH = 20;
+export const MAP_HEIGHT = 40;
 
-export const mapColors: { [key: number]: number } = {
+export const MAP_COLORS: { [key: number]: number } = {
   0: 0x6e5c4f, // Brown for 0
   1: 0x05aec8, // Cyan for 1
   2: 0x026440, // Darker green for 2
