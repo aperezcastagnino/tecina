@@ -1,4 +1,6 @@
 import { Scene } from "phaser";
+import type { LevelData } from "types/level-data";
+import { loadLevelData } from "../utils/data-util";
 import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
 import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
@@ -9,7 +11,7 @@ import { DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
 import { Dialog } from "../common-ui/dialog";
-import { Awards } from "../utils/awards";
+import { Awards } from "../common-ui/awards";
 import { DialogWithOptions } from "../common-ui/dialog-with-options";
 
 const CUSTOM_TILED_TYPES = {
@@ -37,12 +39,15 @@ export class Level1 extends Scene {
 
   #npcs: NPC[];
 
+  #levelData: LevelData | undefined;
+
   constructor() {
     super(SceneKeys.LEVEL_1);
     this.#npcs = [];
   }
 
   create() {
+    this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     // this.cameras.main.setZoom(0.8);
 
@@ -82,19 +87,14 @@ export class Level1 extends Scene {
     this.#createNPCs(map);
 
     this.#controls = new Controls(this);
-    this.#dialog = new Dialog({ scene: this });
+    this.#dialog = new Dialog({ scene: this, data: this.#levelData.dialogs });
 
-    this.#dialog?.setMessages([
-      "Hello",
-      "How are you?",
-      "Are you well?",
-      "Goodbye",
-    ]);
     this.#dialogWithOptions = new DialogWithOptions({
       scene: this,
-      statement: "esto es la pregunta",
-      options: ["How are you?", "Are you well?", "he", "ho"],
-      callback: () => {},
+      data: this.#levelData.dialogs,
+      callback: (optionSelected: string) => {
+        console.log("Option selected: ", optionSelected);
+      },
     });
 
     this.cameras.main.startFollow(this.#player.sprite);
@@ -128,7 +128,8 @@ export class Level1 extends Scene {
     }
 
     if (this.#controls.wasShiftPressed()) {
-      this.#dialogWithOptions!.show();
+      this.#dialog?.setMessageComplete("npc-1");
+      this.#dialogWithOptions?.show("npc-1");
     }
 
     this.#player.update();
@@ -138,6 +139,27 @@ export class Level1 extends Scene {
       this.#dialogWithOptions!.handlePlayerInput(
         this.#controls.getKeyPressed(),
       );
+    }
+  }
+
+  #handlePlayerInteraction() {
+    if (this.#dialog) {
+      if (this.#dialog.isVisible) {
+        this.#dialog.showNextMessage();
+        return;
+      }
+
+      const { x, y } = this.#player.sprite;
+      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
+
+      const nearbyNpc = this.#npcs.find((npc) =>
+        arePositionsNear(npc.sprite, targetPosition),
+      );
+      if (nearbyNpc) {
+        nearbyNpc.facePlayer(this.#player.direction);
+        nearbyNpc.isTalkingToPlayer = true;
+        this.#dialog.show("npc-1");
+      }
     }
   }
 
@@ -185,26 +207,5 @@ export class Level1 extends Scene {
     });
 
     this.#player.setCaractersToCollideWith(this.#npcs);
-  }
-
-  #handlePlayerInteraction() {
-    if (this.#dialog) {
-      if (this.#dialog.isVisible) {
-        this.#dialog.showNextMessage();
-        return;
-      }
-
-      const { x, y } = this.#player.sprite;
-      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
-
-      const nearbyNpc = this.#npcs.find((npc) =>
-        arePositionsNear(npc.sprite, targetPosition),
-      );
-      if (nearbyNpc) {
-        nearbyNpc.facePlayer(this.#player.direction);
-        nearbyNpc.isTalkingToPlayer = true;
-        this.#dialog.show();
-      }
-    }
   }
 }

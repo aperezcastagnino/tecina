@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "../config/debug-config";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { getAnimations } from "../utils/data-utils";
+import { getAnimations } from "../utils/animation-utils";
 
 export class Preloader extends Scene {
   constructor() {
@@ -55,6 +55,7 @@ export class Preloader extends Scene {
 
     // load json data
     this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
+    this.load.json("level_1", "/data/level_1.json");
 
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);

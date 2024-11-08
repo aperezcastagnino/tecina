@@ -3,7 +3,7 @@ export const AssetKeys = {
     MAIN_MENU: "main-menu-background",
   },
   MAPS: {
-    LEVEL_1: "level1",
+    LEVEL_1: "level_1",
   },
   LEVELS: {
     TILESET: "tileset",
