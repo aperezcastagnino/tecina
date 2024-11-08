@@ -1,39 +1,70 @@
 import { Scene } from "phaser";
-import type { LevelData } from "types/level-data";
-import { loadLevelData } from "../utils/data-util";
-import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
-import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
-import { Player } from "../characters/player";
-// import { DIRECTION } from "../common/direction";
-import { TILE_SIZE } from "../config/config";
-// import { Controls } from "../utils/controls";
-// import { DialogUi } from "../common/dialog-ui";
+import { Dialog } from "../common-ui/dialog";
+// import { Awards } from "../utils/awards.js";
 
 export class Level1 extends Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
+  
   private tilemap!: Phaser.Tilemaps.Tilemap;
+  
   private tileset!: Phaser.Tilemaps.Tileset | null;
+  
   private collisionLayer!: Phaser.Tilemaps.TilemapLayer | null;
+  
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable para almacenar las teclas
+  
   private waitingSpaceKeyboard!: boolean;
+  
   private objectsToDispose!: Phaser.GameObjects.Sprite[]; // Cambiamos a un array
+  
   private spriteName!: string; // Cambiamos a un array
+  
+  private startDialog!: Dialog;
+  
+  private endDialog!: Dialog;
+  
+  private timeOutStartDialogCompleted: boolean;
+  
+  private timeOutEndDialogCompleted: boolean;
+  
+  private award: Awards;
+  
+  private awardCount: number;
 
-  #levelData: LevelData | undefined;
-
+  private npcsColide: { Id: number; enable: boolean }[];
+  private npcCounts: number;
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
   preload() {
+    this.awardCount = 0;
+    this.award = new Awards({
+      assetKey: AssetKeys.UI.AWARD.EYE.NAME,
+      frameRate: 10,
+      padding: AssetKeys.UI.AWARD.EYE.frameWidth,
+      scene: this,
+      spriteConfig: {
+        frameWidth: AssetKeys.UI.AWARD.EYE.frameWidth,
+        frameHeight: AssetKeys.UI.AWARD.EYE.frameHeight,
+        startFrame: AssetKeys.UI.AWARD.EYE.startFrame,
+        endFrame: AssetKeys.UI.AWARD.EYE.endFrame,
+      },
+      width: this.cameras.main.width,
+      scale: 0.5,
+    });
     this.anims.create({
       key: "KeyAnim",
-      frames: this.anims.generateFrameNumbers(
-        AssetKeys.UI.HALLOWEEN_EYE_AWARD.NAME,
-      ),
-      frameRate: 30,
+      frames: this.anims.generateFrameNumbers(AssetKeys.UI.NPCS.BASKETMAN.NAME),
+      frameRate: 10,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "KeyAnim-Award",
+      frames: this.anims.generateFrameNumbers(AssetKeys.UI.AWARD.EYE.NAME),
+      frameRate: 10,
       repeat: -1,
     });
     this.anims.create({
@@ -75,6 +106,9 @@ export class Level1 extends Scene {
   }
 
   create() {
+    this.timeOutStartDialogCompleted = this.timeOutEndDialogCompleted = false;
+    this.npcsColide = [];
+
     this.waitingSpaceKeyboard = false;
     this.tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
 
@@ -99,32 +133,121 @@ export class Level1 extends Scene {
     this.physics.add.collider(this.player, this.collisionLayer!);
     this.collisionLayer!.setCollisionByExclusion([-1]);
     this.cursors = this.input.keyboard!.createCursorKeys(); // Carga las teclas del cursor (flechas)
-    var capaObjetos = this.tilemap.objects.find(
-      (f) => f.name == "Capa de Objetos 1",
-    ); // Accede a la capa de objetos
+    var npcLayer = this.tilemap.objects.find((f) => f.name == "objs_npcs"); // Accede a la capa de objetos
+    var awardsLayer = this.tilemap.objects.find((f) => f.name == "objs_awards");
     this.objectsToDispose = [];
-
+    this.startDialog = new Dialog({
+      scene: this,
+    });
+    this.startDialog.setMessages([
+      "Wachin me vas a buscar las estrellas porfa?, bien de vago el pibe",
+    ]);
+    this.endDialog = new Dialog({
+      scene: this,
+    });
+    this.endDialog.setMessages([
+      "Claro mi rey, te quiero mucho, Me voy pa mi casa, portate bien hace todos los deberes",
+    ]);
+    this.startDialog.show();
+    this.endDialog.show();
+    this.startDialog.getContainer().setVisible(false);
+    this.endDialog.getContainer().setVisible(false);
     var sprite = null;
-    capaObjetos!.objects.forEach((objeto, index) => {
+    this.npcCounts = npcLayer?.objects.length!;
+    npcLayer!.objects.forEach((objeto, index) => {
       sprite = this.physics.add.sprite(
         objeto.x!,
         objeto.y!,
-        AssetKeys.CHARACTERS.NPC,
+        AssetKeys.UI.NPCS.BASKETMAN.NAME,
       );
+
       sprite.setOrigin(0.5, 0.5);
 
-      sprite.name = "Key-" + index;
+      sprite.name = objeto.properties
+        .find((f) => f.name == "Id")
+        .value.toString();
+      this.npcsColide.push({
+        Id: objeto.properties.find((f) => f.name == "Id").value,
+        enable: false,
+      });
       sprite.setImmovable(true);
       sprite.anims.play("KeyAnim", true);
       sprite.body.setSize(
-        AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameWidth,
-        AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameHeight,
+        AssetKeys.UI.NPCS.BASKETMAN.frameWidth,
+        AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
       );
+      this.children.moveBelow(this.startDialog.getContainer(), sprite);
 
-      this.objectsToDispose.push(sprite);
       this.physics.add.collider(this.player, sprite, (a, b) => {
-        if (this.cursors.space.isDown) {
-          b.destroy();
+        //Colision entre player y npc
+        const spriteB = b as Phaser.GameObjects.Sprite;
+        var npcColide = this.npcsColide.find(
+          (f) => f.Id.toString() == spriteB.name.toString(),
+        );
+        if (this.cursors.space.isDown && !npcColide?.enable) {
+          this.npcsColide.find(
+            (f) => f.Id.toString() == spriteB.name.toString(),
+          )!.enable = true;
+          var objectsFromNPC = awardsLayer?.objects.filter(
+            (element) =>
+              element.properties
+                ?.find((prop) => prop.name == "IdNPC")
+                ?.value.toString() == spriteB.name.toString(),
+          );
+          var objectsCount = objectsFromNPC!.length;
+          this.timeOutStartDialogCompleted = false;
+          this.startDialog.getContainer().setVisible(true);
+          setTimeout(() => {
+            this.timeOutStartDialogCompleted = true;
+            // this.startDialog.hide()
+          }, 2000);
+
+          objectsFromNPC!.forEach((element) => {
+            const id = element.id.toString();
+            var spriteAward = this.physics.add.sprite(
+              element.x!,
+              element.y!,
+              AssetKeys.UI.AWARD.EYE.NAME,
+            );
+            spriteAward.setOrigin(0.5, 0.5);
+            spriteAward.setImmovable(true);
+            spriteAward.anims.play("KeyAnim-Award", true);
+            spriteAward.body.setSize(
+              AssetKeys.UI.AWARD.EYE.frameWidth,
+              AssetKeys.UI.AWARD.EYE.frameHeight,
+            );
+            this.children.moveBelow(
+              this.startDialog.getContainer(),
+              spriteAward,
+            );
+            this.physics.add.collider(
+              this.player,
+              spriteAward,
+              (player, sprite) => {
+                //Colision entre player y el award
+                objectsCount!--;
+                sprite.destroy();
+                this.awardCount++;
+                this.award.setAwardsCount(this.awardCount);
+                if (objectsCount == 0) {
+                  this.timeOutEndDialogCompleted = false;
+                  this.endDialog.getContainer().setVisible(true);
+                  setTimeout(() => {
+                    this.timeOutEndDialogCompleted = true;
+                    spriteB.destroy();
+                    this.npcCounts--;
+                    if (this.npcCounts == 0) {
+                      this.scene.start(SceneKeys.GAME_OVER);
+                    }
+                  }, 2000);
+
+                  console.log(
+                    "Ya encontraste todos bien wachin, sos un kapo papu, tkm",
+                  );
+                }
+              },
+            );
+          });
         }
       });
     });
@@ -136,25 +259,36 @@ export class Level1 extends Scene {
       100,
       AssetKeys.CHARACTERS.PLAYER,
     );
+    // this.cameras.main.startFollow(this.player);
   }
 
   update() {
     // Verificamos si el jugador está tocando algún objeto a ocultar
-    const velocity = 100;
+    var velocity = 200;
+    if (this.cursors.shift.isDown) {
+      velocity = velocity * 2;
+    }
     if (this.cursors.left.isDown) {
-      this.player.setmainityX(-velocity);
+      this.player.setVelocity(-velocity, 0);
       this.player.anims.play("walk-left", true);
     } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(velocity);
+      this.player.setVelocity(velocity, 0);
       this.player.anims.play("walk-right", true);
     } else if (this.cursors.up.isDown) {
-      this.player.setVelocityY(-velocity);
+      this.player.setVelocity(0, -velocity);
       this.player.anims.play("walk-up", true);
     } else if (this.cursors.down.isDown) {
-      this.player.setVelocityY(velocity);
+      this.player.setVelocity(0, velocity);
       this.player.anims.play("walk-down", true);
+    } else if (this.cursors.space.isDown) {
+      if (this.timeOutStartDialogCompleted) {
+        this.startDialog.getContainer().setVisible(false);
+      }
+      if (this.timeOutEndDialogCompleted) {
+        this.endDialog.getContainer().setVisible(false);
+      }
     } else {
-      this.player.setVelocity(0);
+      this.player.setVelocity(0, 0);
       this.player.anims.stop();
     }
   }

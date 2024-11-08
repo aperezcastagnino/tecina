@@ -1,11 +1,9 @@
 // Map generation
-export const blockSize = 3;
-
-export const mapTiles = [0, 2, 3, 4, 5, 6, 8, 9];
-export const frequency = [1, 20, 0, 1, 1, 0, 1, 1];
+export const mapTiles = [0, 2, 3, 1, 5, 6, 8, 9];
+export const frequency = [5, 15, 0, 20, 2, 0, 0, 1];
 
 export const mapWidth = 15;
-export const mapHeight = 15;
+export const mapHeight = 30;
 
 export const mapColors: { [key: number]: number } = {
   0: 0x6e5c4f, // White for 0

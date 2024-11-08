@@ -1,10 +1,8 @@
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { Player } from "../characters/player";
-import { DIRECTION } from "../common/player-keys";
 import { TILE_SIZE } from "../config/config";
 import { Controls } from "../common/controls";
-import { mapWidth, mapHeight } from "../assets/constants";
+import { mapWidth, mapHeight } from "../config/map-config";
 import { mapColors } from "../assets/colors";
 import { MapLogicalGenerator } from "../map/map-logical-generation";
 import { AssetKeys } from "../assets/asset-keys";
@@ -89,8 +87,6 @@ export class Level2 extends Scene {
 
     this.cursors = this.input.keyboard!.createCursorKeys(); // Load the cursor keys (arrows)
 
-    console.log("Drawing map..."); // Debugging log
-
     for (let n = 0; n < rows; n += 1) {
       for (let m = 0; m < columns; m += 1) {
         const hexa = map[n]?.[m] ?? 0; // Get the tile value
@@ -101,13 +97,7 @@ export class Level2 extends Scene {
         const y = startY + n * TILE_SIZE;
 
         // Add a rectangle for each tile
-        const tile = this.add.rectangle(
-          x + TILE_SIZE / 2,
-          y + TILE_SIZE / 2,
-          TILE_SIZE,
-          TILE_SIZE,
-          color,
-        );
+        const tile = this.add.rectangle(x, y, TILE_SIZE, TILE_SIZE, color);
 
         // Enable physics on each tile
         this.physics.add.existing(tile, true); // true makes it static
@@ -137,8 +127,8 @@ export class Level2 extends Scene {
 
   createPlayer() {
     this.player = this.physics.add.sprite(
-      100,
-      100,
+      250,
+      300,
       AssetKeys.CHARACTERS.PLAYER,
     );
   }
