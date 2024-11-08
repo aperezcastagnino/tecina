@@ -1,15 +1,9 @@
 import type { MapType } from "types/map";
-import { mapTiles, frequency, mapWidth, mapHeight } from "../assets/constants";
-import { TILE_SIZE } from "../config/config";
+import { mapTiles, frequency, mapWidth, mapHeight } from "../../config/map-config";
+import { TILE_SIZE } from "../../config/config";
 
 export class MapLogicalGenerator {
-  #map: MapType = {
-    blockSize: 0,
-    mapTiles: [],
-    frequency: [],
-    mapWidth: 0,
-    mapHeight: 0,
-  };
+  #map!: MapType 
 
   #row: number;
 
@@ -18,10 +12,10 @@ export class MapLogicalGenerator {
   constructor(n: number, m: number) {
     this.#row = n;
     this.#column = m;
-    this.#map = this.create_empty_map();
+    this.#map = this.#createEmptyMap();
   }
 
-  create_empty_map() {
+  #createEmptyMap() {
     this.#map = {
       blockSize: TILE_SIZE,
       mapTiles: new Array(this.#row)
@@ -31,16 +25,10 @@ export class MapLogicalGenerator {
       mapWidth,
       mapHeight,
     };
-    for (let i = 0; i < this.#row; i += 1) {
-      this.#map.mapTiles[i] = new Array(this.#column).fill(0);
-    }
     return this.#map;
   }
 
-  add_path() {
-    if (!this.#map) {
-      throw new Error("Map is not initialized");
-    }
+  #addPath() {
     let x = Math.floor(this.#row / 2);
     let y = 0;
 
@@ -63,7 +51,7 @@ export class MapLogicalGenerator {
     }
   }
 
-  contour_map() {
+  #contourMap() {
     if (!this.#map) {
       throw new Error("Map is not initialized");
     }
@@ -92,7 +80,7 @@ export class MapLogicalGenerator {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  calculateCumulativeFrequency(frequencies: number[]) {
+  #calculateCumulativeFrequency(frequencies: number[]) {
     const cumulativeFrequency = [];
     let total = 0;
 
@@ -107,12 +95,12 @@ export class MapLogicalGenerator {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getSelectedIndex(cumulativeFrequency: number[], randomValue: number) {
+  #getSelectedIndex(cumulativeFrequency: number[], randomValue: number) {
     return cumulativeFrequency.findIndex((weight) => randomValue < weight);
   }
 
-  fill_map() {
-    const cumulativeFrequency = this.calculateCumulativeFrequency(frequency);
+  fillMap() {
+    const cumulativeFrequency = this.#calculateCumulativeFrequency(frequency);
 
     for (let i = 0; i < this.#row; i += 1) {
       for (let j = 0; j < this.#column; j += 1) {
@@ -120,7 +108,7 @@ export class MapLogicalGenerator {
           const randomValue =
             Math.random() *
             cumulativeFrequency[cumulativeFrequency.length - 1]!;
-          const selectedIndex = this.getSelectedIndex(
+          const selectedIndex = this.#getSelectedIndex(
             cumulativeFrequency,
             randomValue,
           );
@@ -130,11 +118,11 @@ export class MapLogicalGenerator {
     }
   }
 
-  run() {
-    this.create_empty_map();
-    this.add_path();
-    this.contour_map();
-    this.fill_map();
+  generate() {
+    this.#createEmptyMap();
+    this.#addPath();
+    this.#contourMap();
+    this.fillMap();
     console.log(this.#map);
     return this.#map;
   }
