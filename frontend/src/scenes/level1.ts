@@ -1,4 +1,8 @@
 import { Scene } from "phaser";
+import type { LevelData } from "types/level-data";
+import { loadLevelData } from "../utils/data-util";
+import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
+import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
@@ -16,6 +20,8 @@ export class Level1 extends Scene {
   private waitingSpaceKeyboard!: boolean;
   private objectsToDispose!: Phaser.GameObjects.Sprite[]; // Cambiamos a un array
   private spriteName!: string; // Cambiamos a un array
+
+  #levelData: LevelData | undefined;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
