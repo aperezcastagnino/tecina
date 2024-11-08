@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { mapWidth, mapHeight } from "../config/map-config";
-import { mapColors } from "../assets/colors";
+import { mapWidth, mapHeight, mapColors } from "../config/map-config";
 import { MapLogicalGenerator } from "../common/map/map-logical-generation";
 import { TILE_SIZE } from "../config/config";
 
@@ -27,8 +26,8 @@ export class MapLevel extends Phaser.Scene {
         const color = mapColors[hexa] || 0xffffff; // Get the color
 
         // Calculate the position of the cell
-        const x = (startX + column * TILE_SIZE) + TILE_SIZE/2;
-        const y = (startY + row * TILE_SIZE) +TILE_SIZE /2;
+        const x = startX + column * TILE_SIZE + TILE_SIZE / 2;
+        const y = startY + row * TILE_SIZE + TILE_SIZE / 2;
 
         // Add a rectangle with the specified color
         this.add.rectangle(

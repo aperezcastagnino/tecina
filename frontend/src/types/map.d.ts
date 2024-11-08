@@ -1,4 +1,6 @@
 export type MapType = {
+  id: string;
+
   blockSize: number;
 
   mapTiles: number[][];

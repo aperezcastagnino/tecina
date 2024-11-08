@@ -1,9 +1,14 @@
 import type { MapType } from "types/map";
-import { mapTiles, frequency, mapWidth, mapHeight } from "../../config/map-config";
+import {
+  mapTiles,
+  frequency,
+  mapWidth,
+  mapHeight,
+} from "../../config/map-config";
 import { TILE_SIZE } from "../../config/config";
 
 export class MapLogicalGenerator {
-  #map!: MapType 
+  #map!: MapType;
 
   #row: number;
 
