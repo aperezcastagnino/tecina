@@ -10,4 +10,12 @@ export type MapType = {
   mapWidth: number;
 
   mapHeight: number;
+
+  startRow: number;
+
+  startColumn: number;
+
+  finishRow: number;
+
+  finishColumn: number;
 };

@@ -3,4 +3,5 @@ export const GAME_DIMENSIONS = {
   HEIGHT: 1840,
 };
 
+export const defaultVelocity = 500;
 export const TILE_SIZE = 90;
