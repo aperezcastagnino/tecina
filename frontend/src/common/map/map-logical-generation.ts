@@ -22,6 +22,7 @@ export class MapLogicalGenerator {
 
   #createEmptyMap() {
     this.#map = {
+      id: "map",
       blockSize: TILE_SIZE,
       mapTiles: new Array(this.#row)
         .fill([])
