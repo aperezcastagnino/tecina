@@ -4,10 +4,13 @@ export const AssetKeys = {
   },
   MAPS: {
     LEVEL_1: "level1",
-    LEVEL_2: "level2"
+    LEVEL_2: "level2",
   },
   LEVELS: {
-    TILESET: "tileset",
+    TILESET: {
+      KEY: "tileset",
+      TILESETIMAGE: "tileset_sunnysideworld",
+    },
     GROUND: "ground",
     ELEMENTS: "elements",
     COLLISION: "collision",
@@ -21,6 +24,11 @@ export const AssetKeys = {
   },
   UI: {
     CURSOR: "cursor",
+    HALLOWEEN_EYE_AWARD: {
+      NAME: "HALLOWEEN_EYE_AWARD",
+      frameWidth: 150,
+      frameHeight: 150,
+    },
     AWARD: {
       NAME: "AWARD",
       frameWidth: 256,

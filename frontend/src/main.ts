@@ -8,21 +8,22 @@ import { MapLevel } from "./scenes/map-level";
 import { Preloader } from "./scenes/preloader";
 
 const config: Types.Core.GameConfig = {
-  type: Phaser.CANVAS,
+  type: Phaser.WEBGL,
   pixelArt: false, // averiguar
   backgroundColor: "#000F00",
+  physics: {
+    default: "arcade", // Motor de físicas arcade
+    arcade: {
+      gravity: { y: 0, x: 0 }, // Sin gravedad en el juego (es un top-down)
+      debug: false, // Activa o desactiva el modo de depuración (útil para ver las colisiones)
+    },
+  },
   scale: {
     parent: "game-container",
     width: GAME_DIMENSIONS.WIDTH,
     height: GAME_DIMENSIONS.HEIGHT,
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-  },
-  physics: {
-    default: 'arcade', // Enable the arcade physics engine
-    arcade: {
-      gravity: { x: 0, y: 0 }
-    },
   },
   scene: [Boot, Preloader, MainMenu, Level1, MapLevel, Level2],
 };

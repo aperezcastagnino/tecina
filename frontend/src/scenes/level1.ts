@@ -1,210 +1,155 @@
 import { Scene } from "phaser";
-import { DEBUG_MODE_ACTIVE } from "../config/debug-config";
-import { arePositionsNear, getNextPosition } from "../utils/location-utils";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { Player } from "../characters/player";
-import { NPC } from "../characters/npc";
-import { DIRECTION } from "../common/player-keys";
+// import { DIRECTION } from "../common/direction";
 import { TILE_SIZE } from "../config/config";
-import { Controls } from "../common/controls";
-import { Dialog } from "../common-ui/dialog";
-import { Awards } from "../utils/awards";
-import { DialogWithOptions } from "../common-ui/dialog-with-options";
-
-const CUSTOM_TILED_TYPES = {
-  NPC: "npc",
-  NPC_PATH: "npc_path",
-};
-
-const TILED_NPC_PROPERTY = {
-  IS_SPAWN_POINT: "is_spawn_point",
-  MOVEMENT_PATTERN: "movement_pattern",
-  MESSAGES: "messages",
-  FRAME: "frame",
-};
+// import { Controls } from "../utils/controls";
+// import { DialogUi } from "../common/dialog-ui";
 
 export class Level1 extends Scene {
-  #player!: Player;
-
-  #controls!: Controls;
-
-  #dialog: Dialog | undefined;
-
-  #dialogWithOptions: DialogWithOptions | undefined;
-
-  #awards!: Awards;
-
-  #npcs: NPC[];
+  private player!: Phaser.Physics.Arcade.Sprite;
+  private tilemap!: Phaser.Tilemaps.Tilemap;
+  private tileset!: Phaser.Tilemaps.Tileset | null;
+  private collisionLayer!: Phaser.Tilemaps.TilemapLayer | null;
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable para almacenar las teclas
+  private waitingSpaceKeyboard!: boolean;
+  private objectsToDispose!: Phaser.GameObjects.Sprite[]; // Cambiamos a un array
+  private spriteName!: string; // Cambiamos a un array
 
   constructor() {
     super(SceneKeys.LEVEL_1);
-    this.#npcs = [];
+  }
+
+  preload() {
+    this.anims.create({
+      key: "KeyAnim",
+      frames: this.anims.generateFrameNumbers(
+        AssetKeys.UI.HALLOWEEN_EYE_AWARD.NAME,
+      ),
+      frameRate: 30,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "walk-right",
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
+        start: 3,
+        end: 5,
+      }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1, // Repetir indefinidamente
+    });
+    this.anims.create({
+      key: "walk-left",
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
+        start: 9,
+        end: 11,
+      }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1, // Repetir indefinidamente
+    });
+    this.anims.create({
+      key: "walk-up",
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
+        start: 0,
+        end: 2,
+      }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1, // Repetir indefinidamente
+    });
+    this.anims.create({
+      key: "walk-down",
+      frames: this.anims.generateFrameNumbers(AssetKeys.CHARACTERS.PLAYER, {
+        start: 6,
+        end: 8,
+      }), // Asume que los frames 0 a 3 son la animación
+      frameRate: 10, // Velocidad de la animación (fotogramas por segundo)
+      repeat: -1, // Repetir indefinidamente
+    });
   }
 
   create() {
-    this.cameras.main.setBounds(0, 0, 1280, 2176);
-    // this.cameras.main.setZoom(0.8);
+    this.waitingSpaceKeyboard = false;
+    this.tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
 
-    const map = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
-    const collisionTiles = map.addTilesetImage(
-      "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET,
+    // Vincular el tileset con el nombre que se usó en Tiled
+    this.tileset = this.tilemap.addTilesetImage(
+      AssetKeys.LEVELS.TILESET.TILESETIMAGE,
+      AssetKeys.LEVELS.TILESET.KEY,
     );
-    if (!collisionTiles) {
-      console.error(
-        `[${Level1.name}:create] encountered error while creating collision tileset using data from tiled`,
+
+    // Crear las capas del mapa
+    const fondoLayer = this.tilemap.createLayer("ground", this.tileset!, 0, 0);
+    this.collisionLayer = this.tilemap.createLayer(
+      "elements",
+      this.tileset!,
+      0,
+      0,
+    );
+
+    // Habilitar la colisión en la capa 'Colision'
+    this.collisionLayer!.setCollisionByProperty({ colisionable: true });
+    this.createPlayer();
+    this.physics.add.collider(this.player, this.collisionLayer!);
+    this.collisionLayer!.setCollisionByExclusion([-1]);
+    this.cursors = this.input.keyboard!.createCursorKeys(); // Carga las teclas del cursor (flechas)
+    var capaObjetos = this.tilemap.objects.find(
+      (f) => f.name == "Capa de Objetos 1",
+    ); // Accede a la capa de objetos
+    this.objectsToDispose = [];
+
+    var sprite = null;
+    capaObjetos!.objects.forEach((objeto, index) => {
+      sprite = this.physics.add.sprite(
+        objeto.x!,
+        objeto.y!,
+        AssetKeys.CHARACTERS.NPC,
       );
-      return;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const groundLayer = map.createLayer(0, collisionTiles!);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const elementsLayer = map.createLayer(1, collisionTiles!);
-    const collisionLayer = map.createLayer("collision", collisionTiles, 0, 0);
-    if (!collisionLayer) {
-      console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
+      sprite.setOrigin(0.5, 0.5);
+
+      sprite.name = "Key-" + index;
+      sprite.setImmovable(true);
+      sprite.anims.play("KeyAnim", true);
+      sprite.body.setSize(
+        AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameWidth,
+        AssetKeys.UI.HALLOWEEN_EYE_AWARD.frameHeight,
       );
-      return;
-    }
-    collisionLayer.setAlpha(DEBUG_MODE_ACTIVE ? 0.7 : 0).setDepth(2);
 
-    this.#player = new Player({
-      scene: this,
-      direction: DIRECTION.DOWN,
-      position: {
-        x: 2 * TILE_SIZE,
-        y: 2 * TILE_SIZE,
-      },
-      collisionLayer,
+      this.objectsToDispose.push(sprite);
+      this.physics.add.collider(this.player, sprite, (a, b) => {
+        if (this.cursors.space.isDown) {
+          b.destroy();
+        }
+      });
     });
-    this.#createNPCs(map);
+  }
 
-    this.#controls = new Controls(this);
-    this.#dialog = new Dialog({ scene: this });
-
-    this.#dialog?.setMessages([
-      "Hello",
-      "How are you?",
-      "Are you well?",
-      "Goodbye",
-    ]);
-    this.#dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      statement: "esto es la pregunta",
-      options: ["How are you?", "Are you well?", "he", "ho"],
-      callback: () => {},
-    });
-
-    this.cameras.main.startFollow(this.#player.sprite);
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
-    this.#awards = new Awards({
-      scene: this,
-      width: this.cameras.main.width - 50,
-      padding: 10,
-      scale: 0.5,
-      frameRate: 20,
-      assetKey: AssetKeys.UI.AWARD.NAME,
-      spriteConfig: {
-        frameWidth: AssetKeys.UI.AWARD.frameWidth,
-        frameHeight: AssetKeys.UI.AWARD.frameHeight,
-      },
-    });
-    this.#awards.setAwardsCount(2);
+  createPlayer() {
+    this.player = this.physics.add.sprite(
+      100,
+      100,
+      AssetKeys.CHARACTERS.PLAYER,
+    );
   }
 
   update() {
-    const selectedDirection = this.#controls.getDirectionKeyPressedDown();
-    if (
-      selectedDirection !== DIRECTION.NONE &&
-      !this.#dialogWithOptions?.isVisible
-    ) {
-      this.#player.moveCharacter(selectedDirection);
-    }
-
-    if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
-      this.#handlePlayerInteraction();
-    }
-
-    if (this.#controls.wasShiftPressed()) {
-      this.#dialogWithOptions!.show();
-    }
-
-    this.#player.update();
-    this.#npcs.forEach((npc) => npc.update());
-
-    if (this.#dialogWithOptions?.isVisible) {
-      this.#dialogWithOptions!.handlePlayerInput(
-        this.#controls.getKeyPressed(),
-      );
-    }
-  }
-
-  #createNPCs(map: Phaser.Tilemaps.Tilemap) {
-    this.#npcs = [];
-
-    const npcLayers = map
-      .getObjectLayerNames()
-      .filter((layerName) => layerName.includes("NPC"));
-
-    npcLayers.forEach((layerName) => {
-      const layer = map.getObjectLayer(layerName);
-      const npcObject = layer?.objects.find(
-        (obj) => obj.type === CUSTOM_TILED_TYPES.NPC,
-      );
-      if (
-        !npcObject ||
-        npcObject.x === undefined ||
-        npcObject.y === undefined
-      ) {
-        return;
-      }
-
-      const npcFrame =
-        npcObject.properties?.find(
-          (prop: any) => prop.name === TILED_NPC_PROPERTY.FRAME,
-        )?.value || 0;
-
-      const npcMessagesSTRING =
-        npcObject.properties?.find(
-          (prop: any) => prop.name === TILED_NPC_PROPERTY.MESSAGES,
-        )?.value || "";
-      const npcMessages = npcMessagesSTRING.split("::");
-
-      const npc = new NPC({
-        scene: this,
-        position: { x: 6 * TILE_SIZE, y: 3 * TILE_SIZE },
-        direction: DIRECTION.DOWN,
-        frame: parseInt(npcFrame, 10),
-        messages: npcMessages,
-        otherCharactersToCheckForCollisionsWith: [this.#player],
-      });
-
-      this.#npcs.push(npc);
-    });
-
-    this.#player.setCaractersToCollideWith(this.#npcs);
-  }
-
-  #handlePlayerInteraction() {
-    if (this.#dialog) {
-      if (this.#dialog.isVisible) {
-        this.#dialog.showNextMessage();
-        return;
-      }
-
-      const { x, y } = this.#player.sprite;
-      const targetPosition = getNextPosition({ x, y }, this.#player.direction);
-
-      const nearbyNpc = this.#npcs.find((npc) =>
-        arePositionsNear(npc.sprite, targetPosition),
-      );
-      if (nearbyNpc) {
-        nearbyNpc.facePlayer(this.#player.direction);
-        nearbyNpc.isTalkingToPlayer = true;
-        this.#dialog.show();
-      }
+    // Verificamos si el jugador está tocando algún objeto a ocultar
+    const velocity = 100;
+    if (this.cursors.left.isDown) {
+      this.player.setmainityX(-velocity);
+      this.player.anims.play("walk-left", true);
+    } else if (this.cursors.right.isDown) {
+      this.player.setVelocityX(velocity);
+      this.player.anims.play("walk-right", true);
+    } else if (this.cursors.up.isDown) {
+      this.player.setVelocityY(-velocity);
+      this.player.anims.play("walk-up", true);
+    } else if (this.cursors.down.isDown) {
+      this.player.setVelocityY(velocity);
+      this.player.anims.play("walk-down", true);
+    } else {
+      this.player.setVelocity(0);
+      this.player.anims.stop();
     }
   }
 }

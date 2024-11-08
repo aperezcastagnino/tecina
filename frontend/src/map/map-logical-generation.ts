@@ -115,7 +115,7 @@ export class MapLogicalGenerator {
   run() {
     this.create_empty_map();
     this.add_path();
-    this.contour_map();
+    //this.contour_map();
     this.fill_map();
     console.log(this.#map);
     return this.#map;

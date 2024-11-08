@@ -1,6 +1,6 @@
 export const GAME_DIMENSIONS = {
-  WIDTH: 2920,
-  HEIGHT: 3040,
+  WIDTH: 3920,
+  HEIGHT: 1840,
 };
 
-export const TILE_SIZE = 64;
+export const TILE_SIZE = 90;
