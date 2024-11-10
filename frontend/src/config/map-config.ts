@@ -1,6 +1,6 @@
 // Map generation
 export const MAP_TILES = [0, 2, 3, 1, 5, 6, 8, 9];
-export const FREQUENCY = [5, 25, 0, 5, 2, 0, 0, 1];
+export const FREQUENCY = [0, 25, 0, 1, 1, 0, 0, 1];
 
 export const MAP_WIDTH = 20;
 export const MAP_HEIGHT = 40;

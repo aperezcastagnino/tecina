@@ -6,31 +6,31 @@ import { Dialog } from "../common-ui/dialog";
 
 export class Level1 extends Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
-  
+
   private tilemap!: Phaser.Tilemaps.Tilemap;
-  
+
   private tileset!: Phaser.Tilemaps.Tileset | null;
-  
+
   private collisionLayer!: Phaser.Tilemaps.TilemapLayer | null;
-  
+
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable para almacenar las teclas
-  
+
   private waitingSpaceKeyboard!: boolean;
-  
+
   private objectsToDispose!: Phaser.GameObjects.Sprite[]; // Cambiamos a un array
-  
+
   private spriteName!: string; // Cambiamos a un array
-  
+
   private startDialog!: Dialog;
-  
+
   private endDialog!: Dialog;
-  
+
   private timeOutStartDialogCompleted: boolean;
-  
+
   private timeOutEndDialogCompleted: boolean;
-  
+
   private award: Awards;
-  
+
   private awardCount: number;
 
   private npcsColide: { Id: number; enable: boolean }[];

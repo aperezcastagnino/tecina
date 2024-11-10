@@ -129,7 +129,7 @@ export class Level2 extends Scene {
 
   createPlayer() {
     this.player = this.physics.add.sprite(
-      (this.map.startColumn + 1 ) *100 + 45, // the 45 depends on the asset
+      (this.map.startColumn + 1) * 100 + 45, // the 45 depends on the asset
       this.map.startRow * 100 - 30, // the 30 depends on the asset
       AssetKeys.CHARACTERS.PLAYER,
     );

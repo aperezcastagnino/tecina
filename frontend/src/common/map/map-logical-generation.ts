@@ -64,10 +64,6 @@ export class MapLogicalGenerator {
   }
 
   #contourMap() {
-    if (!this.#map) {
-      throw new Error("Map is not initialized");
-    }
-
     // First border
     // This sets the border of the map to 1
 
