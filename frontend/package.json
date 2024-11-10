@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .js --ext .jsx --ext .ts --ext .tsx && tsc",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
-    "checks": "npm run lint && npm run prettier:check",
+    "checks": "npm run lint && npm run prettier:check"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
