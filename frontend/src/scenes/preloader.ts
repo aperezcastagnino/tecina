@@ -27,7 +27,6 @@ export class Preloader extends Scene {
   }
 
   preload() {
-    console.log(`[${Preloader.name}:preload] INVOKED`);
     this.load.setPath("assets");
 
     this.load.image(
@@ -58,22 +57,34 @@ export class Preloader extends Scene {
     this.load.json("level_1", "/data/level_1.json");
 
     // level 1
-    this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_2, `/maps/level1.json`);
+    this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
-      AssetKeys.LEVELS.TILESET.KEY,
+      AssetKeys.LEVELS.TILESET,
       `/tilesets/tileset_sunnysideworld_16px.png`,
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
 
+    this.load.spritesheet(AssetKeys.UI.AWARD.STAR.NAME, "/awards/star.png", {
+      frameWidth: AssetKeys.UI.AWARD.STAR.frameWidth,
+      frameHeight: AssetKeys.UI.AWARD.STAR.frameHeight,
+      startFrame: AssetKeys.UI.AWARD.STAR.startFrame,
+      endFrame: AssetKeys.UI.AWARD.STAR.endFrame,
+    });
+    this.load.spritesheet(AssetKeys.UI.AWARD.EYE.NAME, "/awards/anim_eye.png", {
+      frameWidth: AssetKeys.UI.AWARD.EYE.frameWidth,
+      frameHeight: AssetKeys.UI.AWARD.EYE.frameHeight,
+      startFrame: AssetKeys.UI.AWARD.EYE.startFrame,
+      endFrame: AssetKeys.UI.AWARD.EYE.endFrame,
+    });
     this.load.spritesheet(
-      AssetKeys.UI.HALLOWEEN_EYE_AWARD.NAME,
-      "/objects/anim_eye.png",
+      AssetKeys.UI.NPCS.BASKETMAN.NAME,
+      "/npcs/gasol_botando.png",
       {
-        frameWidth: 150,
-        frameHeight: 150,
-        startFrame: 0,
-        endFrame: 15,
+        frameWidth: AssetKeys.UI.NPCS.BASKETMAN.frameWidth,
+        frameHeight: AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
+        startFrame: AssetKeys.UI.NPCS.BASKETMAN.startFrame,
+        endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
       },
     );
   }
@@ -100,7 +111,6 @@ export class Preloader extends Scene {
         frameRate: animation.frameRate,
         repeat: animation.repeat,
         delay: animation.delay,
-        yoyo: animation.yoyo,
       });
     });
   }

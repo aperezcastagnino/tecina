@@ -5,16 +5,17 @@ import { Level1 } from "./scenes/level1";
 import { Level2 } from "./scenes/level2";
 import { MainMenu } from "./scenes/main-menu";
 import { Preloader } from "./scenes/preloader";
+import { GameOver } from "./scenes/game-over";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.WEBGL,
-  pixelArt: false, // averiguar
+  pixelArt: false,
   backgroundColor: "#000F00",
   physics: {
-    default: "arcade", // Motor de físicas arcade
+    default: "arcade",
     arcade: {
-      gravity: { y: 0, x: 0 }, // Sin gravedad en el juego (es un top-down)
-      debug: false, // Activa o desactiva el modo de depuración (útil para ver las colisiones)
+      gravity: { y: 0, x: 0 },
+      debug: false,
     },
   },
   scale: {
@@ -24,7 +25,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, Level1, Level2],
+  scene: [Boot, Preloader, MainMenu,GameOver, Level1, Level2],
 };
 
 export default new Game(config);

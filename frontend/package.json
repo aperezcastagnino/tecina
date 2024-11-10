@@ -15,8 +15,7 @@
     "lint": "eslint . --ext .js --ext .jsx --ext .ts --ext .tsx && tsc",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
-    "checks": "npm run lint && npm run prettier:check",
-    "prepare": "husky"
+    "checks": "npm run lint && npm run prettier:check"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
@@ -32,7 +31,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-deprecation": "^3.0.0",
-    "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "3.3.3",
     "typescript": "^5.5.4",
