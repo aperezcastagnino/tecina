@@ -1,11 +1,11 @@
 import Phaser from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { mapWidth, mapHeight, mapColors } from "../config/map-config";
-import { MapLogicalGenerator } from "../common/map/map-logical-generation";
+import { mapColors } from "../config/map-config";
 import { TILE_SIZE } from "../config/config";
+import { Preloader } from "./preloader";
 
-const mapLogicalGenerator = new MapLogicalGenerator(mapWidth, mapHeight);
-const map = mapLogicalGenerator.generate();
+const preloader = new Preloader();
+const map = preloader.createMap(); // This will internally call the private #createMap method
 
 export class MapLevel extends Phaser.Scene {
   constructor() {
