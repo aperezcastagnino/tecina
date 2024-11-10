@@ -22,7 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.position.x,
       config.position.y,
       AssetKeys.CHARACTERS.PLAYER,
-      config.frame
+      config.frame,
     );
 
     this.isMoving = false;
