@@ -5,7 +5,7 @@ import { AssetKeys } from "../assets/asset-keys";
 type PlayerConfig = {
   scene: Phaser.Scene;
   position: Coordinate;
-  maxVelocity: number;
+  velocity: number;
   frame?: string | number;
 };
 
@@ -13,6 +13,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   #direction: Direction;
 
   #velocity: number;
+
+  isMoving: boolean;
 
   constructor(config: PlayerConfig) {
     super(
@@ -23,43 +25,36 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.frame
     );
 
+    this.isMoving = false;
     config.scene.add.existing(this);
     config.scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
 
-    (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(100);
+    (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(config.velocity);
     this.#direction = DIRECTION.NONE;
-    this.#velocity = config.maxVelocity;
+    this.#velocity = config.velocity;
     this.setScale(0.8);
   }
 
   move(direction: Direction) {
-    switch (direction) {
-      case DIRECTION.UP:
+    if (direction === DIRECTION.NONE) {
+      this.isMoving = false;
+      this.anims.stop();
+      this.setVelocity(0);
+    } else {
+      if (direction === DIRECTION.UP) {
         this.setVelocity(0, -this.#velocity);
-        this.#direction = DIRECTION.UP;
-        this.anims.play(`PLAYER_${this.#direction}`, true);
-        break;
-      case DIRECTION.DOWN:
+      } else if (direction === DIRECTION.DOWN) {
         this.setVelocity(0, this.#velocity);
-        this.#direction = DIRECTION.DOWN;
-        this.anims.play(`PLAYER_${this.#direction}`, true);
-        break;
-      case DIRECTION.LEFT:
+      } else if (direction === DIRECTION.LEFT) {
         this.setVelocity(-this.#velocity, 0);
-        this.#direction = DIRECTION.LEFT;
-        this.anims.play(`PLAYER_${this.#direction}`, true);
-        break;
-      case DIRECTION.RIGHT:
+      } else if (direction === DIRECTION.RIGHT) {
         this.setVelocity(this.#velocity, 0);
-        this.#direction = DIRECTION.RIGHT;
-        this.anims.play(`PLAYER_${this.#direction}`, true);
-        break;
-      case DIRECTION.NONE:
-      default:
-        this.setVelocity(0);
-        this.anims.stop();
-        break;
+      }
+
+      this.isMoving = true;
+      this.#direction = direction;
+      this.anims.play(`PLAYER_${this.#direction}`, true);
     }
   }
 }

@@ -31,7 +31,7 @@ export class Preloader extends Scene {
 
     this.load.image(
       AssetKeys.BACKGROUNDS.MAIN_MENU,
-      `/backgrounds/main-menu-background.png`
+      `/backgrounds/main-menu-background.png`,
     );
 
     // load characters
@@ -41,7 +41,7 @@ export class Preloader extends Scene {
       {
         frameWidth: 64,
         frameHeight: 88,
-      }
+      },
     );
     this.load.spritesheet(
       AssetKeys.CHARACTERS.NPC,
@@ -49,7 +49,7 @@ export class Preloader extends Scene {
       {
         frameWidth: 16,
         frameHeight: 16,
-      }
+      },
     );
 
     // load json data
@@ -60,7 +60,7 @@ export class Preloader extends Scene {
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
       AssetKeys.LEVELS.TILESET,
-      `/tilesets/tileset_sunnysideworld_16px.png`
+      `/tilesets/tileset_sunnysideworld_16px.png`,
     );
 
     this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
@@ -85,7 +85,7 @@ export class Preloader extends Scene {
         frameHeight: AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
         startFrame: AssetKeys.UI.NPCS.BASKETMAN.startFrame,
         endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
-      }
+      },
     );
   }
 
@@ -93,7 +93,7 @@ export class Preloader extends Scene {
     this.#createAnimations();
 
     this.scene.start(
-      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
   }
 
@@ -111,7 +111,6 @@ export class Preloader extends Scene {
         frameRate: animation.frameRate,
         repeat: animation.repeat,
         delay: animation.delay,
-        yoyo: animation.yoyo,
       });
     });
   }

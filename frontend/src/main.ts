@@ -11,9 +11,9 @@ const config: Types.Core.GameConfig = {
   pixelArt: false,
   backgroundColor: "#000F00",
   physics: {
-    default: 'arcade',
+    default: "arcade",
     arcade: {
-      gravity: { y: 0, x:0 },
+      gravity: { y: 0, x: 0 },
       debug: false,
     },
   },

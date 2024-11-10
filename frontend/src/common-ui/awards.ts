@@ -57,7 +57,7 @@ export class Awards {
           this.#positionX -
             this.#spriteConfig.frameWidth * (i + initialLength) * this.#scale,
           this.#positionY,
-          this.#assetKey
+          this.#assetKey,
         )
         .setScale(this.#scale);
       this.#sprites.push(sprite);

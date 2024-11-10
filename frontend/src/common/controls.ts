@@ -27,11 +27,17 @@ export class Controls {
   }
 
   wasSpaceKeyPressed(): boolean {
-    return Boolean(this.#cursorKeys) && Phaser.Input.Keyboard.JustDown(this.#cursorKeys!.space);
+    return (
+      Boolean(this.#cursorKeys) &&
+      Phaser.Input.Keyboard.JustDown(this.#cursorKeys!.space)
+    );
   }
 
   wasShiftPressed(): boolean {
-    return Boolean(this.#cursorKeys) && Phaser.Input.Keyboard.JustDown(this.#cursorKeys!.shift);
+    return (
+      Boolean(this.#cursorKeys) &&
+      Phaser.Input.Keyboard.JustDown(this.#cursorKeys!.shift)
+    );
   }
 
   getKeyPressed(): PlayerKeys {
