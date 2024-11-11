@@ -1,14 +1,11 @@
 import type { MapType } from "types/map";
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
-import { TILE_SIZE, DEFAULT_VELOCITY } from "../config/config";
+import { TILE_SIZE, DEFAULT_VELOCITY, GAME_DIMENSIONS } from "../config/config";
 import { Controls } from "../common/controls";
-import { MAP_WIDTH, MAP_HEIGHT, MAP_COLORS } from "../config/map-config";
+import { MAP_WIDTH, MAP_HEIGHT, MAP_TILES_ASSETS } from "../config/map-config";
 import { MapLogicalGenerator } from "../common/map/map-logical-generation";
 import { AssetKeys } from "../assets/asset-keys";
-// import { Player } from "../characters/player";
-// import { Controls } from "../utils/controls";
-// import { DialogUi } from "../common/dialog-ui";
 
 export class Level2 extends Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -26,6 +23,7 @@ export class Level2 extends Scene {
   private collisionGroup!: Phaser.Physics.Arcade.StaticGroup;
 
   preload() {
+
     this.anims.create({
       key: "KeyAnim",
       frames: this.anims.generateFrameNumbers(
@@ -84,22 +82,22 @@ export class Level2 extends Scene {
     const columns = this.map.mapTiles[0]?.length || 0;
 
     // Calculate start position for centering the map on screen
-    const startX = (this.scale.width - columns * TILE_SIZE) / 2;
-    const startY = (this.scale.height - rows * TILE_SIZE) / 2;
+    const startX = (GAME_DIMENSIONS.WIDTH - MAP_WIDTH * 164) / 2; // This is forced to be centered
+    const startY = (GAME_DIMENSIONS.HEIGHT - MAP_HEIGHT * 42) / 2;
 
     this.cursors = this.input.keyboard!.createCursorKeys(); // Load the cursor keys (arrows)
 
     for (let n = 0; n < rows; n += 1) {
       for (let m = 0; m < columns; m += 1) {
         const hexa = this.map.mapTiles[n]?.[m] ?? 0; // Get the tile value
-        const color = MAP_COLORS[hexa] || 0xffffff; // Get the tile color
 
         // Calculate the tile position
         const x = startX + m * TILE_SIZE;
         const y = startY + n * TILE_SIZE;
 
+
         // Add a rectangle for each tile
-        const tile = this.add.rectangle(x, y, TILE_SIZE, TILE_SIZE, color);
+        const tile = this.add.image(x, y, MAP_TILES_ASSETS[hexa]!).setDisplaySize(TILE_SIZE, TILE_SIZE);
 
         // Enable physics on each tile
         this.physics.add.existing(tile, true); // true makes it static
@@ -107,7 +105,6 @@ export class Level2 extends Scene {
         if (hexa === 1) {
           // Make tiles with `1` in the matrix collidable
           this.collisionGroup.add(tile); // Add to collision group
-          console.log("Water tile added to collision group"); // Debugging log
         }
       }
     }
@@ -129,8 +126,8 @@ export class Level2 extends Scene {
 
   createPlayer() {
     this.player = this.physics.add.sprite(
-      (this.map.startColumn + 1) * 100 + 45, // the 45 depends on the asset
-      this.map.startRow * 100 - 30, // the 30 depends on the asset
+      (this.map.startColumn + 190),
+      ((this.map.startRow ) + GAME_DIMENSIONS.HEIGHT / 2 ) + 40, 
       AssetKeys.CHARACTERS.PLAYER,
     );
   }

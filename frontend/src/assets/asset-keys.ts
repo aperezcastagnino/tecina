@@ -22,6 +22,22 @@ export const AssetKeys = {
   DATA: {
     ANIMATIONS: "animations",
   },
+  TILES:{
+    GRASS: {
+      NAME: "GRASS",
+      frameWidth: 150,
+      frameHeight: 150,
+      startFrame: 0,
+      endFrame: 29,
+    },
+    FLOWER: {
+      NAME: "FLOWER",
+      frameWidth: 150,
+      frameHeight: 150,
+      startFrame: 0,
+      endFrame: 29,
+    },
+  },
   UI: {
     CURSOR: "cursor",
     HALLOWEEN_EYE_AWARD: {

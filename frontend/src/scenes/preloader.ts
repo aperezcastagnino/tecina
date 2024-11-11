@@ -59,7 +59,7 @@ export class Preloader extends Scene {
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
     this.load.image(
-      AssetKeys.LEVELS.TILESET,
+      AssetKeys.LEVELS.TILESET.TILESETIMAGE,
       `/tilesets/tileset_sunnysideworld_16px.png`,
     );
 
@@ -87,6 +87,20 @@ export class Preloader extends Scene {
         endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
       },
     );
+
+    // Load tileset
+    this.load.spritesheet(AssetKeys.TILES.GRASS.NAME, "/tiles/grass.png", {
+      frameWidth: AssetKeys.TILES.GRASS.frameWidth,
+      frameHeight: AssetKeys.TILES.GRASS.frameHeight,
+      startFrame: AssetKeys.TILES.GRASS.startFrame,
+      endFrame: AssetKeys.TILES.GRASS.endFrame,
+    });
+    this.load.spritesheet(AssetKeys.TILES.FLOWER.NAME, "/tiles/flower.png", {
+      frameWidth: AssetKeys.TILES.FLOWER.frameWidth,
+      frameHeight: AssetKeys.TILES.FLOWER.frameHeight,
+      startFrame: AssetKeys.TILES.FLOWER.startFrame,
+      endFrame: AssetKeys.TILES.FLOWER.endFrame,
+    });
   }
 
   create() {

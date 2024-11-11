@@ -4,4 +4,4 @@ export const GAME_DIMENSIONS = {
 };
 
 export const DEFAULT_VELOCITY = 500;
-export const TILE_SIZE = 64;
+export const TILE_SIZE = 90;
