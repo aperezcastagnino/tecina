@@ -16,7 +16,6 @@ export class GameOver extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    // Agregar un mensaje para reiniciar o salir
     this.add
       .text(width / 2, height / 2 + 100, "Presiona ESPACIO para reiniciar", {
         fontSize: "24px",
@@ -25,7 +24,7 @@ export class GameOver extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.input.keyboard?.once("keydown-SPACE", () => {
-      this.scene.start("MainScene"); // Cambia 'MainScene' por el nombre de tu escena principal
+      this.scene.start("MainScene");
     });
   }
 }
