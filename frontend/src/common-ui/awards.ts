@@ -1,47 +1,47 @@
 import type { AwardConfig } from "common-ui/config";
 
 export class Awards {
-  private _scene: Phaser.Scene;
+  #scene: Phaser.Scene;
 
-  private _scale: number;
+  #scale: number;
 
-  private _positionX: number;
+  #positionX: number;
 
-  private _positionY: number;
+  #positionY: number;
 
-  private _frameRate: number;
+  #frameRate: number;
 
-  private _padding: number;
+  #padding: number;
 
-  private _assetKey: string;
+  #assetKey: string;
 
-  private spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
+  #spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
 
-  private keyAnim: string;
+  #keyAnim: string;
 
-  private sprites: Phaser.GameObjects.Sprite[];
+  #sprites: Phaser.GameObjects.Sprite[];
 
   constructor(config: AwardConfig) {
-    this._scale = config.scale ?? 1;
-    this._positionX = config.width - config.padding;
-    this._positionY = (config.spriteConfig.frameHeight! / 2) * this._scale;
-    this.spriteConfig = config.spriteConfig;
-    this._scene = config.scene;
-    this._assetKey = config.assetKey;
-    this._frameRate = config.frameRate;
-    this._padding = config.padding;
-    this.keyAnim = "AwardsKeyAnim";
-    this._scene.anims.create({
-      key: this.keyAnim,
-      frames: this._scene.anims.generateFrameNumbers(this._assetKey),
-      frameRate: this._frameRate,
+    this.#scale = config.scale ?? 1;
+    this.#positionX = config.width - config.padding;
+    this.#positionY = (config.spriteConfig.frameHeight! / 2) * this.#scale;
+    this.#spriteConfig = config.spriteConfig;
+    this.#scene = config.scene;
+    this.#assetKey = config.assetKey;
+    this.#frameRate = config.frameRate;
+    this.#padding = config.padding;
+    this.#keyAnim = "AwardsKeyAnim";
+    this.#scene.anims.create({
+      key: this.#keyAnim,
+      frames: this.#scene.anims.generateFrameNumbers(this.#assetKey),
+      frameRate: this.#frameRate,
       repeat: -1,
     });
-    this.sprites = [];
+    this.#sprites = [];
   }
 
   setAwardsCount(count: number) {
-    const countDifference = count - this.sprites.length;
+    const countDifference = count - this.#sprites.length;
     if (countDifference > 0) {
       this.addAnims(countDifference);
     } else {
@@ -50,24 +50,26 @@ export class Awards {
   }
 
   addAnims(count: number) {
+    const initialLength = this.#sprites.length;
     for (let i = 0; i < count; i += 1) {
-      const sprite = this._scene.add
+      const sprite = this.#scene.add
         .sprite(
-          this._positionX - this.spriteConfig.frameWidth * i * this._scale,
-          this._positionY,
-          this._assetKey,
+          this.#positionX -
+            this.#spriteConfig.frameWidth * (i + initialLength) * this.#scale,
+          this.#positionY,
+          this.#assetKey,
         )
-        .setScale(this._scale);
-      this.sprites.push(sprite);
+        .setScale(this.#scale);
+      this.#sprites.push(sprite);
     }
-    this.sprites.forEach((element) => {
-      setTimeout(() => element.play(this.keyAnim), 0);
+    this.#sprites.forEach((element) => {
+      setTimeout(() => element.play(this.#keyAnim), 0);
     });
   }
 
   removeAnims(count: number) {
     for (let i = 0; i < count; i += 1) {
-      const sprite = this.sprites.pop();
+      const sprite = this.#sprites.pop();
       sprite!.stop();
       sprite!.setFrame(0);
       sprite!.visible = false;
