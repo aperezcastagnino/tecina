@@ -50,7 +50,6 @@ export class Level1 extends Scene {
       );
       return;
     }
-    collisionLayer.setCollisionByProperty({ colisionable: true });
     collisionLayer.setCollisionByExclusion([-1]);
 
     this.#player = new Player({
