@@ -1,4 +1,4 @@
-import type { MapType } from "types/map";
+import type { mapType } from "types/map";
 import {
   mapTiles,
   frequency,
@@ -8,7 +8,7 @@ import {
 import { TILE_SIZE } from "../../config/config";
 
 export class MapLogicalGenerator {
-  #map!: MapType;
+  #map!: mapType;
 
   #row: number;
 
@@ -23,7 +23,6 @@ export class MapLogicalGenerator {
   #createEmptyMap() {
     this.#map = {
       id: "map",
-      blockSize: TILE_SIZE,
       mapTiles: new Array(this.#row)
         .fill([])
         .map(() => new Array(this.#column).fill(0)),
@@ -125,7 +124,6 @@ export class MapLogicalGenerator {
   }
 
   generate() {
-    this.#createEmptyMap();
     this.#addPath();
     this.#contourMap();
     this.fillMap();
