@@ -1,7 +1,5 @@
-export type MapType = {
+export type mapType = {
   id: string;
-
-  blockSize: number;
 
   mapTiles: number[][];
 

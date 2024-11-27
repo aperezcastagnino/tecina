@@ -1,4 +1,4 @@
-import type { MapType } from "types/map";
+import type { mapType } from "types/map";
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
 import { TILE_SIZE, DEFAULT_VELOCITY, GAME_DIMENSIONS } from "../config/config";
@@ -14,7 +14,7 @@ export class Level2 extends Scene {
 
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable to store the keys
 
-  private map!: MapType;
+  private map!: mapType;
 
   constructor() {
     super(SceneKeys.LEVEL_2);
@@ -23,7 +23,6 @@ export class Level2 extends Scene {
   private collisionGroup!: Phaser.Physics.Arcade.StaticGroup;
 
   preload() {
-
     this.anims.create({
       key: "KeyAnim",
       frames: this.anims.generateFrameNumbers(
@@ -95,9 +94,10 @@ export class Level2 extends Scene {
         const x = startX + m * TILE_SIZE;
         const y = startY + n * TILE_SIZE;
 
-
-        // Add a rectangle for each tile
-        const tile = this.add.image(x, y, MAP_TILES_ASSETS[hexa]!).setDisplaySize(TILE_SIZE, TILE_SIZE);
+        // Add a image for each tile
+        const tile = this.add
+          .image(x, y, MAP_TILES_ASSETS[hexa]!)
+          .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
         // Enable physics on each tile
         this.physics.add.existing(tile, true); // true makes it static
@@ -116,8 +116,14 @@ export class Level2 extends Scene {
     this.#controls = new Controls(this);
 
     // Adjust the camera to follow the player
-    this.cameras.main.setBounds(0, 0, this.scale.width, this.scale.height);
     this.cameras.main.startFollow(this.player);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      MAP_WIDTH * TILE_SIZE * 400,
+      MAP_HEIGHT * TILE_SIZE * 400,
+      true,
+    );
     this.cameras.main.fadeIn(1000, 0, 0, 0);
 
     // Set up collision between the player and collision group
@@ -126,8 +132,8 @@ export class Level2 extends Scene {
 
   createPlayer() {
     this.player = this.physics.add.sprite(
-      (this.map.startColumn + 190),
-      ((this.map.startRow ) + GAME_DIMENSIONS.HEIGHT / 2 ) + 40, 
+      this.map.startColumn + 190,
+      this.map.startRow + GAME_DIMENSIONS.HEIGHT / 2 + 40,
       AssetKeys.CHARACTERS.PLAYER,
     );
   }
@@ -136,15 +142,22 @@ export class Level2 extends Scene {
     // Check if the player is touching any object to hide
     const velocity = DEFAULT_VELOCITY;
     if (this.cursors.left.isDown) {
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
       this.player.setVelocityX(-velocity);
       this.player.anims.play("walk-left", true);
     } else if (this.cursors.right.isDown) {
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+
       this.player.setVelocityX(velocity);
       this.player.anims.play("walk-right", true);
     } else if (this.cursors.up.isDown) {
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+
       this.player.setVelocityY(-velocity);
       this.player.anims.play("walk-up", true);
     } else if (this.cursors.down.isDown) {
+      this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+
       this.player.setVelocityY(velocity);
       this.player.anims.play("walk-down", true);
     } else {

@@ -5,7 +5,6 @@ import {
   MAP_WIDTH,
   MAP_HEIGHT,
 } from "../../config/map-config";
-import { TILE_SIZE } from "../../config/config";
 
 export class MapLogicalGenerator {
   #map!: MapType;
@@ -23,7 +22,6 @@ export class MapLogicalGenerator {
   #createEmptyMap() {
     this.#map = {
       id: "map",
-      blockSize: TILE_SIZE,
       mapTiles: new Array(this.#row)
         .fill([])
         .map(() => new Array(this.#column).fill(0)),

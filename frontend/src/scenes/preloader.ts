@@ -101,6 +101,22 @@ export class Preloader extends Scene {
       startFrame: AssetKeys.TILES.FLOWER.startFrame,
       endFrame: AssetKeys.TILES.FLOWER.endFrame,
     });
+    this.load.spritesheet(AssetKeys.TILES.TREE.NAME, "/tiles/tree.png", {
+      frameWidth: AssetKeys.TILES.FLOWER.frameWidth,
+      frameHeight: AssetKeys.TILES.FLOWER.frameHeight,
+      startFrame: AssetKeys.TILES.FLOWER.startFrame,
+      endFrame: AssetKeys.TILES.FLOWER.endFrame,
+    });
+    this.load.spritesheet(
+      AssetKeys.TILES.FLOWER_GRASS.NAME,
+      "/tiles/flower_grass.png",
+      {
+        frameWidth: AssetKeys.TILES.FLOWER.frameWidth,
+        frameHeight: AssetKeys.TILES.FLOWER.frameHeight,
+        startFrame: AssetKeys.TILES.FLOWER.startFrame,
+        endFrame: AssetKeys.TILES.FLOWER.endFrame,
+      },
+    );
   }
 
   create() {

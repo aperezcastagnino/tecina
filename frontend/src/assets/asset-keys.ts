@@ -22,7 +22,7 @@ export const AssetKeys = {
   DATA: {
     ANIMATIONS: "animations",
   },
-  TILES:{
+  TILES: {
     GRASS: {
       NAME: "GRASS",
       frameWidth: 150,
@@ -32,6 +32,20 @@ export const AssetKeys = {
     },
     FLOWER: {
       NAME: "FLOWER",
+      frameWidth: 2000,
+      frameHeight: 150,
+      startFrame: 0,
+      endFrame: 29,
+    },
+    TREE: {
+      NAME: "TREE",
+      frameWidth: 1500,
+      frameHeight: 1500,
+      startFrame: 0,
+      endFrame: 29,
+    },
+    FLOWER_GRASS: {
+      NAME: "FLOWER_GRASS",
       frameWidth: 150,
       frameHeight: 150,
       startFrame: 0,

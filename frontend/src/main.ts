@@ -25,7 +25,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu,GameOver, Level1, Level2],
+  scene: [Boot, Preloader, MainMenu, GameOver, Level1, Level2],
 };
 
 export default new Game(config);
