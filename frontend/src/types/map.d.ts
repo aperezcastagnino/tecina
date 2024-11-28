@@ -1,4 +1,4 @@
-export type mapType = {
+export type Map = {
   id: string;
 
   mapTiles: number[][];

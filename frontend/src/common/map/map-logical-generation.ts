@@ -1,13 +1,10 @@
-import type { MapType } from "types/map";
-import {
-  MAP_TILES,
-  FREQUENCY,
-  MAP_WIDTH,
-  MAP_HEIGHT,
-} from "../../config/map-config";
+import type { Map } from "types/map";
+
+import {MAP_TILES ,FREQUENCY ,MAP_WIDTH ,
+  MAP_HEIGHT} from "../../config/map-config";
 
 export class MapLogicalGenerator {
-  #map!: MapType;
+  #map!: Map;
 
   #row: number;
 
@@ -25,7 +22,7 @@ export class MapLogicalGenerator {
       mapTiles: new Array(this.#row)
         .fill([])
         .map(() => new Array(this.#column).fill(0)),
-      frequency: [],
+      frequency: FREQUENCY,
       mapWidth: MAP_WIDTH,
       mapHeight: MAP_HEIGHT,
       startRow: 0,
@@ -93,7 +90,7 @@ export class MapLogicalGenerator {
     }
   }
 
-  fillMap() {
+  #fillMap() {
     const cumulativeFrequency = [];
     let total = 0;
 
@@ -129,10 +126,9 @@ export class MapLogicalGenerator {
   }
 
   generate() {
-    this.#createEmptyMap();
     this.#addPath();
     this.#contourMap();
-    this.fillMap();
+    this.#fillMap();
     console.log(this.#map);
     return this.#map;
   }

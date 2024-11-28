@@ -31,7 +31,7 @@ export class Level1 extends Scene {
     const tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const tileset = tilemap.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET,
+      AssetKeys.LEVELS.TILESET.TILESETIMAGE,
     );
     if (!tileset) {
       console.error(
@@ -50,7 +50,6 @@ export class Level1 extends Scene {
       );
       return;
     }
-    collisionLayer.setCollisionByProperty({ colisionable: true });
     collisionLayer.setCollisionByExclusion([-1]);
 
     this.#player = new Player({

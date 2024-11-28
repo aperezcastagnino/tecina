@@ -1,4 +1,4 @@
-import type { mapType } from "types/map";
+import type { Map } from "types/map";
 import { Scene } from "phaser";
 import { SceneKeys } from "./scene-keys";
 import { TILE_SIZE, DEFAULT_VELOCITY, GAME_DIMENSIONS } from "../config/config";
@@ -14,7 +14,7 @@ export class Level2 extends Scene {
 
   cursors!: Phaser.Types.Input.Keyboard.CursorKeys; // Variable to store the keys
 
-  private map!: mapType;
+  private map!: Map;
 
   constructor() {
     super(SceneKeys.LEVEL_2);

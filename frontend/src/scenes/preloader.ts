@@ -3,6 +3,8 @@ import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "../config/debug-config";
 import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "../assets/asset-keys";
 import { getAnimations } from "../utils/animation-utils";
+import { MAP_WIDTH, MAP_HEIGHT } from "../config/map-config";
+import { MapLogicalGenerator } from "../common/map/map-logical-generation";
 
 export class Preloader extends Scene {
   constructor() {
@@ -115,12 +117,22 @@ export class Preloader extends Scene {
         frameHeight: AssetKeys.TILES.FLOWER.frameHeight,
         startFrame: AssetKeys.TILES.FLOWER.startFrame,
         endFrame: AssetKeys.TILES.FLOWER.endFrame,
+    });
+    this.load.spritesheet(
+      AssetKeys.UI.NPCS.BASKETMAN.NAME,
+      "/npcs/gasol_botando.png",
+      {
+        frameWidth: AssetKeys.UI.NPCS.BASKETMAN.frameWidth,
+        frameHeight: AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
+        startFrame: AssetKeys.UI.NPCS.BASKETMAN.startFrame,
+        endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
       },
     );
   }
 
   create() {
     this.#createAnimations();
+    this.createMap();
 
     this.scene.start(
       DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
@@ -143,5 +155,10 @@ export class Preloader extends Scene {
         delay: animation.delay,
       });
     });
+  }
+
+  public createMap() {
+    const mapLogicalGenerator = new MapLogicalGenerator(MAP_WIDTH,MAP_HEIGHT);
+    return mapLogicalGenerator.generate();
   }
 }
