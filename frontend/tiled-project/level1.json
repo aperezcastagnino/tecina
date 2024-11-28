@@ -1303,13 +1303,20 @@
     {
       "draworder": "topdown",
       "id": 4,
-      "name": "Capa de Objetos 1",
+      "name": "objs_awards",
       "objects": [
         {
           "height": 0,
           "id": 1,
           "name": "",
           "point": true,
+          "properties": [
+            {
+              "name": "IdNPC",
+              "type": "int",
+              "value": 1
+            }
+          ],
           "rotation": 0,
           "type": "",
           "visible": true,
@@ -1322,6 +1329,13 @@
           "id": 2,
           "name": "",
           "point": true,
+          "properties": [
+            {
+              "name": "IdNPC",
+              "type": "int",
+              "value": 2
+            }
+          ],
           "rotation": 0,
           "type": "",
           "visible": true,
@@ -1334,6 +1348,13 @@
           "id": 3,
           "name": "",
           "point": true,
+          "properties": [
+            {
+              "name": "IdNPC",
+              "type": "int",
+              "value": 1
+            }
+          ],
           "rotation": 0,
           "type": "",
           "visible": true,
@@ -1344,13 +1365,63 @@
       ],
       "opacity": 1,
       "type": "objectgroup",
+      "visible": false,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "draworder": "topdown",
+      "id": 5,
+      "name": "objs_npcs",
+      "objects": [
+        {
+          "height": 0,
+          "id": 4,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "Id",
+              "type": "int",
+              "value": 1
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1337.19960278054,
+          "y": 188.123138033764
+        },
+        {
+          "height": 0,
+          "id": 5,
+          "name": "",
+          "point": true,
+          "properties": [
+            {
+              "name": "Id",
+              "type": "int",
+              "value": 2
+            }
+          ],
+          "rotation": 0,
+          "type": "",
+          "visible": true,
+          "width": 0,
+          "x": 1634.63753723932,
+          "y": 643.17775571003
+        }
+      ],
+      "opacity": 1,
+      "type": "objectgroup",
       "visible": true,
       "x": 0,
       "y": 0
     }
   ],
-  "nextlayerid": 5,
-  "nextobjectid": 4,
+  "nextlayerid": 6,
+  "nextobjectid": 8,
   "orientation": "orthogonal",
   "renderorder": "right-down",
   "tiledversion": "1.10.2",
@@ -1359,7 +1430,7 @@
     {
       "columns": 64,
       "firstgid": 1,
-      "image": "tilesets/tileset_sunnysideworld_16px.png",
+      "image": "../../../tiledProject/tilesets/tileset_sunnysideworld_16px.png",
       "imageheight": 1024,
       "imagewidth": 1024,
       "margin": 0,
