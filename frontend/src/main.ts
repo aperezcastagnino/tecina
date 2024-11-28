@@ -5,11 +5,19 @@ import { Level1 } from "./scenes/level1";
 import { MainMenu } from "./scenes/main-menu";
 import { MapLevel } from "./scenes/map-level";
 import { Preloader } from "./scenes/preloader";
+import { GameOver } from "./scenes/game-over";
 
 const config: Types.Core.GameConfig = {
-  type: Phaser.CANVAS,
-  pixelArt: false, // averiguar
+  type: Phaser.WEBGL,
+  pixelArt: false,
   backgroundColor: "#000F00",
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 0, x: 0 },
+      debug: false,
+    },
+  },
   scale: {
     parent: "game-container",
     width: GAME_DIMENSIONS.WIDTH,
@@ -17,7 +25,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, Level1, MapLevel],
+  scene: [Boot, Preloader, MainMenu, Level1, MapLevel, GameOver],
 };
 
 export default new Game(config);

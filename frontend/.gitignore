@@ -8,3 +8,4 @@ dist
 !.vscode/extensions.json
 
 tsconfig.tsbuildinfo
+tiled-project/tecina.tiled-session
