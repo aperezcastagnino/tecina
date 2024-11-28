@@ -26,12 +26,18 @@ export class Level1 extends Scene {
   }
 
   create() {
-    this.#npcGroup = this.add.group();
-    this.#awardGroup = this.add.group();
+    this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
+    this.cameras.main.setBounds(0, 0, 1280, 2176);
 
-    const [tilemap, collisionLayer] = this.#createMapFromTiled(this);
-    if (tilemap === undefined || collisionLayer === undefined) {
-      console.error(`ERRROR CREATING MAP FROM TILED: ${SceneKeys.LEVEL_1}`);
+    const tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
+    const tileset = tilemap.addTilesetImage(
+      "tileset_sunnysideworld",
+      AssetKeys.LEVELS.TILESET,
+    );
+    if (!tileset) {
+      console.error(
+        `[${Level1.name}:create] encountered error while assigning tileset to the map`,
+      );
       return;
     }
 
