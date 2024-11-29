@@ -66,7 +66,7 @@ export class Level1 extends Scene {
 
     if (this.#dialogWithOptions?.isVisible) {
       this.#dialogWithOptions!.handlePlayerInput(
-        this.#controls.getKeyPressed()
+        this.#controls.getKeyPressed(),
       );
     }
   }
@@ -107,7 +107,7 @@ export class Level1 extends Scene {
       (_player, award) => {
         const awardSprite = award as Phaser.GameObjects.Sprite;
         this.#defineBehaviorForAwards(awardSprite);
-      }
+      },
     );
   }
 
@@ -130,7 +130,7 @@ export class Level1 extends Scene {
         const npcSprite = this.physics.add.sprite(
           npcObject.x!,
           npcObject.y!,
-          AssetKeys.UI.NPCS.BASKETMAN.NAME
+          AssetKeys.UI.NPCS.BASKETMAN.NAME,
         );
         npcSprite.setOrigin(0.5, 0.5);
         npcSprite.setImmovable(true);
@@ -140,7 +140,7 @@ export class Level1 extends Scene {
         } else npcSprite.name = "npc-2";
 
         this.#npcGroup.add(npcSprite);
-      }
+      },
     );
   }
 
@@ -151,7 +151,7 @@ export class Level1 extends Scene {
       const spriteAward = this.physics.add.sprite(
         element.x!,
         element.y!,
-        AssetKeys.UI.AWARD.EYE.NAME
+        AssetKeys.UI.AWARD.EYE.NAME,
       );
       spriteAward.setOrigin(0.5, 0.5);
       spriteAward.setImmovable(true);
@@ -188,7 +188,7 @@ export class Level1 extends Scene {
   }
 
   #createMapFromTiled(
-    scene: Scene
+    scene: Scene,
   ): [
     Phaser.Tilemaps.Tilemap | undefined,
     Phaser.Tilemaps.TilemapLayer | undefined,
@@ -196,22 +196,22 @@ export class Level1 extends Scene {
     const tilemap = scene.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const tileset = tilemap.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET
+      AssetKeys.LEVELS.TILESET,
     );
     if (!tileset) {
       console.error(
-        `[${Level1.name}:create] encountered error while assigning tileset to the map`
+        `[${Level1.name}:create] encountered error while assigning tileset to the map`,
       );
       return [undefined, undefined];
     }
     tilemap.createLayer(AssetKeys.LEVELS.GROUND, tileset);
     const collisionLayer = tilemap.createLayer(
       AssetKeys.LEVELS.ELEMENTS,
-      tileset
+      tileset,
     );
     if (!collisionLayer) {
       console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`
+        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
       );
       return [undefined, undefined];
     }
