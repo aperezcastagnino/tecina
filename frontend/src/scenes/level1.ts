@@ -45,7 +45,7 @@ export class Level1 extends Scene {
 
     this.#hideElements(this.#awardGroup);
 
-    this.#defineInteractionBehaviors();
+    this.#defineBehaviors();
 
     this.cameras.main.setBounds(0, 0, 1280, 2176);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
@@ -95,35 +95,31 @@ export class Level1 extends Scene {
     });
   }
 
-  #defineInteractionBehaviors() {
+  #defineBehaviors() {
     this.physics.add.collider(this.#player, this.#npcGroup, (_player, npc) => {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
-      if (this.#controls.wasSpaceKeyPressed()) {
-        this.#dialog?.show(npcSprite.name);
-        this.#showElements(this.#awardGroup);
-      }
+      this.#defineBehaviorForNPCs(npcSprite);
     });
 
     this.physics.add.collider(
       this.#player,
       this.#awardGroup,
       (_player, award) => {
-        award.destroy();
+        const awardSprite = award as Phaser.GameObjects.Sprite;
+        this.#defineBehaviorForAwards(awardSprite);
       }
     );
   }
 
-  #createDialogs() {
-    const levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
+  #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
+    if (this.#controls.wasSpaceKeyPressed()) {
+      this.#dialog?.show(npc.name);
+      this.#showElements(this.#awardGroup);
+    }
+  }
 
-    this.#dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this.#dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: levelData.dialogs,
-      callback: (optionSelected: string) => {
-        console.log("Option selected: ", optionSelected);
-      },
-    });
+  #defineBehaviorForAwards(award: Phaser.GameObjects.Sprite) {
+    award.destroy();
   }
 
   #createNPCs(tilemap: Phaser.Tilemaps.Tilemap) {
@@ -161,6 +157,19 @@ export class Level1 extends Scene {
       spriteAward.setImmovable(true);
 
       this.#awardGroup.add(spriteAward);
+    });
+  }
+
+  #createDialogs() {
+    const levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
+
+    this.#dialog = new Dialog({ scene: this, data: levelData.dialogs });
+    this.#dialogWithOptions = new DialogWithOptions({
+      scene: this,
+      data: levelData.dialogs,
+      callback: (optionSelected: string) => {
+        console.log("Option selected: ", optionSelected);
+      },
     });
   }
 
@@ -208,7 +217,6 @@ export class Level1 extends Scene {
     }
     collisionLayer.setCollisionByExclusion([-1]);
 
-    // eslint-disable-next-line consistent-return
     return [tilemap, collisionLayer];
   }
 }
