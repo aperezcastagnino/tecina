@@ -101,6 +101,22 @@ export class Level1 extends Scene {
     });
   }
 
+  #defineBehaviors() {
+    this.physics.add.collider(this.#player, this.#npcGroup, (_player, npc) => {
+      const npcSprite = npc as Phaser.GameObjects.Sprite;
+      this.#defineBehaviorForNPCs(npcSprite);
+    });
+
+    this.physics.add.collider(
+      this.#player,
+      this.#awardGroup,
+      (_player, award) => {
+        const awardSprite = award as Phaser.GameObjects.Sprite;
+        this.#defineBehaviorForAwards(awardSprite);
+      }
+    );
+  }
+
   #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
     if (this.#controls.wasSpaceKeyPressed()) {
       this.#dialog?.show(npc.name);
