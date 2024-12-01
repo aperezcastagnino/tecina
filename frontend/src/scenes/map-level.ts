@@ -1,7 +1,7 @@
 import Phaser from "phaser";
+import { mapColors } from "config/map-config";
+import { TILE_SIZE } from "config/config";
 import { SceneKeys } from "./scene-keys";
-import { mapColors } from "../config/map-config";
-import { TILE_SIZE } from "../config/config";
 import { Preloader } from "./preloader";
 
 const preloader = new Preloader();

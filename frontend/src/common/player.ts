@@ -1,6 +1,6 @@
 import type { Coordinate } from "types/coordinate";
-import { DIRECTION, type Direction } from "./player-keys";
-import { AssetKeys } from "../assets/asset-keys";
+import { DIRECTION, type Direction } from "common/player-keys";
+import { AssetKeys } from "assets/asset-keys";
 
 type PlayerConfig = {
   scene: Phaser.Scene;

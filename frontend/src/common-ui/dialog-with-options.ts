@@ -1,16 +1,16 @@
 import Phaser from "phaser";
-import { animateText } from "../utils/animation-utils";
-import { AssetKeys } from "../assets/asset-keys";
-import { Colors, DialogColors } from "../assets/colors";
-import { FontSize, PRIMARY_FONT_FAMILY } from "../assets/fonts";
+import { animateText } from "utils/animation-utils";
+import { AssetKeys } from "assets/asset-keys";
+import { Colors, DialogColors } from "assets/colors";
+import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import {
   DIRECTION,
   PLAYER_KEYS,
   type Direction,
   type PlayerKeys,
-} from "../common/player-keys";
+} from "common/player-keys";
+import type { DialogData, DialogDataCollection } from "types/level-data";
 import type { DialogConfig } from "./dialog";
-import type { DialogData, DialogDataCollection } from "../types/level-data";
 
 const MENU_CURSOR_POS = {
   x: 42,
