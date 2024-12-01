@@ -5,6 +5,11 @@ import { getAnimations } from "utils/animation-utils";
 import { mapWidth, mapHeight } from "config/map-config";
 import { MapLogicalGenerator } from "common/map/map-logical-generation";
 import { SceneKeys } from "./scene-keys";
+<<<<<<< HEAD
+=======
+import { AssetKeys } from "../assets/asset-keys";
+import { getAnimations } from "../utils/animation-utils";
+>>>>>>> 75eae1f (save for destruction)
 
 export class Preloader extends Scene {
   constructor() {
@@ -57,6 +62,7 @@ export class Preloader extends Scene {
     // load json data
     this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
     this.load.json("level_1", "/data/level_1.json");
+    this.load.json("level_deprecated", "/data/level_deprecated.json");
 
     // level 1
     this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
@@ -93,7 +99,6 @@ export class Preloader extends Scene {
 
   create() {
     this.#createAnimations();
-    this.createMap();
 
     this.scene.start(
       DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
@@ -116,10 +121,5 @@ export class Preloader extends Scene {
         delay: animation.delay,
       });
     });
-  }
-
-  public createMap() {
-    const mapLogicalGenerator = new MapLogicalGenerator(mapWidth, mapHeight);
-    return mapLogicalGenerator.generate();
   }
 }

@@ -11,7 +11,6 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
     "lint": "eslint . --ext .js --ext .jsx --ext .ts --ext .tsx && tsc",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",

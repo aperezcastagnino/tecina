@@ -1,3 +1,5 @@
+import type { Coordinate } from "./coordinate";
+
 export type Map = {
   id: string;
 
@@ -5,7 +7,11 @@ export type Map = {
 
   frequency: number[];
 
-  mapWidth: number;
+  rows: number;
 
-  mapHeight: number;
+  columns: number;
+
+  startPosition: Coordinate;
+
+  finishPosition: Coordinate;
 };

@@ -1,4 +1,8 @@
 import { GameObjects, Scene } from "phaser";
+import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
+import { MapGenerator } from "common/map/map-generator";
+import type { Map } from "types/map";
+import { MapRenderer } from "common/map/map-renderer";
 import { loadLevelData } from "utils/data-util";
 import { AssetKeys } from "assets/asset-keys";
 import { Player } from "common/player";
@@ -21,13 +25,21 @@ export class Level1 extends Scene {
 
   #awardGroup!: GameObjects.Group;
 
+  #map!: Map;
+
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
+  preload() {
+    this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
+  }
+
   create() {
-    this.#levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
-    this.cameras.main.setBounds(0, 0, 1280, 2176);
+    MapRenderer.renderer(this, this.#map);
+
+    this.#npcGroup = this.add.group();
+    this.#awardGroup = this.add.group();
 
     const tilemap = this.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
     const tileset = tilemap.addTilesetImage(
