@@ -9,14 +9,10 @@ import { GameOver } from "scenes/game-over";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.WEBGL,
-  pixelArt: false,
+  pixelArt: true,
   backgroundColor: "#000F00",
   physics: {
     default: "arcade",
-    arcade: {
-      gravity: { y: 0, x: 0 },
-      debug: false,
-    },
   },
   scale: {
     parent: "game-container",
