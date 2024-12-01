@@ -1,13 +1,13 @@
 import { Scene } from "phaser";
 import type { LevelData } from "types/level-data";
-import { loadLevelData } from "../utils/data-util";
+import { loadLevelData } from "utils/data-util";
+import { AssetKeys } from "assets/asset-keys";
+import { Player } from "characters/player";
+import { TILE_SIZE } from "config/config";
+import { Controls } from "common/controls";
+import { Dialog } from "common-ui/dialog";
+import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { SceneKeys } from "./scene-keys";
-import { AssetKeys } from "../assets/asset-keys";
-import { Player } from "../characters/player";
-import { TILE_SIZE } from "../config/config";
-import { Controls } from "../common/controls";
-import { Dialog } from "../common-ui/dialog";
-import { DialogWithOptions } from "../common-ui/dialog-with-options";
 
 export class Level1 extends Scene {
   #player!: Player;
