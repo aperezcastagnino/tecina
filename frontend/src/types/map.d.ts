@@ -5,8 +5,6 @@ export type Map = {
 
   mapTiles: number[][];
 
-  frequency: number[];
-
   rows: number;
 
   columns: number;
@@ -14,4 +12,6 @@ export type Map = {
   startPosition: Coordinate;
 
   finishPosition: Coordinate;
+
+  assetGroups: Phaser.GameObjects.Group[];
 };

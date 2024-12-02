@@ -24,11 +24,11 @@ export class MapGenerator {
       mapTiles: new Array(rows)
         .fill([])
         .map(() => new Array(columns).fill(0)),
-      frequency: [],
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
       finishPosition: { x: 0, y: 0 },
+      assetGroups: [],
     };
   }
 

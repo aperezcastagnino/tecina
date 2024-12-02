@@ -1,10 +1,10 @@
-import { AssetKeys } from "assets/asset-keys";
+import { AssetKeys } from "../assets/asset-keys";
 
 export const MAP_TILES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-export const FREQUENCY = [0, 30, 50, 1, 2, 0, 0, 0, 0, 0];
+export const FREQUENCY = [10, 30, 50, 1, 2, 0, 0, 0, 0, 0];
 
-export const MAP_WIDTH = 15;
-export const MAP_HEIGHT = 15;
+export const MAP_WIDTH = 300;
+export const MAP_HEIGHT = 300;
 
 export const MAP_COLORS: { [key: number]: number } = {
   0: 0x6e5c4f, // White for 0
@@ -20,14 +20,14 @@ export const MAP_COLORS: { [key: number]: number } = {
 }
 
 export const MAP_TILES_ASSETS: { [key: number]: string } = {
-  0: AssetKeys.TILES.GRASS.NAME,
-  1: AssetKeys.TILES.GRASS.NAME, // Only 1s are collidable
-  2: AssetKeys.TILES.GRASS.NAME,
-  3: AssetKeys.TILES.GRASS.NAME,
-  4: AssetKeys.TILES.GRASS.NAME,
-  5: AssetKeys.TILES.GRASS.NAME,
-  6: AssetKeys.TILES.GRASS.NAME,
-  7: AssetKeys.TILES.GRASS.NAME,
-  8: AssetKeys.TILES.GRASS.NAME,
-  9: AssetKeys.TILES.GRASS.NAME,
+  0: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+  1: AssetKeys.TILES.TREE, // Only 1s are collidable
+  2: AssetKeys.TILES.FLOWER,
+  3: AssetKeys.TILES.FLOWER_GRASS,
+  4: AssetKeys.TILES.GRASS,
+  5: AssetKeys.TILES.GRASS,
+  6: AssetKeys.TILES.GRASS,
+  7: AssetKeys.TILES.GRASS,
+  8: AssetKeys.TILES.GRASS,
+  9: AssetKeys.TILES.GRASS,
 };

@@ -46,4 +46,21 @@ export const AssetKeys = {
       },
     },
   },
+  TILES: {
+    GRASS: "GLASS",
+    FLOWER: "FLOWER",
+    TREE: "TREE",
+    FLOWER_GRASS: "FLOWER_GRASS",
+  },
+  ITEMS: {
+    FRUITS: {
+      ORANGE: {
+        NAME: "ORANGE",
+        FRAME_WIDTH: 40,
+        FRAME_HEIGHT: 40,
+        STAR_FRAME: 0,
+        END_FRAME: 17,
+      },
+    }
+  }
 };

@@ -1,37 +1,50 @@
 import type { Scene } from "phaser";
-import type { Map } from "types/map";
-import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
-import { MAP_HEIGHT, MAP_TILES_ASSETS, MAP_WIDTH } from "config/map-config";
+import { AssetKeys } from "../../assets/asset-keys";
+import type { Map } from "../../types/map";
+import { TILE_SIZE } from "../../config/config";
+import { MAP_TILES_ASSETS } from "../../config/map-config";
+import type { Coordinate } from "../../types/coordinate";
 
 export class MapRenderer {
   static renderer(scene: Scene, map: Map) {
-    const staticGroup = scene.physics.add.staticGroup();
+    const { rows: numberOfRows, columns: numberOfColumns } = map;
+    const startPosition: Coordinate = { x: 0, y: 0 };
 
-    const { rows, columns } = map;
+    for (let row = 0; row < numberOfRows; row += 1) {
+      for (let column = 0; column < numberOfColumns; column += 1) {
+        const assetRef = map.mapTiles[row]?.[column] ?? 0;
 
-    // Calculate start position for centering the map on screen
-    const startX = (GAME_DIMENSIONS.WIDTH - MAP_WIDTH * 164) / 2; // This is forced to be centered
-    const startY = (GAME_DIMENSIONS.HEIGHT - MAP_HEIGHT * 42) / 2;
+        const x = startPosition.x + column * TILE_SIZE;
+        const y = startPosition.y + row * TILE_SIZE;
 
-    for (let n = 0; n < rows; n += 1) {
-      for (let m = 0; m < columns; m += 1) {
-        const hexa = map.mapTiles[n]?.[m] ?? 0; // Get the tile value
+        const assetName = MAP_TILES_ASSETS[assetRef]!;
+        if (assetName === "Orange") {
+          const spriteAward = scene.add.sprite(
+            x,
+            y,
+            AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+          );
+          spriteAward.anims.play("OrangeAnim", true);
 
-        // Calculate the tile position
-        const x = startX + m * TILE_SIZE;
-        const y = startY + n * TILE_SIZE;
+          if (map.assetGroups[assetRef] === undefined) {
+            const group = scene.physics.add.staticGroup();
+            // eslint-disable-next-line no-param-reassign
+            map.assetGroups[assetRef] = group;
+            group.name = assetName;
+          }
+          map.assetGroups[assetRef]?.add(spriteAward);
+        } else {
+          const tileImage = scene.add
+            .image(x, y, assetName)
+            .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
-        // Add a image for each tile
-        const tile = scene.add
-          .image(x, y, MAP_TILES_ASSETS[hexa]!)
-          .setDisplaySize(TILE_SIZE, TILE_SIZE);
-
-        // Enable physics on each tile
-        scene.physics.add.existing(tile, true); // true makes it static
-
-        if (hexa === 1) {
-          // Make tiles with `1` in the matrix collidable
-          staticGroup.add(tile); // Add to collision group
+          if (map.assetGroups[assetRef] === undefined) {
+            const group = scene.physics.add.staticGroup();
+            // eslint-disable-next-line no-param-reassign
+            map.assetGroups[assetRef] = group;
+            group.name = assetName;
+          }
+          map.assetGroups[assetRef]?.add(tileImage);
         }
       }
     }
