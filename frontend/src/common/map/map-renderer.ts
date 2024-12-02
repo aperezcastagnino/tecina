@@ -22,7 +22,7 @@ export class MapRenderer {
           const spriteAward = scene.add.sprite(
             x,
             y,
-            AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+            AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
           );
           spriteAward.anims.play("OrangeAnim", true);
 

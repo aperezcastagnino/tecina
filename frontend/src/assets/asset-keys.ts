@@ -61,6 +61,6 @@ export const AssetKeys = {
         STAR_FRAME: 0,
         END_FRAME: 17,
       },
-    }
-  }
+    },
+  },
 };

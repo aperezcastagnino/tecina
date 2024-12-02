@@ -17,7 +17,7 @@ export const MAP_COLORS: { [key: number]: number } = {
   7: 0x037d50, // Green for 7
   8: 0x0000ff, // Cyan for 8
   9: 0xcc6666, // Red for 9
-}
+};
 
 export const MAP_TILES_ASSETS: { [key: number]: string } = {
   0: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,

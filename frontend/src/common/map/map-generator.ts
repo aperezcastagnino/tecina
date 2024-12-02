@@ -1,12 +1,8 @@
 import type { Map } from "types/map";
-<<<<<<< HEAD:frontend/src/common/map/map-logical-generation.ts
-import { mapTiles, frequency, mapWidth, mapHeight } from "config/map-config";
-=======
 import {
   MAP_TILES,
   FREQUENCY,
-} from "../../config/map-config";
->>>>>>> 75eae1f (save for destruction):frontend/src/common/map/map-generator.ts
+} from "config/map-config";
 
 export class MapGenerator {
   #map!: Map;

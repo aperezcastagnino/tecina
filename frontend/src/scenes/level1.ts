@@ -28,8 +28,10 @@ export class Level1 extends Scene {
     this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
 
     this.anims.create({
-      key: 'OrangeAnim',
-      frames: this.anims.generateFrameNumbers(AssetKeys.ITEMS.FRUITS.ORANGE.NAME),
+      key: "OrangeAnim",
+      frames: this.anims.generateFrameNumbers(
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      ),
       frameRate: 19,
       repeat: -1,
     });
