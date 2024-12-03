@@ -6,5 +6,5 @@ build*
 .vscode
 !.vscode/extensions.json
 
-tsconfig.tsbuildinfo*
+tsconfig.tsbuildinfo
 tiled-project/tecina.tiled-session

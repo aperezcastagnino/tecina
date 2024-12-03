@@ -46,6 +46,7 @@ rules:
         - "vite.config.*"
         - "**/vite-env.d.ts"
   no-console: "off"
+  allowAfterSuper: true
 
 # Allows for absolute imports
 settings:

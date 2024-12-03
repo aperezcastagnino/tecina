@@ -3,15 +3,14 @@ import type { Map } from "types/map";
 import { MapGenerator } from "common/map/map-generator";
 import { MAP_COLORS, MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
 import { TILE_SIZE } from "config/config";
-import { SceneKeys } from "./scene-keys";
 
 export class MapLevel extends Phaser.Scene {
   #map: Map;
 
   constructor() {
-    super(SceneKeys.MAP_LEVEL);
+    super('MAP_LEVEL');
 
-    this.#map = MapGenerator.newMap(SceneKeys.MAP_LEVEL, MAP_WIDTH, MAP_HEIGHT);
+    this.#map = MapGenerator.newMap('MAP_LEVEL', MAP_WIDTH, MAP_HEIGHT);
   }
 
   create() {

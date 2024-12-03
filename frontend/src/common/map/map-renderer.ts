@@ -10,7 +10,6 @@ export class MapRenderer {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
     const startPosition: Coordinate = { x: 0, y: 0 };
 
-    console.log(map.mapTiles);
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
         const assetRef = map.mapTiles[row]?.[column] ?? 0;

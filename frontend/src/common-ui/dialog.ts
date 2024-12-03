@@ -130,7 +130,7 @@ export class Dialog {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR,
+      AssetKeys.UI_COMPONENTS.CURSOR,
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({

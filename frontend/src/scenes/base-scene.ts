@@ -134,7 +134,7 @@ export class BaseScene extends Scene {
         const npcSprite = this.physics.add.sprite(
           npcObject.x!,
           npcObject.y!,
-          AssetKeys.UI.NPCS.BASKETMAN.NAME,
+          AssetKeys.CHARACTERS.NPC,
         );
         npcSprite.setOrigin(0.5, 0.5);
         npcSprite.setImmovable(true);
@@ -155,7 +155,7 @@ export class BaseScene extends Scene {
       const spriteAward = this.physics.add.sprite(
         element.x!,
         element.y!,
-        AssetKeys.UI.AWARD.EYE.NAME,
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       );
       spriteAward.setOrigin(0.5, 0.5);
       spriteAward.setImmovable(true);
@@ -197,10 +197,10 @@ export class BaseScene extends Scene {
     Phaser.Tilemaps.Tilemap | undefined,
     Phaser.Tilemaps.TilemapLayer | undefined,
   ] {
-    const tilemap = scene.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
+    const tilemap = scene.make.tilemap({ key: AssetKeys.LEVELS.LEVEL_1 });
     const tileset = tilemap.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET,
+      AssetKeys.LEVEL_COMPONENTS.TILESET,
     );
     if (!tileset) {
       console.error(
@@ -208,9 +208,9 @@ export class BaseScene extends Scene {
       );
       return [undefined, undefined];
     }
-    tilemap.createLayer(AssetKeys.LEVELS.GROUND, tileset);
+    tilemap.createLayer(AssetKeys.LEVEL_COMPONENTS.GROUND, tileset);
     const collisionLayer = tilemap.createLayer(
-      AssetKeys.LEVELS.ELEMENTS,
+      AssetKeys.LEVEL_COMPONENTS.ELEMENTS,
       tileset,
     );
     if (!collisionLayer) {

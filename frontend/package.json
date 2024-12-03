@@ -2,6 +2,7 @@
   "name": "tecina",
   "description": "Phaser 3 with TypeScript using Vite.",
   "version": "0.0.1",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aperezcastagnino/tecina"

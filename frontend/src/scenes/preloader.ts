@@ -29,20 +29,32 @@ export class Preloader extends Scene {
   preload() {
     this.load.setPath("assets");
 
-    // backgrounds
+    // Backgrounds
     this.load.image(
       AssetKeys.BACKGROUNDS.MAIN_MENU,
-      `/backgrounds/main-menu-background.png`,
+      `/backgrounds/main-menu-background.png`
     );
 
-    // load characters
+    // Load data
+    this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
+    this.load.json("level_1", "/data/level_1.json");
+    this.load.json("level_deprecated", "/data/level_deprecated.json");
+
+    // Level 1
+    this.load.tilemapTiledJSON(AssetKeys.LEVELS.LEVEL_1, `/maps/level1.json`);
+    this.load.image(
+      AssetKeys.LEVEL_COMPONENTS.TILESET,
+      `/tilesets/tileset_sunnysideworld_16px.png`
+    );
+
+    // Load Characters
     this.load.spritesheet(
       AssetKeys.CHARACTERS.PLAYER,
       `characters/player.png`,
       {
         frameWidth: 64,
         frameHeight: 88,
-      },
+      }
     );
     this.load.spritesheet(
       AssetKeys.CHARACTERS.NPC,
@@ -50,56 +62,11 @@ export class Preloader extends Scene {
       {
         frameWidth: 16,
         frameHeight: 16,
-      },
+      }
     );
 
-    // load json data
-    this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
-    this.load.json("level_1", "/data/level_1.json");
-    this.load.json("level_deprecated", "/data/level_deprecated.json");
-
-    // level 1
-    this.load.tilemapTiledJSON(AssetKeys.MAPS.LEVEL_1, `/maps/level1.json`);
-    this.load.image(
-      AssetKeys.LEVELS.TILESET,
-      `/tilesets/tileset_sunnysideworld_16px.png`,
-    );
-
-    this.load.image(AssetKeys.UI.CURSOR, `/images/cursor.png`);
-
-    // this.load.spritesheet(AssetKeys.UI.AWARD.STAR.NAME, "/awards/star.png", {
-    //   frameWidth: AssetKeys.UI.AWARD.STAR.frameWidth,
-    //   frameHeight: AssetKeys.UI.AWARD.STAR.frameHeight,
-    //   startFrame: AssetKeys.UI.AWARD.STAR.startFrame,
-    //   endFrame: AssetKeys.UI.AWARD.STAR.endFrame,
-    // });
-    // this.load.spritesheet(AssetKeys.UI.AWARD.EYE.NAME, "/awards/anim_eye.png", {
-    //   frameWidth: AssetKeys.UI.AWARD.EYE.frameWidth,
-    //   frameHeight: AssetKeys.UI.AWARD.EYE.frameHeight,
-    //   startFrame: AssetKeys.UI.AWARD.EYE.startFrame,
-    //   endFrame: AssetKeys.UI.AWARD.EYE.endFrame,
-    // });
-    // this.load.spritesheet(
-    //   AssetKeys.UI.NPCS.BASKETMAN.NAME,
-    //   "/npcs/gasol_botando.png",
-    //   {
-    //     frameWidth: AssetKeys.UI.NPCS.BASKETMAN.frameWidth,
-    //     frameHeight: AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
-    //     startFrame: AssetKeys.UI.NPCS.BASKETMAN.startFrame,
-    //     endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
-    //   }
-    // );
-
-    this.load.spritesheet(
-      AssetKeys.UI.NPCS.BASKETMAN.NAME,
-      "/npcs/gasol_botando.png",
-      {
-        frameWidth: AssetKeys.UI.NPCS.BASKETMAN.frameWidth,
-        frameHeight: AssetKeys.UI.NPCS.BASKETMAN.frameHeight,
-        startFrame: AssetKeys.UI.NPCS.BASKETMAN.startFrame,
-        endFrame: AssetKeys.UI.NPCS.BASKETMAN.endFrame,
-      },
-    );
+    // Load UI Components
+    this.load.image(AssetKeys.UI_COMPONENTS.CURSOR, `/images/cursor.png`);
 
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
@@ -116,7 +83,7 @@ export class Preloader extends Scene {
         frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
         startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-      },
+      }
     );
   }
 
@@ -124,7 +91,7 @@ export class Preloader extends Scene {
     this.#createAnimations();
 
     this.scene.start(
-      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU
     );
   }
 

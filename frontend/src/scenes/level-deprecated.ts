@@ -11,17 +11,14 @@ export class LevelDeprecated extends BaseScene {
   }
 
   _defineBehaviors() {
-    // eslint-disable-next-line no-underscore-dangle
     super._defineBehaviors();
   }
 
   _defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
-    // eslint-disable-next-line no-underscore-dangle
     super._defineBehaviorForNPCs(npc);
   }
 
   _defineBehaviorForAwards(award: Phaser.GameObjects.Sprite) {
-    // eslint-disable-next-line no-underscore-dangle
     super._defineBehaviorForAwards(award);
   }
 }
