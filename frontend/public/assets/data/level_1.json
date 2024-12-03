@@ -33,6 +33,31 @@
             "correctOption": "opcion 1"
           }
         ]
+      },
+      {
+        "id": "npc-2",
+        "description": "segundo npc",
+        "dialogs": [
+          {
+            "id": "npc-2-d-1",
+            "description": "primer dialogo",
+            "statements": [
+              "Hello, I am the SECOND NPC",
+              "I am here to help you",
+              "I will give you a hint",
+              "You need to find the key to open the door"
+            ]
+          },
+          {
+            "id": "npc-2-d-2",
+            "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
+            "statements": [
+              "Hello! It's me again",
+              "I hope you find the key soon",
+              "Good luck!"
+            ]
+          }
+        ]
       }
     ],
     "simpleDialogs": [
