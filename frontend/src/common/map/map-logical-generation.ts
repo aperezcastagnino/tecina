@@ -1,10 +1,5 @@
 import type { Map } from "types/map";
-import {
-  mapTiles,
-  frequency,
-  mapWidth,
-  mapHeight,
-} from "../../config/map-config";
+import { mapTiles, frequency, mapWidth, mapHeight } from "config/map-config";
 
 export class MapLogicalGenerator {
   #map!: Map;

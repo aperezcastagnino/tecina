@@ -3,7 +3,7 @@ import {
   SPECIAL_KEYS,
   type Direction,
   type PlayerKeys,
-} from "./player-keys";
+} from "common/player-keys";
 
 export class Controls {
   #scene: Phaser.Scene;

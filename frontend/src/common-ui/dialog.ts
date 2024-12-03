@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import type { DialogData, DialogDataCollection } from "../types/level-data";
-import { animateText } from "../utils/animation-utils";
-import { PRIMARY_FONT_FAMILY, FontSize } from "../assets/fonts";
-import { DialogColors } from "../assets/colors";
-import { AssetKeys } from "../assets/asset-keys";
+import type { DialogData, DialogDataCollection } from "types/level-data";
+import { animateText } from "utils/animation-utils";
+import { PRIMARY_FONT_FAMILY, FontSize } from "assets/fonts";
+import { DialogColors } from "assets/colors";
+import { AssetKeys } from "assets/asset-keys";
 
 export type DialogConfig = {
   scene: Phaser.Scene;

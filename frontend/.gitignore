@@ -1,11 +1,10 @@
 npm-debug.log*
 
-node_modules
-dist
-*.local
+node_modules*
+build*
 
-.vscode/*
+.vscode
 !.vscode/extensions.json
 
-tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo*
 tiled-project/tecina.tiled-session
