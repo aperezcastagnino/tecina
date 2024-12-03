@@ -2,14 +2,7 @@ import { Scene } from "phaser";
 import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/debug-config";
 import { AssetKeys } from "assets/asset-keys";
 import { getAnimations } from "utils/animation-utils";
-import { mapWidth, mapHeight } from "config/map-config";
-import { MapLogicalGenerator } from "common/map/map-logical-generation";
 import { SceneKeys } from "./scene-keys";
-<<<<<<< HEAD
-=======
-import { AssetKeys } from "../assets/asset-keys";
-import { getAnimations } from "../utils/animation-utils";
->>>>>>> 75eae1f (save for destruction)
 
 export class Preloader extends Scene {
   constructor() {

@@ -1,9 +1,9 @@
 import type { Scene } from "phaser";
-import { AssetKeys } from "../../assets/asset-keys";
-import type { Map } from "../../types/map";
-import { TILE_SIZE } from "../../config/config";
-import { MAP_COLORS, MAP_TILES_ASSETS } from "../../config/map-config";
-import type { Coordinate } from "../../types/coordinate";
+import { AssetKeys } from "assets/asset-keys";
+import type { Map } from "types/map";
+import { TILE_SIZE } from "config/config";
+import { MAP_COLORS, MAP_TILES_ASSETS } from "config/map-config";
+import type { Coordinate } from "types/coordinate";
 
 export class MapRenderer {
   static renderer(scene: Scene, map: Map) {
@@ -22,12 +22,12 @@ export class MapRenderer {
         const tileImage = scene.add
         .image(x, y, assetName)
         .setDisplaySize(TILE_SIZE, TILE_SIZE);
-      
+
         let childObject = null;
       map.assetGroups[assetRef]?.add(tileImage);
       childObject = tileImage;
-        
-      if (MAP_COLORS[assetRef] == 0xffcc66) {
+
+      if (MAP_COLORS[assetRef] === 0xffcc66) {
           const spriteAward = scene.add.sprite(
             x,
             y,
@@ -35,13 +35,13 @@ export class MapRenderer {
           );
           spriteAward.setScale(2)
           spriteAward.anims.play("OrangeAnim", true);
-          childObject = spriteAward; //Sobreescribo childObject
+          childObject = spriteAward; // Sobreescribo childObject
 
-        } 
-        if(MAP_COLORS[assetRef]== 0x026440){
-          const npcImage = scene.add.image(x,y,AssetKeys.CHARACTERS.NPC);  
+        }
+        if(MAP_COLORS[assetRef] === 0x026440){
+          const npcImage = scene.add.image(x,y,AssetKeys.CHARACTERS.NPC);
           npcImage.setScale(3);
-          childObject = npcImage;//Sobreescribo childObject
+          childObject = npcImage; // Sobreescribo childObject
         }
 
         if (map.assetGroups[assetRef] === undefined) {
@@ -50,7 +50,7 @@ export class MapRenderer {
           map.assetGroups[assetRef] = group;
           group.name = assetName;
         }
-        map.assetGroups[assetRef]?.add(childObject);//Agrego childObject que puede ser el sprite, la imagen del npc o la imagen original.
+        map.assetGroups[assetRef]?.add(childObject);// Agrego childObject que puede ser el sprite, la imagen del npc o la imagen original.
       }
     }
   }

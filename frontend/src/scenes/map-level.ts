@@ -1,19 +1,9 @@
 import Phaser from "phaser";
-<<<<<<< HEAD
-import { mapColors } from "config/map-config";
+import type { Map } from "types/map";
+import { MapGenerator } from "common/map/map-generator";
+import { MAP_COLORS, MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
 import { TILE_SIZE } from "config/config";
 import { SceneKeys } from "./scene-keys";
-import { Preloader } from "./preloader";
-
-const preloader = new Preloader();
-const map = preloader.createMap(); // This will internally call the private #createMap method
-=======
-import type { Map } from "types/map";
-import { MapGenerator } from "../common/map/map-generator";
-import { SceneKeys } from "./scene-keys";
-import { MAP_COLORS, MAP_HEIGHT, MAP_WIDTH } from "../config/map-config";
-import { TILE_SIZE } from "../config/config";
->>>>>>> 75eae1f (save for destruction)
 
 export class MapLevel extends Phaser.Scene {
   #map: Map;
