@@ -8,9 +8,9 @@ export class MapLevel extends Phaser.Scene {
   #map: Map;
 
   constructor() {
-    super('MAP_LEVEL');
+    super("MAP_LEVEL");
 
-    this.#map = MapGenerator.newMap('MAP_LEVEL', MAP_WIDTH, MAP_HEIGHT);
+    this.#map = MapGenerator.newMap("MAP_LEVEL", MAP_WIDTH, MAP_HEIGHT);
   }
 
   create() {
