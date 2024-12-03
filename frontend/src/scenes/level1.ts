@@ -1,15 +1,15 @@
 import { Scene, GameObjects } from "phaser";
-import { AssetKeys } from "../assets/asset-keys";
-import { MAP_HEIGHT, MAP_WIDTH } from "../config/map-config";
-import { MapGenerator } from "../common/map/map-generator";
-import type { Map } from "../types/map";
-import { MapRenderer } from "../common/map/map-renderer";
-import { loadLevelData } from "../utils/data-util";
+import { AssetKeys } from "assets/asset-keys";
+import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
+import type { Map } from "types/map";
+import { loadLevelData } from "utils/data-util";
+import { GAME_DIMENSIONS } from "config/config";
+import { MapGenerator } from "common/map/map-generator";
+import { MapRenderer } from "common/map/map-renderer";
+import { Controls } from "common/controls";
+import { Player } from "common/player";
+import { Dialog } from "common-ui/dialog";
 import { SceneKeys } from "./scene-keys";
-import { GAME_DIMENSIONS } from "../config/config";
-import { Controls } from "../common/controls";
-import { Player } from "../common/player";
-import { Dialog } from "../common-ui/dialog";
 
 export class Level1 extends Scene {
   #player!: Player;

@@ -1,6 +1,6 @@
 import { Game, type Types } from "phaser";
+import { GAME_DIMENSIONS } from "config/config";
 import { LevelDeprecated } from "./scenes/level-deprecated";
-import { GAME_DIMENSIONS } from "./config/config";
 import { Boot } from "./scenes/boot";
 import { Level1 } from "./scenes/level1";
 import { MainMenu } from "./scenes/main-menu";
