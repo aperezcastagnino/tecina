@@ -1,8 +1,5 @@
 import type { Map } from "types/map";
-import {
-  MAP_TILES,
-  FREQUENCY,
-} from "config/map-config";
+import { MAP_TILES, FREQUENCY } from "config/map-config";
 
 export class MapGenerator {
   #map!: Map;
@@ -17,9 +14,7 @@ export class MapGenerator {
   #createEmptyMap(sceneKey: string, rows: number, columns: number) {
     this.#map = {
       id: `MAP-${sceneKey}`,
-      mapTiles: new Array(rows)
-        .fill([])
-        .map(() => new Array(columns).fill(0)),
+      mapTiles: new Array(rows).fill([]).map(() => new Array(columns).fill(0)),
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
@@ -33,7 +28,10 @@ export class MapGenerator {
     let y = 2;
 
     this.#map.startPosition = { x, y };
-    this.#map.finishPosition = { x: this.#map.rows - 1, y: this.#map.columns - 1 };
+    this.#map.finishPosition = {
+      x: this.#map.rows - 1,
+      y: this.#map.columns - 1,
+    };
     this.#map.mapTiles[x]![y] = 4;
 
     while (y < this.#map.columns - 3) {
@@ -77,12 +75,16 @@ export class MapGenerator {
 
     for (let i = 1; i < this.#map.rows - 1; i += 1) {
       this.#map.mapTiles[i]![1] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[i]![this.#map.columns - 2] = Math.floor(Math.random() * 2);
+      this.#map.mapTiles[i]![this.#map.columns - 2] = Math.floor(
+        Math.random() * 2,
+      );
     }
 
     for (let j = 1; j < this.#map.columns - 1; j += 1) {
       this.#map.mapTiles[1]![j] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[this.#map.rows - 2]![j] = Math.floor(Math.random() * 2);
+      this.#map.mapTiles[this.#map.rows - 2]![j] = Math.floor(
+        Math.random() * 2,
+      );
     }
   }
 

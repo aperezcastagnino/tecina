@@ -10,7 +10,7 @@ export class MapRenderer {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
     const startPosition: Coordinate = { x: 0, y: 0 };
 
-    console.log(map.mapTiles)
+    console.log(map.mapTiles);
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
         const assetRef = map.mapTiles[row]?.[column] ?? 0;
@@ -20,26 +20,25 @@ export class MapRenderer {
 
         const assetName = MAP_TILES_ASSETS[assetRef]!;
         const tileImage = scene.add
-        .image(x, y, assetName)
-        .setDisplaySize(TILE_SIZE, TILE_SIZE);
+          .image(x, y, assetName)
+          .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
         let childObject = null;
-      map.assetGroups[assetRef]?.add(tileImage);
-      childObject = tileImage;
+        map.assetGroups[assetRef]?.add(tileImage);
+        childObject = tileImage;
 
-      if (MAP_COLORS[assetRef] === 0xffcc66) {
+        if (MAP_COLORS[assetRef] === 0xffcc66) {
           const spriteAward = scene.add.sprite(
             x,
             y,
             AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
           );
-          spriteAward.setScale(2)
+          spriteAward.setScale(2);
           spriteAward.anims.play("OrangeAnim", true);
           childObject = spriteAward; // Sobreescribo childObject
-
         }
-        if(MAP_COLORS[assetRef] === 0x026440){
-          const npcImage = scene.add.image(x,y,AssetKeys.CHARACTERS.NPC);
+        if (MAP_COLORS[assetRef] === 0x026440) {
+          const npcImage = scene.add.image(x, y, AssetKeys.CHARACTERS.NPC);
           npcImage.setScale(3);
           childObject = npcImage; // Sobreescribo childObject
         }
@@ -50,7 +49,7 @@ export class MapRenderer {
           map.assetGroups[assetRef] = group;
           group.name = assetName;
         }
-        map.assetGroups[assetRef]?.add(childObject);// Agrego childObject que puede ser el sprite, la imagen del npc o la imagen original.
+        map.assetGroups[assetRef]?.add(childObject); // Agrego childObject que puede ser el sprite, la imagen del npc o la imagen original.
       }
     }
   }
