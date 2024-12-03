@@ -56,8 +56,8 @@ export const AssetKeys = {
     FRUITS: {
       ORANGE: {
         NAME: "ORANGE",
-        FRAME_WIDTH: 40,
-        FRAME_HEIGHT: 40,
+        FRAME_WIDTH: 32,
+        FRAME_HEIGHT: 32,
         STAR_FRAME: 0,
         END_FRAME: 17,
       },

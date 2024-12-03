@@ -1,10 +1,12 @@
 import { AssetKeys } from "../assets/asset-keys";
 
 export const MAP_TILES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-export const FREQUENCY = [10, 30, 50, 1, 2, 0, 0, 0, 0, 0];
+export const FREQUENCY = [10, 20, 50, 1, 7, 5, 0, 0, 0, 0];
 
 export const MAP_WIDTH = 300;
 export const MAP_HEIGHT = 300;
+export const COUNT_OF_NPC = 1;
+export const NPC_ID = 2;
 
 export const MAP_COLORS: { [key: number]: number } = {
   0: 0x6e5c4f, // White for 0
@@ -20,9 +22,9 @@ export const MAP_COLORS: { [key: number]: number } = {
 };
 
 export const MAP_TILES_ASSETS: { [key: number]: string } = {
-  0: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+  0: AssetKeys.TILES.GRASS,
   1: AssetKeys.TILES.TREE, // Only 1s are collidable
-  2: AssetKeys.TILES.FLOWER,
+  2: AssetKeys.TILES.GRASS,
   3: AssetKeys.TILES.FLOWER_GRASS,
   4: AssetKeys.TILES.GRASS,
   5: AssetKeys.TILES.GRASS,
