@@ -13,7 +13,6 @@ export class MapRenderer {
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
         const assetRef = map.mapTiles[row]?.[column] ?? 0;
-
         const x = startPosition.x + column * TILE_SIZE;
         const y = startPosition.y + row * TILE_SIZE;
 

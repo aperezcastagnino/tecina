@@ -22,6 +22,7 @@ rules:
   no-underscore-dangle:
     - error
     - allowAfterThis: true
+    - allowAfterSuper: true
   linebreak-style: 0
   # Sometimes it's more convenient to have named exports even
   # though only one thing has to be exported.
@@ -46,7 +47,6 @@ rules:
         - "vite.config.*"
         - "**/vite-env.d.ts"
   no-console: "off"
-  allowAfterSuper: true
 
 # Allows for absolute imports
 settings:
