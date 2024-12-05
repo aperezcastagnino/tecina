@@ -3,7 +3,7 @@ import { AssetKeys } from "assets/asset-keys";
 import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
 import type { Map } from "types/map";
 import { loadLevelData } from "utils/data-util";
-import { GAME_DIMENSIONS } from "config/config";
+import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
 import { MapGenerator } from "common/map/map-generator";
 import { MapRenderer } from "common/map/map-renderer";
 import { Controls } from "common/controls";
@@ -20,6 +20,8 @@ export class Level1 extends Scene {
 
   #map!: Map;
 
+  #total_oranges = 0;
+
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
@@ -28,9 +30,9 @@ export class Level1 extends Scene {
     this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
 
     this.anims.create({
-      key: "OrangeAnim",
+      key: "ORANGEAnim",
       frames: this.anims.generateFrameNumbers(
-        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME
       ),
       frameRate: 19,
       repeat: -1,
@@ -49,14 +51,23 @@ export class Level1 extends Scene {
     // this.#hideElements(this.#awardGroup);
 
     this.#defineBehaviors();
-
+    this.cameras.main.startFollow(this.#player);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      MAP_WIDTH * TILE_SIZE * 400,
+      MAP_HEIGHT * TILE_SIZE * 400,
+      true
+    );
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
   update() {
     const directionSelected = this.#controls.getDirectionKeyPressed();
-    this.#player.move(directionSelected);
 
+    if (!this.#dialog?.isVisible) {
+      this.#player.move(directionSelected);
+    }
     if (this.#controls.wasSpaceKeyPressed()) {
       this.#handlePlayerInteraction();
     }
@@ -87,74 +98,65 @@ export class Level1 extends Scene {
   }
 
   #defineBehaviors() {
-    this.physics.add.collider(this.#player, this.#map.assetGroups[1]!);
-    // this.physics.add.collider(this.#player, this.#npcGroup, (_player, npc) => {
-    //   const npcSprite = npc as Phaser.GameObjects.Sprite;
-    //   this.#defineBehaviorForNPCs(npcSprite);
-    // });
+    const treeGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "TREE"
+    );
+    const orangeGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "ORANGE"
+    );
+    const npcGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "NPC"
+    );
+    this.#hideElements(orangeGroup[0]!);
 
-    // this.physics.add.collider(
-    //   this.#player,
-    //   this.#awardGroup,
-    //   (_player, award) => {
-    //     const awardSprite = award as Phaser.GameObjects.Sprite;
-    //     this.#defineBehaviorForAwards(awardSprite);
-    //   },
-    // );
+    this.#total_oranges = npcGroup[0]!.countActive();
+    console.log(this.#total_oranges);
+    this.physics.add.collider(this.#player, treeGroup[0]!);
+    this.physics.add.collider(this.#player, npcGroup[0]!, (_player, npc) => {
+      const npcSprite = npc as Phaser.GameObjects.Sprite;
+      this.#defineBehaviorForNPCs(npcSprite, orangeGroup[0]!);
+    });
+
+    this.physics.add.collider(
+      this.#player,
+      orangeGroup[0]!,
+      (_player, item) => {
+        const itemObject = item as Phaser.GameObjects.Sprite;
+        this.#defineBehaviorForItems(itemObject);
+      }
+    );
   }
 
-  // #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
-  //   if (this.#controls.wasSpaceKeyPressed()) {
-  //     this.#dialog?.show(npc.name);
-  //     this.#showElements(this.#awardGroup);
-  //   }
-  // }
+  #defineBehaviorForNPCs(
+    npc: Phaser.GameObjects.Sprite,
+    itemGroup: GameObjects.Group
+  ) {
+    if (this.#controls.wasSpaceKeyPressed()) {
+      debugger
+      if (npc.name === "npc-1") {
+        if (this.#total_oranges > 0 && this.#total_oranges < 2 ) {
+          this.#dialog?.setMessageComplete("npc-1");
+          this.#dialog?.showNextMessage();
+        } else
+        {
+          this.#dialog?.show("npc-1");
+          this.#showElements(itemGroup!);
+          this.#dialog?.setMessageComplete("npc-1");
+        }
+      }
 
-  // #defineBehaviorForAwards(award: Phaser.GameObjects.Sprite) {
-  //   award.destroy();
-  // }
+      if (npc.name === "npc-2") {
+      }
 
-  // #createNPCs(tilemap: Phaser.Tilemaps.Tilemap) {
-  //   const npcsLayer = tilemap.objects.find((f) => f.name === "objs_npcs");
+    }
+  }
 
-  //   npcsLayer!.objects.forEach(
-  //     (npcObject: Phaser.Types.Tilemaps.TiledObject) => {
-  //       const npcSprite = this.physics.add.sprite(
-  //         npcObject.x!,
-  //         npcObject.y!,
-  //         AssetKeys.UI.NPCS.BASKETMAN.NAME,
-  //       );
-  //       npcSprite.setOrigin(0.5, 0.5);
-  //       npcSprite.setImmovable(true);
-
-  //       if (this.#npcGroup.getLength() === 0) {
-  //         npcSprite.name = "npc-1";
-  //       } else npcSprite.name = "npc-2";
-
-  //       this.#npcGroup.add(npcSprite);
-  //     },
-  //   );
-  // }
-
-  // #createAwards(tilemap: Phaser.Tilemaps.Tilemap) {
-  //   const awardsLayer = tilemap.objects.find((f) => f.name === "objs_awards");
-
-  //   awardsLayer!.objects.forEach((element) => {
-  //     const spriteAward = this.physics.add.sprite(
-  //       element.x!,
-  //       element.y!,
-  //       AssetKeys.UI.AWARD.EYE.NAME,
-  //     );
-  //     spriteAward.setOrigin(0.5, 0.5);
-  //     spriteAward.setImmovable(true);
-
-  //     this.#awardGroup.add(spriteAward);
-  //   });
-  // }
+  #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
+    item.destroy();
+  }
 
   #createDialogs() {
     const levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
-
     this.#dialog = new Dialog({ scene: this, data: levelData.dialogs });
   }
 

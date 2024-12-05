@@ -28,7 +28,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isMoving = false;
     config.scene.add.existing(this);
     config.scene.physics.add.existing(this);
-    this.setCollideWorldBounds(true);
+    // this.setCollideWorldBounds(true);
 
     (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(config.velocity);
     this.#direction = DIRECTION.NONE;

@@ -22,7 +22,7 @@ export const AssetKeys = {
     CURSOR: "cursor",
   },
   TILES: {
-    GRASS: "GLASS",
+    GRASS: "GRASS",
     FLOWER: "FLOWER",
     TREE: "TREE",
     FLOWER_GRASS: "FLOWER_GRASS",

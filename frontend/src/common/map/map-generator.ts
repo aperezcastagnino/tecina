@@ -1,5 +1,5 @@
 import type { Map } from "types/map";
-import { MAP_TILES, FREQUENCY } from "config/map-config";
+import { TILES_TO_USE, FREQUENCY } from "config/map-config";
 
 export class MapGenerator {
   #map!: Map;
@@ -117,7 +117,7 @@ export class MapGenerator {
           );
 
           // We fill the map with the selected number
-          this.#map.mapTiles[i]![j] = MAP_TILES[selectedIndex]!;
+          this.#map.mapTiles[i]![j] = TILES_TO_USE[selectedIndex]!;
         }
       }
     }

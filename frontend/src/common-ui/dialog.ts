@@ -27,7 +27,7 @@ export class Dialog {
 
   #padding: number;
 
-  #container!: Phaser.GameObjects.Container;
+  container!: Phaser.GameObjects.Container;
 
   #userInputCursor!: Phaser.GameObjects.Image;
 
@@ -74,18 +74,18 @@ export class Dialog {
       ...{ wordWrap: { width: this.#width - 18 } },
     });
 
-    this.#container = this.#scene.add.container(0, 0, [panel]);
-    this.#container.add(this.#uiText);
+    this.container = this.#scene.add.container(0, 0, [panel]);
+    this.container.add(this.#uiText);
 
     const startX = this.#padding;
     const startY =
       this.#scene.cameras.main.height - this.#height - this.#padding / 4;
-    this.#container.setPosition(startX, startY);
+    this.container.setPosition(startX, startY);
     this.#createPlayerInputCursor();
   }
 
   show(npcId?: string): void {
-    this.#container.setAlpha(1);
+    this.container.setAlpha(1);
     this.isVisible = true;
 
     if (npcId) {
@@ -97,7 +97,7 @@ export class Dialog {
 
   hide(): void {
     this.#userInputCursorTween.pause();
-    this.#container.setAlpha(0);
+    this.container.setAlpha(0);
     this.isVisible = false;
   }
 
@@ -145,7 +145,7 @@ export class Dialog {
       targets: this.#userInputCursor,
     });
     // this._userInputCursorTween.pause();
-    this.#container.add(this.#userInputCursor);
+    this.container.add(this.#userInputCursor);
   }
 
   #handleNPCDialogs(npcId: string): void {
