@@ -22,11 +22,20 @@ export class Level1 extends Scene {
 
   #total_oranges = 0;
 
+  private npc_1_show_first_message!: boolean;
+  private npc_1_show_first_complete_collect_objects!: boolean;
+  private npc_1_show_intermediate_message!: boolean;
+
+
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
   preload() {
+    this.npc_1_show_first_message = true;
+    this.npc_1_show_first_complete_collect_objects = true;
+    this.npc_1_show_intermediate_message = false;
+
     this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
 
     this.anims.create({
@@ -104,12 +113,15 @@ export class Level1 extends Scene {
     const orangeGroup = this.#map.assetGroups.filter(
       (group) => group.name === "ORANGE",
     );
+    const appleGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "APPLE",
+    );
     const npcGroup = this.#map.assetGroups.filter(
       (group) => group.name === "NPC",
     );
     this.#hideElements(orangeGroup[0]!);
 
-    this.#total_oranges = npcGroup[0]!.countActive();
+    this.#total_oranges = orangeGroup[0]!.getChildren().length;
     console.log(this.#total_oranges);
     this.physics.add.collider(this.#player, treeGroup[0]!);
     this.physics.add.collider(this.#player, npcGroup[0]!, (_player, npc) => {
@@ -131,22 +143,43 @@ export class Level1 extends Scene {
     npc: Phaser.GameObjects.Sprite,
     itemGroup: GameObjects.Group,
   ) {
+    this.#total_oranges = this.#map.assetGroups.filter(
+      (group) => group.name === "ORANGE",
+    )[0]!.getChildren().length;
     if (this.#controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
-        if (this.#total_oranges > 0 && this.#total_oranges < 2) {
-          this.#dialog?.setMessageComplete("npc-1");
-          this.#dialog?.showNextMessage();
-        } else {
+        if(this.npc_1_show_first_message){
           this.#dialog?.show("npc-1");
           this.#showElements(itemGroup!);
           this.#dialog?.setMessageComplete("npc-1");
-        }
+          this.npc_1_show_first_message = false;
       }
+      else{
+        if(this.#total_oranges> 0){ 
+          this.#dialog?.show("npc-1"); 
+          this.npc_1_show_intermediate_message = true;       
+        }
+        else{
+          if(this.npc_1_show_first_complete_collect_objects){
+            if(!this.npc_1_show_intermediate_message){
+              this.#dialog?.setMessageComplete("npc-1");  
+            }
+            this.npc_1_show_first_complete_collect_objects = false;
+          }
+          this.#dialog?.show("npc-1");        
+        }
+      }      
+      }
+      if(npc.name == "npc-2"){
+        if(this.#total_oranges== 0){
+          this.#dialog?.setMessageComplete("npc-2");
+        }
+        this.#dialog?.show("npc-2");        
 
-      // if (npc.name === "npc-2") {
-      // }
+      }
     }
   }
+
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
     item.destroy();
