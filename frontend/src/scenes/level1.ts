@@ -32,7 +32,7 @@ export class Level1 extends Scene {
     this.anims.create({
       key: "ORANGEAnim",
       frames: this.anims.generateFrameNumbers(
-        AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       ),
       frameRate: 19,
       repeat: -1,
@@ -57,7 +57,7 @@ export class Level1 extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true
+      true,
     );
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
@@ -99,13 +99,13 @@ export class Level1 extends Scene {
 
   #defineBehaviors() {
     const treeGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "TREE"
+      (group) => group.name === "TREE",
     );
     const orangeGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "ORANGE"
+      (group) => group.name === "ORANGE",
     );
     const npcGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "NPC"
+      (group) => group.name === "NPC",
     );
     this.#hideElements(orangeGroup[0]!);
 
@@ -123,31 +123,28 @@ export class Level1 extends Scene {
       (_player, item) => {
         const itemObject = item as Phaser.GameObjects.Sprite;
         this.#defineBehaviorForItems(itemObject);
-      }
+      },
     );
   }
 
   #defineBehaviorForNPCs(
     npc: Phaser.GameObjects.Sprite,
-    itemGroup: GameObjects.Group
+    itemGroup: GameObjects.Group,
   ) {
     if (this.#controls.wasSpaceKeyPressed()) {
-      debugger
       if (npc.name === "npc-1") {
-        if (this.#total_oranges > 0 && this.#total_oranges < 2 ) {
+        if (this.#total_oranges > 0 && this.#total_oranges < 2) {
           this.#dialog?.setMessageComplete("npc-1");
           this.#dialog?.showNextMessage();
-        } else
-        {
+        } else {
           this.#dialog?.show("npc-1");
           this.#showElements(itemGroup!);
           this.#dialog?.setMessageComplete("npc-1");
         }
       }
 
-      if (npc.name === "npc-2") {
-      }
-
+      // if (npc.name === "npc-2") {
+      // }
     }
   }
 

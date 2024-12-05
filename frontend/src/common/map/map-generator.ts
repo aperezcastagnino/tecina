@@ -45,9 +45,9 @@ export class MapGenerator {
 
       // keeps it inside x and y
       if (x >= 3 && x < this.#map.rows - 3 && y >= 0 && y < this.#map.columns) {
-        this.#map.mapTiles[x]![y] = 7; // keep track of where you have been
+        this.#map.mapTiles[x]![y] = 1; // keep track of where you have been
         y += 1; // Always move right
-        this.#map.mapTiles[x]![y] = 7;
+        this.#map.mapTiles[x]![y] = 1;
       }
     }
   }

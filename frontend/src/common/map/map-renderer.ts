@@ -36,7 +36,7 @@ export class MapRenderer {
           const sprite = scene.add.sprite(
             x,
             y,
-            AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+            AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
           );
           sprite.setScale(2);
           sprite.anims.play(`${AssetKeys.ITEMS.FRUITS.ORANGE.NAME}Anim`, true);
@@ -47,7 +47,12 @@ export class MapRenderer {
             .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
           if (numberOfNPCs > 0) {
-            const sprite = scene.add.image(x, y, AssetKeys.CHARACTERS.NPC, assetNPC[numberOfNPCs - 1]);
+            const sprite = scene.add.image(
+              x,
+              y,
+              AssetKeys.CHARACTERS.NPC,
+              assetNPC[numberOfNPCs - 1],
+            );
             sprite.setScale(3);
             sprite.name = `npc-${numberOfNPCs}`;
 
@@ -55,7 +60,7 @@ export class MapRenderer {
               const group = scene.physics.add.staticGroup();
               // eslint-disable-next-line no-param-reassign
               map.assetGroups[Tiles.NPC] = group;
-              group.name = 'NPC';
+              group.name = "NPC";
             }
 
             map.assetGroups[Tiles.NPC]?.add(sprite);
