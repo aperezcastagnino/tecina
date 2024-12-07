@@ -153,7 +153,7 @@ export class DialogWithOptions {
       .image(
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
-        AssetKeys.UI.CURSOR,
+        AssetKeys.UI_COMPONENTS.CURSOR,
         0,
       )
       .setOrigin(0.5)

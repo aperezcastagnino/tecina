@@ -1,11 +1,14 @@
-import { GameObjects, Scene } from "phaser";
-import { loadLevelData } from "utils/data-util";
+import { Scene, GameObjects } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import { Player } from "common/player";
-import { TILE_SIZE } from "config/config";
+import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
+import type { Map } from "types/map";
+import { loadLevelData } from "utils/data-util";
+import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
+import { MapGenerator } from "common/map/map-generator";
+import { MapRenderer } from "common/map/map-renderer";
 import { Controls } from "common/controls";
+import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
-import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { SceneKeys } from "./scene-keys";
 
 export class Level1 extends Scene {
@@ -15,59 +18,67 @@ export class Level1 extends Scene {
 
   #dialog: Dialog | undefined;
 
-  #dialogWithOptions: DialogWithOptions | undefined;
+  #map!: Map;
 
-  #npcGroup!: GameObjects.Group;
+  #total_oranges = 0;
 
-  #awardGroup!: GameObjects.Group;
+  private npc_1_show_first_message!: boolean;
+  private npc_1_show_first_complete_collect_objects!: boolean;
+  private npc_1_show_intermediate_message!: boolean;
+
 
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
+  preload() {
+    this.npc_1_show_first_message = true;
+    this.npc_1_show_first_complete_collect_objects = true;
+    this.npc_1_show_intermediate_message = false;
+
+    this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
+
+    this.anims.create({
+      key: "ORANGEAnim",
+      frames: this.anims.generateFrameNumbers(
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      ),
+      frameRate: 19,
+      repeat: -1,
+    });
+  }
+
   create() {
-    this.#npcGroup = this.add.group();
-    this.#awardGroup = this.add.group();
+    MapRenderer.renderer(this, this.#map);
 
-    const [tilemap, collisionLayer] = this.#createMapFromTiled(this);
-    if (tilemap === undefined || collisionLayer === undefined) {
-      console.error(`ERRROR CREATING MAP FROM TILED: ${SceneKeys.LEVEL_1}`);
-      return;
-    }
+    console.log(this.#map);
 
-    this.#createPlayer(collisionLayer);
+    this.#createPlayer();
 
     this.#createDialogs();
 
-    this.#createNPCs(tilemap);
-
-    this.#createAwards(tilemap);
-
-    this.#hideElements(this.#awardGroup);
+    // this.#hideElements(this.#awardGroup);
 
     this.#defineBehaviors();
-
-    this.cameras.main.setBounds(0, 0, 1280, 2176);
+    this.cameras.main.startFollow(this.#player);
+    this.cameras.main.setBounds(
+      0,
+      0,
+      MAP_WIDTH * TILE_SIZE * 400,
+      MAP_HEIGHT * TILE_SIZE * 400,
+      true,
+    );
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
   update() {
     const directionSelected = this.#controls.getDirectionKeyPressed();
-    this.#player.move(directionSelected);
 
-    if (this.#controls.wasSpaceKeyPressed() && !this.#player.isMoving) {
+    if (!this.#dialog?.isVisible) {
+      this.#player.move(directionSelected);
+    }
+    if (this.#controls.wasSpaceKeyPressed()) {
       this.#handlePlayerInteraction();
-    }
-
-    if (this.#controls.wasShiftPressed()) {
-      this.#dialog?.setMessageComplete("npc-1");
-      this.#dialogWithOptions?.show("npc-1");
-    }
-
-    if (this.#dialogWithOptions?.isVisible) {
-      this.#dialogWithOptions!.handlePlayerInput(
-        this.#controls.getKeyPressed(),
-      );
     }
   }
 
@@ -96,127 +107,99 @@ export class Level1 extends Scene {
   }
 
   #defineBehaviors() {
-    this.physics.add.collider(this.#player, this.#npcGroup, (_player, npc) => {
+    const treeGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "TREE",
+    );
+    const orangeGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "ORANGE",
+    );
+    const appleGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "APPLE",
+    );
+    const npcGroup = this.#map.assetGroups.filter(
+      (group) => group.name === "NPC",
+    );
+    this.#hideElements(orangeGroup[0]!);
+
+    this.#total_oranges = orangeGroup[0]!.getChildren().length;
+    console.log(this.#total_oranges);
+    this.physics.add.collider(this.#player, treeGroup[0]!);
+    this.physics.add.collider(this.#player, npcGroup[0]!, (_player, npc) => {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForNPCs(npcSprite);
+      this.#defineBehaviorForNPCs(npcSprite, orangeGroup[0]!);
     });
 
     this.physics.add.collider(
       this.#player,
-      this.#awardGroup,
-      (_player, award) => {
-        const awardSprite = award as Phaser.GameObjects.Sprite;
-        this.#defineBehaviorForAwards(awardSprite);
+      orangeGroup[0]!,
+      (_player, item) => {
+        const itemObject = item as Phaser.GameObjects.Sprite;
+        this.#defineBehaviorForItems(itemObject);
       },
     );
   }
 
-  #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
+  #defineBehaviorForNPCs(
+    npc: Phaser.GameObjects.Sprite,
+    itemGroup: GameObjects.Group,
+  ) {
+    this.#total_oranges = this.#map.assetGroups.filter(
+      (group) => group.name === "ORANGE",
+    )[0]!.getChildren().length;
     if (this.#controls.wasSpaceKeyPressed()) {
-      this.#dialog?.show(npc.name);
-      this.#showElements(this.#awardGroup);
+      if (npc.name === "npc-1") {
+        if(this.npc_1_show_first_message){
+          this.#dialog?.show("npc-1");
+          this.#showElements(itemGroup!);
+          this.#dialog?.setMessageComplete("npc-1");
+          this.npc_1_show_first_message = false;
+      }
+      else{
+        if(this.#total_oranges> 0){ 
+          this.#dialog?.show("npc-1"); 
+          this.npc_1_show_intermediate_message = true;       
+        }
+        else{
+          if(this.npc_1_show_first_complete_collect_objects){
+            if(!this.npc_1_show_intermediate_message){
+              this.#dialog?.setMessageComplete("npc-1");  
+            }
+            this.npc_1_show_first_complete_collect_objects = false;
+          }
+          this.#dialog?.show("npc-1");        
+        }
+      }      
+      }
+      if(npc.name == "npc-2"){
+        if(this.#total_oranges== 0){
+          this.#dialog?.setMessageComplete("npc-2");
+        }
+        this.#dialog?.show("npc-2");        
+
+      }
     }
   }
 
-  #defineBehaviorForAwards(award: Phaser.GameObjects.Sprite) {
-    award.destroy();
-  }
 
-  #createNPCs(tilemap: Phaser.Tilemaps.Tilemap) {
-    const npcsLayer = tilemap.objects.find((f) => f.name === "objs_npcs");
-
-    npcsLayer!.objects.forEach(
-      (npcObject: Phaser.Types.Tilemaps.TiledObject) => {
-        const npcSprite = this.physics.add.sprite(
-          npcObject.x!,
-          npcObject.y!,
-          AssetKeys.UI.NPCS.BASKETMAN.NAME,
-        );
-        npcSprite.setOrigin(0.5, 0.5);
-        npcSprite.setImmovable(true);
-
-        if (this.#npcGroup.getLength() === 0) {
-          npcSprite.name = "npc-1";
-        } else npcSprite.name = "npc-2";
-
-        this.#npcGroup.add(npcSprite);
-      },
-    );
-  }
-
-  #createAwards(tilemap: Phaser.Tilemaps.Tilemap) {
-    const awardsLayer = tilemap.objects.find((f) => f.name === "objs_awards");
-
-    awardsLayer!.objects.forEach((element) => {
-      const spriteAward = this.physics.add.sprite(
-        element.x!,
-        element.y!,
-        AssetKeys.UI.AWARD.EYE.NAME,
-      );
-      spriteAward.setOrigin(0.5, 0.5);
-      spriteAward.setImmovable(true);
-
-      this.#awardGroup.add(spriteAward);
-    });
+  #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
+    item.destroy();
   }
 
   #createDialogs() {
     const levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
-
     this.#dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this.#dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: levelData.dialogs,
-      callback: (optionSelected: string) => {
-        console.log("Option selected: ", optionSelected);
-      },
-    });
   }
 
-  #createPlayer(collisionLayer: Phaser.Tilemaps.TilemapLayer) {
+  #createPlayer() {
     this.#player = new Player({
       scene: this,
       position: {
-        x: 2 * TILE_SIZE,
-        y: 2 * TILE_SIZE,
+        x: this.#map.startPosition.x + 190,
+        y: this.#map.startPosition.y + GAME_DIMENSIONS.HEIGHT / 2 + 40,
       },
       velocity: 700,
     });
-    this.physics.add.collider(this.#player, collisionLayer);
 
     this.#controls = new Controls(this);
-  }
-
-  #createMapFromTiled(
-    scene: Scene,
-  ): [
-    Phaser.Tilemaps.Tilemap | undefined,
-    Phaser.Tilemaps.TilemapLayer | undefined,
-  ] {
-    const tilemap = scene.make.tilemap({ key: AssetKeys.MAPS.LEVEL_1 });
-    const tileset = tilemap.addTilesetImage(
-      "tileset_sunnysideworld",
-      AssetKeys.LEVELS.TILESET,
-    );
-    if (!tileset) {
-      console.error(
-        `[${Level1.name}:create] encountered error while assigning tileset to the map`,
-      );
-      return [undefined, undefined];
-    }
-    tilemap.createLayer(AssetKeys.LEVELS.GROUND, tileset);
-    const collisionLayer = tilemap.createLayer(
-      AssetKeys.LEVELS.ELEMENTS,
-      tileset,
-    );
-    if (!collisionLayer) {
-      console.error(
-        `[${Level1.name}:create] encountered error while creating collision layer using data from tiled`,
-      );
-      return [undefined, undefined];
-    }
-    collisionLayer.setCollisionByExclusion([-1]);
-
-    return [tilemap, collisionLayer];
   }
 }

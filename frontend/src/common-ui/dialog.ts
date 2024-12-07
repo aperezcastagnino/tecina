@@ -27,7 +27,7 @@ export class Dialog {
 
   #padding: number;
 
-  #container!: Phaser.GameObjects.Container;
+  container!: Phaser.GameObjects.Container;
 
   #userInputCursor!: Phaser.GameObjects.Image;
 
@@ -63,7 +63,7 @@ export class Dialog {
     const panel = this.#scene.add
       .rectangle(0, 0, this.#width, this.#height, 0xffffff, 0.9)
       .setOrigin(0)
-      .setStrokeStyle(8, DialogColors.border, 1);
+      .setStrokeStyle(8, DialogColors.border, 1).setScrollFactor(0);
     this.#uiText = this.#scene.add.text(18, 12, "", {
       ...{
         fontFamily: PRIMARY_FONT_FAMILY,
@@ -72,20 +72,20 @@ export class Dialog {
         wordWrap: { width: 0 },
       },
       ...{ wordWrap: { width: this.#width - 18 } },
-    });
+    }).setScrollFactor(0);
 
-    this.#container = this.#scene.add.container(0, 0, [panel]);
-    this.#container.add(this.#uiText);
+    this.container = this.#scene.add.container(0, 0, [panel]);
+    this.container.add(this.#uiText);
 
     const startX = this.#padding;
     const startY =
       this.#scene.cameras.main.height - this.#height - this.#padding / 4;
-    this.#container.setPosition(startX, startY);
+    this.container.setPosition(startX, startY);
     this.#createPlayerInputCursor();
   }
 
   show(npcId?: string): void {
-    this.#container.setAlpha(1);
+    this.container.setAlpha(1);
     this.isVisible = true;
 
     if (npcId) {
@@ -97,7 +97,7 @@ export class Dialog {
 
   hide(): void {
     this.#userInputCursorTween.pause();
-    this.#container.setAlpha(0);
+    this.container.setAlpha(0);
     this.isVisible = false;
   }
 
@@ -130,7 +130,7 @@ export class Dialog {
     this.#userInputCursor = this.#scene.add.image(
       this.#width - 20,
       yPosition,
-      AssetKeys.UI.CURSOR,
+      AssetKeys.UI_COMPONENTS.CURSOR,
     );
     this.#userInputCursor.setAngle(90).setScale(4.5, 2);
     this.#userInputCursorTween = this.#scene.add.tween({
@@ -145,7 +145,7 @@ export class Dialog {
       targets: this.#userInputCursor,
     });
     // this._userInputCursorTween.pause();
-    this.#container.add(this.#userInputCursor);
+    this.container.add(this.#userInputCursor);
   }
 
   #handleNPCDialogs(npcId: string): void {
@@ -189,9 +189,9 @@ export class Dialog {
       dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
     }
 
-    if (dialog!.showed) {
+    // if (dialog!.showed) {
       dialog!.completed = true;
       dialog!.showed = false;
-    }
+    //}
   }
 }

@@ -2,6 +2,7 @@
   "name": "tecina",
   "description": "Phaser 3 with TypeScript using Vite.",
   "version": "0.0.1",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aperezcastagnino/tecina"
@@ -11,7 +12,6 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
     "lint": "eslint . --ext .js --ext .jsx --ext .ts --ext .tsx && tsc",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",

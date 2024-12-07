@@ -1,11 +1,17 @@
+import type { Coordinate } from "./coordinate";
+
 export type Map = {
   id: string;
 
   mapTiles: number[][];
 
-  frequency: number[];
+  rows: number;
 
-  mapWidth: number;
+  columns: number;
 
-  mapHeight: number;
+  startPosition: Coordinate;
+
+  finishPosition: Coordinate;
+
+  assetGroups: Phaser.GameObjects.Group[];
 };

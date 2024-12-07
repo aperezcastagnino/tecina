@@ -1,5 +1,5 @@
 {
-  "title": "Level 1",
+  "title": "Level Deprecated",
   "dialogs": {
     "npcs": [
       {
@@ -10,22 +10,19 @@
             "id": "npc-1-d-1",
             "description": "primer dialogo",
             "statements": [
-              "Can you pick the oranges?",
-              "They're for making marmalade."
+              "Hello, I am the first NPC",
+              "I am here to help you",
+              "I will give you a hint",
+              "You need to find the key to open the door"
             ]
           },
           {
             "id": "npc-1-d-2",
             "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
             "statements": [
-              "I need all the oranges you can find so I can cook them!"
-            ]
-          },
-          {
-            "id": "npc-1-d-3",
-            "description": "tercer dialogo del primer npc.",
-            "statements": [
-              "Thank you! Now I can make the marmalade my grandma used to make!"
+              "Hello! It's me again",
+              "I hope you find the key soon",
+              "Good luck!"
             ]
           },
           {
@@ -45,21 +42,20 @@
             "id": "npc-2-d-1",
             "description": "primer dialogo",
             "statements": [
-              "I'll give you a hint! Oranges are round and orange!"
+              "Hello, I am the SECOND NPC",
+              "I am here to help you",
+              "I will give you a hint",
+              "You need to find the key to open the door"
             ]
           },
           {
             "id": "npc-2-d-2",
-            "description": "primer dialogo",
-            "statements": [
-              "My favorite fruits are apples!",
-              "Could you pick some for me?"
-            ]
-          },
-          {
-            "id": "npc-2-d-3",
             "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
-            "statements": ["Thank you so much!"]
+            "statements": [
+              "Hello! It's me again",
+              "I hope you find the key soon",
+              "Good luck!"
+            ]
           }
         ]
       }
