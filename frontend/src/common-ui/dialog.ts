@@ -63,16 +63,19 @@ export class Dialog {
     const panel = this.#scene.add
       .rectangle(0, 0, this.#width, this.#height, 0xffffff, 0.9)
       .setOrigin(0)
-      .setStrokeStyle(8, DialogColors.border, 1).setScrollFactor(0);
-    this.#uiText = this.#scene.add.text(18, 12, "", {
-      ...{
-        fontFamily: PRIMARY_FONT_FAMILY,
-        color: "black",
-        fontSize: FontSize.EXTRA_LARGE,
-        wordWrap: { width: 0 },
-      },
-      ...{ wordWrap: { width: this.#width - 18 } },
-    }).setScrollFactor(0);
+      .setStrokeStyle(8, DialogColors.border, 1)
+      .setScrollFactor(0);
+    this.#uiText = this.#scene.add
+      .text(18, 12, "", {
+        ...{
+          fontFamily: PRIMARY_FONT_FAMILY,
+          color: "black",
+          fontSize: FontSize.EXTRA_LARGE,
+          wordWrap: { width: 0 },
+        },
+        ...{ wordWrap: { width: this.#width - 18 } },
+      })
+      .setScrollFactor(0);
 
     this.container = this.#scene.add.container(0, 0, [panel]);
     this.container.add(this.#uiText);
@@ -189,9 +192,7 @@ export class Dialog {
       dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
     }
 
-    // if (dialog!.showed) {
-      dialog!.completed = true;
-      dialog!.showed = false;
-    //}
+    dialog!.completed = true;
+    dialog!.showed = false;
   }
 }
