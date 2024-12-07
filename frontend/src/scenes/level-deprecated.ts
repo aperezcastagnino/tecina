@@ -1,7 +1,7 @@
-import { BaseScene } from "./base-scene";
+import { BaseTiledScene } from "./base-tiled-scene";
 import { SceneKeys } from "./scene-keys";
 
-export class LevelDeprecated extends BaseScene {
+export class LevelDeprecated extends BaseTiledScene {
   constructor() {
     super(SceneKeys.LEVEL_DEPRECATED);
   }
