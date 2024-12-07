@@ -36,9 +36,9 @@ export class BaseTiledScene extends Scene {
       return;
     }
 
-    this.#createPlayer(collisionLayer);
-
     this.#createDialogs();
+
+    this.#createPlayer(collisionLayer);
 
     this.#createNPCs(tilemap);
 
@@ -48,11 +48,7 @@ export class BaseTiledScene extends Scene {
 
     this._hideElements(this._awardGroup);
 
-    this._defineBehaviors();
-
-    this.cameras.main.startFollow(this._player, true, 0.1, 0.1);
-    this.cameras.main.setBounds(0, 0, 1280, 2176);
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
+    this.#setCamera();
   }
 
   update() {
@@ -89,14 +85,6 @@ export class BaseTiledScene extends Scene {
       (child as Phaser.GameObjects.Sprite).setVisible(false);
       return true;
     });
-  }
-
-  #handlePlayerInteraction() {
-    if (this._dialog) {
-      if (this._dialog.isVisible) {
-        this._dialog.showNextMessage();
-      }
-    }
   }
 
   _defineBehaviors() {
@@ -162,6 +150,20 @@ export class BaseTiledScene extends Scene {
 
       this._awardGroup.add(spriteAward);
     });
+  }
+
+  #handlePlayerInteraction() {
+    if (this._dialog) {
+      if (this._dialog.isVisible) {
+        this._dialog.showNextMessage();
+      }
+    }
+  }
+
+  #setCamera() {
+    this.cameras.main.startFollow(this._player, true, 0.1, 0.1);
+    this.cameras.main.setBounds(0, 0, 1280, 2176);
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
   #createDialogs() {

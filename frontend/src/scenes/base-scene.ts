@@ -8,6 +8,7 @@ import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
 import type { Map } from "types/map";
 import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
+import { MapGenerator } from "common/map/map-generator";
 
 export class BaseScene extends Scene {
   _map!: Map;
@@ -25,27 +26,22 @@ export class BaseScene extends Scene {
     super(sceneKey);
   }
 
+  preload(sceneKey: string) {
+    this._map = MapGenerator.newMap(sceneKey, MAP_HEIGHT, MAP_WIDTH);
+  }
+
   create() {
     MapRenderer.renderer(this, this._map);
 
-    console.log(this._map);
+    this.#createDialogs();
 
     this.#createPlayer();
 
-    this.#createDialogs();
-
     // this.#hideElements(this.#awardGroup);
 
+    this.#setCamera();
+
     this._defineBehaviors();
-    this.cameras.main.startFollow(this._player);
-    this.cameras.main.setBounds(
-      0,
-      0,
-      MAP_WIDTH * TILE_SIZE * 400,
-      MAP_HEIGHT * TILE_SIZE * 400,
-      true,
-    );
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
   update() {
@@ -83,6 +79,18 @@ export class BaseScene extends Scene {
         this._dialog.showNextMessage();
       }
     }
+  }
+
+  #setCamera() {
+    this.cameras.main.setBounds(
+      0,
+      0,
+      MAP_WIDTH * TILE_SIZE * 400,
+      MAP_HEIGHT * TILE_SIZE * 400,
+      true
+    );
+    this.cameras.main.startFollow(this._player);
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
   #createDialogs() {

@@ -6,10 +6,6 @@ export class LevelDeprecated extends BaseTiledScene {
     super(SceneKeys.LEVEL_DEPRECATED);
   }
 
-  create() {
-    super.create();
-  }
-
   _defineBehaviors() {
     super._defineBehaviors();
   }

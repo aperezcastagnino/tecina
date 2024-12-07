@@ -1,7 +1,5 @@
 import { GameObjects } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
-import { MapGenerator } from "common/map/map-generator";
 import { SceneKeys } from "./scene-keys";
 import { BaseScene } from "./base-scene";
 
@@ -19,11 +17,11 @@ export class Level1 extends BaseScene {
   }
 
   preload() {
+    super.preload(SceneKeys.LEVEL_1);
+
     this.#npc_1_show_first_message = true;
     this.#npc_1_show_first_complete_collect_objects = true;
     this.#npc_1_show_intermediate_message = false;
-
-    this._map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
 
     this.anims.create({
       key: "ORANGEAnim",
@@ -33,10 +31,6 @@ export class Level1 extends BaseScene {
       frameRate: 19,
       repeat: -1,
     });
-  }
-
-  create() {
-    super.create();
   }
 
   _defineBehaviors() {
