@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
-import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/debug-config";
 import { AssetKeys } from "assets/asset-keys";
-import { getAnimations } from "utils/animation-utils";
+import { AnimationsKeys } from "assets/animation-keys";
+import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
 import { SceneKeys } from "./scene-keys";
 
 export class Preloader extends Scene {
@@ -36,16 +36,10 @@ export class Preloader extends Scene {
     );
 
     // Load data
-    this.load.json(AssetKeys.DATA.ANIMATIONS, "/data/animations.json");
     this.load.json("level_1", "/data/level_1.json");
     this.load.json("level_deprecated", "/data/level_deprecated.json");
 
     // Level 1
-    this.load.tilemapTiledJSON(AssetKeys.LEVELS.LEVEL_1, `/maps/level1.json`);
-    this.load.image(
-      AssetKeys.LEVEL_COMPONENTS.TILESET,
-      `/tilesets/tileset_sunnysideworld_16px.png`,
-    );
 
     // Load Characters
     this.load.spritesheet(
@@ -66,7 +60,10 @@ export class Preloader extends Scene {
     );
 
     // Load UI Components
-    this.load.image(AssetKeys.UI_COMPONENTS.CURSOR, `/images/cursor.png`);
+    this.load.image(
+      AssetKeys.UI_COMPONENTS.CURSOR,
+      `/ui-components/cursor.png`,
+    );
 
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
@@ -77,7 +74,18 @@ export class Preloader extends Scene {
     // Load items
     this.load.spritesheet(
       AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-      "/items/fruits/Orange.png",
+      "/items/fruits/orange.png",
+      {
+        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+      },
+    );
+
+    this.load.spritesheet(
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      "/items/fruits/apple.png",
       {
         frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
         frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
@@ -96,20 +104,38 @@ export class Preloader extends Scene {
   }
 
   #createAnimations() {
-    const animations = getAnimations(this);
-    animations.forEach((animation) => {
-      const frames = animation.frames
-        ? this.anims.generateFrameNumbers(animation.assetKey, {
-            frames: animation.frames,
-          })
-        : this.anims.generateFrameNumbers(animation.assetKey);
-      this.anims.create({
-        key: animation.key,
+    this.#createPlayerAnimation(
+      AnimationsKeys.PLAYER_UP,
+      AssetKeys.CHARACTERS.PLAYER,
+      [0, 1, 2],
+    );
+    this.#createPlayerAnimation(
+      AnimationsKeys.PLAYER_RIGHT,
+      AssetKeys.CHARACTERS.PLAYER,
+      [3, 4, 5],
+    );
+    this.#createPlayerAnimation(
+      AnimationsKeys.PLAYER_DOWN,
+      AssetKeys.CHARACTERS.PLAYER,
+      [6, 7, 8],
+    );
+    this.#createPlayerAnimation(
+      AnimationsKeys.PLAYER_LEFT,
+      AssetKeys.CHARACTERS.PLAYER,
+      [9, 10, 11],
+    );
+  }
+
+  #createPlayerAnimation(key: string, asseyKey: string, frames: number[]) {
+    this.anims.create({
+      key,
+      frames: this.anims.generateFrameNumbers(asseyKey, {
         frames,
-        frameRate: animation.frameRate,
-        repeat: animation.repeat,
-        delay: animation.delay,
-      });
+      }),
+      frameRate: 6,
+      repeat: -1,
+      delay: 0,
+      yoyo: true,
     });
   }
 }

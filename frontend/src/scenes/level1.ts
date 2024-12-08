@@ -1,25 +1,10 @@
-import { Scene, GameObjects } from "phaser";
+import { GameObjects } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
-import type { Map } from "types/map";
-import { loadLevelData } from "utils/data-util";
-import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
-import { MapGenerator } from "common/map/map-generator";
-import { MapRenderer } from "common/map/map-renderer";
-import { Controls } from "common/controls";
-import { Player } from "common/player";
-import { Dialog } from "common-ui/dialog";
+import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "./scene-keys";
+import { BaseScene } from "./base-scene";
 
-export class Level1 extends Scene {
-  #player!: Player;
-
-  #controls!: Controls;
-
-  #dialog: Dialog | undefined;
-
-  #map!: Map;
-
+export class Level1 extends BaseScene {
   #total_oranges = 0;
 
   #npc_1_show_first_message!: boolean;
@@ -30,17 +15,25 @@ export class Level1 extends Scene {
 
   constructor() {
     super(SceneKeys.LEVEL_1);
-  }
 
-  preload() {
     this.#npc_1_show_first_message = true;
     this.#npc_1_show_first_complete_collect_objects = true;
     this.#npc_1_show_intermediate_message = false;
+  }
 
-    this.#map = MapGenerator.newMap(SceneKeys.LEVEL_1, MAP_HEIGHT, MAP_WIDTH);
+  create() {
+    super.create();
+
+    this._hideElements(
+      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
+    );
+  }
+
+  preload() {
+    super.preload(SceneKeys.LEVEL_1);
 
     this.anims.create({
-      key: "ORANGEAnim",
+      key: AnimationsKeys.ORANGE,
       frames: this.anims.generateFrameNumbers(
         AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       ),
@@ -49,150 +42,65 @@ export class Level1 extends Scene {
     });
   }
 
-  create() {
-    MapRenderer.renderer(this, this.#map);
+  _defineBehaviors() {
+    const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
+    const orangeGroup = this._map.assetGroups.get(
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+    )!;
+    const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
-    console.log(this.#map);
+    this.physics.add.collider(this._player, treeGroup);
 
-    this.#createPlayer();
+    this.#total_oranges = orangeGroup.getChildren().length;
 
-    this.#createDialogs();
-
-    // this.#hideElements(this.#awardGroup);
-
-    this.#defineBehaviors();
-    this.cameras.main.startFollow(this.#player);
-    this.cameras.main.setBounds(
-      0,
-      0,
-      MAP_WIDTH * TILE_SIZE * 400,
-      MAP_HEIGHT * TILE_SIZE * 400,
-      true,
-    );
-    this.cameras.main.fadeIn(1000, 0, 0, 0);
-  }
-
-  update() {
-    const directionSelected = this.#controls.getDirectionKeyPressed();
-
-    if (!this.#dialog?.isVisible) {
-      this.#player.move(directionSelected);
-    }
-    if (this.#controls.wasSpaceKeyPressed()) {
-      this.#handlePlayerInteraction();
-    }
-  }
-
-  #handlePlayerInteraction() {
-    if (this.#dialog) {
-      if (this.#dialog.isVisible) {
-        this.#dialog.showNextMessage();
-      }
-    }
-  }
-
-  #showElements(group: GameObjects.Group) {
-    group.children.iterate((child) => {
-      child.setActive(true);
-      (child as Phaser.GameObjects.Sprite).setVisible(true);
-      return true;
-    });
-  }
-
-  #hideElements(group: GameObjects.Group) {
-    group.children.iterate((child) => {
-      child.setActive(false);
-      (child as Phaser.GameObjects.Sprite).setVisible(false);
-      return true;
-    });
-  }
-
-  #defineBehaviors() {
-    const treeGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "TREE",
-    );
-    const orangeGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "ORANGE",
-    );
-
-    const npcGroup = this.#map.assetGroups.filter(
-      (group) => group.name === "NPC",
-    );
-    this.#hideElements(orangeGroup[0]!);
-
-    this.#total_oranges = orangeGroup[0]!.getChildren().length;
-    console.log(this.#total_oranges);
-    this.physics.add.collider(this.#player, treeGroup[0]!);
-    this.physics.add.collider(this.#player, npcGroup[0]!, (_player, npc) => {
+    this.physics.add.collider(this._player, npcGroup, (_player, npc) => {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForNPCs(npcSprite, orangeGroup[0]!);
+      this.#defineBehaviorForNPCs(npcSprite, orangeGroup);
     });
 
-    this.physics.add.collider(
-      this.#player,
-      orangeGroup[0]!,
-      (_player, item) => {
-        const itemObject = item as Phaser.GameObjects.Sprite;
-        this.#defineBehaviorForItems(itemObject);
-      },
-    );
+    this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
+      const itemObject = item as Phaser.GameObjects.Sprite;
+      this.#defineBehaviorForItems(itemObject);
+    });
   }
 
   #defineBehaviorForNPCs(
     npc: Phaser.GameObjects.Sprite,
     itemGroup: GameObjects.Group,
   ) {
-    this.#total_oranges = this.#map.assetGroups
-      .filter((group) => group.name === "ORANGE")[0]!
+    this.#total_oranges = this._map.assetGroups
+      .get("ORANGE")!
       .getChildren().length;
-    if (this.#controls.wasSpaceKeyPressed()) {
+    if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
         if (this.#npc_1_show_first_message) {
-          this.#dialog?.show("npc-1");
-          this.#showElements(itemGroup!);
-          this.#dialog?.setMessageComplete("npc-1");
+          this._dialog?.show("npc-1");
+          this._showElements(itemGroup!);
+          this._dialog?.setMessageComplete("npc-1");
           this.#npc_1_show_first_message = false;
         } else if (this.#total_oranges > 0) {
-          this.#dialog?.show("npc-1");
+          this._dialog?.show("npc-1");
           this.#npc_1_show_intermediate_message = true;
         } else {
           if (this.#npc_1_show_first_complete_collect_objects) {
             if (!this.#npc_1_show_intermediate_message) {
-              this.#dialog?.setMessageComplete("npc-1");
+              this._dialog?.setMessageComplete("npc-1");
             }
             this.#npc_1_show_first_complete_collect_objects = false;
           }
-          this.#dialog?.show("npc-1");
+          this._dialog?.show("npc-1");
         }
       }
       if (npc.name === "npc-2") {
         if (this.#total_oranges === 0) {
-          this.#dialog?.setMessageComplete("npc-2");
+          this._dialog?.setMessageComplete("npc-2");
         }
-        this.#dialog?.show("npc-2");
+        this._dialog?.show("npc-2");
       }
     }
   }
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
     item.destroy();
-  }
-
-  #createDialogs() {
-    const levelData = loadLevelData(this, SceneKeys.LEVEL_1.toLowerCase());
-    this.#dialog = new Dialog({ scene: this, data: levelData.dialogs });
-  }
-
-  #createPlayer() {
-    this.#player = new Player({
-      scene: this,
-      position: {
-        x: this.#map.startPosition.x + 190,
-        y: this.#map.startPosition.y + GAME_DIMENSIONS.HEIGHT / 2 + 40,
-      },
-      velocity: 700,
-    });
-
-    this.#controls = new Controls(this);
   }
 }

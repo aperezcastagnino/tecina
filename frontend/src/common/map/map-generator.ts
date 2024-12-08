@@ -1,8 +1,8 @@
-import type { Map } from "types/map";
+import type { MapStructure } from "types/map";
 import { TILES_TO_USE, FREQUENCY } from "config/map-config";
 
 export class MapGenerator {
-  #map!: Map;
+  #map!: MapStructure;
 
   constructor(sceneKey: string, rows: number, columns: number) {
     this.#createEmptyMap(sceneKey, rows, columns);
@@ -14,12 +14,12 @@ export class MapGenerator {
   #createEmptyMap(sceneKey: string, rows: number, columns: number) {
     this.#map = {
       id: `MAP-${sceneKey}`,
-      mapTiles: new Array(rows).fill([]).map(() => new Array(columns).fill(0)),
+      tiles: new Array(rows).fill([]).map(() => new Array(columns).fill(0)),
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
       finishPosition: { x: 0, y: 0 },
-      assetGroups: [],
+      assetGroups: new Map(),
     };
   }
 
@@ -32,7 +32,7 @@ export class MapGenerator {
       x: this.#map.rows - 1,
       y: this.#map.columns - 1,
     };
-    this.#map.mapTiles[x]![y] = 4;
+    this.#map.tiles[x]![y] = 4;
 
     while (y < this.#map.columns - 3) {
       const direction = Math.floor(Math.random() * 2); // Randomly choose a direction
@@ -45,9 +45,9 @@ export class MapGenerator {
 
       // keeps it inside x and y
       if (x >= 3 && x < this.#map.rows - 3 && y >= 0 && y < this.#map.columns) {
-        this.#map.mapTiles[x]![y] = 1; // keep track of where you have been
+        this.#map.tiles[x]![y] = 1; // keep track of where you have been
         y += 1; // Always move right
-        this.#map.mapTiles[x]![y] = 1;
+        this.#map.tiles[x]![y] = 1;
       }
     }
   }
@@ -57,13 +57,13 @@ export class MapGenerator {
     // This sets the border of the map to 1
 
     for (let i = 0; i < this.#map.rows; i += 1) {
-      this.#map.mapTiles[i]![0] = 1;
-      this.#map.mapTiles[i]![this.#map.columns - 1] = 1;
+      this.#map.tiles[i]![0] = 1;
+      this.#map.tiles[i]![this.#map.columns - 1] = 1;
     }
 
     for (let j = 0; j < this.#map.columns; j += 1) {
-      this.#map.mapTiles[0]![j] = 1;
-      this.#map.mapTiles[this.#map.rows - 1]![j] = 1;
+      this.#map.tiles[0]![j] = 1;
+      this.#map.tiles[this.#map.rows - 1]![j] = 1;
     }
 
     // Second border (inner border) with 1s randomly
@@ -74,17 +74,15 @@ export class MapGenerator {
     // So we multiply by 2 to get a number between 0 and 2 and the floor returns 0 or 1
 
     for (let i = 1; i < this.#map.rows - 1; i += 1) {
-      this.#map.mapTiles[i]![1] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[i]![this.#map.columns - 2] = Math.floor(
+      this.#map.tiles[i]![1] = Math.floor(Math.random() * 2);
+      this.#map.tiles[i]![this.#map.columns - 2] = Math.floor(
         Math.random() * 2,
       );
     }
 
     for (let j = 1; j < this.#map.columns - 1; j += 1) {
-      this.#map.mapTiles[1]![j] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[this.#map.rows - 2]![j] = Math.floor(
-        Math.random() * 2,
-      );
+      this.#map.tiles[1]![j] = Math.floor(Math.random() * 2);
+      this.#map.tiles[this.#map.rows - 2]![j] = Math.floor(Math.random() * 2);
     }
   }
 
@@ -105,7 +103,7 @@ export class MapGenerator {
     for (let i = 0; i < this.#map.rows; i += 1) {
       for (let j = 0; j < this.#map.columns; j += 1) {
         // If the column is empty, fill it with a random value
-        if (this.#map.mapTiles[i]![j] === 0) {
+        if (this.#map.tiles[i]![j] === 0) {
           // We pick the random value based on the cumulative frequency
           // We multiply by the maxFrequency to get a value between 0 and the maxFrequency
           const randomValue = Math.random() * maxFrequency;
@@ -117,13 +115,13 @@ export class MapGenerator {
           );
 
           // We fill the map with the selected number
-          this.#map.mapTiles[i]![j] = TILES_TO_USE[selectedIndex]!;
+          this.#map.tiles[i]![j] = TILES_TO_USE[selectedIndex]!;
         }
       }
     }
   }
 
-  static newMap(sceneKey: string, rows: number, columns: number): Map {
+  static newMap(sceneKey: string, rows: number, columns: number): MapStructure {
     const generator = new MapGenerator(sceneKey, rows, columns);
     return generator.#map;
   }
