@@ -6,12 +6,12 @@ import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
-import type { Map } from "types/map";
+import type { MapStructure } from "types/map";
 import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
 import { MapGenerator } from "common/map/map-generator";
 
 export class BaseScene extends Scene {
-  _map!: Map;
+  _map!: MapStructure;
 
   _player!: Player;
 
@@ -36,8 +36,6 @@ export class BaseScene extends Scene {
     this.#createDialogs();
 
     this.#createPlayer();
-
-    // this.#hideElements(this.#awardGroup);
 
     this.#setCamera();
 
@@ -87,7 +85,7 @@ export class BaseScene extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true
+      true,
     );
     this.cameras.main.startFollow(this._player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);

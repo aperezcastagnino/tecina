@@ -1,9 +1,9 @@
 import type { Coordinate } from "./coordinate";
 
-export type Map = {
+export type MapStructure = {
   id: string;
 
-  mapTiles: number[][];
+  tiles: number[][];
 
   rows: number;
 
@@ -13,5 +13,5 @@ export type Map = {
 
   finishPosition: Coordinate;
 
-  assetGroups: Phaser.GameObjects.Group[];
+  assetGroups: Map<string, Phaser.GameObjects.Group>;
 };

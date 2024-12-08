@@ -1,12 +1,13 @@
 import type { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import type { Map } from "types/map";
+import type { MapStructure } from "types/map";
 import { TILE_SIZE } from "config/config";
 import { Tiles } from "config/map-config";
 import type { Coordinate } from "types/coordinate";
+import { AnimationsKeys } from "assets/animation-keys";
 
 export class MapRenderer {
-  static renderer(scene: Scene, map: Map) {
+  static renderer(scene: Scene, map: MapStructure) {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
     const startPosition: Coordinate = { x: 0, y: 0 };
 
@@ -18,14 +19,13 @@ export class MapRenderer {
         const x = startPosition.x + column * TILE_SIZE;
         const y = startPosition.y + row * TILE_SIZE;
 
-        const assetRef = (map.mapTiles[row]?.[column] as Tiles) ?? 0;
+        const assetRef = (map.tiles[row]?.[column] as Tiles) ?? 0;
         const assetName = Tiles[assetRef]!;
 
-        if (map.assetGroups[assetRef] === undefined) {
+        if (!map.assetGroups.has(assetName) && assetRef !== Tiles.FREE_SPACE) {
           const group = scene.physics.add.staticGroup();
-          // eslint-disable-next-line no-param-reassign
-          map.assetGroups[assetRef] = group;
           group.name = assetName;
+          map.assetGroups.set(assetName, group);
         }
 
         if (assetRef === Tiles.ORANGE) {
@@ -36,11 +36,11 @@ export class MapRenderer {
           const sprite = scene.add.sprite(
             x,
             y,
-            AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+            AssetKeys.ITEMS.FRUITS.ORANGE.NAME
           );
           sprite.setScale(2);
-          sprite.anims.play(`${AssetKeys.ITEMS.FRUITS.ORANGE.NAME}Anim`, true);
-          map.assetGroups[assetRef]?.add(sprite);
+          sprite.anims.play(AnimationsKeys.ORANGE, true);
+          map.assetGroups.get(assetName)!.add(sprite);
         } else if (assetRef === Tiles.FREE_SPACE) {
           scene.add
             .image(x, y, AssetKeys.TILES.GRASS)
@@ -51,26 +51,25 @@ export class MapRenderer {
               x,
               y,
               AssetKeys.CHARACTERS.NPC,
-              assetNPC[numberOfNPCs - 1],
+              assetNPC[numberOfNPCs - 1]
             );
             sprite.setScale(3);
             sprite.name = `npc-${numberOfNPCs}`;
 
-            if (map.assetGroups[Tiles.NPC] === undefined) {
+            if (!map.assetGroups.has("NPC")) {
               const group = scene.physics.add.staticGroup();
-              // eslint-disable-next-line no-param-reassign
-              map.assetGroups[Tiles.NPC] = group;
               group.name = "NPC";
+              map.assetGroups.set("NPC", group);
             }
 
-            map.assetGroups[Tiles.NPC]?.add(sprite);
+            map.assetGroups.get("NPC")!.add(sprite);
             numberOfNPCs -= 1;
           }
         } else {
           const image = scene.add
             .image(x, y, assetName)
             .setDisplaySize(TILE_SIZE, TILE_SIZE);
-          map.assetGroups[assetRef]?.add(image);
+          map.assetGroups.get(assetName)!.add(image);
         }
       }
     }

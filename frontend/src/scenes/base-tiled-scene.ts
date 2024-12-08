@@ -8,6 +8,18 @@ import { Dialog } from "common-ui/dialog";
 import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { SceneKeys } from "./scene-keys";
 
+const AssetTileMapKeys = {
+  LEVELS: {
+    LEVEL_1: "level_1",
+  },
+  LEVEL_COMPONENTS: {
+    TILESET: "tileset",
+    GROUND: "ground",
+    ELEMENTS: "elements",
+    COLLISION: "collision",
+  },
+};
+
 export class BaseTiledScene extends Scene {
   _player!: Player;
 
@@ -24,6 +36,17 @@ export class BaseTiledScene extends Scene {
   // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor(sceneKey: string) {
     super(sceneKey);
+  }
+
+  preload() {
+    this.load.tilemapTiledJSON(
+      AssetTileMapKeys.LEVELS.LEVEL_1,
+      `/maps/level1.json`,
+    );
+    this.load.image(
+      AssetTileMapKeys.LEVEL_COMPONENTS.TILESET,
+      `/tilesets/tileset_sunnysideworld_16px.png`,
+    );
   }
 
   create() {
@@ -199,10 +222,12 @@ export class BaseTiledScene extends Scene {
     Phaser.Tilemaps.Tilemap | undefined,
     Phaser.Tilemaps.TilemapLayer | undefined,
   ] {
-    const tilemap = scene.make.tilemap({ key: AssetKeys.LEVELS.LEVEL_1 });
+    const tilemap = scene.make.tilemap({
+      key: AssetTileMapKeys.LEVELS.LEVEL_1,
+    });
     const tileset = tilemap.addTilesetImage(
       "tileset_sunnysideworld",
-      AssetKeys.LEVEL_COMPONENTS.TILESET,
+      AssetTileMapKeys.LEVEL_COMPONENTS.TILESET,
     );
     if (!tileset) {
       console.error(
@@ -210,9 +235,9 @@ export class BaseTiledScene extends Scene {
       );
       return [undefined, undefined];
     }
-    tilemap.createLayer(AssetKeys.LEVEL_COMPONENTS.GROUND, tileset);
+    tilemap.createLayer(AssetTileMapKeys.LEVEL_COMPONENTS.GROUND, tileset);
     const collisionLayer = tilemap.createLayer(
-      AssetKeys.LEVEL_COMPONENTS.ELEMENTS,
+      AssetTileMapKeys.LEVEL_COMPONENTS.ELEMENTS,
       tileset,
     );
     if (!collisionLayer) {

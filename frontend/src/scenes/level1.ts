@@ -1,5 +1,6 @@
 import { GameObjects } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
+import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "./scene-keys";
 import { BaseScene } from "./base-scene";
 
@@ -14,17 +15,23 @@ export class Level1 extends BaseScene {
 
   constructor() {
     super(SceneKeys.LEVEL_1);
+
+    this.#npc_1_show_first_message = true;
+    this.#npc_1_show_first_complete_collect_objects = true;
+    this.#npc_1_show_intermediate_message = false;
+  }
+
+  create() {
+    super.create();
+
+    this._hideElements(this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!);
   }
 
   preload() {
     super.preload(SceneKeys.LEVEL_1);
 
-    this.#npc_1_show_first_message = true;
-    this.#npc_1_show_first_complete_collect_objects = true;
-    this.#npc_1_show_intermediate_message = false;
-
     this.anims.create({
-      key: "ORANGEAnim",
+      key: AnimationsKeys.ORANGE,
       frames: this.anims.generateFrameNumbers(
         AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       ),
@@ -34,29 +41,22 @@ export class Level1 extends BaseScene {
   }
 
   _defineBehaviors() {
-    const treeGroup = this._map.assetGroups.filter(
-      (group) => group.name === "TREE",
-    );
-    const orangeGroup = this._map.assetGroups.filter(
-      (group) => group.name === "ORANGE",
-    );
+    const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
+    const orangeGroup = this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!;
+    const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
-    const npcGroup = this._map.assetGroups.filter(
-      (group) => group.name === "NPC",
-    );
-    this._hideElements(orangeGroup[0]!);
+    this.physics.add.collider(this._player, treeGroup);
 
-    this.#total_oranges = orangeGroup[0]!.getChildren().length;
-    console.log(this.#total_oranges);
-    this.physics.add.collider(this._player, treeGroup[0]!);
-    this.physics.add.collider(this._player, npcGroup[0]!, (_player, npc) => {
+    this.#total_oranges = orangeGroup.getChildren().length;
+
+    this.physics.add.collider(this._player, npcGroup, (_player, npc) => {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForNPCs(npcSprite, orangeGroup[0]!);
+      this.#defineBehaviorForNPCs(npcSprite, orangeGroup);
     });
 
     this.physics.add.collider(
       this._player,
-      orangeGroup[0]!,
+      orangeGroup,
       (_player, item) => {
         const itemObject = item as Phaser.GameObjects.Sprite;
         this.#defineBehaviorForItems(itemObject);
@@ -68,9 +68,7 @@ export class Level1 extends BaseScene {
     npc: Phaser.GameObjects.Sprite,
     itemGroup: GameObjects.Group,
   ) {
-    this.#total_oranges = this._map.assetGroups
-      .filter((group) => group.name === "ORANGE")[0]!
-      .getChildren().length;
+    this.#total_oranges = this._map.assetGroups.get("ORANGE")!.getChildren().length;
     if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
         if (this.#npc_1_show_first_message) {
