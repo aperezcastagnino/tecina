@@ -1,6 +1,6 @@
 import { AssetKeys } from "assets/asset-keys";
 
-export type MapParameters = {
+export type GameMapParameters = {
   rows: number;
   columns: number;
   tiles: Tiles[];

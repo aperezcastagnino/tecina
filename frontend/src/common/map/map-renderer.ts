@@ -36,7 +36,7 @@ export class MapRenderer {
           const sprite = scene.add.sprite(
             x,
             y,
-            AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+            AssetKeys.ITEMS.FRUITS.ORANGE.NAME
           );
           sprite.setScale(2);
           sprite.anims.play(AnimationsKeys.ORANGE, true);
@@ -51,7 +51,7 @@ export class MapRenderer {
               x,
               y,
               AssetKeys.CHARACTERS.NPC,
-              assetNPC[numberOfNPCs - 1],
+              assetNPC[numberOfNPCs - 1]
             );
             sprite.setScale(3);
             sprite.name = `npc-${numberOfNPCs}`;
