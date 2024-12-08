@@ -82,9 +82,7 @@ export class MapGenerator {
 
     for (let j = 1; j < this.#map.columns - 1; j += 1) {
       this.#map.tiles[1]![j] = Math.floor(Math.random() * 2);
-      this.#map.tiles[this.#map.rows - 2]![j] = Math.floor(
-        Math.random() * 2,
-      );
+      this.#map.tiles[this.#map.rows - 2]![j] = Math.floor(Math.random() * 2);
     }
   }
 

@@ -24,7 +24,9 @@ export class Level1 extends BaseScene {
   create() {
     super.create();
 
-    this._hideElements(this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!);
+    this._hideElements(
+      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
+    );
   }
 
   preload() {
@@ -42,7 +44,9 @@ export class Level1 extends BaseScene {
 
   _defineBehaviors() {
     const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
-    const orangeGroup = this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!;
+    const orangeGroup = this._map.assetGroups.get(
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+    )!;
     const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
     this.physics.add.collider(this._player, treeGroup);
@@ -54,21 +58,19 @@ export class Level1 extends BaseScene {
       this.#defineBehaviorForNPCs(npcSprite, orangeGroup);
     });
 
-    this.physics.add.collider(
-      this._player,
-      orangeGroup,
-      (_player, item) => {
-        const itemObject = item as Phaser.GameObjects.Sprite;
-        this.#defineBehaviorForItems(itemObject);
-      },
-    );
+    this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
+      const itemObject = item as Phaser.GameObjects.Sprite;
+      this.#defineBehaviorForItems(itemObject);
+    });
   }
 
   #defineBehaviorForNPCs(
     npc: Phaser.GameObjects.Sprite,
     itemGroup: GameObjects.Group,
   ) {
-    this.#total_oranges = this._map.assetGroups.get("ORANGE")!.getChildren().length;
+    this.#total_oranges = this._map.assetGroups
+      .get("ORANGE")!
+      .getChildren().length;
     if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
         if (this.#npc_1_show_first_message) {
