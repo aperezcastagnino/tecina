@@ -24,7 +24,7 @@ export class Level1 extends BaseScene {
     super.create();
 
     this._hideElements(
-      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
+      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
   }
 
@@ -34,7 +34,7 @@ export class Level1 extends BaseScene {
     this.anims.create({
       key: AnimationsKeys.ORANGE,
       frames: this.anims.generateFrameNumbers(
-        AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       ),
       frameRate: 19,
       repeat: -1,
@@ -44,7 +44,7 @@ export class Level1 extends BaseScene {
   _defineBehaviors() {
     const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
     const orangeGroup = this._map.assetGroups.get(
-      AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
     )!;
     const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
@@ -65,12 +65,14 @@ export class Level1 extends BaseScene {
 
   #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
     this.#total_oranges = this._map.assetGroups
-      .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!.getLength();
+      .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
+      .getLength();
 
     if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
         const orangeGroup = this._map.assetGroups.get(
-          AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!;
+          AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+        )!;
 
         if (this.#npc_1_show_first_message) {
           this._dialog?.show(npc.name);
