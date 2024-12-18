@@ -1,4 +1,4 @@
-import { constants } from "config/constants";
+import { API_URL } from "config/config";
 import { ApiError } from "./api-error";
 import { ErrorCode } from "./types/error-code";
 
@@ -41,8 +41,8 @@ class ApiServiceClass {
   ): Promise<ReturnType> {
     const updatedConfig = { ...config };
     updatedConfig.headers = { ...this.addedHeaders, ...(config.headers ?? {}) };
-    const fullURL = new URL(path, constants.apiBaseURL);
-    const response = await fetch(fullURL, {
+    const fullURL = new URL(path, "http://localhost:8000/");
+    const response = await fetch(fullURL.href, {
       method,
       ...updatedConfig,
     });
@@ -50,9 +50,11 @@ class ApiServiceClass {
     try {
       data = (await response.json()) as Promise<ReturnType>;
     } catch (error) {
+      // eslint-disable-next-line no-underscore-dangle
       ApiServiceClass._raiseError(error);
     }
     if (!response.ok) {
+      // eslint-disable-next-line no-underscore-dangle
       ApiServiceClass._raiseError(data);
     }
     // We need to disable these rules here since we need to trust 100% that the data that comes from

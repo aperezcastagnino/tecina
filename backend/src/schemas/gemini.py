@@ -6,4 +6,5 @@ class PromptRequest(BaseModel):
 
 
 class ParaphraseResponse(BaseModel):
+    initial_prompt: str
     paraphrase: str

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.core.config import settings
+from .config import settings
 
 
 class LogConfig(BaseModel):

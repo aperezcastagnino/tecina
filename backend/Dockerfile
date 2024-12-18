@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y curl libpq-dev gcc
 
@@ -21,7 +21,5 @@ RUN poetry install --no-ansi --no-root && \
 COPY . .
 
 ENV PYTHONPATH=/backend
-
-EXPOSE 8000
 
 CMD ["uvicorn", "src.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]

@@ -13,7 +13,7 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     log_level: LogLevel = LogLevel.debug
-    server_url: str
+    gemini_api_key: str
 
 
 settings = Settings()

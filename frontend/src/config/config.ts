@@ -1,5 +1,7 @@
 import { SceneKeys } from "scenes/scene-keys";
 
+export const API_URL = "http://localhost:8000";
+
 export const GAME_DIMENSIONS = {
   WIDTH: 1920,
   HEIGHT: 1040,
