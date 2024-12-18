@@ -1,4 +1,3 @@
-import { API_URL } from "config/config";
 import { ApiError } from "./api-error";
 import { ErrorCode } from "./types/error-code";
 

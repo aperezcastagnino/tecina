@@ -1,4 +1,3 @@
-import { GameObjects } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "./scene-keys";
