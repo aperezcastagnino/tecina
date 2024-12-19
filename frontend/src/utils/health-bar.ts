@@ -40,12 +40,14 @@ export class HealthBar {
     this._containerShadows = this._scene.add.container(x, y, []);
     this._container = this._scene.add.container(x, y, []);
 
-    this._scene.add.text(GAME_DIMENSIONS.WIDTH -600, 20, text, {
-      fontFamily: PRIMARY_FONT_FAMILY,
-      color: Colors.White,
-      fontSize: FontSize.EXTRA_LARGE,
-      wordWrap: { width: this._fullHeight },
-    }).setScrollFactor(0);
+    this._scene.add
+      .text(GAME_DIMENSIONS.WIDTH - 600, 20, text, {
+        fontFamily: PRIMARY_FONT_FAMILY,
+        color: Colors.White,
+        fontSize: FontSize.EXTRA_LARGE,
+        wordWrap: { width: this._fullHeight },
+      })
+      .setScrollFactor(0);
 
     this._createBarShadowImages(x, y);
     this._createBarImages(x, y);
@@ -95,11 +97,9 @@ export class HealthBar {
     ]);
   }
 
-  decrease(number: number)
-  {
+  decrease(number: number) {
     this.percent -= number;
     this.setMeterPercentage(this.percent / 100);
-
   }
 
   setMeterPercentage(percent = 1) {

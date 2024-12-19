@@ -4,7 +4,6 @@ import { SceneKeys } from "./scene-keys";
 import { BaseScene } from "./base-scene";
 import { HealthBar } from "../utils/health-bar";
 
-
 export class Level1 extends BaseScene {
   #total_oranges = 0;
 
@@ -13,7 +12,7 @@ export class Level1 extends BaseScene {
   #npc_1_show_first_complete_collect_objects!: boolean;
 
   #npc_1_show_intermediate_message!: boolean;
-  
+
   #healthBar!: HealthBar;
 
   constructor() {
@@ -31,10 +30,7 @@ export class Level1 extends BaseScene {
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
     this.#healthBar = new HealthBar(this);
-
   }
-
-  
 
   preload() {
     super.preload(SceneKeys.LEVEL_1);
