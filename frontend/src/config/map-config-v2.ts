@@ -1,10 +1,11 @@
 import { AssetKeys } from "assets/asset-keys";
-import { MapTiles, MapTileType, type GridTile } from "types/map";
+import { MapTiles, type GridTile } from "types/map";
+import { MapTileType } from "./map-config";
 
 export const TILES_TO_USE: GridTile[] = [
   { type: MapTileType.FREE_SPACE, assetTile: MapTiles.GRASS, frequency: 50 },
   {
-    type: MapTileType.NON_INTERACTABLE_OBJECT,
+    type: MapTileType.NO_INTERACTABLE_OBJECT,
     assetTile: MapTiles.TREE,
     frequency: 40,
   },

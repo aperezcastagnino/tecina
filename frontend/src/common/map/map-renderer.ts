@@ -9,7 +9,7 @@ import { AnimationsKeys } from "assets/animation-keys";
 export class MapRenderer {
   static renderer(scene: Scene, map: MapStructure) {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
-    const startPosition: Coordinate = { x: 0, y: 0 };
+    const startPosition: Coordinate = { x: 100, y: 100 };
 
     let numberOfNPCs = 2;
     const assetNPC = [0, 20];
