@@ -1,6 +1,6 @@
 import { Scene, GameObjects } from "phaser";
 import { loadLevelData } from "utils/data-util";
-import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
+import { TILE_SIZE } from "config/config";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
@@ -27,7 +27,7 @@ export class BaseScene extends Scene {
   }
 
   preload(sceneKey: string) {
-    this._map = MapGenerator.newMap(sceneKey, MAP_HEIGHT, MAP_WIDTH);
+    this._map = MapGenerator.newMap(sceneKey);
   }
 
   create() {
@@ -108,8 +108,8 @@ export class BaseScene extends Scene {
     this._player = new Player({
       scene: this,
       position: {
-        x: 100 + (this._map.startPosition.x * TILE_SIZE),
-        y: 100 + (this._map.startPosition.y * TILE_SIZE)  ,
+        x: 100 + this._map.startPosition.x * TILE_SIZE,
+        y: 100 + this._map.startPosition.y * TILE_SIZE,
       },
       velocity: 700,
     });
