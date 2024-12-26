@@ -30,7 +30,7 @@ export class HealthBar {
     this._scene = scene;
     this._scaleY = 0.7;
     this._fullWidth = GAME_DIMENSIONS.WIDTH / 5;
-    this._fullHeight =  GAME_DIMENSIONS.HEIGHT / 3.5 ;
+    this._fullHeight = GAME_DIMENSIONS.HEIGHT / 3.5;
     this.percent = 100;
 
     const x = 600;

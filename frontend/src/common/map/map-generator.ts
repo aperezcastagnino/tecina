@@ -233,10 +233,10 @@ export class MapGenerator {
             this.#map.startPosition.x = x;
             this.#map.startPosition.y = y;
           }
-            this.#map.tiles[y]![x] = this.getRandomBasedOnFrequency(
+          this.#map.tiles[y]![x] = this.getRandomBasedOnFrequency(
             frecuency,
             assets,
-            ); // Replace only empty cells
+          ); // Replace only empty cells
         }
       }
     }
