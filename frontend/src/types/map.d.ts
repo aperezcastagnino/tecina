@@ -1,3 +1,4 @@
+import type { Tiles } from "config/map-config";
 import type { Coordinate } from "./coordinate";
 
 export enum MapTiles {
@@ -7,13 +8,6 @@ export enum MapTiles {
   FLOWER_GRASS = 3,
   ORANGE = 4,
   NPC = 5,
-}
-
-export enum MapTileType {
-  PATH = "PATH",
-  FREE_SPACE = "FREE_SPACE",
-  INTERACTABLE_OBJECT = "INTERACTABLE_OBJECT",
-  NON_INTERACTABLE_OBJECT = "NON_INTERACTABLE_OBJECT",
 }
 
 export type MapConfig = {
@@ -31,7 +25,7 @@ export type GridTile = {
 
 export type MapStructure = {
   id: string;
-  tiles: number[][];
+  tiles: Tiles[][];
   rows: number;
   columns: number;
   startPosition: Coordinate;

@@ -93,6 +93,21 @@ export class Preloader extends Scene {
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
       },
     );
+
+    // HealthBar
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
+      "/healthBar/BarBackground.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
+      "/healthBar/GreenBar.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_YELLOW,
+      "/healthBar/YellowBar.png",
+    );
+    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, "/healthBar/RedBar.png");
   }
 
   create() {

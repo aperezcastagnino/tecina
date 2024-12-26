@@ -2,6 +2,7 @@ import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "./scene-keys";
 import { BaseScene } from "./base-scene";
+import { HealthBar } from "../utils/health-bar";
 
 export class Level1 extends BaseScene {
   #total_oranges = 0;
@@ -11,6 +12,8 @@ export class Level1 extends BaseScene {
   #npc_1_show_first_complete_collect_objects!: boolean;
 
   #npc_1_show_intermediate_message!: boolean;
+
+  #healthBar!: HealthBar;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -26,6 +29,7 @@ export class Level1 extends BaseScene {
     this._hideElements(
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
+    this.#healthBar = new HealthBar(this);
   }
 
   preload() {
@@ -59,6 +63,7 @@ export class Level1 extends BaseScene {
 
     this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
       const itemObject = item as Phaser.GameObjects.Sprite;
+      this.#healthBar.decrease(30);
       this.#defineBehaviorForItems(itemObject);
     });
   }
