@@ -176,7 +176,7 @@ export class MapGenerator {
     };
 
     console.log("Room creado!!");
-    console.log(newPartition.room); // Verifica room en el nuevo objeto
+    console.log(newPartition.room); // Check room in the new object
     return newPartition;
   }
 
@@ -185,7 +185,7 @@ export class MapGenerator {
 
     if (!partition.left && !partition.right) {
       const updatedPartition = this.createRoom(partition);
-      newPartition.room = updatedPartition.room; // Asignar el room al objeto original
+      newPartition.room = updatedPartition.room; // Assign the room to the original object
     } else {
       if (partition.left) {
         newPartition.left = this.assignRooms(partition.left);
@@ -236,7 +236,7 @@ export class MapGenerator {
           this.#map.tiles[y]![x] = this.getRandomBasedOnFrequency(
             frecuency,
             assets,
-          ); // Reemplaza solo celdas vacías
+          ); // Replace only empty cells
         }
       }
     }
