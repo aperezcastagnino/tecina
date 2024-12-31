@@ -10,5 +10,5 @@ router = APIRouter()
 def get_items(
     prompt: str,
 ) -> ParaphraseResponse:
-    result = GeminiService.get_paraphrase(prompt)  # Esto devuelve un str
+    result = GeminiService.get_paraphrase(prompt)
     return ParaphraseResponse(initial_prompt=prompt, paraphrase=result)

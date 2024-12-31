@@ -4,7 +4,6 @@ import { animateText } from "utils/animation-utils";
 import { PRIMARY_FONT_FAMILY, FontSize } from "assets/fonts";
 import { DialogColors } from "assets/colors";
 import { AssetKeys } from "assets/asset-keys";
-import { getParaphrase } from "networking/controllers/gemini-controller";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -157,7 +156,7 @@ export class Dialog {
     this.#handleDialogData(npcDialogs);
   }
 
-  async #handleDialogData(dialogs?: DialogData[]): Promise<void> {
+  #handleDialogData(dialogs?: DialogData[]): void {
     const dialogsToUse = dialogs || this.#data.simpleDialogs;
     const dialog = this.#findMessageInCompleted(dialogsToUse);
 
@@ -168,16 +167,9 @@ export class Dialog {
     }
 
     dialog.showed = true;
+    this.#messagesToShowBackup = [...dialog.statements];
+    this.#messagesToShow = [...dialog.statements];
 
-    const paraphrasePromises = dialog.statements.map(async (statement) => {
-      const prompt = `Te voy a dar un texto y me vas a devolver otro texto que muestre el mismo significado, pero con otras palabras. Entrada: ${statement}`;
-      const response = await getParaphrase(prompt);
-      return response.paraphrase;
-    });
-    const paraphraseResults = await Promise.all(paraphrasePromises);
-
-    this.#messagesToShowBackup = paraphraseResults;
-    this.#messagesToShow = paraphraseResults;
     this.showNextMessage();
   }
 
