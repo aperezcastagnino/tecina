@@ -2,6 +2,7 @@ import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "./scene-keys";
 import { BaseScene } from "./base-scene";
+import { Awards } from "common-ui/awards";
 
 export class Level1 extends BaseScene {
   #total_oranges = 0;
@@ -11,6 +12,9 @@ export class Level1 extends BaseScene {
   #npc_1_show_first_complete_collect_objects!: boolean;
 
   #npc_1_show_intermediate_message!: boolean;
+
+  _awardGroup!: GameObjects.Group;
+
 
   constructor() {
     super(SceneKeys.LEVEL_1);
@@ -26,6 +30,13 @@ export class Level1 extends BaseScene {
     this._hideElements(
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
+    this._awardGroup = this.add.group();
+    
+    const tilemap = this.make.tilemap({ key: 'level1' });
+    this.#createAwards(tilemap);
+
+
+    this._hideElements(this._awardGroup);
   }
 
   preload() {
@@ -38,6 +49,35 @@ export class Level1 extends BaseScene {
       ),
       frameRate: 19,
       repeat: -1,
+    });
+
+    const myAwards = new Awards(
+      { scene: this,
+       width: 800,
+       padding: 10,
+       scale: 1,
+       frameRate: 10,
+       assetKey: "award",
+       spriteConfig: {
+         frameWidth: 64,
+         frameHeight: 64,
+       }})
+
+  }
+
+  #createAwards(tilemap: Phaser.Tilemaps.Tilemap) {
+    const awardsLayer = tilemap.objects.find((f) => f.name === "objs_awards");
+
+    awardsLayer!.objects.forEach((element) => {
+      const spriteAward = this.physics.add.sprite(
+        element.x!,
+        element.y!,
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      );
+      spriteAward.setOrigin(0.5, 0.5);
+      spriteAward.setImmovable(true);
+
+      this._awardGroup.add(spriteAward);
     });
   }
 
