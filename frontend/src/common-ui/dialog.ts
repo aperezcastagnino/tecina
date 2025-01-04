@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import type { DialogData, DialogDataCollection } from "types/level-data";
+import type { DialogData } from "types/level-data";
 import { animateText } from "utils/animation-utils";
 import { PRIMARY_FONT_FAMILY, FontSize } from "assets/fonts";
 import { DialogColors } from "assets/colors";
@@ -7,7 +7,7 @@ import { AssetKeys } from "assets/asset-keys";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
-  data: DialogDataCollection;
+  data: DialogData[];
   height?: number;
   width?: number;
   padding?: number;
@@ -19,7 +19,7 @@ export type DialogConfig = {
 export class Dialog {
   #scene: Phaser.Scene;
 
-  #data: DialogDataCollection;
+  #data: DialogData[];
 
   #height: number;
 
@@ -128,27 +128,17 @@ export class Dialog {
     this.textAnimationPlaying = true;
   }
 
-  #createPlayerInputCursor(): void {
-    const yPosition = this.#height - 24;
-    this.#userInputCursor = this.#scene.add.image(
-      this.#width - 20,
-      yPosition,
-      AssetKeys.UI_COMPONENTS.CURSOR,
-    );
-    this.#userInputCursor.setAngle(90).setScale(4.5, 2);
-    this.#userInputCursorTween = this.#scene.add.tween({
-      delay: 0,
-      duration: 500,
-      repeat: -1,
-      y: {
-        from: yPosition,
-        start: yPosition,
-        to: yPosition + 6,
-      },
-      targets: this.#userInputCursor,
-    });
-    // this._userInputCursorTween.pause();
-    this.container.add(this.#userInputCursor);
+  setMessageComplete(npcId?: string): void {
+    let dialog;
+    if (npcId) {
+      const npcDialogs = this.#findDialogsByNpcId(npcId);
+      dialog = this.#findMessageInCompleted(npcDialogs);
+    } else {
+      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
+    }
+
+    dialog!.completed = true;
+    dialog!.showed = false;
   }
 
   #handleNPCDialogs(npcId: string): void {
@@ -184,16 +174,26 @@ export class Dialog {
     );
   }
 
-  setMessageComplete(npcId?: string): void {
-    let dialog;
-    if (npcId) {
-      const npcDialogs = this.#findDialogsByNpcId(npcId);
-      dialog = this.#findMessageInCompleted(npcDialogs);
-    } else {
-      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
-    }
-
-    dialog!.completed = true;
-    dialog!.showed = false;
+  #createPlayerInputCursor(): void {
+    const yPosition = this.#height - 24;
+    this.#userInputCursor = this.#scene.add.image(
+      this.#width - 20,
+      yPosition,
+      AssetKeys.UI_COMPONENTS.CURSOR,
+    );
+    this.#userInputCursor.setAngle(90).setScale(4.5, 2);
+    this.#userInputCursorTween = this.#scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      y: {
+        from: yPosition,
+        start: yPosition,
+        to: yPosition + 6,
+      },
+      targets: this.#userInputCursor,
+    });
+    // this._userInputCursorTween.pause();
+    this.container.add(this.#userInputCursor);
   }
 }
