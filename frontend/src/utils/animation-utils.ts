@@ -12,7 +12,7 @@ export const animateText = (
       target.text += text[i];
 
       i += 1;
-      if (i > text.length && callback) {
+      if (i >= text.length && callback) {
         callback();
       }
     },

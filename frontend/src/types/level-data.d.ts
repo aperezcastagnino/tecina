@@ -7,7 +7,6 @@ export type DialogData = {
   hints: string[];
   options: string[] | undefined;
   correctOption: string | undefined;
-  showed: boolean | undefined;
   showed_by: string | undefined;
   completed: boolean | undefined;
 };
