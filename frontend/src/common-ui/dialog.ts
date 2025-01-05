@@ -3,7 +3,6 @@ import type { DialogData } from "types/level-data";
 import { animateText } from "utils/animation-utils";
 import { PRIMARY_FONT_FAMILY, FontSize } from "assets/fonts";
 import { DialogColors } from "assets/colors";
-import { AssetKeys } from "assets/asset-keys";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -29,19 +28,13 @@ export class Dialog {
 
   container!: Phaser.GameObjects.Container;
 
-  #userInputCursor!: Phaser.GameObjects.Image;
-
-  #userInputCursorTween!: Phaser.Tweens.Tween;
-
   #uiText!: Phaser.GameObjects.Text;
 
   #messagesToShow: string[];
 
-  #messagesToShowBackup: string[];
+  #textAnimationPlaying: boolean;
 
-  isVisible: boolean;
-
-  textAnimationPlaying: boolean;
+  #activeDialog: DialogData | undefined;
 
   constructor(config: DialogConfig) {
     this.#scene = config.scene;
@@ -51,104 +44,97 @@ export class Dialog {
     this.#width =
       config.width || this.#scene.cameras.main.width - this.#padding * 2;
     this.#messagesToShow = [];
-    this.#messagesToShowBackup = [];
-    this.isVisible = false;
-    this.textAnimationPlaying = false;
+    this.#textAnimationPlaying = false;
 
-    this._createUI();
+    this.#createUI();
     this.hide();
   }
 
-  _createUI(): void {
-    const panel = this.#scene.add
+  #createUI(): void {
+    const panel = this.#createPanel();
+    this.#uiText = this.#createUIText();
+    this.container = this.#createContainer();
+    this.container.add([panel, this.#uiText]);
+  }
+
+  #createPanel(): Phaser.GameObjects.Rectangle {
+    return this.#scene.add
       .rectangle(0, 0, this.#width, this.#height, 0xffffff, 0.9)
       .setOrigin(0)
       .setStrokeStyle(8, DialogColors.border, 1)
       .setScrollFactor(0);
-    this.#uiText = this.#scene.add
+  }
+
+  #createUIText(): Phaser.GameObjects.Text {
+    return this.#scene.add
       .text(18, 12, "", {
-        ...{
-          fontFamily: PRIMARY_FONT_FAMILY,
-          color: "black",
-          fontSize: FontSize.EXTRA_LARGE,
-          wordWrap: { width: 0 },
-        },
-        ...{ wordWrap: { width: this.#width - 18 } },
+        fontFamily: PRIMARY_FONT_FAMILY,
+        color: "black",
+        fontSize: FontSize.EXTRA_LARGE,
+        wordWrap: { width: this.#width - 18 },
       })
       .setScrollFactor(0);
+  }
 
-    this.container = this.#scene.add.container(0, 0, [panel]);
-    this.container.add(this.#uiText);
+  #createContainer(): Phaser.GameObjects.Container {
+    const positionX = this.#padding;
+    const positionY =
+    this.#scene.cameras.main.height - this.#height - this.#padding / 4;
 
-    const startX = this.#padding;
-    const startY =
-      this.#scene.cameras.main.height - this.#height - this.#padding / 4;
-    this.container.setPosition(startX, startY);
-    this.#createPlayerInputCursor();
+    return this.#scene.add.container(positionX, positionY);
+  }
+
+  #setIsVisible(value: boolean): void {
+    this.container.visible = value;
+  }
+
+  isVisible(): boolean {
+    return this.container.visible;
   }
 
   show(npcId?: string): void {
-    this.container.setAlpha(1);
-    this.isVisible = true;
-
-    if (npcId) {
-      this.#handleNPCDialogs(npcId);
-    } else {
-      this.#handleDialogData();
-    }
+    this.#getDialogData(npcId);
   }
 
   hide(): void {
-    this.#userInputCursorTween.pause();
-    this.container.setAlpha(0);
-    this.isVisible = false;
+    this.#setIsVisible(false);
   }
 
   showNextMessage(): void {
-    if (this.isVisible && this.#messagesToShow.length === 0) {
-      this.#messagesToShow = this.#messagesToShowBackup;
+    if (this.#textAnimationPlaying) return;
+
+    if (this.isVisible() && this.#messagesToShow.length === 0) {
       this.hide();
       return;
     }
 
-    if (this.#messagesToShow.length === 0) {
-      return;
-    }
+    if (this.#messagesToShow.length === 0) return;
 
     this.#uiText.setText("").setAlpha(1);
+    this.#textAnimationPlaying = true;
     animateText(
       this.#scene,
       this.#uiText,
       this.#messagesToShow.shift() || "",
       10,
       () => {
-        this.textAnimationPlaying = false;
+        this.#textAnimationPlaying = false;
       },
     );
-    this.textAnimationPlaying = true;
   }
 
   setMessageComplete(npcId?: string): void {
-    let dialog;
-    if (npcId) {
-      const npcDialogs = this.#findDialogsByNpcId(npcId);
-      dialog = this.#findMessageInCompleted(npcDialogs);
-    } else {
-      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
+    if (!this.#activeDialog) return;
+
+    if (this.#activeDialog.showed_by === npcId) {
+      this.#activeDialog!.completed = true;
+      this.#activeDialog = undefined;
+      this.hide();
     }
-
-    dialog!.completed = true;
-    dialog!.showed = false;
   }
 
-  #handleNPCDialogs(npcId: string): void {
-    const npcDialogs = this.#findDialogsByNpcId(npcId);
-    this.#handleDialogData(npcDialogs);
-  }
-
-  #handleDialogData(dialogs?: DialogData[]): void {
-    const dialogsToUse = dialogs || this.#data.simpleDialogs;
-    const dialog = this.#findMessageInCompleted(dialogsToUse);
+  #getDialogData(npcId?: string): void {
+    const dialog = this.#activeDialog || this.#findMessageInCompleted(this.#data);
 
     if (!dialog) {
       console.error("No dialogs not shown were found.");
@@ -156,44 +142,31 @@ export class Dialog {
       return;
     }
 
-    dialog.showed = true;
-    this.#messagesToShowBackup = [...dialog.statements];
-    this.#messagesToShow = [...dialog.statements];
+    if (!this.#activeDialog) {
+      this.#activeDialog = dialog;
+    }
 
+    const textsToShow = this.#resolveDialogsToShow(dialog, npcId);
+    this.#messagesToShow = [...textsToShow];
+
+    this.#setIsVisible(true);
     this.showNextMessage();
   }
 
-  #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
-    return this.#data.npcs?.find((npc) => npc.id === npcId)?.dialogs;
+  #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
+    if (dialog.showed_by === npcId) return dialog.questInProgress;
+    if (dialog.showed_by) return dialog.hints;
+
+    // eslint-disable-next-line no-param-reassign
+    dialog.showed_by = npcId || "";
+    return dialog.questStart;
   }
+
 
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
     return dialogs?.find(
       (dialog) =>
         !dialog.completed && (!dialog.options || dialog.options.length === 0),
     );
-  }
-
-  #createPlayerInputCursor(): void {
-    const yPosition = this.#height - 24;
-    this.#userInputCursor = this.#scene.add.image(
-      this.#width - 20,
-      yPosition,
-      AssetKeys.UI_COMPONENTS.CURSOR,
-    );
-    this.#userInputCursor.setAngle(90).setScale(4.5, 2);
-    this.#userInputCursorTween = this.#scene.add.tween({
-      delay: 0,
-      duration: 500,
-      repeat: -1,
-      y: {
-        from: yPosition,
-        start: yPosition,
-        to: yPosition + 6,
-      },
-      targets: this.#userInputCursor,
-    });
-    // this._userInputCursorTween.pause();
-    this.container.add(this.#userInputCursor);
   }
 }

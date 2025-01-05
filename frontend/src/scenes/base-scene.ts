@@ -43,11 +43,11 @@ export class BaseScene extends Scene {
   }
 
   update() {
-    const directionSelected = this._controls.getDirectionKeyPressed();
-
-    if (!this._dialog?.isVisible) {
+    if (!this._dialog?.isVisible()) {
+      const directionSelected = this._controls.getDirectionKeyPressed();
       this._player.move(directionSelected);
     }
+
     if (this._controls.wasSpaceKeyPressed()) {
       this.#handlePlayerInteraction();
     }
@@ -72,11 +72,8 @@ export class BaseScene extends Scene {
   _defineBehaviors() {}
 
   #handlePlayerInteraction() {
-    if (this._dialog) {
-      if (this._dialog.isVisible) {
-        this._dialog.showNextMessage();
-      }
-    }
+    if (this._dialog?.isVisible())
+      this._dialog.showNextMessage();
   }
 
   #setCamera() {
@@ -85,7 +82,7 @@ export class BaseScene extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true,
+      true
     );
     this.cameras.main.startFollow(this._player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
