@@ -108,8 +108,8 @@ export class BaseScene extends Scene {
     this._player = new Player({
       scene: this,
       position: {
-        x: 100 + this._map.startPosition.x * TILE_SIZE,
-        y: 100 + this._map.startPosition.y * TILE_SIZE,
+        x: 0 + TILE_SIZE + this._map.startPosition.x * TILE_SIZE,
+        y: 0 + TILE_SIZE + this._map.startPosition.y * TILE_SIZE,
       },
       velocity: 700,
     });

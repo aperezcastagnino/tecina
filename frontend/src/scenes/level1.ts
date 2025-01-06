@@ -57,17 +57,14 @@ export class Level1 extends BaseScene {
       this.#defineBehaviorForNPCs(npcSprite);
     });
 
-    this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
-      const itemObject = item as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForItems(itemObject);
-    });
+    
   }
 
   #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
     this.#total_oranges = this._map.assetGroups
       .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
       .getLength();
-
+      
     if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
         const orangeGroup = this._map.assetGroups.get(
@@ -77,6 +74,10 @@ export class Level1 extends BaseScene {
         if (this.#npc_1_show_first_message) {
           this._dialog?.show(npc.name);
           this._showElements(orangeGroup!);
+          this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
+            const itemObject = item as Phaser.GameObjects.Sprite;
+            this.#defineBehaviorForItems(itemObject);
+          });
           this._dialog?.setMessageComplete(npc.name);
           this.#npc_1_show_first_message = false;
         } else if (this.#total_oranges > 0) {
@@ -103,6 +104,8 @@ export class Level1 extends BaseScene {
   }
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
-    item.destroy();
+    if(item.visible){
+      item.destroy();
+    }
   }
 }

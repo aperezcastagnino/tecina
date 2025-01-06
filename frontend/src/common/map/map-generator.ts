@@ -81,7 +81,6 @@ export class MapGenerator {
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
-      finishPosition: { x: 0, y: 0 },
       assetGroups: new Map(),
     };
   }
@@ -211,36 +210,6 @@ export class MapGenerator {
     return arrayOfTiles[0];
   }
 
-  replaceColisionablesWithFrequency(map: Tiles[][]): void {
-    const frecuency = TILES_TO_USE.filter(
-      (f) =>
-        f.Type === MapTileType.INTERACTABLE_OBJECT ||
-        f.Type === MapTileType.EMPTY_SPACE,
-    ).map((m) => m.Frecuency!);
-    const assets = TILES_TO_USE.filter(
-      (f) =>
-        f.Type === MapTileType.INTERACTABLE_OBJECT ||
-        f.Type === MapTileType.EMPTY_SPACE,
-    ).map((m) => m.Asset);
-
-    for (let y = 0; y < map.length; y += 1) {
-      for (let x = 0; x < map[y]!.length; x += 1) {
-        if (this.#matrix[y]![x] === UNUSED_CELL) {
-          if (
-            this.#map.startPosition.x === 0 &&
-            this.#map.startPosition.y === 0
-          ) {
-            this.#map.startPosition.x = x;
-            this.#map.startPosition.y = y;
-          }
-          this.#map.tiles[y]![x] = this.getRandomBasedOnFrequency(
-            frecuency,
-            assets,
-          ); // Reemplaza solo celdas vacías
-        }
-      }
-    }
-  }
 
   fillMap(map: Tiles[][], partition: Partition): void {
     if (partition.room) {
@@ -290,7 +259,7 @@ export class MapGenerator {
       const index = rooms.indexOf(room);
       rooms.splice(index, 1);
 
-      this.#map.tiles[room.x + room.width / 2]![room.y + room.height / 2] =
+      this.#map.tiles[room.x + Math.trunc(room.width / 2)]![room.y + Math.trunc(room.height / 2)] =
         Tiles.FREE_SPACE;
     }
   }
@@ -322,6 +291,10 @@ export class MapGenerator {
               frecuencyInteractuableAndEmptySpace,
               assetsInteractuableAndEmptySpace,
             );
+            if(this.#map.startPosition.x == 0 && this.#map.startPosition.y==0){
+              this.#map.startPosition.x = columnIndex +1;
+              this.#map.startPosition.y = rowIndex +1;
+            }
         }
         if (element === UNUSED_CELL) {
           this.#map.tiles[columnIndex]![rowIndex] =
