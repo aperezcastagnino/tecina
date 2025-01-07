@@ -3,13 +3,12 @@ import { AssetKeys } from "assets/asset-keys";
 import type { MapStructure } from "types/map";
 import { TILE_SIZE } from "config/config";
 import { Tiles } from "config/map-config";
-import type { Coordinate } from "types/coordinate";
 import { AnimationsKeys } from "assets/animation-keys";
 
 export class MapRenderer {
   static renderer(scene: Scene, map: MapStructure) {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
-    const startPosition = {x: 0, y:0 };
+    const startPosition = { x: 0, y: 0 };
 
     let numberOfNPCs = 2;
     const assetNPC = [0, 20];
