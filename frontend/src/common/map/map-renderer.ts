@@ -3,21 +3,20 @@ import { AssetKeys } from "assets/asset-keys";
 import type { MapStructure } from "types/map";
 import { TILE_SIZE } from "config/config";
 import { Tiles } from "config/map-config";
-import type { Coordinate } from "types/coordinate";
 import { AnimationsKeys } from "assets/animation-keys";
 
 export class MapRenderer {
   static renderer(scene: Scene, map: MapStructure) {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
-    const startPosition: Coordinate = { x: 100, y: 100 };
+    const startPosition = { x: 0, y: 0 };
 
     let numberOfNPCs = 2;
     const assetNPC = [0, 20];
 
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
-        const x = startPosition.x + column * TILE_SIZE;
-        const y = startPosition.y + row * TILE_SIZE;
+        const x = startPosition.x + TILE_SIZE + column * TILE_SIZE;
+        const y = startPosition.y + TILE_SIZE + row * TILE_SIZE;
 
         const assetRef = (map.tiles[row]?.[column] as Tiles) ?? 0;
         const assetName = Tiles[assetRef]!;

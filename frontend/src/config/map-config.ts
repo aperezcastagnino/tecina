@@ -60,7 +60,7 @@ export const TILES_TO_USE: TilesToUseConfig[] = [
   },
   {
     Type: MapTileType.NO_INTERACTABLE_OBJECT, // EL 100% DE LOS OBJETOS INTERACTUABL SON ARBOLES
-    Asset: Tiles.TREE,
+    Asset: Tiles.GRASS,
     Frecuency: 50,
   },
   {
@@ -70,10 +70,10 @@ export const TILES_TO_USE: TilesToUseConfig[] = [
   },
 ];
 
-export const MAP_WIDTH = 10;
-export const MAP_HEIGHT = 10;
-export const MIN_PARTITION_SIZE = 4;
-export const MIN_ROOM_SIZE = 4;
+export const MAP_WIDTH = 120;
+export const MAP_HEIGHT = 120;
+export const MIN_PARTITION_SIZE = 5; // MIN_PARTITION_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
+export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 
 export const MAP_TILES_ASSETS: { [key: number]: string } = {
   0: AssetKeys.TILES.GRASS,
