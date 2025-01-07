@@ -84,32 +84,17 @@ export class Dialog {
     return this.#scene.add.container(positionX, positionY);
   }
 
-  #setIsVisible(value: boolean): void {
-    this.container.visible = value;
-  }
-
-  isVisible(): boolean {
-    return this.container.visible;
-  }
-
-  show(npcId?: string): void {
-    this.#getDialogData(npcId);
-  }
-
-  hide(): void {
-    this.#setIsVisible(false);
-  }
-
   showNextMessage(): void {
     if (this.#textAnimationPlaying) return;
 
-    if (this.isVisible() && this.#messagesToShow.length === 0) {
+    if (this.#messagesToShow.length === 0 && this.isVisible()) {
       this.hide();
       return;
     }
 
     if (this.#messagesToShow.length === 0) return;
 
+    this.#setIsVisible(true);
     this.#uiText.setText("").setAlpha(1);
     this.#textAnimationPlaying = true;
     animateText(
@@ -121,16 +106,6 @@ export class Dialog {
         this.#textAnimationPlaying = false;
       },
     );
-  }
-
-  setMessageComplete(npcId?: string): void {
-    if (!this.#activeDialog) return;
-
-    if (this.#activeDialog.showed_by === npcId) {
-      this.#activeDialog!.completed = true;
-      this.#activeDialog = undefined;
-      this.hide();
-    }
   }
 
   #getDialogData(npcId?: string): void {
@@ -148,8 +123,6 @@ export class Dialog {
 
     const textsToShow = this.#resolveDialogsToShow(dialog, npcId);
     this.#messagesToShow = [...textsToShow];
-
-    this.#setIsVisible(true);
     this.showNextMessage();
   }
 
@@ -168,5 +141,40 @@ export class Dialog {
       (dialog) =>
         !dialog.completed && (!dialog.options || dialog.options.length === 0),
     );
+  }
+
+  #setIsVisible(value: boolean): void {
+    this.container.visible = value;
+  }
+
+  isVisible(): boolean {
+    return this.container.visible;
+  }
+
+  show(npcId?: string): void {
+    this.#getDialogData(npcId);
+  }
+
+  hide(): void {
+    this.#setIsVisible(false);
+  }
+
+  setMessageComplete(npcId?: string): void {
+    if (!this.#activeDialog) return;
+
+    if (this.#activeDialog.showed_by === npcId) {
+      this.#activeDialog!.completed = true;
+      this.#activeDialog = undefined;
+      this.hide();
+    }
+  }
+
+  getAssetKey(): string | undefined {
+    debugger
+    return this.#activeDialog?.assetKey;
+  }
+
+  isQuestActive(): boolean {
+    return !!this.#activeDialog;
   }
 }

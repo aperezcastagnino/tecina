@@ -36,7 +36,7 @@ export class Level1 extends BaseScene {
     super.create();
 
     this._hideElements(
-      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
+      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
     );
   }
 
@@ -46,7 +46,7 @@ export class Level1 extends BaseScene {
     this.anims.create({
       key: AnimationsKeys.ORANGE,
       frames: this.anims.generateFrameNumbers(
-        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+        AssetKeys.ITEMS.FRUITS.ORANGE.NAME
       ),
       frameRate: 19,
       repeat: -1,
@@ -56,7 +56,7 @@ export class Level1 extends BaseScene {
   _defineBehaviors() {
     const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
     const orangeGroup = this._map.assetGroups.get(
-      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME
     )!;
     const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
@@ -98,44 +98,21 @@ export class Level1 extends BaseScene {
       return;
     }
     if (this._controls.wasSpaceKeyPressed()) {
-      if (npc.name === "npc-1") {
-        const orangeGroup = this._map.assetGroups.get(
-          AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-        )!;
+      this._dialog?.show(npc.name);
+      debugger;
 
-        if (this.#npc_1_show_first_message) {
-          this._dialog?.show(npc.name);
-          this._showElements(orangeGroup!);
-          this.physics.add.collider(
-            this._player,
-            orangeGroup,
-            (_player, item) => {
-              const itemObject = item as Phaser.GameObjects.Sprite;
-              this.#defineBehaviorForItems(itemObject);
-            },
-          );
-          this._dialog?.setMessageComplete(npc.name);
-          this.#npc_1_show_first_message = false;
-        } else if (this.#total_oranges > 0) {
-          this._dialog?.show("npc-1");
-          this.#npc_1_show_intermediate_message = true;
-        } else {
-          if (this.#npc_1_show_first_complete_collect_objects) {
-            if (!this.#npc_1_show_intermediate_message) {
-              this._dialog?.setMessageComplete(npc.name);
-            }
-            this.#npc_1_show_first_complete_collect_objects = false;
-          }
-          this._dialog?.show(npc.name);
-        }
+      const assetKey = this._dialog?.getAssetKey();
+      if (!assetKey) return;
+
+      const assetGroup = this._map.assetGroups.get(assetKey)!;
+
+      if (assetGroup.countActive(true) === 0 && !this._dialog?.isQuestActive()) {
+        this._showElements(assetGroup);
+      } else if (assetGroup.countActive(true) === 0) {
+        this._dialog?.setMessageComplete(npc.name);
       }
 
-      if (npc.name === "npc-2") {
-        if (this.#total_oranges === 0) {
-          this._dialog?.setMessageComplete(npc.name);
-        }
-        this._dialog?.show(npc.name);
-      }
+
     }
   }
 

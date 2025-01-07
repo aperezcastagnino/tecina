@@ -9,6 +9,7 @@ export type DialogData = {
   correctOption: string | undefined;
   showed_by: string | undefined;
   completed: boolean | undefined;
+  assetKey: string | undefined;
 };
 
 export type LevelData = {

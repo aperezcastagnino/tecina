@@ -72,8 +72,9 @@ export class BaseScene extends Scene {
   _defineBehaviors() {}
 
   #handlePlayerInteraction() {
-    if (this._dialog?.isVisible())
+    if (this._dialog?.isVisible()) {
       this._dialog.showNextMessage();
+    }
   }
 
   #setCamera() {
