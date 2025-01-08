@@ -2,23 +2,14 @@ import type { AwardConfig } from "common-ui/config";
 
 export class Awards {
   #scene: Phaser.Scene;
-
   #scale: number;
-
   #positionX: number;
-
   #positionY: number;
-
   #frameRate: number;
-
   #padding: number;
-
   #assetKey: string;
-
   #spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
-
   #keyAnim: string;
-
   #sprites: Phaser.GameObjects.Sprite[];
 
   constructor(config: AwardConfig) {
@@ -31,12 +22,15 @@ export class Awards {
     this.#frameRate = config.frameRate;
     this.#padding = config.padding;
     this.#keyAnim = "AwardsKeyAnim";
+
+    // Crear la animación
     this.#scene.anims.create({
       key: this.#keyAnim,
       frames: this.#scene.anims.generateFrameNumbers(this.#assetKey),
       frameRate: this.#frameRate,
       repeat: -1,
     });
+
     this.#sprites = [];
   }
 
@@ -59,9 +53,13 @@ export class Awards {
           this.#positionY,
           this.#assetKey,
         )
-        .setScale(this.#scale);
+        .setScale(this.#scale)
+        .setScrollFactor(0); // Hace que el sprite no se mueva con la cámara
+
       this.#sprites.push(sprite);
     }
+
+    // Reproducir la animación para cada sprite
     this.#sprites.forEach((element) => {
       setTimeout(() => element.play(this.#keyAnim), 0);
     });
@@ -70,9 +68,11 @@ export class Awards {
   removeAnims(count: number) {
     for (let i = 0; i < count; i += 1) {
       const sprite = this.#sprites.pop();
-      sprite!.stop();
-      sprite!.setFrame(0);
-      sprite!.visible = false;
+      if (sprite) {
+        sprite.stop();
+        sprite.setFrame(0);
+        sprite.setVisible(false);
+      }
     }
   }
 }
