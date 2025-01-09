@@ -1,7 +1,7 @@
 import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
-import { SceneKeys } from "./scene-keys";
-import { BaseScene } from "./base-scene";
+import { SceneKeys } from "scenes/scene-keys";
+import { BaseScene } from "scenes/base-scene";
 import { TILE_SIZE } from "config/config";
 import { GameObjects } from "phaser";
 import { Awards } from "common-ui/awards";
@@ -38,7 +38,6 @@ export class Level1 extends BaseScene {
     this._hideElements(
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
-    
   }
 
   preload() {
@@ -69,16 +68,16 @@ export class Level1 extends BaseScene {
       assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
       frameRate: 19,
       padding: 0,
-      scale : 2,
+      scale: 2,
       scene: this,
       width: MAP_WIDTH * TILE_SIZE,
       spriteConfig: {
         startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
         frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT
-      }
-    })
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+      },
+    });
 
     this.physics.add.collider(this._player, npcGroup, (_player, npc) => {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
@@ -91,9 +90,9 @@ export class Level1 extends BaseScene {
       .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
       .getLength();
 
-    if (this.#has_object_in_the_bag) {
-      this.#collected_oranges++;
-      this,this.#award.setAwardsCount(this.#collected_oranges);
+    if (npc.name === "npc-1" && this.#has_object_in_the_bag) {
+      this.#collected_oranges += 1;
+      this.#award.setAwardsCount(this.#collected_oranges);
       this.#bag_objects.destroy();
       this.#has_object_in_the_bag = false;
       return;
@@ -147,19 +146,31 @@ export class Level1 extends BaseScene {
       this.children.bringToTop(this.#bag_objects); // Este método mueve "top" al frente de la pila de renderizado
       if (item.body) {
         const body = item.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = true;  // Deshabilitar las colisiones del objeto
+        body.checkCollision.none = true; // Deshabilitar las colisiones del objeto
       }
     }
   }
+
   update(): void {
     super.update();
     if (this.#has_object_in_the_bag) {
-      if (this._controls.wasShiftPressed()) { //Tengo que soltar
+      if (this._controls.wasShiftPressed()) {
         const dropX = this._player.x + TILE_SIZE;
         const dropY = this._player.y;
-        const canDrop = this.physics.overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true).filter(ol => (ol.gameObject instanceof GameObjects.Image && (ol.gameObject.texture.key === AssetKeys.TILES.TREE || ol.gameObject.texture.key == AssetKeys.CHARACTERS.NPC))).length > 0;
+        const canDrop =
+          this.physics
+            .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
+            .filter(
+              (ol) =>
+                ol.gameObject instanceof GameObjects.Image &&
+                (ol.gameObject.texture.key === AssetKeys.TILES.TREE ||
+                  ol.gameObject.texture.key === AssetKeys.CHARACTERS.NPC),
+            ).length > 0;
         if (!canDrop) {
-          this.#bag_objects.setPosition(this._player.x + TILE_SIZE, this._player.y);
+          this.#bag_objects.setPosition(
+            this._player.x + TILE_SIZE,
+            this._player.y,
+          );
           this.#has_object_in_the_bag = false;
           if (this.#bag_objects.body) {
             const body = this.#bag_objects.body as Phaser.Physics.Arcade.Body;
