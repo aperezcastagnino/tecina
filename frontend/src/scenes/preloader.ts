@@ -65,6 +65,21 @@ export class Preloader extends Scene {
       `/ui-components/cursor.png`,
     );
 
+    // Healthar
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
+      "/health-bar/bar-background.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
+      "/health-bar/green-bar.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_YELLOW,
+      "/health-bar/yellow-bar.png",
+    );
+    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, "/health-bar/red-bar.png");
+
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
     this.load.image(AssetKeys.TILES.FLOWER, "/tiles/flower.png");
@@ -94,20 +109,6 @@ export class Preloader extends Scene {
       },
     );
 
-    // HealthBar
-    this.load.image(
-      AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
-      "/healthBar/BarBackground.png",
-    );
-    this.load.image(
-      AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
-      "/healthBar/GreenBar.png",
-    );
-    this.load.image(
-      AssetKeys.HEALTH_BAR.MIDDLE_YELLOW,
-      "/healthBar/YellowBar.png",
-    );
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, "/healthBar/RedBar.png");
   }
 
   create() {
