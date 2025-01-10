@@ -29,7 +29,6 @@ export type MapStructure = {
   rows: number;
   columns: number;
   startPosition: Coordinate;
-  finishPosition: Coordinate;
   assetGroups: Map<string, Phaser.GameObjects.Group>;
   initialParameters?: MapConfig;
 };

@@ -2,7 +2,6 @@ from logging.config import dictConfig
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.config import settings
 from src.logging import LogConfig
 from src.main_router import router
 

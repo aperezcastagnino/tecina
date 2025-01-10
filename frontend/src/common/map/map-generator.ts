@@ -81,7 +81,6 @@ export class MapGenerator {
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
-      finishPosition: { x: 0, y: 0 },
       assetGroups: new Map(),
     };
   }
@@ -290,8 +289,9 @@ export class MapGenerator {
       const index = rooms.indexOf(room);
       rooms.splice(index, 1);
 
-      this.#map.tiles[room.x + room.width / 2]![room.y + room.height / 2] =
-        Tiles.FREE_SPACE;
+      this.#map.tiles[room.x + Math.trunc(room.width / 2)]![
+        room.y + Math.trunc(room.height / 2)
+      ] = Tiles.FREE_SPACE;
     }
   }
 
@@ -322,6 +322,13 @@ export class MapGenerator {
               frecuencyInteractuableAndEmptySpace,
               assetsInteractuableAndEmptySpace,
             );
+          if (
+            this.#map.startPosition.x === 0 &&
+            this.#map.startPosition.y === 0
+          ) {
+            this.#map.startPosition.x = columnIndex + 1;
+            this.#map.startPosition.y = rowIndex + 1;
+          }
         }
         if (element === UNUSED_CELL) {
           this.#map.tiles[columnIndex]![rowIndex] =

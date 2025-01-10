@@ -1,0 +1,4 @@
+# Byte-compiled / optimized / DLL files
+**/__pycache__
+*.py[cod]
+backend/src/schemas/__pycache__/gemini.cpython-310.pyc
