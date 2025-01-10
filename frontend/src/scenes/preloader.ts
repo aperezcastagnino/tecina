@@ -65,7 +65,7 @@ export class Preloader extends Scene {
       `/ui-components/cursor.png`,
     );
 
-    // Healthar
+    // Health bar
     this.load.image(
       AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
       "/health-bar/bar-background.png",
@@ -141,10 +141,10 @@ export class Preloader extends Scene {
     );
   }
 
-  #createPlayerAnimation(key: string, asseyKey: string, frames: number[]) {
+  #createPlayerAnimation(key: string, assetKey: string, frames: number[]) {
     this.anims.create({
       key,
-      frames: this.anims.generateFrameNumbers(asseyKey, {
+      frames: this.anims.generateFrameNumbers(assetKey, {
         frames,
       }),
       frameRate: 6,

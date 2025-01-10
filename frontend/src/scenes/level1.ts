@@ -60,12 +60,6 @@ export class Level1 extends BaseScene {
       const npcSprite = npc as Phaser.GameObjects.Sprite;
       this.#defineBehaviorForNPCs(npcSprite);
     });
-
-    this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
-      const itemObject = item as Phaser.GameObjects.Sprite;
-      // this.#healthBar.decreaseHealth(30);
-      this.#defineBehaviorForItems(itemObject);
-    });
   }
 
   #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
