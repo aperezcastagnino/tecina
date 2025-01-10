@@ -1,51 +1,59 @@
-import { FontSize, PRIMARY_FONT_FAMILY } from "../assets/fonts";
-import { AssetKeys } from "../assets/asset-keys";
-import { Colors } from "../assets/colors";
-import { GAME_DIMENSIONS } from "../config/config";
+import { AssetKeys } from "assets/asset-keys";
+import { GAME_DIMENSIONS } from "config/config";
+import {
+  FontSize,
+  PRIMARY_FONT_FAMILY,
+  WIDTH,
+  HEIGHT,
+  POSITION_X,
+  POSITION_Y,
+  HEALTH_BAR_TEXT,
+} from "common-ui/health-bar";
+import { Colors } from "assets/colors";
 
 export class HealthBar {
-  _scene: Phaser.Scene;
+  #scene: Phaser.Scene;
 
-  _middle_green!: Phaser.GameObjects.Image;
+  #middle_green!: Phaser.GameObjects.Image;
 
-  _middle_yellow!: Phaser.GameObjects.Image;
+  #middle_yellow!: Phaser.GameObjects.Image;
 
-  _middle_red!: Phaser.GameObjects.Image;
+  #middle_red!: Phaser.GameObjects.Image;
 
-  _middleShadow!: Phaser.GameObjects.Image;
+  #middle_shadow!: Phaser.GameObjects.Image;
 
-  _scaleY!: number;
+  #scaleY!: number;
 
-  _containerShadows!: Phaser.GameObjects.Container;
+  #container_shadows!: Phaser.GameObjects.Container;
 
-  _container!: Phaser.GameObjects.Container;
+  #container!: Phaser.GameObjects.Container;
 
-  _fullWidth!: number;
+  #fullWidth!: number;
 
-  _fullHeight!: number;
+  #fullHeight!: number;
 
-  percent!: number;
+  #percent!: number;
 
   constructor(scene: Phaser.Scene) {
-    this._scene = scene;
-    this._scaleY = 0.7;
-    this._fullWidth = GAME_DIMENSIONS.WIDTH / 5;
-    this._fullHeight = GAME_DIMENSIONS.HEIGHT / 3.5;
-    this.percent = 100;
+    this.#scene = scene;
+    this.#scaleY = 0.7;
+    this.#fullWidth = WIDTH;
+    this.#fullHeight = HEIGHT;
+    this.#percent = 100;
 
-    const x = 600;
-    const y = 30;
-    const text = "HEALTH";
+    const x = POSITION_X;
+    const y = POSITION_Y;
+    const text = HEALTH_BAR_TEXT;
 
-    this._containerShadows = this._scene.add.container(x, y, []);
-    this._container = this._scene.add.container(x, y, []);
+    this.#container_shadows = this.#scene.add.container(x, y, []);
+    this.#container = this.#scene.add.container(x, y, []);
 
-    this._scene.add
+    this.#scene.add
       .text(GAME_DIMENSIONS.WIDTH - 600, 20, text, {
         fontFamily: PRIMARY_FONT_FAMILY,
         color: Colors.White,
         fontSize: FontSize.EXTRA_LARGE,
-        wordWrap: { width: this._fullHeight },
+        wordWrap: { width: this.#fullHeight },
       })
       .setScrollFactor(0);
 
@@ -54,93 +62,102 @@ export class HealthBar {
   }
 
   _createBarShadowImages(x: number, y: number) {
-    this._middleShadow = this._scene.add
+    this.#middle_shadow = this.#scene.add
       .image(x, y, AssetKeys.HEALTH_BAR.MIDDLE_SHADOW)
       .setOrigin(0, 0.5)
-      .setScale(1, this._scaleY)
+      .setScale(1, this.#scaleY)
       .setScrollFactor(0);
-    this._middleShadow.displayWidth = this._fullWidth;
-    this._middleShadow.displayHeight = this._fullHeight;
-    this._containerShadows.add([this._middleShadow]);
+    this.#middle_shadow.displayWidth = this.#fullWidth;
+    this.#middle_shadow.displayHeight = this.#fullHeight;
+    this.#container_shadows.add([this.#middle_shadow]);
   }
 
   _createBarImages(x: number, y: number) {
-    this._middle_green = this._scene.add
+    this.#middle_green = this.#scene.add
       .image(x, y, AssetKeys.HEALTH_BAR.MIDDLE_GREEN)
       .setOrigin(0, 0.5)
       .setScale(1, 0)
       .setScrollFactor(0);
-    this._middle_green.displayHeight = this._fullHeight;
-    this._middle_green.displayWidth = this._fullWidth;
+    this.#middle_green.displayHeight = this.#fullHeight;
+    this.#middle_green.displayWidth = this.#fullWidth;
 
-    this._middle_yellow = this._scene.add
+    this.#middle_yellow = this.#scene.add
       .image(x, y, AssetKeys.HEALTH_BAR.MIDDLE_YELLOW)
       .setOrigin(0, 0.5)
       .setScale(1, 0)
       .setScrollFactor(0);
-    this._middle_yellow.displayHeight = this._fullHeight;
-    this._middle_yellow.displayWidth = this._fullWidth;
+    this.#middle_yellow.displayHeight = this.#fullHeight;
+    this.#middle_yellow.displayWidth = this.#fullWidth;
 
-    this._middle_red = this._scene.add
+    this.#middle_red = this.#scene.add
       .image(x, y, AssetKeys.HEALTH_BAR.MIDDLE_RED)
       .setOrigin(0, 0.5)
       .setScale(1, 0)
       .setScrollFactor(0);
-    this._middle_red.displayHeight = this._fullHeight;
-    this._middle_red.displayWidth = this._fullWidth;
+    this.#middle_red.displayHeight = this.#fullHeight;
+    this.#middle_red.displayWidth = this.#fullWidth;
 
-    this._updateBarGameObjects(1);
-    this._container.add([
-      this._middle_yellow,
-      this._middle_green,
-      this._middle_red,
+    this.#updateBarGameObjects(1);
+    this.#container.add([
+      this.#middle_yellow,
+      this.#middle_green,
+      this.#middle_red,
     ]);
   }
 
-  decrease(number: number) {
-    this.percent -= number;
-    this.setMeterPercentage(this.percent / 100);
+  decreaseHealth(number: number) {
+    this.#percent -= number;
+    if (this.#percent <= 0) {
+      this.#scene.scene.start("GAME_OVER");
+    } else {
+      this.#setMeterPercentage(this.#percent / 100);
+    }
   }
 
-  setMeterPercentage(percent = 1) {
-    const width = this._fullWidth * percent;
-    this._scene.tweens.add({
-      targets: this._middle_green,
+  increaseHealth(number: number) {
+    this.#percent += number;
+    if (this.#percent >= 100) {
+      this.#percent = 100;
+    }
+    this.#setMeterPercentage(this.#percent / 100);
+  }
+
+  #setMeterPercentage(percent = 1) {
+    const width = this.#fullWidth * percent;
+    this.#scene.tweens.add({
+      targets: this.#middle_green,
       displayWidth: width,
       duration: 1000,
       ease: Phaser.Math.Easing.Sine.InOut,
       onUpdate: () => {
-        this._updateBarGameObjects(percent);
+        this.#updateBarGameObjects(percent);
       },
     });
   }
 
-  _updateBarGameObjects(percent: number) {
-    const isVisible = this._middle_green.displayWidth > 0;
-    this._middle_green.visible = isVisible;
+  #updateBarGameObjects(percent: number) {
+    this.#middle_green.visible = this.#middle_green.displayWidth > 0;
     const constrainedWidth = Math.min(
-      this._middle_green.displayWidth,
-      this._fullWidth,
+      this.#middle_green.displayWidth,
+      this.#fullWidth,
     );
 
-    if (percent > 0.2 && percent < 0.5) {
-      this._middle_yellow.displayWidth = constrainedWidth;
-      this._middle_yellow.visible = true;
-      this._middle_green.visible = false;
-      this._middle_red.visible = false;
-      this._middle_green.setOrigin(0, 0.5);
-    }
-    if (percent < 0.2) {
-      this._middle_red.displayWidth = constrainedWidth;
-      this._middle_yellow.visible = false;
-      this._middle_green.visible = false;
-      this._middle_red.visible = true;
-    }
     if (percent >= 0.5) {
-      this._middle_green.displayWidth = constrainedWidth;
-      this._middle_yellow.visible = false;
-      this._middle_green.visible = true;
-      this._middle_red.visible = false;
+      this.#middle_green.displayWidth = constrainedWidth;
+      this.#middle_yellow.visible = false;
+      this.#middle_green.visible = true;
+      this.#middle_red.visible = false;
+    } else if (percent > 0.2 && percent < 0.5) {
+      this.#middle_yellow.displayWidth = constrainedWidth;
+      this.#middle_yellow.visible = true;
+      this.#middle_green.visible = false;
+      this.#middle_red.visible = false;
+      this.#middle_green.setOrigin(0, 0.5);
+    } else if (percent <= 0.2) {
+      this.#middle_red.displayWidth = constrainedWidth;
+      this.#middle_yellow.visible = false;
+      this.#middle_green.visible = false;
+      this.#middle_red.visible = true;
     }
   }
 }

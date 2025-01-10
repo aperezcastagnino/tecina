@@ -63,7 +63,7 @@ export class Level1 extends BaseScene {
 
     this.physics.add.collider(this._player, orangeGroup, (_player, item) => {
       const itemObject = item as Phaser.GameObjects.Sprite;
-      this.#healthBar.decrease(30);
+      // this.#healthBar.decreaseHealth(30);
       this.#defineBehaviorForItems(itemObject);
     });
   }

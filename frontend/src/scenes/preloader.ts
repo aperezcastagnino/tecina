@@ -108,7 +108,6 @@ export class Preloader extends Scene {
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
       },
     );
-
   }
 
   create() {
