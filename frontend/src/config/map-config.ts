@@ -70,8 +70,8 @@ export const TILES_TO_USE: TilesToUseConfig[] = [
   },
 ];
 
-export const MAP_WIDTH = 120;
-export const MAP_HEIGHT = 120;
+export const MAP_WIDTH = 12;
+export const MAP_HEIGHT = 12;
 export const MIN_PARTITION_SIZE = 5; // MIN_PARTITION_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 
