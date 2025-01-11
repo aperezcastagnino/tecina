@@ -5,22 +5,22 @@ import { MapTileType } from "./map-config";
 export const TILES_TO_USE: GridTile[] = [
   { type: MapTileType.FREE_SPACE, assetTile: MapTiles.GRASS, frequency: 50 },
   {
-    type: MapTileType.NO_INTERACTABLE_OBJECT,
+    type: MapTileType.NO_INTERACTIVE_OBJECT,
     assetTile: MapTiles.TREE,
     frequency: 40,
   },
   {
-    type: MapTileType.INTERACTABLE_OBJECT,
+    type: MapTileType.INTERACTIVE_OBJECT,
     assetTile: MapTiles.FLOWER_GRASS,
     frequency: 20,
   },
   {
-    type: MapTileType.INTERACTABLE_OBJECT,
+    type: MapTileType.INTERACTIVE_OBJECT,
     assetTile: MapTiles.ORANGE,
     frequency: 2,
   },
   {
-    type: MapTileType.INTERACTABLE_OBJECT,
+    type: MapTileType.INTERACTIVE_OBJECT,
     assetTile: MapTiles.NPC,
     quantity: 2,
   },

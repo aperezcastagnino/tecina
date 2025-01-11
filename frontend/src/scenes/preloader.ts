@@ -65,6 +65,16 @@ export class Preloader extends Scene {
       `/ui-components/cursor.png`,
     );
 
+    // Health bar
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_SHADOW,
+      "/health-bar/bar-background.png",
+    );
+    this.load.image(
+      AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
+      "/health-bar/green-bar.png",
+    );
+
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
     this.load.image(AssetKeys.TILES.FLOWER, "/tiles/flower.png");
@@ -126,10 +136,10 @@ export class Preloader extends Scene {
     );
   }
 
-  #createPlayerAnimation(key: string, asseyKey: string, frames: number[]) {
+  #createPlayerAnimation(key: string, assetKey: string, frames: number[]) {
     this.anims.create({
       key,
-      frames: this.anims.generateFrameNumbers(asseyKey, {
+      frames: this.anims.generateFrameNumbers(assetKey, {
         frames,
       }),
       frameRate: 6,

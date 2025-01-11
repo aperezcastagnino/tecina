@@ -14,10 +14,10 @@ type Room = {
   y: number;
   width: number;
   height: number;
-  interactuableObject?: InteractuableObject;
+  interactiveObject?: InteractiveObject;
 };
 
-interface InteractuableObject {
+interface InteractiveObject {
   x: number;
   y: number;
 }
@@ -65,7 +65,7 @@ export class MapGenerator {
     this.generateMapTile();
     console.log(this.#root);
     this.fillFreeSpace(this.#root);
-    // this.replaceColisionablesWithFrequency(this.#map.tiles)
+    // this.replaceCollidableWithFrequency(this.#map.tiles)
     console.log(this.#map.tiles);
   }
 
@@ -174,8 +174,6 @@ export class MapGenerator {
       height: roomHeight,
     };
 
-    console.log("Room creado!!");
-    console.log(newPartition.room); // Verifica room en el nuevo objeto
     return newPartition;
   }
 
@@ -184,7 +182,7 @@ export class MapGenerator {
 
     if (!partition.left && !partition.right) {
       const updatedPartition = this.createRoom(partition);
-      newPartition.room = updatedPartition.room; // Asignar el room al objeto original
+      newPartition.room = updatedPartition.room; // Assign the room to the original object
     } else {
       if (partition.left) {
         newPartition.left = this.assignRooms(partition.left);
@@ -196,15 +194,15 @@ export class MapGenerator {
     return newPartition;
   }
 
-  getRandomBasedOnFrequency(frecuency: number[], arrayOfTiles: any[]): any {
-    const totalFrequency = frecuency.reduce((a, b) => a + b, 0);
+  getRandomBasedOnFrequency(frequency: number[], arrayOfTiles: any[]): any {
+    const totalFrequency = frequency.reduce((a, b) => a + b, 0);
     const randomValue = Math.random() * totalFrequency;
 
     let cumulative = 0;
-    for (let i = 0; i < frecuency.length; i += 1) {
-      cumulative += frecuency[i]!;
+    for (let i = 0; i < frequency.length; i += 1) {
+      cumulative += frequency[i]!;
       if (randomValue < cumulative) {
-        return arrayOfTiles[i]!; // Inicia desde 3
+        return arrayOfTiles[i]!; // Starts in 3
       }
     }
     return arrayOfTiles[0];
@@ -265,22 +263,22 @@ export class MapGenerator {
   }
 
   generateMapTile() {
-    const frecuencyInteractuableAndEmptySpace = TILES_TO_USE.filter(
+    const frequencyInteractiveAndEmptySpace = TILES_TO_USE.filter(
       (f) =>
-        f.Type === MapTileType.INTERACTABLE_OBJECT ||
+        f.Type === MapTileType.INTERACTIVE_OBJECT ||
         f.Type === MapTileType.EMPTY_SPACE,
-    ).map((m) => m.Frecuency!);
-    const assetsInteractuableAndEmptySpace = TILES_TO_USE.filter(
+    ).map((m) => m.Frequency!);
+    const assetsInteractiveAndEmptySpace = TILES_TO_USE.filter(
       (f) =>
-        f.Type === MapTileType.INTERACTABLE_OBJECT ||
+        f.Type === MapTileType.INTERACTIVE_OBJECT ||
         f.Type === MapTileType.EMPTY_SPACE,
     ).map((m) => m.Asset);
 
-    const frecuencyNoInteractueblaObject = TILES_TO_USE.filter(
-      (f) => f.Type === MapTileType.NO_INTERACTABLE_OBJECT,
-    ).map((m) => m.Frecuency!);
-    const assetsNoInteractueblaObject = TILES_TO_USE.filter(
-      (f) => f.Type === MapTileType.NO_INTERACTABLE_OBJECT,
+    const frequencyNoInteractiveObject = TILES_TO_USE.filter(
+      (f) => f.Type === MapTileType.NO_INTERACTIVE_OBJECT,
+    ).map((m) => m.Frequency!);
+    const assetsNoInteractiveObject = TILES_TO_USE.filter(
+      (f) => f.Type === MapTileType.NO_INTERACTIVE_OBJECT,
     ).map((m) => m.Asset);
 
     this.#matrix.forEach((column, columnIndex) => {
@@ -288,8 +286,8 @@ export class MapGenerator {
         if (element === USED_CELL) {
           this.#map.tiles[columnIndex]![rowIndex] =
             this.getRandomBasedOnFrequency(
-              frecuencyInteractuableAndEmptySpace,
-              assetsInteractuableAndEmptySpace,
+              frequencyInteractiveAndEmptySpace,
+              assetsInteractiveAndEmptySpace,
             );
           if (
             this.#map.startPosition.x === 0 &&
@@ -302,8 +300,8 @@ export class MapGenerator {
         if (element === UNUSED_CELL) {
           this.#map.tiles[columnIndex]![rowIndex] =
             this.getRandomBasedOnFrequency(
-              frecuencyNoInteractueblaObject,
-              assetsNoInteractueblaObject,
+              frequencyNoInteractiveObject,
+              assetsNoInteractiveObject,
             );
         }
       });
@@ -328,14 +326,14 @@ export class MapGenerator {
     };
 
     while (pointA.x !== pointB.x) {
-      // this.#map.tiles[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frecuency, assets);
+      // this.#map.tiles[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frequency, assets);
       this.#matrix[pointA.y]![pointA.x] = USED_CELL;
 
       pointA.x += pointA.x < pointB.x ? 1 : -1;
     }
 
     while (pointA.y !== pointB.y) {
-      // map[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frecuency, assets);
+      // map[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frequency, assets);
       this.#matrix[pointA.y]![pointA.x] = USED_CELL;
       pointA.y += pointA.y < pointB.y ? 1 : -1;
     }
