@@ -74,11 +74,6 @@ export class Preloader extends Scene {
       AssetKeys.HEALTH_BAR.MIDDLE_GREEN,
       "/health-bar/green-bar.png",
     );
-    this.load.image(
-      AssetKeys.HEALTH_BAR.MIDDLE_YELLOW,
-      "/health-bar/yellow-bar.png",
-    );
-    this.load.image(AssetKeys.HEALTH_BAR.MIDDLE_RED, "/health-bar/red-bar.png");
 
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");

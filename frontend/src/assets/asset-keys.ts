@@ -31,8 +31,6 @@ export const AssetKeys = {
   },
   HEALTH_BAR: {
     MIDDLE_GREEN: "MIDDLE_GREEN",
-    MIDDLE_YELLOW: "MIDDLE_YELLOW",
-    MIDDLE_RED: "MIDDLE_RED",
     MIDDLE_SHADOW: "MIDDLE_SHADOW",
   },
 };

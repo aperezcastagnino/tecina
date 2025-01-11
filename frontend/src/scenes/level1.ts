@@ -20,7 +20,7 @@ export class Level1 extends BaseScene {
   #npc_1_show_intermediate_message!: boolean;
 
   #healthBar!: HealthBar;
-  
+
   #has_object_in_the_bag!: boolean;
 
   #bag_objects!: Phaser.GameObjects.Sprite;
@@ -145,6 +145,7 @@ export class Level1 extends BaseScene {
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
     if (item.visible && !this.#has_object_in_the_bag) {
+      this.#healthBar.decreaseHealth(30);
       this.#has_object_in_the_bag = true;
       this.#bag_objects = item;
       this.children.bringToTop(this.#bag_objects); // Este método mueve "top" al frente de la pila de renderizado
