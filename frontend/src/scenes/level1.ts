@@ -157,16 +157,16 @@ export class Level1 extends BaseScene {
       if (this._controls.wasShiftPressed()) {
         const dropX = this._player.x + TILE_SIZE;
         const dropY = this._player.y;
-        const canDrop =
+        const cantDrop =
           this.physics
             .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
             .filter(
               (ol) =>
                 ol.gameObject instanceof GameObjects.Image &&
-                (ol.gameObject.texture.key === AssetKeys.TILES.TREE ||
-                  ol.gameObject.texture.key === AssetKeys.CHARACTERS.NPC),
+                (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
+                  ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
             ).length > 0;
-        if (!canDrop) {
+        if (cantDrop) {
           this.#bag_objects.setPosition(
             this._player.x + TILE_SIZE,
             this._player.y,
