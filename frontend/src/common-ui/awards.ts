@@ -59,7 +59,9 @@ export class Awards {
           this.#positionY,
           this.#assetKey,
         )
-        .setScale(this.#scale);
+        .setScale(this.#scale)
+        .setScrollFactor(0);
+
       this.#sprites.push(sprite);
     }
     this.#sprites.forEach((element) => {
@@ -70,9 +72,11 @@ export class Awards {
   removeAnims(count: number) {
     for (let i = 0; i < count; i += 1) {
       const sprite = this.#sprites.pop();
-      sprite!.stop();
-      sprite!.setFrame(0);
-      sprite!.visible = false;
+      if (sprite) {
+        sprite.stop();
+        sprite.setFrame(0);
+        sprite.setVisible(false);
+      }
     }
   }
 }
