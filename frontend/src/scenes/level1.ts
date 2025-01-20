@@ -99,7 +99,6 @@ export class Level1 extends BaseScene {
     }
     if (this._controls.wasSpaceKeyPressed()) {
       this._dialog?.show(npc.name);
-      debugger;
 
       const assetKey = this._dialog?.getAssetKey();
       if (!assetKey) return;
