@@ -9,7 +9,7 @@ import {
   type Direction,
   type PlayerKeys,
 } from "common/player-keys";
-import type { DialogData, DialogDataCollection } from "types/level-data";
+import type { DialogData } from "types/level-data";
 import type { DialogConfig } from "./dialog";
 
 const MENU_CURSOR_POS = {
@@ -30,7 +30,7 @@ export type DialogWithOptionsConfig = {
 export class DialogWithOptions {
   #scene: Phaser.Scene;
 
-  #data: DialogDataCollection;
+  #data: DialogData[];
 
   #height: number;
 

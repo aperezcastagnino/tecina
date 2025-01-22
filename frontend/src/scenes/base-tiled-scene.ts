@@ -177,7 +177,7 @@ export class BaseTiledScene extends Scene {
 
   #handlePlayerInteraction() {
     if (this._dialog) {
-      if (this._dialog.isVisible) {
+      if (this._dialog.isVisible()) {
         this._dialog.showNextMessage();
       }
     }
