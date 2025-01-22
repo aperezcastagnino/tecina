@@ -170,7 +170,6 @@ export class Dialog {
   }
 
   getAssetKey(): string | undefined {
-    debugger
     return this.#activeDialog?.assetKey;
   }
 
