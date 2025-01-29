@@ -28,7 +28,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isMoving = false;
     config.scene.add.existing(this);
     config.scene.physics.add.existing(this);
-    // this.setCollideWorldBounds(true);
 
     (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(config.velocity);
     this.#direction = DIRECTION.NONE;
@@ -54,7 +53,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
       this.isMoving = true;
       this.#direction = direction;
-      this.anims.play(`PLAYER_${this.#direction}`, true);
+      this.anims.play(`PLAYER_${this.#direction}_ANIMATION`, true);
     }
   }
 }

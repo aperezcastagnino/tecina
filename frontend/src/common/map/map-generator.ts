@@ -1,130 +1,348 @@
-import type { Map } from "types/map";
-import { TILES_TO_USE, FREQUENCY } from "config/map-config";
+import type { MapStructure } from "types/map";
+import {
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  MIN_PARTITION_SIZE,
+  MIN_ROOM_SIZE,
+  MapTileType,
+  TILES_TO_USE,
+  Tiles,
+} from "config/map-config";
+
+type Room = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  interactuableObject?: InteractuableObject;
+};
+
+interface InteractuableObject {
+  x: number;
+  y: number;
+}
+
+interface Partition {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  left?: Partition;
+  right?: Partition;
+  room?: Room;
+}
+
+const UNUSED_CELL = -2;
+const USED_CELL = -1;
 
 export class MapGenerator {
-  #map!: Map;
+  #map!: MapStructure;
 
-  constructor(sceneKey: string, rows: number, columns: number) {
-    this.#createEmptyMap(sceneKey, rows, columns);
-    this.#addPath();
-    this.#contourMap();
-    this.#fillMap();
+  #matrix!: number[][];
+
+  #root!: Partition;
+
+  private quantityOfFreeSpace: number;
+
+  constructor(sceneKey: string) {
+    this.quantityOfFreeSpace =
+      TILES_TO_USE.filter((f) => f.Type === MapTileType.FREE_SPACE).map(
+        (m) => m.Quantity,
+      )[0] ?? 0;
+
+    this.#createEmptyMap(sceneKey, MAP_WIDTH, MAP_HEIGHT);
+    this.#root = {
+      x: 0,
+      y: 0,
+      width: MAP_WIDTH,
+      height: MAP_HEIGHT,
+    };
+
+    this.#root = this.splitPartition(this.#root)!;
+    this.#root = this.assignRooms(this.#root);
+    this.fillMap(this.#map.tiles, this.#root);
+
+    this.generateMapTile();
+    console.log(this.#root);
+    this.fillFreeSpace(this.#root);
+    // this.replaceColisionablesWithFrequency(this.#map.tiles)
+    console.log(this.#map.tiles);
   }
 
   #createEmptyMap(sceneKey: string, rows: number, columns: number) {
+    this.#matrix = new Array(rows)
+      .fill([])
+      .map(() => new Array(columns).fill(UNUSED_CELL));
     this.#map = {
       id: `MAP-${sceneKey}`,
-      mapTiles: new Array(rows).fill([]).map(() => new Array(columns).fill(0)),
+      tiles: new Array(rows)
+        .fill([])
+        .map(() => new Array(columns).fill(UNUSED_CELL)),
       rows,
       columns,
       startPosition: { x: 0, y: 0 },
-      finishPosition: { x: 0, y: 0 },
-      assetGroups: [],
+      assetGroups: new Map(),
     };
   }
 
-  #addPath() {
-    let x = Math.floor(this.#map.rows / 2);
-    let y = 2;
+  splitPartition(partition: Partition): Partition {
+    const partitionCopy = { ...partition };
 
-    this.#map.startPosition = { x, y };
-    this.#map.finishPosition = {
-      x: this.#map.rows - 1,
-      y: this.#map.columns - 1,
+    const canSplitHorizontally = partitionCopy.height > MIN_PARTITION_SIZE * 2;
+    const canSplitVertically = partitionCopy.width > MIN_PARTITION_SIZE * 2;
+
+    if (!canSplitHorizontally && !canSplitVertically) {
+      return partitionCopy;
+    }
+
+    const splitHorizontally =
+      canSplitHorizontally && (!canSplitVertically || Math.random() < 0.5);
+
+    let left;
+    let right;
+
+    if (splitHorizontally) {
+      const splitY = Math.floor(
+        Math.random() * (partitionCopy.height - 2 * MIN_PARTITION_SIZE) +
+          partitionCopy.y +
+          MIN_PARTITION_SIZE,
+      );
+      left = {
+        x: partitionCopy.x,
+        y: partitionCopy.y,
+        width: partitionCopy.width,
+        height: splitY - partitionCopy.y,
+      };
+      right = {
+        x: partitionCopy.x,
+        y: splitY,
+        width: partitionCopy.width,
+        height: partitionCopy.y + partitionCopy.height - splitY,
+      };
+    } else {
+      const splitX = Math.floor(
+        Math.random() * (partitionCopy.width - 2 * MIN_PARTITION_SIZE) +
+          partitionCopy.x +
+          MIN_PARTITION_SIZE,
+      );
+      left = {
+        x: partitionCopy.x,
+        y: partitionCopy.y,
+        width: splitX - partitionCopy.x,
+        height: partitionCopy.height,
+      };
+      right = {
+        x: splitX,
+        y: partitionCopy.y,
+        width: partitionCopy.x + partitionCopy.width - splitX,
+        height: partitionCopy.height,
+      };
+    }
+
+    const leftPartition = this.splitPartition(left);
+    const rightPartition = this.splitPartition(right);
+
+    return {
+      x: partition.x,
+      y: partition.y,
+      height: partition.height,
+      width: partition.width,
+      left: leftPartition,
+      right: rightPartition,
     };
-    this.#map.mapTiles[x]![y] = 4;
-
-    while (y < this.#map.columns - 3) {
-      const direction = Math.floor(Math.random() * 2); // Randomly choose a direction
-
-      if (direction === 0 && x > 0) {
-        x -= 1; // 0 means up
-      } else if (direction === 1 && x < this.#map.rows - 1) {
-        x += 1; // 1 means down
-      }
-
-      // keeps it inside x and y
-      if (x >= 3 && x < this.#map.rows - 3 && y >= 0 && y < this.#map.columns) {
-        this.#map.mapTiles[x]![y] = 1; // keep track of where you have been
-        y += 1; // Always move right
-        this.#map.mapTiles[x]![y] = 1;
-      }
-    }
   }
 
-  #contourMap() {
-    // First border
-    // This sets the border of the map to 1
+  createRoom(partition: Partition): Partition {
+    const newPartition = { ...partition };
+    const roomWidth = Math.floor(
+      Math.random() * (partition.width - MIN_ROOM_SIZE) + MIN_ROOM_SIZE,
+    );
+    const roomHeight = Math.floor(
+      Math.random() * (partition.height - MIN_ROOM_SIZE) + MIN_ROOM_SIZE,
+    );
+    const roomX = Math.floor(
+      Math.random() * (partition.width - roomWidth) + partition.x,
+    );
+    const roomY = Math.floor(
+      Math.random() * (partition.height - roomHeight) + partition.y,
+    );
 
-    for (let i = 0; i < this.#map.rows; i += 1) {
-      this.#map.mapTiles[i]![0] = 1;
-      this.#map.mapTiles[i]![this.#map.columns - 1] = 1;
-    }
+    newPartition.room = {
+      x: roomX,
+      y: roomY,
+      width: roomWidth,
+      height: roomHeight,
+    };
 
-    for (let j = 0; j < this.#map.columns; j += 1) {
-      this.#map.mapTiles[0]![j] = 1;
-      this.#map.mapTiles[this.#map.rows - 1]![j] = 1;
-    }
-
-    // Second border (inner border) with 1s randomly
-
-    // Here we use Math.floor(Math.random() * 2) to randomly set the inner border to 1
-    // Math.random() returns a random number between 0 and 1
-    // If we do Math.floor(Math.random()) returns always 0
-    // So we multiply by 2 to get a number between 0 and 2 and the floor returns 0 or 1
-
-    for (let i = 1; i < this.#map.rows - 1; i += 1) {
-      this.#map.mapTiles[i]![1] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[i]![this.#map.columns - 2] = Math.floor(
-        Math.random() * 2,
-      );
-    }
-
-    for (let j = 1; j < this.#map.columns - 1; j += 1) {
-      this.#map.mapTiles[1]![j] = Math.floor(Math.random() * 2);
-      this.#map.mapTiles[this.#map.rows - 2]![j] = Math.floor(
-        Math.random() * 2,
-      );
-    }
+    console.log("Room creado!!");
+    console.log(newPartition.room); // Verifica room en el nuevo objeto
+    return newPartition;
   }
 
-  #fillMap() {
-    const cumulativeFrequency = [];
-    let total = 0;
+  assignRooms(partition: Partition): Partition {
+    const newPartition = { ...partition };
 
-    // Calculate the cumulative frequency
-    // if the frequency is [5, 10, 20] the cumulative frequency is [5, 15, 35]
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const weight of FREQUENCY) {
-      total += weight;
-      cumulativeFrequency.push(total);
+    if (!partition.left && !partition.right) {
+      const updatedPartition = this.createRoom(partition);
+      newPartition.room = updatedPartition.room; // Asignar el room al objeto original
+    } else {
+      if (partition.left) {
+        newPartition.left = this.assignRooms(partition.left);
+      }
+      if (partition.right) {
+        newPartition.right = this.assignRooms(partition.right);
+      }
     }
-    const maxFrequency = cumulativeFrequency[cumulativeFrequency.length - 1]!;
+    return newPartition;
+  }
 
-    for (let i = 0; i < this.#map.rows; i += 1) {
-      for (let j = 0; j < this.#map.columns; j += 1) {
-        // If the column is empty, fill it with a random value
-        if (this.#map.mapTiles[i]![j] === 0) {
-          // We pick the random value based on the cumulative frequency
-          // We multiply by the maxFrequency to get a value between 0 and the maxFrequency
-          const randomValue = Math.random() * maxFrequency;
+  getRandomBasedOnFrequency(frecuency: number[], arrayOfTiles: any[]): any {
+    const totalFrequency = frecuency.reduce((a, b) => a + b, 0);
+    const randomValue = Math.random() * totalFrequency;
 
-          // Once we have the random value we find the index of the first weight that is greater than the random value
-          // This is the weight that we will use to fill the map
-          const selectedIndex = cumulativeFrequency.findIndex(
-            (weight) => randomValue < weight,
-          );
+    let cumulative = 0;
+    for (let i = 0; i < frecuency.length; i += 1) {
+      cumulative += frecuency[i]!;
+      if (randomValue < cumulative) {
+        return arrayOfTiles[i]!; // Inicia desde 3
+      }
+    }
+    return arrayOfTiles[0];
+  }
 
-          // We fill the map with the selected number
-          this.#map.mapTiles[i]![j] = TILES_TO_USE[selectedIndex]!;
+  fillMap(map: Tiles[][], partition: Partition): void {
+    if (partition.room) {
+      const { x, y, width, height } = partition.room;
+      for (let i = y; i < y + height; i += 1) {
+        for (let j = x; j < x + width; j += 1) {
+          this.#matrix[i]![j] = USED_CELL;
         }
       }
     }
+
+    if (partition.left && partition.right) {
+      const leftRoom = this.findRoom(partition.left);
+      const rightRoom = this.findRoom(partition.right);
+
+      if (leftRoom && rightRoom) {
+        this.connectRooms(leftRoom, rightRoom);
+      }
+
+      this.fillMap(map, partition.left);
+      this.fillMap(map, partition.right);
+    }
   }
 
-  static newMap(sceneKey: string, rows: number, columns: number): Map {
-    const generator = new MapGenerator(sceneKey, rows, columns);
+  getAllRooms(partition: Partition | undefined): Room[] {
+    if (!partition) return [];
+
+    const rooms: Room[] = [];
+
+    if (partition.room) {
+      rooms.push(partition.room);
+    }
+
+    rooms.push(...this.getAllRooms(partition.left));
+    rooms.push(...this.getAllRooms(partition.right));
+
+    return rooms;
+  }
+
+  fillFreeSpace(partition: Partition) {
+    const rooms = this.getAllRooms(partition);
+    for (let i = 0; i < this.quantityOfFreeSpace; i += 1) {
+      const room = this.getRandomBasedOnFrequency(
+        new Array(rooms.length).fill(1),
+        rooms,
+      ) as Room;
+      const index = rooms.indexOf(room);
+      rooms.splice(index, 1);
+
+      this.#map.tiles[room.x + Math.trunc(room.width / 2)]![
+        room.y + Math.trunc(room.height / 2)
+      ] = Tiles.FREE_SPACE;
+    }
+  }
+
+  generateMapTile() {
+    const frecuencyInteractuableAndEmptySpace = TILES_TO_USE.filter(
+      (f) =>
+        f.Type === MapTileType.INTERACTABLE_OBJECT ||
+        f.Type === MapTileType.EMPTY_SPACE,
+    ).map((m) => m.Frecuency!);
+    const assetsInteractuableAndEmptySpace = TILES_TO_USE.filter(
+      (f) =>
+        f.Type === MapTileType.INTERACTABLE_OBJECT ||
+        f.Type === MapTileType.EMPTY_SPACE,
+    ).map((m) => m.Asset);
+
+    const frecuencyNoInteractueblaObject = TILES_TO_USE.filter(
+      (f) => f.Type === MapTileType.NO_INTERACTABLE_OBJECT,
+    ).map((m) => m.Frecuency!);
+    const assetsNoInteractueblaObject = TILES_TO_USE.filter(
+      (f) => f.Type === MapTileType.NO_INTERACTABLE_OBJECT,
+    ).map((m) => m.Asset);
+
+    this.#matrix.forEach((column, columnIndex) => {
+      column.forEach((element, rowIndex) => {
+        if (element === USED_CELL) {
+          this.#map.tiles[columnIndex]![rowIndex] =
+            this.getRandomBasedOnFrequency(
+              frecuencyInteractuableAndEmptySpace,
+              assetsInteractuableAndEmptySpace,
+            );
+          if (
+            this.#map.startPosition.x === 0 &&
+            this.#map.startPosition.y === 0
+          ) {
+            this.#map.startPosition.x = columnIndex + 1;
+            this.#map.startPosition.y = rowIndex + 1;
+          }
+        }
+        if (element === UNUSED_CELL) {
+          this.#map.tiles[columnIndex]![rowIndex] =
+            this.getRandomBasedOnFrequency(
+              frecuencyNoInteractueblaObject,
+              assetsNoInteractueblaObject,
+            );
+        }
+      });
+    });
+  }
+
+  findRoom(partition: Partition): Room | undefined {
+    if (partition.room) return partition.room;
+    if (partition.left) return this.findRoom(partition.left);
+    if (partition.right) return this.findRoom(partition.right);
+    return undefined;
+  }
+
+  connectRooms(roomA: Room, roomB: Room): void {
+    const pointA = {
+      x: Math.floor(roomA.x + roomA.width / 2),
+      y: Math.floor(roomA.y + roomA.height / 2),
+    };
+    const pointB = {
+      x: Math.floor(roomB.x + roomB.width / 2),
+      y: Math.floor(roomB.y + roomB.height / 2),
+    };
+
+    while (pointA.x !== pointB.x) {
+      // this.#map.tiles[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frecuency, assets);
+      this.#matrix[pointA.y]![pointA.x] = USED_CELL;
+
+      pointA.x += pointA.x < pointB.x ? 1 : -1;
+    }
+
+    while (pointA.y !== pointB.y) {
+      // map[pointA.y]![pointA.x] = this.getRandomBasedOnFrequency(frecuency, assets);
+      this.#matrix[pointA.y]![pointA.x] = USED_CELL;
+      pointA.y += pointA.y < pointB.y ? 1 : -1;
+    }
+  }
+
+  static newMap(sceneKey: string): MapStructure {
+    const generator = new MapGenerator(sceneKey);
     return generator.#map;
   }
 }

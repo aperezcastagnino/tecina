@@ -169,6 +169,7 @@ export class Dialog {
     dialog.showed = true;
     this.#messagesToShowBackup = [...dialog.statements];
     this.#messagesToShow = [...dialog.statements];
+
     this.showNextMessage();
   }
 
