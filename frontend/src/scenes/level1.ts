@@ -6,6 +6,7 @@ import { TILE_SIZE } from "config/config";
 import { GameObjects } from "phaser";
 import { Awards } from "common-ui/awards";
 import { MAP_WIDTH } from "config/map-config";
+import { HealthBar } from "../utils/health-bar";
 
 export class Level1 extends BaseScene {
   #total_oranges = 0;
@@ -17,6 +18,8 @@ export class Level1 extends BaseScene {
   #npc_1_show_first_complete_collect_objects!: boolean;
 
   #npc_1_show_intermediate_message!: boolean;
+
+  #healthBar!: HealthBar;
 
   #has_object_in_the_bag!: boolean;
 
@@ -38,6 +41,7 @@ export class Level1 extends BaseScene {
     this._hideElements(
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
+    this.#healthBar = new HealthBar(this);
   }
 
   preload() {
@@ -141,6 +145,7 @@ export class Level1 extends BaseScene {
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
     if (item.visible && !this.#has_object_in_the_bag) {
+      this.#healthBar.decreaseHealth(30);
       this.#has_object_in_the_bag = true;
       this.#bag_objects = item;
       this.children.bringToTop(this.#bag_objects); // Este método mueve "top" al frente de la pila de renderizado
@@ -157,16 +162,16 @@ export class Level1 extends BaseScene {
       if (this._controls.wasShiftPressed()) {
         const dropX = this._player.x + TILE_SIZE;
         const dropY = this._player.y;
-        const cantDrop =
+        const canDrop =
           this.physics
             .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
             .filter(
               (ol) =>
                 ol.gameObject instanceof GameObjects.Image &&
-                (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-                  ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
+                (ol.gameObject.texture.key === AssetKeys.TILES.TREE ||
+                  ol.gameObject.texture.key === AssetKeys.CHARACTERS.NPC),
             ).length > 0;
-        if (cantDrop) {
+        if (!canDrop) {
           this.#bag_objects.setPosition(
             this._player.x + TILE_SIZE,
             this._player.y,
