@@ -8,6 +8,7 @@ export enum MapTiles {
   FLOWER_GRASS = 3,
   ORANGE = 4,
   NPC = 5,
+  STRAWBERRY = 6,
 }
 
 export type MapConfig = {

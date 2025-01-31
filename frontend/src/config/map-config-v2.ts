@@ -24,6 +24,11 @@ export const TILES_TO_USE: GridTile[] = [
     assetTile: MapTiles.NPC,
     quantity: 2,
   },
+  {
+    type: MapTileType.INTERACTIVE_OBJECT,
+    assetTile: MapTiles.STRAWBERRY,
+    frequency: 18,
+  },
 ];
 
 export const DEFAULT_MAP_DIMENSIONS = {
@@ -38,4 +43,5 @@ export const MapTileToAssetKey: Record<MapTiles, string> = {
   [MapTiles.FLOWER_GRASS]: AssetKeys.TILES.FLOWER_GRASS,
   [MapTiles.ORANGE]: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
   [MapTiles.NPC]: AssetKeys.CHARACTERS.NPC,
+  [MapTiles.STRAWBERRY]: AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME,
 };

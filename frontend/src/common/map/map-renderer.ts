@@ -38,7 +38,24 @@ export class MapRenderer {
             AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
           );
           sprite.setScale(2);
+          sprite.setVisible(false);
           sprite.anims.play(AnimationsKeys.ORANGE, true);
+
+          map.assetGroups.get(assetName)!.add(sprite);
+        } else if (assetRef === Tiles.STRAWBERRY) {
+          scene.add
+            .image(x, y, AssetKeys.TILES.GRASS)
+            .setDisplaySize(TILE_SIZE, TILE_SIZE);
+
+          const sprite = scene.add.sprite(
+            x,
+            y,
+            AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME,
+          );
+          sprite.setScale(2);
+          sprite.setVisible(false);
+          sprite.anims.play(AnimationsKeys.STRAWBERRY, true);
+
           map.assetGroups.get(assetName)!.add(sprite);
         } else if (assetRef === Tiles.FREE_SPACE) {
           scene.add

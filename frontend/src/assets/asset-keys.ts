@@ -27,6 +27,13 @@ export const AssetKeys = {
         STAR_FRAME: 0,
         END_FRAME: 17,
       },
+      STRAWBERRY: {
+        NAME: "STRAWBERRY",
+        FRAME_WIDTH: 32,
+        FRAME_HEIGHT: 32,
+        STAR_FRAME: 0,
+        END_FRAME: 17,
+      },
     },
   },
   HEALTH_BAR: {

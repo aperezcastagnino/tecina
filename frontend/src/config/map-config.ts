@@ -28,6 +28,7 @@ export enum Tiles {
   FLOWER_GRASS = 3,
   ORANGE = 4,
   NPC = 5,
+  STRAWBERRY = 6,
 }
 
 export type TilesToUseConfig = {
@@ -67,6 +68,11 @@ export const TILES_TO_USE: TilesToUseConfig[] = [
     Type: MapTileType.INTERACTIVE_OBJECT, // 100% OF THE INTERACTIVE OBJECTS ARE ORANGES
     Asset: Tiles.ORANGE,
     Frequency: 10,
+  },
+  {
+    Type: MapTileType.INTERACTIVE_OBJECT, // 100% OF THE INTERACTIVE OBJECTS ARE ORANGES
+    Asset: Tiles.STRAWBERRY,
+    Frequency: 5,
   },
 ];
 
