@@ -94,13 +94,13 @@ export class Preloader extends Scene {
     );
 
     this.load.spritesheet(
-      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-      "/items/fruits/apple.png",
+      AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME,
+      "/items/fruits/strawberry.png",
       {
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_HEIGHT,
+        startFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.END_FRAME,
       },
     );
   }

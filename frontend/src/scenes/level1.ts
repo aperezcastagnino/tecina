@@ -37,15 +37,20 @@ export class Level1 extends BaseScene {
 
   create() {
     super.create();
-
-    this._hideElements(
-      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
-    );
     this.#healthBar = new HealthBar(this);
   }
 
   preload() {
     super.preload(SceneKeys.LEVEL_1);
+
+    this.anims.create({
+      key: AnimationsKeys.STRAWBERRY,
+      frames: this.anims.generateFrameNumbers(
+        AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME,
+      ),
+      frameRate: 19,
+      repeat: -1,
+    });
 
     this.anims.create({
       key: AnimationsKeys.ORANGE,
@@ -94,15 +99,30 @@ export class Level1 extends BaseScene {
       .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
       .getLength();
 
-    if (npc.name === "npc-1" && this.#has_object_in_the_bag) {
+    if (
+      npc.name === "npc-1" &&
+      this.#has_object_in_the_bag &&
+      this.#bag_objects.texture.key === AssetKeys.ITEMS.FRUITS.ORANGE.NAME
+    ) {
       this.#collected_oranges += 1;
       this.#award.setAwardsCount(this.#collected_oranges);
       this.#bag_objects.destroy();
       this.#has_object_in_the_bag = false;
-      return;
+    } else if (
+      npc.name === "npc-1" &&
+      this.#has_object_in_the_bag &&
+      this.#bag_objects.texture.key === AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME
+    ) {
+      this.#has_object_in_the_bag = false;
+      this.#bag_objects.destroy();
+      this.#healthBar.decreaseHealth(10);
     }
+
     if (this._controls.wasSpaceKeyPressed()) {
       if (npc.name === "npc-1") {
+        const strawberryGroup = this._map.assetGroups.get(
+          AssetKeys.ITEMS.FRUITS.STRAWBERRY.NAME,
+        )!;
         const orangeGroup = this._map.assetGroups.get(
           AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
         )!;
@@ -110,9 +130,19 @@ export class Level1 extends BaseScene {
         if (this.#npc_1_show_first_message) {
           this._dialog?.show(npc.name);
           this._showElements(orangeGroup!);
+          this._showElements(strawberryGroup!);
+
           this.physics.add.collider(
             this._player,
             orangeGroup,
+            (_player, item) => {
+              const itemObject = item as Phaser.GameObjects.Sprite;
+              this.#defineBehaviorForItems(itemObject);
+            },
+          );
+          this.physics.add.collider(
+            this._player,
+            strawberryGroup,
             (_player, item) => {
               const itemObject = item as Phaser.GameObjects.Sprite;
               this.#defineBehaviorForItems(itemObject);
@@ -145,13 +175,12 @@ export class Level1 extends BaseScene {
 
   #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
     if (item.visible && !this.#has_object_in_the_bag) {
-      this.#healthBar.decreaseHealth(30);
       this.#has_object_in_the_bag = true;
       this.#bag_objects = item;
-      this.children.bringToTop(this.#bag_objects); // Este método mueve "top" al frente de la pila de renderizado
+      this.children.bringToTop(this.#bag_objects); // This method moves "top" to the front of the render stack
       if (item.body) {
         const body = item.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = true; // Deshabilitar las colisiones del objeto
+        body.checkCollision.none = true; // Disable collisions for the object
       }
     }
   }
