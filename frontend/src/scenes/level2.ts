@@ -28,7 +28,7 @@ export class Level2 extends BaseScene {
   #award!: Awards;
 
   constructor() {
-    super(SceneKeys.LEVEL_1);
+    super(SceneKeys.LEVEL_2);
 
     this.#npc_1_show_first_message = true;
     this.#npc_1_show_first_complete_collect_objects = true;
@@ -45,7 +45,7 @@ export class Level2 extends BaseScene {
   }
 
   preload() {
-    super.preload(SceneKeys.LEVEL_1);
+    super.preload(SceneKeys.LEVEL_2);
 
     this.anims.create({
       key: AnimationsKeys.ORANGE,
