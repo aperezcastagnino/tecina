@@ -62,6 +62,6 @@ export class MainMenu extends Scene {
   }
 
   startGame() {
-    this.scene.start(SceneKeys.LEVEL_1);
+    this.scene.start(SceneKeys.LEVELS_MENU);
   }
 }
