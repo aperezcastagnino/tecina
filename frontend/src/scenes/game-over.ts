@@ -10,8 +10,8 @@ export class GameOver extends Phaser.Scene {
     const { width, height } = this.scale;
 
     this.add
-      .text(width / 2, height / 2, "Felicitaciones, sos un kapo", {
-        fontSize: "48px",
+      .text(width / 2, height / 2, "GAME OVER", {
+        fontSize: "100px",
         color: "#ff0000",
       })
       .setOrigin(0.5);
@@ -24,7 +24,7 @@ export class GameOver extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.input.keyboard?.once("keydown-SPACE", () => {
-      this.scene.start("MainScene");
+      this.scene.start(SceneKeys.LEVEL_1); // here we need a global variable to track in which level the user is
     });
   }
 }

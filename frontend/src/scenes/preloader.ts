@@ -126,10 +126,10 @@ export class Preloader extends Scene {
     );
   }
 
-  #createPlayerAnimation(key: string, asseyKey: string, frames: number[]) {
+  #createPlayerAnimation(key: string, assetKey: string, frames: number[]) {
     this.anims.create({
       key,
-      frames: this.anims.generateFrameNumbers(asseyKey, {
+      frames: this.anims.generateFrameNumbers(assetKey, {
         frames,
       }),
       frameRate: 6,
