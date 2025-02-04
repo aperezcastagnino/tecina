@@ -38,7 +38,6 @@ export class Level1 extends BaseScene {
     this._hideElements(
       this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
-    this.#healthBar = new HealthBar(this);
   }
 
   preload() {
