@@ -1,15 +1,10 @@
 import { AssetKeys } from "assets/asset-keys";
-import { GAME_DIMENSIONS } from "config/config";
 import {
-  FontSize,
-  PRIMARY_FONT_FAMILY,
   WIDTH,
   HEIGHT,
   POSITION_X,
   POSITION_Y,
-  HEALTH_BAR_TEXT,
 } from "common-ui/health-bar";
-import { Colors } from "assets/colors";
 
 export class HealthBar {
   #scene: Phaser.Scene;
@@ -39,7 +34,6 @@ export class HealthBar {
 
     const x = POSITION_X;
     const y = POSITION_Y;
-    const text = HEALTH_BAR_TEXT;
 
     this.#container_shadows = this.#scene.add.container(x, y, []);
     this.#container = this.#scene.add.container(x, y, []);
