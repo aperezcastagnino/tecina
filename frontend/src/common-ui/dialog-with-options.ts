@@ -10,7 +10,7 @@ import {
   type PlayerKeys,
 } from "common/player-keys";
 import type { DialogData } from "types/level-data";
-import type { DialogConfig } from "./dialog";
+import type { DialogConfig } from "./base-dialog";
 
 const MENU_CURSOR_POS = {
   x: 42,
@@ -27,10 +27,10 @@ export type DialogWithOptionsConfig = {
   callback: (option: string) => void;
 } & DialogConfig;
 
-export class DialogWithOptions {
-  #scene: Phaser.Scene;
+ export class DialogWithOptions {
+  scene: Phaser.Scene;
 
-  #data: DialogData[];
+  data: DialogData[];
 
   #height: number;
 
@@ -42,7 +42,7 @@ export class DialogWithOptions {
 
   #container!: Phaser.GameObjects.Container;
 
-  #statementUI!: Phaser.GameObjects.Text;
+  protected statementUI!: Phaser.GameObjects.Text;
 
   #firstOptionUI!: Phaser.GameObjects.Text;
 
@@ -68,17 +68,24 @@ export class DialogWithOptions {
 
   #statementTextLength: number;
 
-  isVisible: boolean;
-
   textAnimationPlaying: boolean;
 
+  private messagesToShow: string[] = [];
+
+  protected activeDialog: DialogData | undefined;
+
+  protected questGiverNpcId: string | undefined;
+
+  container!: Phaser.GameObjects.Container;
+
+
   constructor(config: DialogWithOptionsConfig) {
-    this.#scene = config.scene;
-    this.#data = config.data;
+    this.scene = config.scene;
+    this.data = config.data;
     this.#height = config.height || 200;
     this.#padding = config.padding || 60;
     this.#width =
-      config.width || this.#scene.cameras.main.width - this.#padding * 2;
+      config.width || this.scene.cameras.main.width - this.#padding * 2;
     this.#statement = "";
     this.#statementTextLength = 600;
     this.#options = [];
@@ -86,7 +93,6 @@ export class DialogWithOptions {
     this.#isUpperMenuOption = 0;
     this.#isRightMenuOption = 0;
     this.#callback = config.callback;
-    this.isVisible = false;
     this.textAnimationPlaying = false;
 
     this._createUI();
@@ -95,15 +101,15 @@ export class DialogWithOptions {
   _createUI(): void {
     const containerStartX = this.#padding;
     const containerStartY =
-      this.#scene.cameras.main.height - this.#height - this.#padding / 4;
+      this.scene.cameras.main.height - this.#height - this.#padding / 4;
     const optionTextLength = 400;
     this.textAnimationPlaying = true;
 
-    const containerBackground = this.#scene.add
+    const containerBackground = this.scene.add
       .rectangle(
         0,
         0,
-        this.#scene.cameras.main.width - this.#padding * 2,
+        this.scene.cameras.main.width - this.#padding * 2,
         this.#height,
         DialogColors.main,
         1,
@@ -111,45 +117,45 @@ export class DialogWithOptions {
       .setOrigin(0)
       .setStrokeStyle(8, DialogColors.border, 1);
 
-    this.#statementUI = this.#scene.add.text(
+    this.statementUI = this.scene.add.text(
       this.#padding,
       55,
       "",
       DIALOG_TEXT_STYLE,
     );
 
-    this.#firstOptionUI = this.#scene.add.text(
+    this.#firstOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       22,
       "",
       DIALOG_TEXT_STYLE,
     );
-    this.#secondOptionUI = this.#scene.add.text(
+    this.#secondOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       22,
       "",
       DIALOG_TEXT_STYLE,
     );
-    this.#thirdOptionUI = this.#scene.add.text(
+    this.#thirdOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
       DIALOG_TEXT_STYLE,
     );
-    this.#thirdOptionUI = this.#scene.add.text(
+    this.#thirdOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
       DIALOG_TEXT_STYLE,
     );
-    this.#fourthOptionUI = this.#scene.add.text(
+    this.#fourthOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       80,
       "",
       DIALOG_TEXT_STYLE,
     );
 
-    this.#cursor = this.#scene.add
+    this.#cursor = this.scene.add
       .image(
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
@@ -159,10 +165,10 @@ export class DialogWithOptions {
       .setOrigin(0.5)
       .setScale(2.5);
 
-    this.#container = this.#scene.add
+    this.#container = this.scene.add
       .container(containerStartX, containerStartY, [
         containerBackground,
-        this.#statementUI,
+        this.statementUI,
         this.#firstOptionUI,
         this.#secondOptionUI,
         this.#thirdOptionUI,
@@ -172,19 +178,96 @@ export class DialogWithOptions {
       .setAlpha(0);
   }
 
-  show(npcId: string): void {
-    if (npcId) {
-      this.#container.setAlpha(1);
-      this.isVisible = true;
-      const npcDialogs = this.#findDialogsByNpcId(npcId);
-      this.#handleDialogData(npcDialogs);
+  protected setIsVisible(value: boolean): void {
+    this.container.visible = value;
+  }
+
+  isVisible(): boolean {
+    return this.container.visible;
+  }
+
+  showNextMessage(): void {
+    if (this.textAnimationPlaying) return;
+
+    if (this.messagesToShow.length === 0 && this.isVisible()) {
+      this.hide();
+      return;
     }
+
+    if (this.messagesToShow.length === 0) return;
+
+    this.setIsVisible(true);
+    this.statementUI.setText("").setAlpha(1);
+    this.textAnimationPlaying = true;
+    animateText(
+      this.scene,
+      this.statementUI,
+      this.messagesToShow.shift() || "",
+      10,
+      () => {
+        this.textAnimationPlaying = false;
+      },
+    );
+  }
+
+  #getDialogData(npcId?: string): void {
+    const dialog = this.activeDialog || this.#findMessageInCompleted(this.data);
+
+    if (!dialog) {
+      console.error("No dialogs not shown were found.");
+      this.hide();
+      return;
+    }
+
+    if (!this.activeDialog) {
+      this.activeDialog = dialog;
+      this.questGiverNpcId = npcId;
+    }
+
+    const textsToShow = this.#resolveDialogsToShow(dialog, npcId);
+    this.messagesToShow = [...textsToShow];
+    this.showNextMessage();
+  }
+
+  #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
+    if (this.questGiverNpcId === npcId) return dialog.questInProgress;
+    if (this.questGiverNpcId) return dialog.hints;
+
+    // eslint-disable-next-line no-param-reassign
+    this.questGiverNpcId = npcId || "";
+    return dialog.questStart;
+  }
+
+  #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
+    return dialogs?.find(
+      (dialog) =>
+        !dialog.completed && (!dialog.options || dialog.options.length === 0),
+    );
+  }
+
+
+  show(npcId?: string): void {
+    this.#getDialogData(npcId);
   }
 
   hide(): void {
-    this.#container.setAlpha(0);
-    this.isVisible = false;
+    this.setIsVisible(false);
   }
+
+  // show(npcId: string): void {
+
+  //   if (npcId) {
+  //     this.#container.setAlpha(1);
+  //     this.isVisible = true;
+  //     const npcDialogs = this.#findDialogsByNpcId(npcId);
+  //     this.#handleDialogData(npcDialogs);
+  //   }
+  // }
+
+  // hide(): void {
+  //   this.#container.setAlpha(0);
+  //   this.isVisible = false;
+  // }
 
   playInputCursorAnimation() {
     this.#cursor.setPosition(this.#cursor.displayWidth * 2.7, this.#cursor.y);
@@ -201,19 +284,19 @@ export class DialogWithOptions {
   }
 
   #execAnimation() {
-    this.#statementUI.text = "";
+    this.statementUI.text = "";
     this.#firstOptionUI.text = "";
     this.#secondOptionUI.text = "";
     this.#thirdOptionUI.text = "";
     this.#fourthOptionUI.text = "";
     const delay = 10;
 
-    animateText(this.#scene, this.#statementUI, this.#statement, delay, () => {
+    animateText(this.scene, this.statementUI, this.#statement, delay, () => {
       this.textAnimationPlaying = false;
     });
 
     animateText(
-      this.#scene,
+      this.scene,
       this.#firstOptionUI,
       this.#options[0] || "",
       delay,
@@ -222,7 +305,7 @@ export class DialogWithOptions {
       },
     );
     animateText(
-      this.#scene,
+      this.scene,
       this.#secondOptionUI,
       this.#options[1] || "",
       delay,
@@ -231,7 +314,7 @@ export class DialogWithOptions {
       },
     );
     animateText(
-      this.#scene,
+      this.scene,
       this.#thirdOptionUI,
       this.#options[2] || "",
       delay,
@@ -240,7 +323,7 @@ export class DialogWithOptions {
       },
     );
     animateText(
-      this.#scene,
+      this.scene,
       this.#fourthOptionUI,
       this.#options[3] || "",
       delay,
@@ -286,43 +369,14 @@ export class DialogWithOptions {
     this.hide();
   }
 
-  #findDialogsByNpcId(npcId: string): DialogData[] | undefined {
-    return this.#data.npcs?.find((npc) => npc.id === npcId)?.dialogs;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
-    return dialogs?.find(
-      (dialog) =>
-        !dialog.completed && dialog.options && dialog.options.length > 0,
-    );
-  }
-
-  #handleDialogData(dialogs?: DialogData[]): void {
-    const dialogsToUse = dialogs || this.#data.simpleDialogs;
-    const dialog = this.#findMessageInCompleted(dialogsToUse);
-
-    if (!dialog) {
-      console.error("No dialogs not shown were found.");
-      this.hide();
-      return;
-    }
-
-    const [firstStatement = ""] = dialog.statements;
-    this.#statement = firstStatement;
-    this.#options = dialog.options!;
-    this.#execAnimation();
-  }
-
   setMessageComplete(npcId?: string): void {
-    let dialog;
-    if (npcId) {
-      const npcDialogs = this.#findDialogsByNpcId(npcId);
-      dialog = this.#findMessageInCompleted(npcDialogs);
-    } else {
-      dialog = this.#findMessageInCompleted(this.#data.simpleDialogs);
-    }
+    if (!this.activeDialog) return;
 
-    dialog!.completed = true;
+    if (this.questGiverNpcId === npcId) {
+      this.activeDialog!.completed = true;
+      this.activeDialog = undefined;
+      this.questGiverNpcId = undefined;
+    }
   }
+
 }
