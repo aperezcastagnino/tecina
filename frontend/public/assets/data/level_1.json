@@ -8,22 +8,19 @@
         "Can you pick the oranges?",
         "They're for making marmalade."
       ],
-      "questStartIAGenerated": [
-        "EXAMPLE"
-      ],
+      "questStartIAGenerated": ["EXAMPLE"],
       "questInProgress": [
         "I need all the oranges you can find so I can cook them!"
       ],
-      "questInProgressIAGenerated": [
-        "EXAMPLE"
-      ],
+      "questInProgressIAGenerated": ["EXAMPLE"],
       "questFinished": [
         "Thank you! Now I can make the marmalade my grandma used to make!"
       ],
-      "questFinishedIAGenerated": [
-        "EXAMPLE"
+      "questFinishedIAGenerated": ["EXAMPLE"],
+      "hints": [
+        "I'll give you a hint! Oranges are round and orange!",
+        "I don't have nothing more to say!"
       ],
-      "hints": ["I'll give you a hint! Oranges are round and orange!", "I don't have nothing more to say!"],
       "hintsIAGenerated": ["EXAMPLE"],
       "assetKey": "ORANGE",
       "quantityToCollect": 5

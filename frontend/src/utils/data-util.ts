@@ -2,7 +2,7 @@ import type { DialogData, LevelData, RawDialogData } from "types/level-data";
 
 export const loadLevelData = (
   scene: Phaser.Scene,
-  level: string
+  level: string,
 ): LevelData => {
   const rawData = scene.cache.json.get(level);
 
@@ -12,31 +12,28 @@ export const loadLevelData = (
       description: dialog.description,
       questStart: [
         ...(dialog.questStart || []),
-        ...(dialog.questStartIAGenerated || [])
+        ...(dialog.questStartIAGenerated || []),
       ],
       questInProgress: [
         ...(dialog.questInProgress || []),
-        ...(dialog.questInProgressIAGenerated || [])
+        ...(dialog.questInProgressIAGenerated || []),
       ],
       questFinished: [
         ...(dialog.questFinished || []),
-        ...(dialog.questFinishedIAGenerated || [])
+        ...(dialog.questFinishedIAGenerated || []),
       ],
-      hints: [
-        ...(dialog.hints || []),
-        ...(dialog.hintsIAGenerated || [])
-      ],
+      hints: [...(dialog.hints || []), ...(dialog.hintsIAGenerated || [])],
       options: dialog.options,
       correctOption: dialog.correctOption,
       assetKey: dialog.assetKey,
       quantityToCollect: dialog.quantityToCollect,
-      completed: false
+      completed: false,
     };
     return convertedDialog;
   });
 
   return {
     title: rawData.title,
-    dialogs: convertedDialogs
+    dialogs: convertedDialogs,
   };
 };

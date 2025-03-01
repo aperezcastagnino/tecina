@@ -42,7 +42,8 @@ export abstract class BaseDialog extends UIComponent {
     this.data = config.data;
     this.height = config.height || 200;
     this.padding = config.padding || 60;
-    this.width = config.width || this.scene.cameras.main.width - this.padding * 2;
+    this.width =
+      config.width || this.scene.cameras.main.width - this.padding * 2;
     this.textAnimationPlaying = false;
   }
 
@@ -79,10 +80,10 @@ export abstract class BaseDialog extends UIComponent {
       .setScrollFactor(0);
   }
 
-  protected findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
-    return dialogs?.find(
-      (dialog) => !dialog.completed
-    );
+  protected findMessageInCompleted(
+    dialogs?: DialogData[],
+  ): DialogData | undefined {
+    return dialogs?.find((dialog) => !dialog.completed);
   }
 
   protected setIsVisible(value: boolean): void {

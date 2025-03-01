@@ -27,7 +27,7 @@ export type DialogWithOptionsConfig = {
   callback: (option: string) => void;
 } & DialogConfig;
 
- export class DialogWithOptions {
+export class DialogWithOptions {
   scene: Phaser.Scene;
 
   data: DialogData[];
@@ -77,7 +77,6 @@ export type DialogWithOptionsConfig = {
   protected questGiverNpcId: string | undefined;
 
   container!: Phaser.GameObjects.Container;
-
 
   constructor(config: DialogWithOptionsConfig) {
     this.scene = config.scene;
@@ -245,7 +244,6 @@ export type DialogWithOptionsConfig = {
     );
   }
 
-
   show(npcId?: string): void {
     this.#getDialogData(npcId);
   }
@@ -378,5 +376,4 @@ export type DialogWithOptionsConfig = {
       this.questGiverNpcId = undefined;
     }
   }
-
 }
