@@ -6,8 +6,8 @@ import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
-import type { MapStructure } from "types/map";
-import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
+import type { MapMinimalConfiguration, MapStructure } from "types/map";
+import { MAP_HEIGHT, MAP_WIDTH, MIN_PARTITION_SIZE, MIN_ROOM_SIZE } from "config/map-config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
@@ -21,15 +21,21 @@ export abstract class BaseScene extends Scene {
 
   dialog: Dialog | undefined;
 
-  _dialogWithOptions: DialogWithOptions | undefined;
+  dialogWithOptions: DialogWithOptions | undefined;
 
   awards!: Awards;
 
   objectBag: Phaser.GameObjects.Sprite | undefined;
 
-  preload(sceneKey: string): void {
-    this.map = MapGenerator.newMap(sceneKey);
-
+  preload(config: MapMinimalConfiguration): void {
+    this.map = MapGenerator.create({
+      name: config.name,
+      tilesConfig: config.tilesConfig,
+      mapWidth: config.mapHeight || MAP_WIDTH,
+      mapHeight: config.mapWidth || MAP_HEIGHT,
+      minPartitionSize: config.minPartitionSize || MIN_PARTITION_SIZE,
+      minRoomSize: config.minRoomSize || MIN_ROOM_SIZE
+    });
     this.createAnimations();
   }
 
@@ -179,7 +185,7 @@ export abstract class BaseScene extends Scene {
     const levelData = loadLevelData(this, this.scene.key.toLowerCase());
 
     this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this._dialogWithOptions = new DialogWithOptions({
+    this.dialogWithOptions = new DialogWithOptions({
       scene: this,
       data: levelData.dialogs,
       callback: (optionSelected: string) => {

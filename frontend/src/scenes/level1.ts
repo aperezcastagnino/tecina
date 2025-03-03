@@ -2,6 +2,7 @@ import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "scenes/scene-keys";
 import { BaseScene } from "scenes/base-scene";
+import { TILE_CONFIGURATION } from "config/map-config";
 
 export class Level1 extends BaseScene {
   #collected_items = 0;
@@ -19,7 +20,7 @@ export class Level1 extends BaseScene {
   }
 
   preload(): void {
-    super.preload(SceneKeys.LEVEL_1);
+    super.preload({ name: SceneKeys.LEVEL_1, tilesConfig: TILE_CONFIGURATION});
   }
 
   defineBehaviors(): void {

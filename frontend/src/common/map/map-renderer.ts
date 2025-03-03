@@ -1,8 +1,7 @@
 import type { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import type { MapStructure } from "types/map";
+import { TilesAsset, type MapStructure } from "types/map";
 import { TILE_SIZE } from "config/config";
-import { Tiles } from "config/map-config";
 import { AnimationsKeys } from "assets/animation-keys";
 
 export class MapRenderer {
@@ -18,16 +17,16 @@ export class MapRenderer {
         const x = startPosition.x + TILE_SIZE + column * TILE_SIZE;
         const y = startPosition.y + TILE_SIZE + row * TILE_SIZE;
 
-        const assetRef = (map.tiles[row]?.[column] as Tiles) ?? 0;
-        const assetName = Tiles[assetRef]!;
+        const assetRef = (map.tiles[row]?.[column] as TilesAsset) ?? 0;
+        const assetName = TilesAsset[assetRef]!;
 
-        if (!map.assetGroups.has(assetName) && assetRef !== Tiles.FREE_SPACE) {
+        if (!map.assetGroups.has(assetName) && assetRef !== TilesAsset.FREE_SPACE) {
           const group = scene.physics.add.staticGroup();
           group.name = assetName;
           map.assetGroups.set(assetName, group);
         }
 
-        if (assetRef === Tiles.ORANGE) {
+        if (assetRef === TilesAsset.ORANGE) {
           scene.add
             .image(x, y, AssetKeys.TILES.GRASS)
             .setDisplaySize(TILE_SIZE, TILE_SIZE);
@@ -40,7 +39,7 @@ export class MapRenderer {
           sprite.setScale(2);
           sprite.anims.play(AnimationsKeys.ORANGE, true);
           map.assetGroups.get(assetName)!.add(sprite);
-        } else if (assetRef === Tiles.FREE_SPACE) {
+        } else if (assetRef === TilesAsset.FREE_SPACE) {
           scene.add
             .image(x, y, AssetKeys.TILES.GRASS)
             .setDisplaySize(TILE_SIZE, TILE_SIZE);
