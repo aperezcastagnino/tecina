@@ -9,77 +9,144 @@ import { MapRenderer } from "common/map/map-renderer";
 import type { MapStructure } from "types/map";
 import { MAP_HEIGHT, MAP_WIDTH } from "config/map-config";
 import { MapGenerator } from "common/map/map-generator";
+import { Awards } from "common-ui/awards";
+import { AssetKeys } from "assets/asset-keys";
 
-export class BaseScene extends Scene {
-  _map!: MapStructure;
+export abstract class BaseScene extends Scene {
+  map!: MapStructure;
 
-  _player!: Player;
+  player!: Player;
 
-  _controls!: Controls;
+  controls!: Controls;
 
-  _dialog: Dialog | undefined;
+  dialog: Dialog | undefined;
 
   _dialogWithOptions: DialogWithOptions | undefined;
 
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(sceneKey: string) {
-    super(sceneKey);
+  awards!: Awards;
+
+  objectBag: Phaser.GameObjects.Sprite | undefined;
+
+  preload(sceneKey: string): void {
+    this.map = MapGenerator.newMap(sceneKey);
+
+    this.createAnimations();
   }
 
-  preload(sceneKey: string) {
-    this._map = MapGenerator.newMap(sceneKey);
-  }
-
-  create() {
-    MapRenderer.renderer(this, this._map);
-
-    this.#createDialogs();
+  create(): void {
+    MapRenderer.renderer(this, this.map);
 
     this.#createPlayer();
 
-    this.#setCamera();
+    this.#createDialogs();
 
-    this._defineBehaviors();
+    this.#createAwards();
+
+    this.#setupCamera();
+
+    this.defineBehaviors();
   }
 
-  update() {
-    const directionSelected = this._controls.getDirectionKeyPressed();
-
-    if (!this._dialog?.isVisible) {
-      this._player.move(directionSelected);
-    }
-    if (this._controls.wasSpaceKeyPressed()) {
+  update(): void {
+    if (this.controls.wasSpaceKeyPressed()) {
       this.#handlePlayerInteraction();
+      return;
+    }
+
+    const directionSelected = this.controls.getDirectionKeyPressed();
+    this.player.move(directionSelected);
+
+    if (this.objectBag) {
+      this.objectBag.setPosition(this.player.x, this.player.y);
     }
   }
 
-  _showElements(group: GameObjects.Group) {
+  showElements(group: GameObjects.Group): void {
     group.children.iterate((child) => {
-      child.setActive(true);
-      (child as Phaser.GameObjects.Sprite).setVisible(true);
+      const sprite = child as Phaser.GameObjects.Sprite;
+      sprite.setVisible(true);
+      if (sprite.body)
+        (sprite.body as Phaser.Physics.Arcade.Body).enable = true;
+
       return true;
     });
   }
 
-  _hideElements(group: GameObjects.Group) {
+  hideElements(group: GameObjects.Group): void {
     group.children.iterate((child) => {
-      child.setActive(false);
-      (child as Phaser.GameObjects.Sprite).setVisible(false);
+      const sprite = child as Phaser.GameObjects.Sprite;
+      sprite.setVisible(false);
+      if (sprite.body)
+        (sprite.body as Phaser.Physics.Arcade.Body).enable = false;
+
       return true;
     });
   }
 
-  _defineBehaviors() {}
+  defineBehaviors(): void {
+    const treeGroup = this.map.assetGroups.get(AssetKeys.TILES.TREE)!;
+    const npcGroup = this.map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
-  #handlePlayerInteraction() {
-    if (this._dialog) {
-      if (this._dialog.isVisible) {
-        this._dialog.showNextMessage();
+    this.physics.add.collider(this.player, treeGroup);
+    this.physics.add.collider(this.player, npcGroup);
+  }
+
+  #handleNPCProximity(): void {
+    const npcGroup = this.map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
+    npcGroup.getChildren().forEach((npc) => {
+      const npcSprite = npc as Phaser.GameObjects.Sprite;
+      const distance = Phaser.Math.Distance.Between(
+        this.player.x,
+        this.player.y,
+        npcSprite.x,
+        npcSprite.y,
+      );
+
+      if (distance <= 80) {
+        this.defineBehaviorForNPCs(npcSprite);
+      }
+    });
+  }
+
+  #attemptObjectDrop() {
+    const dropX = this.player.x + TILE_SIZE;
+    const dropY = this.player.y;
+
+    const canDrop =
+      this.physics
+        .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
+        .filter(
+          (ol) =>
+            ol.gameObject instanceof GameObjects.Image &&
+            (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
+        ).length === 0;
+
+    if (canDrop) {
+      this.objectBag!.setPosition(dropX, dropY);
+
+      if (this.objectBag!.body) {
+        const body = this.objectBag!.body as Phaser.Physics.Arcade.Body;
+        body.checkCollision.none = false;
+        body.updateFromGameObject();
       }
     }
   }
 
-  #setCamera() {
+  #handlePlayerInteraction(): void {
+    if (this.dialog?.isVisible()) {
+      this.dialog.showNextMessage();
+      return;
+    }
+
+    this.#handleNPCProximity();
+
+    if (this.objectBag) {
+      this.#attemptObjectDrop();
+    }
+  }
+
+  #setupCamera(): void {
     this.cameras.main.setBounds(
       0,
       0,
@@ -87,14 +154,31 @@ export class BaseScene extends Scene {
       MAP_HEIGHT * TILE_SIZE * 400,
       true,
     );
-    this.cameras.main.startFollow(this._player);
+    this.cameras.main.startFollow(this.player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
-  #createDialogs() {
+  #createAwards(): void {
+    this.awards = new Awards({
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      frameRate: 19,
+      padding: 0,
+      scale: 2,
+      scene: this,
+      width: MAP_WIDTH * TILE_SIZE,
+      spriteConfig: {
+        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+      },
+    });
+  }
+
+  #createDialogs(): void {
     const levelData = loadLevelData(this, this.scene.key.toLowerCase());
 
-    this._dialog = new Dialog({ scene: this, data: levelData.dialogs });
+    this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
     this._dialogWithOptions = new DialogWithOptions({
       scene: this,
       data: levelData.dialogs,
@@ -104,16 +188,20 @@ export class BaseScene extends Scene {
     });
   }
 
-  #createPlayer() {
-    this._player = new Player({
+  #createPlayer(): void {
+    this.player = new Player({
       scene: this,
       position: {
-        x: 0 + TILE_SIZE + this._map.startPosition.x * TILE_SIZE,
-        y: 0 + TILE_SIZE + this._map.startPosition.y * TILE_SIZE,
+        x: 0 + TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
+        y: 0 + TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
       },
       velocity: 700,
     });
 
-    this._controls = new Controls(this);
+    this.controls = new Controls(this);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  abstract defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite): void;
+  abstract createAnimations(): void;
 }

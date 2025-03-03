@@ -63,10 +63,7 @@ export class MapGenerator {
     this.fillMap(this.#map.tiles, this.#root);
 
     this.generateMapTile();
-    console.log(this.#root);
     this.fillFreeSpace(this.#root);
-    // this.replaceCollidableWithFrequency(this.#map.tiles)
-    console.log(this.#map.tiles);
   }
 
   #createEmptyMap(sceneKey: string, rows: number, columns: number) {

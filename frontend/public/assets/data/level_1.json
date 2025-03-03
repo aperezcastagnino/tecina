@@ -1,84 +1,49 @@
 {
   "title": "Level 1",
-  "dialogs": {
-    "npcs": [
-      {
-        "id": "npc-1",
-        "description": "primer npc",
-        "dialogs": [
-          {
-            "id": "npc-1-d-1",
-            "description": "primer dialogo",
-            "statements": [
-              "Can you pick the oranges?",
-              "They're for making marmalade."
-            ]
-          },
-          {
-            "id": "npc-1-d-2",
-            "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
-            "statements": [
-              "I need all the oranges you can find so I can cook them!"
-            ]
-          },
-          {
-            "id": "npc-1-d-3",
-            "description": "tercer dialogo del primer npc.",
-            "statements": [
-              "Thank you! Now I can make the marmalade my grandma used to make!"
-            ]
-          },
-          {
-            "id": "npc-1-dwo-1",
-            "description": "primer dialogo",
-            "statements": ["esto debe ser una pregunta?"],
-            "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
-            "correctOption": "opcion 1"
-          }
-        ]
-      },
-      {
-        "id": "npc-2",
-        "description": "segundo npc",
-        "dialogs": [
-          {
-            "id": "npc-2-d-1",
-            "description": "primer dialogo",
-            "statements": [
-              "I'll give you a hint! Oranges are round and orange!"
-            ]
-          },
-          {
-            "id": "npc-2-d-2",
-            "description": "primer dialogo",
-            "statements": [
-              "My favorite fruits are apples!",
-              "Could you pick some for me?"
-            ]
-          },
-          {
-            "id": "npc-2-d-3",
-            "description": "segundo dialogo del primer npc. la idea es que una vez que finaliza el primero, se muestre estre",
-            "statements": ["Thank you so much!"]
-          }
-        ]
-      }
-    ],
-    "simpleDialogs": [
-      {
-        "id": "d-1",
-        "description": "primer dialogo",
-        "statements": [
-          "esto es un ejemplo de un dialogo simple",
-          "que tiene varias partes",
-          "y se muestra una tras otra"
-        ]
-      },
-      {
-        "id": "d-2",
-        "description": "primer dialogo",
-        "statements": ["esto es otro dialogo", "con dos partes"]
-      }
-    ]
-  }
+  "dialogs": [
+    {
+      "id": "d-1",
+      "description": "primer dialogo",
+      "questStart": [
+        "Can you pick the oranges?",
+        "They're for making marmalade."
+      ],
+      "questStartIAGenerated": ["EXAMPLE"],
+      "questInProgress": [
+        "I need all the oranges you can find so I can cook them!"
+      ],
+      "questInProgressIAGenerated": ["EXAMPLE"],
+      "questFinished": [
+        "Thank you! Now I can make the marmalade my grandma used to make!"
+      ],
+      "questFinishedIAGenerated": ["EXAMPLE"],
+      "hints": [
+        "I'll give you a hint! Oranges are round and orange!",
+        "I don't have nothing more to say!"
+      ],
+      "hintsIAGenerated": ["EXAMPLE"],
+      "assetKey": "ORANGE",
+      "quantityToCollect": 5
+    },
+    {
+      "id": "d-2",
+      "description": "segundo dialogo",
+      "questStart": [
+        "My favorite fruits are apples!",
+        "Could you pick some for me?"
+      ],
+      "questInProgress": [],
+      "questFinished": ["Thank you so much!"],
+      "hints": []
+    },
+    {
+      "id": "dwo-1",
+      "description": "primer dialogo",
+      "questStart": ["esto debe ser una pregunta?"],
+      "questInProgress": [],
+      "questFinished": [],
+      "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
+      "correctOption": "opcion 1"
+    }
+  ]
 }
