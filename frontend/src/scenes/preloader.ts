@@ -42,7 +42,6 @@ export class Preloader extends Scene {
 
     // Load data
     this.load.json("level_1", "/data/level_1.json");
-    this.load.json("level_deprecated", "/data/level_deprecated.json");
 
     // Level 1
 
@@ -67,7 +66,15 @@ export class Preloader extends Scene {
     // Load UI Components
     this.load.image(
       AssetKeys.UI_COMPONENTS.CURSOR,
-      `/ui-components/cursor.png`,
+      "/ui-components/cursor.png",
+    );
+    this.load.image(
+      AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND,
+      "/ui-components/health-bar-background.png",
+    );
+    this.load.image(
+      AssetKeys.UI_COMPONENTS.HEALTH_BAR.FILL,
+      "/ui-components/health-bar-fill.png",
     );
     this.load.image(
       AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE,
@@ -80,26 +87,25 @@ export class Preloader extends Scene {
     this.load.image(AssetKeys.TILES.TREE, "/tiles/tree.png");
     this.load.image(AssetKeys.TILES.FLOWER_GRASS, "/tiles/flower_grass.png");
 
-    // Load items
+    // Load elements
     this.load.spritesheet(
-      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
+      AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
       "/items/fruits/orange.png",
       {
-        frameWidth: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_HEIGHT,
-        startFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
       },
     );
-
     this.load.spritesheet(
-      AssetKeys.OBJECTS.FRUITS.STRAWBERRY.ASSET_KEY,
+      AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
       "/items/fruits/strawberry.png",
       {
-        frameWidth: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.FRAME_WIDTH,
-        frameHeight: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.FRAME_HEIGHT,
-        startFrame: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.STAR_FRAME,
-        endFrame: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_HEIGHT,
+        startFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.END_FRAME,
       },
     );
   }

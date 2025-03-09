@@ -16,6 +16,7 @@ import {
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
+import { HealthBar } from "common-ui/health-bar";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
@@ -30,6 +31,8 @@ export abstract class BaseScene extends Scene {
   dialog: Dialog | undefined;
 
   dialogWithOptions: DialogWithOptions | undefined;
+
+  healthBar!: HealthBar;
 
   awards!: Awards;
 
@@ -58,6 +61,8 @@ export abstract class BaseScene extends Scene {
     this.#createPlayer();
 
     this.#createDialogs();
+
+    this.#createHealthBar();
 
     this.#createAwards();
 
@@ -135,19 +140,22 @@ export abstract class BaseScene extends Scene {
       this.showElements(this.map.assetGroups.get(assetKey)!);
     } else if (this.objectBag) {
       const assetKey = this.dialog?.getAssetKey()!;
-      if (
-        assetKey === this.objectBag.texture.key &&
-        this.dialog?.getQuestGiverNpcId() === npc.name
-      ) {
-        this.#collected_items -= 1;
-        this.awards.setAwardsCount(this.#collected_items);
+      if (npc.name === this.dialog?.getQuestGiverNpcId()) {
+        debugger
+        if (assetKey !== this.objectBag.texture.key) {
+          this.#collected_items -= 1;
+          this.awards.setAwardsCount(this.#collected_items);
+
+          if (this.#collected_items === 0) {
+            this.dialog?.setMessageComplete(npc.name);
+            this.dialog?.show(npc.name);
+          }
+        } else {
+          this.healthBar.decreaseHealth(30);
+        }
+
         this.objectBag.destroy();
         this.objectBag = undefined;
-
-        if (this.#collected_items === 0) {
-          this.dialog?.setMessageComplete(npc.name);
-          this.dialog?.show(npc.name);
-        }
       } else {
         this.dialog?.show(npc.name);
       }
@@ -162,7 +170,7 @@ export abstract class BaseScene extends Scene {
         this.player.x,
         this.player.y,
         npcSprite.x,
-        npcSprite.y,
+        npcSprite.y
       );
 
       if (distance <= 80) {
@@ -195,7 +203,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC)
         ).length === 0;
 
     if (canDrop) {
@@ -215,7 +223,7 @@ export abstract class BaseScene extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true,
+      true
     );
     this.cameras.main.startFollow(this.player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
@@ -223,19 +231,23 @@ export abstract class BaseScene extends Scene {
 
   #createAwards(): void {
     this.awards = new Awards({
-      assetKey: AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
       frameRate: 19,
       padding: 0,
       scale: 2,
       scene: this,
       width: MAP_WIDTH * TILE_SIZE,
       spriteConfig: {
-        startFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
       },
     });
+  }
+
+  #createHealthBar(): void {
+    this.healthBar = new HealthBar(this);
   }
 
   #createDialogs(): void {
