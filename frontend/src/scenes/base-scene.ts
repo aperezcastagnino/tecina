@@ -35,6 +35,10 @@ export abstract class BaseScene extends Scene {
 
   objectBag: Phaser.GameObjects.Sprite | undefined;
 
+  #collected_items = 0;
+
+  abstract createAnimations(): void;
+
   preload(config: MapMinimalConfiguration): void {
     this.map = MapGenerator.create({
       name: this.scene.key,
@@ -44,10 +48,11 @@ export abstract class BaseScene extends Scene {
       minPartitionSize: config.minPartitionSize || MIN_PARTITION_SIZE,
       minRoomSize: config.minRoomSize || MIN_ROOM_SIZE,
     });
+
     this.createAnimations();
   }
 
-  create(): void {
+  async create() {
     MapRenderer.render(this, this.map);
 
     this.#createPlayer();
@@ -58,7 +63,7 @@ export abstract class BaseScene extends Scene {
 
     this.#setupCamera();
 
-    this.defineBehaviors();
+    this.defineInteractions();
   }
 
   update(): void {
@@ -97,12 +102,56 @@ export abstract class BaseScene extends Scene {
     });
   }
 
-  defineBehaviors(): void {
+  defineInteractions(): void {
+    // Obstacles or interactive static objects
     const treeGroup = this.map.assetGroups.get(AssetKeys.TILES.TREE)!;
     const npcGroup = this.map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
 
     this.physics.add.collider(this.player, treeGroup);
     this.physics.add.collider(this.player, npcGroup);
+  }
+
+  defineInteractionWithItems(item: Phaser.GameObjects.Sprite): void {
+    if (item.visible && !this.objectBag) {
+      this.objectBag = item;
+      this.children.bringToTop(this.objectBag);
+      if (item.body) {
+        const body = item.body as Phaser.Physics.Arcade.Body;
+        body.checkCollision.none = true;
+      }
+    }
+  }
+
+  defineInteractionWithNPCs(npc: Phaser.GameObjects.Sprite): void {
+    if (!this.dialog?.isDialogActive()) {
+      this.dialog?.show(npc.name);
+
+      const assetKey = this.dialog?.getAssetKey()!;
+      if (!assetKey) return;
+
+      this.#collected_items = this.dialog?.getQuantityToCollect() || 0;
+      this.awards.setAwardsCount(this.#collected_items);
+
+      this.showElements(this.map.assetGroups.get(assetKey)!);
+    } else if (this.objectBag) {
+      const assetKey = this.dialog?.getAssetKey()!;
+      if (
+        assetKey === this.objectBag.texture.key &&
+        this.dialog?.getQuestGiverNpcId() === npc.name
+      ) {
+        this.#collected_items -= 1;
+        this.awards.setAwardsCount(this.#collected_items);
+        this.objectBag.destroy();
+        this.objectBag = undefined;
+
+        if (this.#collected_items === 0) {
+          this.dialog?.setMessageComplete(npc.name);
+          this.dialog?.show(npc.name);
+        }
+      } else {
+        this.dialog?.show(npc.name);
+      }
+    }
   }
 
   #handleNPCProximity(): void {
@@ -117,9 +166,22 @@ export abstract class BaseScene extends Scene {
       );
 
       if (distance <= 80) {
-        this.defineBehaviorForNPCs(npcSprite);
+        this.defineInteractionWithNPCs(npcSprite);
       }
     });
+  }
+
+  #handlePlayerInteraction(): void {
+    if (this.dialog?.isVisible()) {
+      this.dialog.showNextMessage();
+      return;
+    }
+
+    this.#handleNPCProximity();
+
+    if (this.objectBag) {
+      this.#attemptObjectDrop();
+    }
   }
 
   #attemptObjectDrop() {
@@ -144,19 +206,6 @@ export abstract class BaseScene extends Scene {
         body.checkCollision.none = false;
         body.updateFromGameObject();
       }
-    }
-  }
-
-  #handlePlayerInteraction(): void {
-    if (this.dialog?.isVisible()) {
-      this.dialog.showNextMessage();
-      return;
-    }
-
-    this.#handleNPCProximity();
-
-    if (this.objectBag) {
-      this.#attemptObjectDrop();
     }
   }
 
@@ -214,8 +263,4 @@ export abstract class BaseScene extends Scene {
 
     this.controls = new Controls(this);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  abstract defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite): void;
-  abstract createAnimations(): void;
 }
