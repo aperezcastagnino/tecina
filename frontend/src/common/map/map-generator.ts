@@ -30,7 +30,7 @@ export class MapGenerator {
   static #createMapStructure(
     name: string,
     rows: number,
-    columns: number
+    columns: number,
   ): MapStructure {
     return {
       id: `MAP-${name}`,
@@ -46,7 +46,7 @@ export class MapGenerator {
 
   static #createPartitions(
     partition: Partition,
-    minPartitionSize: number
+    minPartitionSize: number,
   ): Partition {
     const { height, width } = partition;
 
@@ -67,7 +67,7 @@ export class MapGenerator {
       const splitY = Math.floor(
         Math.random() * (height - 2 * minPartitionSize) +
           partition.y +
-          minPartitionSize
+          minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -85,7 +85,7 @@ export class MapGenerator {
       const splitX = Math.floor(
         Math.random() * (partition.width - 2 * minPartitionSize) +
           partition.x +
-          minPartitionSize
+          minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -131,16 +131,16 @@ export class MapGenerator {
 
   static #createRoom(partition: Partition, minRoomSize: number): Partition {
     const roomWidth = Math.floor(
-      Math.random() * (partition.width - minRoomSize) + minRoomSize
+      Math.random() * (partition.width - minRoomSize) + minRoomSize,
     );
     const roomHeight = Math.floor(
-      Math.random() * (partition.height - minRoomSize) + minRoomSize
+      Math.random() * (partition.height - minRoomSize) + minRoomSize,
     );
     const roomX = Math.floor(
-      Math.random() * (partition.width - roomWidth) + partition.x
+      Math.random() * (partition.width - roomWidth) + partition.x,
     );
     const roomY = Math.floor(
-      Math.random() * (partition.height - roomHeight) + partition.y
+      Math.random() * (partition.height - roomHeight) + partition.y,
     );
 
     partition.room = {
@@ -186,7 +186,7 @@ export class MapGenerator {
   static #connectRooms(
     matrix: number[][],
     roomA: Room,
-    roomB: Room
+    roomB: Room,
   ): number[][] {
     const pointA = {
       x: Math.floor(roomA.x + roomA.width / 2),
@@ -213,7 +213,7 @@ export class MapGenerator {
   static #assignTiles(
     map: MapStructure,
     matrix: number[][],
-    tilesConfig: TileConfig[]
+    tilesConfig: TileConfig[],
   ): void {
     const [interactiveTiles, obstacleTiles] =
       this.#prepareTileConfigs(tilesConfig);
@@ -223,7 +223,7 @@ export class MapGenerator {
         if (element === USED_CELL) {
           map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
             interactiveTiles!.frequencies,
-            interactiveTiles!.tiles
+            interactiveTiles!.tiles,
           );
           if (map.startPosition.x === 0 && map.startPosition.y === 0) {
             map.startPosition.x = columnIndex + 1;
@@ -233,7 +233,7 @@ export class MapGenerator {
         if (element === UNUSED_CELL) {
           map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
             obstacleTiles!.frequencies,
-            obstacleTiles!.tiles
+            obstacleTiles!.tiles,
           );
         }
       });
@@ -244,11 +244,11 @@ export class MapGenerator {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
         f.tile.type === TileType.INTERACTIVE_OBJECT ||
-        f.tile.type === TileType.WALKABLE_SPACE
+        f.tile.type === TileType.WALKABLE_SPACE,
     );
 
     const obstacleTiles = tilesConfig.filter(
-      (f) => f.tile.type === TileType.OBSTACLE
+      (f) => f.tile.type === TileType.OBSTACLE,
     );
 
     return [
@@ -281,7 +281,7 @@ export class MapGenerator {
   static #assignInteractiveStaticObject(
     map: MapStructure,
     partition: Partition,
-    tiles: TileConfig[]
+    tiles: TileConfig[],
   ) {
     const rooms = this.#getAllRooms(partition);
 
@@ -289,7 +289,7 @@ export class MapGenerator {
       for (let i = 0; i < (tile.quantity || 0); i += 1) {
         const room = this.#getTileBasedOnFrequency(
           new Array(rooms.length).fill(1),
-          rooms
+          rooms,
         );
 
         rooms.splice(rooms.indexOf(room), 1);
@@ -334,13 +334,13 @@ export class MapGenerator {
       config.mapHeight < config.minPartitionSize * 2
     ) {
       throw new Error(
-        "Map dimensions must be at least twice the minimum partition size"
+        "Map dimensions must be at least twice the minimum partition size",
       );
     }
 
     if (config.minRoomSize > config.minPartitionSize) {
       throw new Error(
-        "Minimum room size must be smaller than minimum partition size"
+        "Minimum room size must be smaller than minimum partition size",
       );
     }
 
@@ -351,7 +351,7 @@ export class MapGenerator {
     const map: MapStructure = MapGenerator.#createMapStructure(
       config.name,
       config.mapWidth,
-      config.mapHeight
+      config.mapHeight,
     );
     map.initialParameters = config;
 
@@ -362,7 +362,7 @@ export class MapGenerator {
         width: config.mapWidth,
         height: config.mapHeight,
       },
-      config.minPartitionSize
+      config.minPartitionSize,
     );
     this.#assignRooms(rootPartition, config.minRoomSize);
 
@@ -374,7 +374,7 @@ export class MapGenerator {
     this.#assignTiles(map, matrix, config.tilesConfig);
 
     const staticObjects = config.tilesConfig.filter(
-      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT
+      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
     );
     this.#assignInteractiveStaticObject(map, rootPartition, staticObjects);
 

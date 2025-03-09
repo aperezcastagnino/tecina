@@ -17,7 +17,7 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 
-type MapMinimalConfiguration = Pick<MapConfiguration,"tilesConfig"> &
+type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
 
 export abstract class BaseScene extends Scene {
