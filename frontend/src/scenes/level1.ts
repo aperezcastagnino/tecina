@@ -64,7 +64,7 @@ export class Level1 extends BaseScene {
     super.create();
 
     this.hideElements(
-      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
+      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!
     );
   }
 
@@ -72,7 +72,7 @@ export class Level1 extends BaseScene {
     super.defineBehaviors();
 
     const fruitsGroup = this.map.assetGroups.get(
-      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
+      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY
     )!;
     this.physics.add.collider(this.player, fruitsGroup, (_player, item) => {
       const itemObject = item as Phaser.GameObjects.Sprite;
