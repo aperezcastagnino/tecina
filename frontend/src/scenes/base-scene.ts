@@ -1,16 +1,24 @@
 import { Scene, GameObjects } from "phaser";
 import { loadLevelData } from "utils/data-util";
-import { TILE_SIZE } from "config/config";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
-import type { MapMinimalConfiguration, MapStructure } from "types/map";
-import { MAP_HEIGHT, MAP_WIDTH, MIN_PARTITION_SIZE, MIN_ROOM_SIZE } from "config/map-config";
+import type { MapConfiguration, MapStructure } from "types/map";
+import {
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  MIN_PARTITION_SIZE,
+  MIN_ROOM_SIZE,
+  TILE_SIZE,
+} from "config/config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
+
+type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
+  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
 
 export abstract class BaseScene extends Scene {
   map!: MapStructure;
@@ -34,13 +42,13 @@ export abstract class BaseScene extends Scene {
       mapWidth: config.mapHeight || MAP_WIDTH,
       mapHeight: config.mapWidth || MAP_HEIGHT,
       minPartitionSize: config.minPartitionSize || MIN_PARTITION_SIZE,
-      minRoomSize: config.minRoomSize || MIN_ROOM_SIZE
+      minRoomSize: config.minRoomSize || MIN_ROOM_SIZE,
     });
     this.createAnimations();
   }
 
   create(): void {
-    MapRenderer.renderer(this, this.map);
+    MapRenderer.render(this, this.map);
 
     this.#createPlayer();
 
@@ -166,17 +174,17 @@ export abstract class BaseScene extends Scene {
 
   #createAwards(): void {
     this.awards = new Awards({
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+      assetKey: AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
       frameRate: 19,
       padding: 0,
       scale: 2,
       scene: this,
       width: MAP_WIDTH * TILE_SIZE,
       spriteConfig: {
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.OBJECTS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.OBJECTS.FRUITS.ORANGE.FRAME_HEIGHT,
       },
     });
   }

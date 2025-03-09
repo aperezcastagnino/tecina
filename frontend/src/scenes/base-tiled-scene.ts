@@ -166,7 +166,7 @@ export class BaseTiledScene extends Scene {
       const spriteAward = this.physics.add.sprite(
         element.x!,
         element.y!,
-        AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+        AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
       );
       spriteAward.setOrigin(0.5, 0.5);
       spriteAward.setImmovable(true);
