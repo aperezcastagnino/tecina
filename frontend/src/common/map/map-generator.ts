@@ -137,10 +137,10 @@ export class MapGenerator {
       Math.random() * (partition.height - minRoomSize) + minRoomSize,
     );
     const roomX = Math.floor(
-      Math.random() * (partition.width - roomWidth) + partition.x
+      Math.random() * (partition.width - roomWidth) + partition.x,
     );
     const roomY = Math.floor(
-      Math.random() * (partition.height - roomHeight) + partition.y
+      Math.random() * (partition.height - roomHeight) + partition.y,
     );
 
     partition.room = {
