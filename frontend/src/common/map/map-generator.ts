@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   TileType,
   type MapConfiguration,
@@ -26,10 +27,10 @@ const UNUSED_CELL = -2;
 const USED_CELL = -1;
 
 export class MapGenerator {
-  static #createEmptyMap(
+  static #createMapStructure(
     name: string,
     rows: number,
-    columns: number,
+    columns: number
   ): MapStructure {
     return {
       id: `MAP-${name}`,
@@ -45,7 +46,7 @@ export class MapGenerator {
 
   static #createPartitions(
     partition: Partition,
-    minPartitionSize: number,
+    minPartitionSize: number
   ): Partition {
     const { height, width } = partition;
 
@@ -66,7 +67,7 @@ export class MapGenerator {
       const splitY = Math.floor(
         Math.random() * (height - 2 * minPartitionSize) +
           partition.y +
-          minPartitionSize,
+          minPartitionSize
       );
       left = {
         x: partition.x,
@@ -84,7 +85,7 @@ export class MapGenerator {
       const splitX = Math.floor(
         Math.random() * (partition.width - 2 * minPartitionSize) +
           partition.x +
-          minPartitionSize,
+          minPartitionSize
       );
       left = {
         x: partition.x,
@@ -113,55 +114,51 @@ export class MapGenerator {
     };
   }
 
-  static #createRooms(partition: Partition, minRoomSize: number): Partition {
-    const newPartition = { ...partition };
-
+  static #assignRooms(partition: Partition, minRoomSize: number): Partition {
     if (!partition.left && !partition.right) {
       const updatedPartition = this.#createRoom(partition, minRoomSize);
-      newPartition.room = updatedPartition.room;
+      partition.room = updatedPartition.room;
     } else {
       if (partition.left) {
-        newPartition.left = this.#createRooms(partition.left, minRoomSize);
+        partition.left = this.#assignRooms(partition.left, minRoomSize);
       }
       if (partition.right) {
-        newPartition.right = this.#createRooms(partition.right, minRoomSize);
+        partition.right = this.#assignRooms(partition.right, minRoomSize);
       }
     }
-    return newPartition;
+    return partition;
   }
 
   static #createRoom(partition: Partition, minRoomSize: number): Partition {
-    const newPartition = { ...partition };
     const roomWidth = Math.floor(
-      Math.random() * (partition.width - minRoomSize) + minRoomSize,
+      Math.random() * (partition.width - minRoomSize) + minRoomSize
     );
     const roomHeight = Math.floor(
-      Math.random() * (partition.height - minRoomSize) + minRoomSize,
+      Math.random() * (partition.height - minRoomSize) + minRoomSize
     );
     const roomX = Math.floor(
-      Math.random() * (partition.width - roomWidth) + partition.x,
+      Math.random() * (partition.width - roomWidth) + partition.x
     );
     const roomY = Math.floor(
-      Math.random() * (partition.height - roomHeight) + partition.y,
+      Math.random() * (partition.height - roomHeight) + partition.y
     );
 
-    newPartition.room = {
+    partition.room = {
       x: roomX,
       y: roomY,
       width: roomWidth,
       height: roomHeight,
     };
 
-    return newPartition;
+    return partition;
   }
 
-  static #fillMap(matrix: number[][], partition: Partition): void {
-    const matrixCopy = { ...matrix };
+  static #fillAndConnectRooms(matrix: number[][], partition: Partition): void {
     if (partition.room) {
       const { x, y, width, height } = partition.room;
       for (let i = y; i < y + height; i += 1) {
         for (let j = x; j < x + width; j += 1) {
-          matrixCopy[i]![j] = USED_CELL;
+          matrix[i]![j] = USED_CELL;
         }
       }
     }
@@ -171,11 +168,11 @@ export class MapGenerator {
       const rightRoom = this.#findRoom(partition.right);
 
       if (leftRoom && rightRoom) {
-        this.#connectRooms(matrixCopy, leftRoom, rightRoom);
+        this.#connectRooms(matrix, leftRoom, rightRoom);
       }
 
-      this.#fillMap(matrixCopy, partition.left);
-      this.#fillMap(matrixCopy, partition.right);
+      this.#fillAndConnectRooms(matrix, partition.left);
+      this.#fillAndConnectRooms(matrix, partition.right);
     }
   }
 
@@ -189,9 +186,8 @@ export class MapGenerator {
   static #connectRooms(
     matrix: number[][],
     roomA: Room,
-    roomB: Room,
+    roomB: Room
   ): number[][] {
-    const matrixCopy = { ...matrix };
     const pointA = {
       x: Math.floor(roomA.x + roomA.width / 2),
       y: Math.floor(roomA.y + roomA.height / 2),
@@ -202,43 +198,42 @@ export class MapGenerator {
     };
 
     while (pointA.x !== pointB.x) {
-      matrixCopy[pointA.y]![pointA.x] = USED_CELL;
+      matrix[pointA.y]![pointA.x] = USED_CELL;
       pointA.x += pointA.x < pointB.x ? 1 : -1;
     }
 
     while (pointA.y !== pointB.y) {
-      matrixCopy[pointA.y]![pointA.x] = USED_CELL;
+      matrix[pointA.y]![pointA.x] = USED_CELL;
       pointA.y += pointA.y < pointB.y ? 1 : -1;
     }
 
-    return matrixCopy;
+    return matrix;
   }
 
   static #assignTiles(
     map: MapStructure,
     matrix: number[][],
-    tilesConfig: TileConfig[],
+    tilesConfig: TileConfig[]
   ): void {
-    const mapCopy = { ...map };
     const [interactiveTiles, obstacleTiles] =
       this.#prepareTileConfigs(tilesConfig);
 
     matrix.forEach((column, columnIndex) => {
       column.forEach((element, rowIndex) => {
         if (element === USED_CELL) {
-          mapCopy.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
+          map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
             interactiveTiles!.frequencies,
-            interactiveTiles!.tiles,
+            interactiveTiles!.tiles
           );
           if (map.startPosition.x === 0 && map.startPosition.y === 0) {
-            mapCopy.startPosition.x = columnIndex + 1;
-            mapCopy.startPosition.y = rowIndex + 1;
+            map.startPosition.x = columnIndex + 1;
+            map.startPosition.y = rowIndex + 1;
           }
         }
         if (element === UNUSED_CELL) {
-          mapCopy.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
+          map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
             obstacleTiles!.frequencies,
-            obstacleTiles!.tiles,
+            obstacleTiles!.tiles
           );
         }
       });
@@ -249,11 +244,11 @@ export class MapGenerator {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
         f.tile.type === TileType.INTERACTIVE_OBJECT ||
-        f.tile.type === TileType.WALKABLE_SPACE,
+        f.tile.type === TileType.WALKABLE_SPACE
     );
 
     const obstacleTiles = tilesConfig.filter(
-      (f) => f.tile.type === TileType.OBSTACLE,
+      (f) => f.tile.type === TileType.OBSTACLE
     );
 
     return [
@@ -283,24 +278,23 @@ export class MapGenerator {
     return tiles[0]!;
   }
 
-  static #assignInteractiveImmovableObject(
+  static #assignInteractiveStaticObject(
     map: MapStructure,
     partition: Partition,
-    tiles: TileConfig[],
+    tiles: TileConfig[]
   ) {
-    const mapCopy = { ...map };
     const rooms = this.#getAllRooms(partition);
 
     tiles.forEach((tile) => {
       for (let i = 0; i < (tile.quantity || 0); i += 1) {
         const room = this.#getTileBasedOnFrequency(
           new Array(rooms.length).fill(1),
-          rooms,
+          rooms
         );
 
         rooms.splice(rooms.indexOf(room), 1);
 
-        mapCopy.tiles[room.x + Math.trunc(room.width / 2)]![
+        map.tiles[room.x + Math.trunc(room.width / 2)]![
           room.y + Math.trunc(room.height / 2)
         ] = tile.tile;
       }
@@ -335,35 +329,54 @@ export class MapGenerator {
     are placed at the center of each room.
     */
 
-    const map: MapStructure = MapGenerator.#createEmptyMap(
+    if (
+      config.mapWidth < config.minPartitionSize * 2 ||
+      config.mapHeight < config.minPartitionSize * 2
+    ) {
+      throw new Error(
+        "Map dimensions must be at least twice the minimum partition size"
+      );
+    }
+
+    if (config.minRoomSize > config.minPartitionSize) {
+      throw new Error(
+        "Minimum room size must be smaller than minimum partition size"
+      );
+    }
+
+    if (!config.tilesConfig.length) {
+      throw new Error("Tiles configuration cannot be empty");
+    }
+
+    const map: MapStructure = MapGenerator.#createMapStructure(
       config.name,
       config.mapWidth,
-      config.mapHeight,
+      config.mapHeight
     );
     map.initialParameters = config;
 
-    let rootPartition = this.#createPartitions(
+    const rootPartition = this.#createPartitions(
       {
         x: 0,
         y: 0,
         width: config.mapWidth,
         height: config.mapHeight,
       },
-      config.minPartitionSize,
+      config.minPartitionSize
     );
-    rootPartition = this.#createRooms(rootPartition, config.minRoomSize);
+    this.#assignRooms(rootPartition, config.minRoomSize);
 
     const matrix = new Array(config.mapWidth)
       .fill([])
       .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
 
-    this.#fillMap(matrix, rootPartition);
+    this.#fillAndConnectRooms(matrix, rootPartition);
     this.#assignTiles(map, matrix, config.tilesConfig);
 
-    const immovableObject = config.tilesConfig.filter(
-      (t) => t.tile.type === TileType.INTERACTIVE_IMMOVABLE_OBJECT,
+    const staticObjects = config.tilesConfig.filter(
+      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT
     );
-    this.#assignInteractiveImmovableObject(map, rootPartition, immovableObject);
+    this.#assignInteractiveStaticObject(map, rootPartition, staticObjects);
 
     return map;
   }

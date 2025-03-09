@@ -50,7 +50,7 @@ export class MapRenderer {
       case TileType.INTERACTIVE_OBJECT:
         this.#renderInteractiveObject(scene, map, x, y, assetName);
         break;
-      case TileType.INTERACTIVE_IMMOVABLE_OBJECT:
+      case TileType.INTERACTIVE_STATIC_OBJECT:
         this.#renderInteractiveImmovableObject(scene, map, x, y, assetName);
         break;
       default:

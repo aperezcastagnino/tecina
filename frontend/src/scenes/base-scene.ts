@@ -17,8 +17,8 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 
-type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
-  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
+type MapMinimalConfiguration = Pick<MapConfiguration,"tilesConfig"> &
+  Partial<Omit<MapConfiguration, "tilesConfig">>;
 
 export abstract class BaseScene extends Scene {
   map!: MapStructure;
@@ -37,7 +37,7 @@ export abstract class BaseScene extends Scene {
 
   preload(config: MapMinimalConfiguration): void {
     this.map = MapGenerator.create({
-      name: config.name,
+      name: this.scene.key,
       tilesConfig: config.tilesConfig,
       mapWidth: config.mapHeight || MAP_WIDTH,
       mapHeight: config.mapWidth || MAP_HEIGHT,

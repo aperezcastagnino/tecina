@@ -17,8 +17,6 @@ export class Awards {
 
   #positionY: number;
 
-  #frameRate: number;
-
   #assetKey: string;
 
   #spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
@@ -34,12 +32,11 @@ export class Awards {
     this.#spriteConfig = config.spriteConfig;
     this.#scene = config.scene;
     this.#assetKey = config.assetKey;
-    this.#frameRate = config.frameRate;
     this.#keyAnim = "AwardsKeyAnim";
     this.#scene.anims.create({
       key: this.#keyAnim,
       frames: this.#scene.anims.generateFrameNumbers(this.#assetKey),
-      frameRate: this.#frameRate,
+      frameRate: config.frameRate,
       repeat: -1,
     });
     this.#sprites = [];

@@ -4,45 +4,45 @@ import { BaseScene } from "scenes/base-scene";
 import { TileType, type TileConfig } from "types/map.d";
 import { Animations } from "utils/animation-utils";
 
-export const MapLevel1Configuration: TileConfig[] = [
+export const level1Config: TileConfig[] = [
   {
     tile: {
-      type: TileType.INTERACTIVE_IMMOVABLE_OBJECT, // I NEED 2 NPC'S
+      type: TileType.INTERACTIVE_STATIC_OBJECT,
       asset: AssetKeys.CHARACTERS.NPC,
     },
     quantity: 2,
   },
   {
     tile: {
-      type: TileType.WALKABLE_SPACE, // 50% OF MY WALKABLE PATH IS GRASS
+      type: TileType.WALKABLE_SPACE,
       asset: AssetKeys.TILES.GRASS,
     },
     frequency: 50,
   },
   {
     tile: {
-      type: TileType.WALKABLE_SPACE, // 50% OF MY WALKABLE PATH IS GRASS
+      type: TileType.WALKABLE_SPACE,
       asset: AssetKeys.TILES.FLOWER_GRASS,
     },
     frequency: 50,
   },
   {
     tile: {
-      type: TileType.OBSTACLE, // 100% OF THE INTERACTIVE OBJECTS ARE TREES
+      type: TileType.OBSTACLE,
       asset: AssetKeys.TILES.TREE,
     },
     frequency: 100,
   },
   {
     tile: {
-      type: TileType.INTERACTIVE_OBJECT, // 100% OF THE INTERACTIVE OBJECTS ARE ORANGES
+      type: TileType.INTERACTIVE_OBJECT,
       asset: AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
     },
     frequency: 2,
   },
   {
     tile: {
-      type: TileType.INTERACTIVE_OBJECT, // 100% OF THE INTERACTIVE OBJECTS ARE ORANGES
+      type: TileType.INTERACTIVE_OBJECT,
       asset: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.ASSET_KEY,
     },
     frequency: 10,
@@ -57,17 +57,14 @@ export class Level1 extends BaseScene {
   }
 
   preload(): void {
-    super.preload({
-      name: SceneKeys.LEVEL_1,
-      tilesConfig: MapLevel1Configuration,
-    });
+    super.preload({ tilesConfig: level1Config });
   }
 
   create(): void {
     super.create();
 
     this.hideElements(
-      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
+      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!
     );
   }
 
@@ -75,14 +72,12 @@ export class Level1 extends BaseScene {
     super.defineBehaviors();
 
     const fruitsGroup = this.map.assetGroups.get(
-      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
+      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY
     )!;
     this.physics.add.collider(this.player, fruitsGroup, (_player, item) => {
       const itemObject = item as Phaser.GameObjects.Sprite;
       this.#defineBehaviorForItems(itemObject);
     });
-
-    console.log("total items: ", fruitsGroup.getChildren().length);
   }
 
   defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite): void {
