@@ -1,5 +1,5 @@
 import type { DialogData } from "types/level-data";
-import { animateText } from "utils/animation-utils";
+import { Animations } from "utils/animation-utils";
 import { BaseDialog, type DialogConfig } from "./base-dialog";
 
 export class Dialog extends BaseDialog {
@@ -24,7 +24,7 @@ export class Dialog extends BaseDialog {
     this.setIsVisible(true);
     this.statementUI.setText("").setAlpha(1);
     this.textAnimationPlaying = true;
-    animateText(
+    Animations.animateText(
       this.scene,
       this.statementUI,
       this.messagesToShow.shift() || "",

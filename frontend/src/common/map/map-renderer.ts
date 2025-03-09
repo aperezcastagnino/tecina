@@ -1,76 +1,125 @@
 import type { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import type { MapStructure } from "types/map";
+import { TileType, type MapStructure } from "types/map.d";
 import { TILE_SIZE } from "config/config";
-import { Tiles } from "config/map-config";
-import { AnimationsKeys } from "assets/animation-keys";
+
+const DEFAULT_FLOOR_ASSET = AssetKeys.TILES.GRASS;
 
 export class MapRenderer {
-  static renderer(scene: Scene, map: MapStructure) {
+  static render(scene: Scene, map: MapStructure): void {
     const { rows: numberOfRows, columns: numberOfColumns } = map;
-    const startPosition = { x: 0, y: 0 };
-
-    let numberOfNPCs = 2;
-    const assetNPC = [0, 20];
 
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
-        const x = startPosition.x + TILE_SIZE + column * TILE_SIZE;
-        const y = startPosition.y + TILE_SIZE + row * TILE_SIZE;
+        const x = TILE_SIZE + column * TILE_SIZE;
+        const y = TILE_SIZE + row * TILE_SIZE;
 
-        const assetRef = (map.tiles[row]?.[column] as Tiles) ?? 0;
-        const assetName = Tiles[assetRef]!;
+        const tile = map.tiles[row]![column]!;
 
-        if (!map.assetGroups.has(assetName) && assetRef !== Tiles.FREE_SPACE) {
-          const group = scene.physics.add.staticGroup();
-          group.name = assetName;
-          map.assetGroups.set(assetName, group);
-        }
-
-        if (assetRef === Tiles.ORANGE) {
-          scene.add
-            .image(x, y, AssetKeys.TILES.GRASS)
-            .setDisplaySize(TILE_SIZE, TILE_SIZE);
-
-          const sprite = scene.add.sprite(
-            x,
-            y,
-            AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-          );
-          sprite.setScale(2);
-          sprite.anims.play(AnimationsKeys.ORANGE, true);
-          map.assetGroups.get(assetName)!.add(sprite);
-        } else if (assetRef === Tiles.FREE_SPACE) {
-          scene.add
-            .image(x, y, AssetKeys.TILES.GRASS)
-            .setDisplaySize(TILE_SIZE, TILE_SIZE);
-
-          if (numberOfNPCs > 0) {
-            const sprite = scene.add.image(
-              x,
-              y,
-              AssetKeys.CHARACTERS.NPC,
-              assetNPC[numberOfNPCs - 1],
-            );
-            sprite.setScale(3);
-            sprite.name = `npc-${numberOfNPCs}`;
-
-            if (!map.assetGroups.has("NPC")) {
-              const group = scene.physics.add.staticGroup();
-              group.name = "NPC";
-              map.assetGroups.set("NPC", group);
-            }
-
-            map.assetGroups.get("NPC")!.add(sprite);
-            numberOfNPCs -= 1;
-          }
-        } else {
-          const image = scene.add
-            .image(x, y, assetName)
-            .setDisplaySize(TILE_SIZE, TILE_SIZE);
-          map.assetGroups.get(assetName)!.add(image);
-        }
+        this.#ensureAssetGroup(scene, map, tile.asset, tile.type);
+        this.#renderTile(scene, map, x, y, tile.asset, tile.type);
       }
     }
+  }
+
+  static #ensureAssetGroup(
+    scene: Scene,
+    map: MapStructure,
+    assetName: string,
+    type: TileType,
+  ): void {
+    if (type !== TileType.WALKABLE_SPACE && !map.assetGroups.has(assetName)) {
+      const group = scene.physics.add.staticGroup();
+      group.name = assetName;
+      map.assetGroups.set(assetName, group);
+    }
+  }
+
+  static #renderTile(
+    scene: Scene,
+    map: MapStructure,
+    x: number,
+    y: number,
+    assetName: string,
+    type: TileType,
+  ): void {
+    switch (type) {
+      case TileType.WALKABLE_SPACE:
+        this.#renderWalkableSpace(scene, x, y, assetName);
+        break;
+      case TileType.INTERACTIVE_OBJECT:
+        this.#renderInteractiveObject(scene, map, x, y, assetName);
+        break;
+      case TileType.INTERACTIVE_STATIC_OBJECT:
+        this.#renderInteractiveImmovableObject(scene, map, x, y, assetName);
+        break;
+      default:
+        this.#renderObstacle(scene, map, x, y, assetName);
+    }
+  }
+
+  static #renderWalkableSpace(
+    scene: Scene,
+    x: number,
+    y: number,
+    assetName: string,
+  ): void {
+    scene.add.image(x, y, assetName).setDisplaySize(TILE_SIZE, TILE_SIZE);
+  }
+
+  static #renderInteractiveObject(
+    scene: Scene,
+    map: MapStructure,
+    x: number,
+    y: number,
+    assetName: string,
+  ): void {
+    scene.add
+      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .setDisplaySize(TILE_SIZE, TILE_SIZE);
+
+    const sprite = scene.add.sprite(x, y, assetName);
+    sprite.setScale(2);
+    sprite.anims.play(`${assetName}_ANIMATION`, true);
+
+    const group = map.assetGroups.get(assetName);
+    if (!group) throw new Error(`Missing asset group for ${assetName}`);
+    group.add(sprite);
+  }
+
+  static #renderInteractiveImmovableObject(
+    scene: Scene,
+    map: MapStructure,
+    x: number,
+    y: number,
+    assetName: string,
+  ): void {
+    scene.add
+      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .setDisplaySize(TILE_SIZE, TILE_SIZE);
+
+    const sprite = scene.add.image(x, y, AssetKeys.CHARACTERS.NPC, assetName);
+    sprite.setScale(3);
+    sprite.name = `npc-${Math.floor(Math.random() * 1000)}`;
+
+    const group = map.assetGroups.get(assetName);
+    if (!group) throw new Error(`Missing asset group for ${assetName}`);
+    group.add(sprite);
+  }
+
+  static #renderObstacle(
+    scene: Scene,
+    map: MapStructure,
+    x: number,
+    y: number,
+    assetName: string,
+  ): void {
+    const image = scene.add
+      .image(x, y, assetName)
+      .setDisplaySize(TILE_SIZE, TILE_SIZE);
+
+    const group = map.assetGroups.get(assetName);
+    if (!group) throw new Error(`Missing asset group for ${assetName}`);
+    group.add(image);
   }
 }

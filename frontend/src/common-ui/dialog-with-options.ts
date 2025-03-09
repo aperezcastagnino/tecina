@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { animateText } from "utils/animation-utils";
 import { AssetKeys } from "assets/asset-keys";
 import { Colors, DialogColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
@@ -10,6 +9,7 @@ import {
   type PlayerKeys,
 } from "common/player-keys";
 import type { DialogData } from "types/level-data";
+import { Animations } from "utils/animation-utils";
 import type { DialogConfig } from "./base-dialog";
 
 const MENU_CURSOR_POS = {
@@ -198,7 +198,7 @@ export class DialogWithOptions {
     this.setIsVisible(true);
     this.statementUI.setText("").setAlpha(1);
     this.textAnimationPlaying = true;
-    animateText(
+    Animations.animateText(
       this.scene,
       this.statementUI,
       this.messagesToShow.shift() || "",
@@ -289,11 +289,17 @@ export class DialogWithOptions {
     this.#fourthOptionUI.text = "";
     const delay = 10;
 
-    animateText(this.scene, this.statementUI, this.#statement, delay, () => {
-      this.textAnimationPlaying = false;
-    });
+    Animations.animateText(
+      this.scene,
+      this.statementUI,
+      this.#statement,
+      delay,
+      () => {
+        this.textAnimationPlaying = false;
+      },
+    );
 
-    animateText(
+    Animations.animateText(
       this.scene,
       this.#firstOptionUI,
       this.#options[0] || "",
@@ -302,7 +308,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    animateText(
+    Animations.animateText(
       this.scene,
       this.#secondOptionUI,
       this.#options[1] || "",
@@ -311,7 +317,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    animateText(
+    Animations.animateText(
       this.scene,
       this.#thirdOptionUI,
       this.#options[2] || "",
@@ -320,7 +326,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    animateText(
+    Animations.animateText(
       this.scene,
       this.#fourthOptionUI,
       this.#options[3] || "",
