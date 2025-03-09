@@ -50,8 +50,6 @@ export const level1Config: TileConfig[] = [
 ];
 
 export class Level1 extends BaseScene {
-  #collected_items = 0;
-
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
@@ -60,71 +58,28 @@ export class Level1 extends BaseScene {
     super.preload({ tilesConfig: level1Config });
   }
 
-  create(): void {
-    super.create();
+  async create(): Promise<void> {
+    await super.create();
 
     this.hideElements(
       this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
     );
   }
 
-  defineBehaviors(): void {
-    super.defineBehaviors();
-
-    const fruitsGroup = this.map.assetGroups.get(
-      AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
-    )!;
-    this.physics.add.collider(this.player, fruitsGroup, (_player, item) => {
-      const itemObject = item as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForItems(itemObject);
-    });
-  }
-
-  defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite): void {
-    if (!this.dialog?.isDialogActive()) {
-      this.dialog?.show(npc.name);
-
-      const assetKey = this.dialog?.getAssetKey()!;
-      if (!assetKey) return;
-
-      const assetGroup = this.map.assetGroups.get(assetKey)!;
-      this.showElements(assetGroup);
-      this.awards.setAwardsCount(this.dialog?.getQuantityToCollect() || 0);
-      this.#collected_items = this.dialog?.getQuantityToCollect() || 0;
-    } else if (this.objectBag) {
-      const assetKey = this.dialog?.getAssetKey()!;
-      if (
-        assetKey === this.objectBag.texture.key &&
-        this.dialog?.getQuestGiverNpcId() === npc.name
-      ) {
-        this.#collected_items -= 1;
-        this.awards.setAwardsCount(this.#collected_items);
-        this.objectBag.destroy();
-        this.objectBag = undefined;
-
-        if (this.#collected_items === 0) {
-          this.dialog?.setMessageComplete(npc.name);
-          this.dialog?.show(npc.name);
-        }
-      } else {
-        this.dialog?.show(npc.name);
-      }
-    }
-  }
-
-  #defineBehaviorForItems(item: Phaser.GameObjects.Sprite): void {
-    if (item.visible && !this.objectBag) {
-      this.objectBag = item;
-      this.children.bringToTop(this.objectBag);
-      if (item.body) {
-        const body = item.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = true;
-      }
-    }
-  }
-
   createAnimations(): void {
     Animations.orangeAnimation(this);
     Animations.strawberryAnimation(this);
+  }
+
+  defineInteractions(): void {
+    super.defineInteractions();
+
+    this.physics.add.collider(
+      this.player,
+      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
+      (_player, element) => {
+        this.defineInteractionWithItems(element as Phaser.GameObjects.Sprite);
+      },
+    );
   }
 }
