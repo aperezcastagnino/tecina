@@ -2,51 +2,84 @@ import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { SceneKeys } from "scenes/scene-keys";
 import { BaseScene } from "scenes/base-scene";
-import { TILE_SIZE } from "config/config";
-import { GameObjects } from "phaser";
-import { Awards } from "common-ui/awards";
-import { MAP_WIDTH } from "config/map-config";
-import { HealthBar } from "../utils/health-bar";
 
 export class Level1 extends BaseScene {
-  #total_oranges = 0;
-
-  #collected_oranges = 0;
-
-  #npc_1_show_first_message!: boolean;
-
-  #npc_1_show_first_complete_collect_objects!: boolean;
-
-  #npc_1_show_intermediate_message!: boolean;
-
-  #healthBar!: HealthBar;
-
-  #has_object_in_the_bag!: boolean;
-
-  #bag_objects!: Phaser.GameObjects.Sprite;
-
-  #award!: Awards;
+  #collected_items = 0;
 
   constructor() {
     super(SceneKeys.LEVEL_1);
-
-    this.#npc_1_show_first_message = true;
-    this.#npc_1_show_first_complete_collect_objects = true;
-    this.#npc_1_show_intermediate_message = false;
   }
 
-  create() {
+  create(): void {
     super.create();
 
-    this._hideElements(
-      this._map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
+    this.hideElements(
+      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!,
     );
-    this.#healthBar = new HealthBar(this);
   }
 
-  preload() {
+  preload(): void {
     super.preload(SceneKeys.LEVEL_1);
+  }
 
+  defineBehaviors(): void {
+    super.defineBehaviors();
+
+    const fruitsGroup = this.map.assetGroups.get(
+      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
+    )!;
+    this.physics.add.collider(this.player, fruitsGroup, (_player, item) => {
+      const itemObject = item as Phaser.GameObjects.Sprite;
+      this.#defineBehaviorForItems(itemObject);
+    });
+
+    console.log("total items: ", fruitsGroup.getChildren().length);
+  }
+
+  defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite): void {
+    if (!this.dialog?.isDialogActive()) {
+      this.dialog?.show(npc.name);
+
+      const assetKey = this.dialog?.getAssetKey()!;
+      if (!assetKey) return;
+
+      const assetGroup = this.map.assetGroups.get(assetKey)!;
+      this.showElements(assetGroup);
+      this.awards.setAwardsCount(this.dialog?.getQuantityToCollect() || 0);
+      this.#collected_items = this.dialog?.getQuantityToCollect() || 0;
+    } else if (this.objectBag) {
+      const assetKey = this.dialog?.getAssetKey()!;
+      if (
+        assetKey === this.objectBag.texture.key &&
+        this.dialog?.getQuestGiverNpcId() === npc.name
+      ) {
+        this.#collected_items -= 1;
+        this.awards.setAwardsCount(this.#collected_items);
+        this.objectBag.destroy();
+        this.objectBag = undefined;
+
+        if (this.#collected_items === 0) {
+          this.dialog?.setMessageComplete(npc.name);
+          this.dialog?.show(npc.name);
+        }
+      } else {
+        this.dialog?.show(npc.name);
+      }
+    }
+  }
+
+  #defineBehaviorForItems(item: Phaser.GameObjects.Sprite): void {
+    if (item.visible && !this.objectBag) {
+      this.objectBag = item;
+      this.children.bringToTop(this.objectBag);
+      if (item.body) {
+        const body = item.body as Phaser.Physics.Arcade.Body;
+        body.checkCollision.none = true;
+      }
+    }
+  }
+
+  createAnimations(): void {
     this.anims.create({
       key: AnimationsKeys.ORANGE,
       frames: this.anims.generateFrameNumbers(
@@ -55,137 +88,5 @@ export class Level1 extends BaseScene {
       frameRate: 19,
       repeat: -1,
     });
-  }
-
-  _defineBehaviors() {
-    const treeGroup = this._map.assetGroups.get(AssetKeys.TILES.TREE)!;
-    const orangeGroup = this._map.assetGroups.get(
-      AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-    )!;
-    const npcGroup = this._map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
-
-    this.physics.add.collider(this._player, treeGroup);
-
-    this.#total_oranges = orangeGroup.getChildren().length;
-
-    this.#award = new Awards({
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-      frameRate: 19,
-      padding: 0,
-      scale: 2,
-      scene: this,
-      width: MAP_WIDTH * TILE_SIZE,
-      spriteConfig: {
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
-      },
-    });
-
-    this.physics.add.collider(this._player, npcGroup, (_player, npc) => {
-      const npcSprite = npc as Phaser.GameObjects.Sprite;
-      this.#defineBehaviorForNPCs(npcSprite);
-    });
-  }
-
-  #defineBehaviorForNPCs(npc: Phaser.GameObjects.Sprite) {
-    this.#total_oranges = this._map.assetGroups
-      .get(AssetKeys.ITEMS.FRUITS.ORANGE.NAME)!
-      .getLength();
-
-    if (npc.name === "npc-1" && this.#has_object_in_the_bag) {
-      this.#collected_oranges += 1;
-      this.#award.setAwardsCount(this.#collected_oranges);
-      this.#bag_objects.destroy();
-      this.#has_object_in_the_bag = false;
-      return;
-    }
-    if (this._controls.wasSpaceKeyPressed()) {
-      if (npc.name === "npc-1") {
-        const orangeGroup = this._map.assetGroups.get(
-          AssetKeys.ITEMS.FRUITS.ORANGE.NAME,
-        )!;
-
-        if (this.#npc_1_show_first_message) {
-          this._dialog?.show(npc.name);
-          this._showElements(orangeGroup!);
-          this.physics.add.collider(
-            this._player,
-            orangeGroup,
-            (_player, item) => {
-              const itemObject = item as Phaser.GameObjects.Sprite;
-              this.#defineBehaviorForItems(itemObject);
-            },
-          );
-          this._dialog?.setMessageComplete(npc.name);
-          this.#npc_1_show_first_message = false;
-        } else if (this.#total_oranges > 0) {
-          this._dialog?.show("npc-1");
-          this.#npc_1_show_intermediate_message = true;
-        } else {
-          if (this.#npc_1_show_first_complete_collect_objects) {
-            if (!this.#npc_1_show_intermediate_message) {
-              this._dialog?.setMessageComplete(npc.name);
-            }
-            this.#npc_1_show_first_complete_collect_objects = false;
-          }
-          this._dialog?.show(npc.name);
-        }
-      }
-
-      if (npc.name === "npc-2") {
-        if (this.#total_oranges === 0) {
-          this._dialog?.setMessageComplete(npc.name);
-        }
-        this._dialog?.show(npc.name);
-      }
-    }
-  }
-
-  #defineBehaviorForItems(item: Phaser.GameObjects.Sprite) {
-    if (item.visible && !this.#has_object_in_the_bag) {
-      this.#healthBar.decreaseHealth(30);
-      this.#has_object_in_the_bag = true;
-      this.#bag_objects = item;
-      this.children.bringToTop(this.#bag_objects); // Este método mueve "top" al frente de la pila de renderizado
-      if (item.body) {
-        const body = item.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = true; // Deshabilitar las colisiones del objeto
-      }
-    }
-  }
-
-  update(): void {
-    super.update();
-    if (this.#has_object_in_the_bag) {
-      if (this._controls.wasShiftPressed()) {
-        const dropX = this._player.x + TILE_SIZE;
-        const dropY = this._player.y;
-        const canDrop =
-          this.physics
-            .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
-            .filter(
-              (ol) =>
-                ol.gameObject instanceof GameObjects.Image &&
-                (ol.gameObject.texture.key === AssetKeys.TILES.TREE ||
-                  ol.gameObject.texture.key === AssetKeys.CHARACTERS.NPC),
-            ).length > 0;
-        if (!canDrop) {
-          this.#bag_objects.setPosition(
-            this._player.x + TILE_SIZE,
-            this._player.y,
-          );
-          this.#has_object_in_the_bag = false;
-          if (this.#bag_objects.body) {
-            const body = this.#bag_objects.body as Phaser.Physics.Arcade.Body;
-            body.checkCollision.none = false;
-            body.updateFromGameObject();
-          }
-        }
-      } else {
-        this.#bag_objects.setPosition(this._player.x, this._player.y);
-      }
-    }
   }
 }
