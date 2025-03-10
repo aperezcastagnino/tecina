@@ -217,6 +217,7 @@ export abstract class BaseScene extends Scene {
         body.checkCollision.none = false;
         body.updateFromGameObject();
       }
+      this.objectBag = undefined;
     }
   }
 
