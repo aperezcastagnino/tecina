@@ -141,8 +141,7 @@ export abstract class BaseScene extends Scene {
     } else if (this.objectBag) {
       const assetKey = this.dialog?.getAssetKey()!;
       if (npc.name === this.dialog?.getQuestGiverNpcId()) {
-        debugger
-        if (assetKey !== this.objectBag.texture.key) {
+        if (assetKey === this.objectBag.texture.key) {
           this.#collected_items -= 1;
           this.awards.setAwardsCount(this.#collected_items);
 
@@ -170,10 +169,10 @@ export abstract class BaseScene extends Scene {
         this.player.x,
         this.player.y,
         npcSprite.x,
-        npcSprite.y
+        npcSprite.y,
       );
 
-      if (distance <= 80) {
+      if (distance <= 70) {
         this.defineInteractionWithNPCs(npcSprite);
       }
     });
@@ -203,7 +202,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC)
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -223,7 +222,7 @@ export abstract class BaseScene extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true
+      true,
     );
     this.cameras.main.startFollow(this.player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);

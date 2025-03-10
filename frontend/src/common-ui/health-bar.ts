@@ -58,7 +58,6 @@ export class HealthBar {
       return true;
     }
 
-    debugger
     this.#setMeterPercentage(this.healthPercent);
     return false;
   }
@@ -81,6 +80,8 @@ export class HealthBar {
       .setScrollFactor(0);
     this.#fillBar.displayHeight = this.#fullHeight;
     this.#fillBar.displayWidth = this.#fullWidth;
+
+    this.#updateBarGameObjects();
   }
 
   #setMeterPercentage(percent = 1): void {
@@ -92,8 +93,17 @@ export class HealthBar {
       duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
       ease: Phaser.Math.Easing.Sine.InOut,
       onUpdate: () => {
-        this.#fillBar.visible = this.#fillBar.displayWidth > 0;
-      }
+        this.#updateBarGameObjects();
+      },
     });
+  }
+
+  #updateBarGameObjects() {
+    const constrainedWidth = Math.max(
+      0,
+      Math.min(this.#fillBar.displayWidth, this.#fullWidth),
+    );
+    this.#fillBar.displayWidth = constrainedWidth;
+    this.#fillBar.visible = constrainedWidth > 0;
   }
 }
