@@ -56,7 +56,7 @@ export class HealthBar {
       .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND)
       .setOrigin(0, 0.5)
       .setScrollFactor(0);
-      this.#background.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
+    this.#background.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
     this.#background.displayWidth = this.#originalWidth;
   }
 
