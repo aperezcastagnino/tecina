@@ -17,6 +17,7 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
+import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
@@ -150,7 +151,10 @@ export abstract class BaseScene extends Scene {
             this.dialog?.show(npc.name);
           }
         } else {
-          this.healthBar.decreaseHealth(30);
+          const imDead = this.healthBar.decreaseHealth(30);
+          if (imDead) {
+            this.scene.start(SceneKeys.GAME_OVER);
+          }
         }
 
         this.objectBag.destroy();

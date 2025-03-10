@@ -16,26 +16,9 @@ export class HealthBar {
 
   #background!: Phaser.GameObjects.Image;
 
-  #fullWidth!: number;
-
-  #fullHeight!: number;
+  #originalWidth: number;
 
   #healthPercent: number = 100;
-
-  constructor(scene: Phaser.Scene) {
-    this.#scene = scene;
-    this.#fullWidth = HEALTH_BAR_CONFIG.WIDTH;
-    this.#fullHeight = HEALTH_BAR_CONFIG.HEIGHT;
-
-    this.createUI(HEALTH_BAR_CONFIG.POSITION_X, HEALTH_BAR_CONFIG.POSITION_Y);
-  }
-
-  createUI(x: number, y: number): void {
-    this.#createBackgroundBar();
-    this.#createBarImages();
-
-    this.#scene.add.container(x, y, [this.#background, this.#fillBar]);
-  }
 
   get healthPercent(): number {
     return this.#healthPercent;
@@ -43,67 +26,57 @@ export class HealthBar {
 
   set healthPercent(value: number) {
     this.#healthPercent = Phaser.Math.Clamp(value, 0, 100);
-    this.#setMeterPercentage(this.#healthPercent / 100);
+    this.#setFillBarPercentage(this.#healthPercent / 100);
+  }
+
+  constructor(scene: Phaser.Scene) {
+    this.#scene = scene;
+    this.#originalWidth = HEALTH_BAR_CONFIG.WIDTH;
+
+    this.createUI(HEALTH_BAR_CONFIG.POSITION_X, HEALTH_BAR_CONFIG.POSITION_Y);
+  }
+
+  createUI(x: number, y: number): void {
+    this.#createBackgroundBar();
+    this.#createFillBar();
+    this.#scene.add.container(x, y, [this.#background, this.#fillBar]);
   }
 
   increaseHealth(amount: number): void {
     this.healthPercent += amount;
-    this.#setMeterPercentage(this.healthPercent);
   }
 
   decreaseHealth(amount: number): boolean {
-    this.#healthPercent -= amount;
-    if (this.#healthPercent <= 0) {
-      this.#scene.scene.start("GAME_OVER");
-      return true;
-    }
-
-    this.#setMeterPercentage(this.healthPercent);
-    return false;
+    this.healthPercent -= amount;
+    return this.healthPercent <= 0;
   }
 
   #createBackgroundBar(): void {
     this.#background = this.#scene.add
       .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND)
       .setOrigin(0, 0.5)
-      .setScale(1)
       .setScrollFactor(0);
-    this.#background.displayWidth = this.#fullWidth;
-    this.#background.displayHeight = this.#fullHeight;
+      this.#background.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
+    this.#background.displayWidth = this.#originalWidth;
   }
 
-  #createBarImages(): void {
+  #createFillBar(): void {
     this.#fillBar = this.#scene.add
       .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.FILL)
       .setOrigin(0, 0.5)
-      .setScale(1, 0)
       .setScrollFactor(0);
-    this.#fillBar.displayHeight = this.#fullHeight;
-    this.#fillBar.displayWidth = this.#fullWidth;
-
-    this.#updateBarGameObjects();
+    this.#fillBar.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
+    this.#fillBar.displayWidth = this.#originalWidth;
   }
 
-  #setMeterPercentage(percent = 1): void {
-    const width = this.#fullWidth * percent;
+  #setFillBarPercentage(percent = 1): void {
+    const width = this.#originalWidth * percent;
 
     this.#scene.tweens.add({
       targets: this.#fillBar,
       displayWidth: width,
       duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
       ease: Phaser.Math.Easing.Sine.InOut,
-      onUpdate: () => {
-        this.#updateBarGameObjects();
-      },
     });
-  }
-
-  #updateBarGameObjects() {
-    const constrainedWidth = Math.max(
-      0,
-      Math.min(this.#fillBar.displayWidth, this.#fullWidth),
-    );
-    this.#fillBar.displayWidth = constrainedWidth;
-    this.#fillBar.visible = constrainedWidth > 0;
   }
 }
