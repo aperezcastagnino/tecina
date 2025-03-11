@@ -2,8 +2,8 @@ import { AssetKeys } from "assets/asset-keys";
 import { GAME_DIMENSIONS } from "config/config";
 
 const HEALTH_BAR_CONFIG = {
-  WIDTH: GAME_DIMENSIONS.WIDTH / 5,
-  HEIGHT: GAME_DIMENSIONS.HEIGHT / 3.5,
+  WIDTH: GAME_DIMENSIONS.WIDTH / 7,
+  HEIGHT: GAME_DIMENSIONS.HEIGHT / 4,
   POSITION_X: 50,
   POSITION_Y: 100,
   TWEEN_DURATION: 300,
