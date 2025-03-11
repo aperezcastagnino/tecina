@@ -1,7 +1,5 @@
 import Phaser from "phaser";
-import { buttonStyles } from "config/menu-styles";
 import { SceneKeys } from "./scene-keys";
-import { TextButton } from "common-ui/text-button";
 import { AssetKeys } from "assets/asset-keys";
 
 export default class LevelsMenu extends Phaser.Scene {
