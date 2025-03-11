@@ -76,7 +76,7 @@ export class Preloader extends Scene {
     this.load.image(AssetKeys.TILES.TREE, "/tiles/tree.png");
     this.load.image(AssetKeys.TILES.FLOWER_GRASS, "/tiles/flower_grass.png");
     this.load.image(
-      AssetKeys.ITEMS.BUTTONS.CIRCLE,
+      AssetKeys.OBJECTS.BUTTONS.CIRCLE,
       "/items/buttons/circle.png",
     );
 

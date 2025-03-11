@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import { SceneKeys } from "./scene-keys";
 import { AssetKeys } from "assets/asset-keys";
+import { SceneKeys } from "./scene-keys";
 
 export default class LevelsMenu extends Phaser.Scene {
   constructor() {
@@ -30,7 +30,7 @@ export default class LevelsMenu extends Phaser.Scene {
 
     positions.forEach((pos, index) => {
       const button = this.add
-        .image(pos.x, pos.y, AssetKeys.ITEMS.BUTTONS.CIRCLE) // they all have the same image
+        .image(pos.x, pos.y, AssetKeys.OBJECTS.BUTTONS.CIRCLE) // they all have the same image
         .setInteractive({ useHandCursor: true })
         .setScale(0.4)
         .on("pointerdown", () => this.startLevel(index + 1))
