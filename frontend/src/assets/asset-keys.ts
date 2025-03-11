@@ -33,8 +33,4 @@ export const AssetKeys = {
       CIRCLE: "CIRCLE",
     },
   },
-  HEALTH_BAR: {
-    MIDDLE_GREEN: "MIDDLE_GREEN",
-    MIDDLE_SHADOW: "MIDDLE_SHADOW",
-  },
 };

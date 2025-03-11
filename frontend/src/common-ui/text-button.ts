@@ -32,11 +32,11 @@ export class TextButton extends Phaser.GameObjects.Text {
   }
 
   #enterButtonHoverState() {
-    this.setStyle(this.#buttonHoverStyle ?? { fill: "#0ff" });
+    this.setStyle(this.#buttonHoverStyle ?? { fill: "#ff0" });
   }
 
   #enterButtonRestState() {
-    this.setStyle(this.#buttonRestStyle ?? { fill: "#0ff" });
+    this.setStyle(this.#buttonRestStyle ?? { fill: "#0f0" });
   }
 
   #enterButtonActiveState() {
