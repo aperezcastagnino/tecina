@@ -15,48 +15,45 @@ export default class LevelsMenu extends Phaser.Scene {
 
   create() {
     const background = this.add
-      .image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU)
+      .image(0, 0, AssetKeys.BACKGROUNDS.LEVELS)
       .setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
 
-    const buttonGrid = {
-      rows: 3,
-      cols: 3,
-      buttonWidth: buttonStyles.startButton.width,
-      buttonHeight: buttonStyles.startButton.height,
-      spacing: 30,
-    };
+    const positions = [
+      { x: 360, y: 430 },
+      { x: 620, y: 650 },
+      { x: 1050, y: 550 },
+      { x: 860, y: 180 },
+      { x: 1500, y: 550 },
+      { x: 1550, y: 240 },
+      { x: 1090, y: 900 },
+    ];
 
-    const startX =
-      (this.sys.canvas.width -
-        (buttonGrid.cols * buttonGrid.buttonWidth +
-          (buttonGrid.cols - 1) * buttonGrid.spacing)) /
-      2;
-    const startY =
-      (this.sys.canvas.height -
-        (buttonGrid.rows * buttonGrid.buttonHeight +
-          (buttonGrid.rows - 1) * buttonGrid.spacing)) /
-      2;
-
-    for (let row = 0; row < buttonGrid.rows; row++) {
-      for (let col = 0; col < buttonGrid.cols; col++) {
-        const x = startX + col * (buttonGrid.buttonWidth + buttonGrid.spacing);
-        const y = startY + row * (buttonGrid.buttonHeight + buttonGrid.spacing);
-        const levelNumber = row * buttonGrid.cols + col + 1;
-        const levelButton = new TextButton(
-          this,
-          x,
-          y,
-          `Level ${levelNumber}`,
-          buttonStyles.startButton,
-          () => this.startLevel(levelNumber),
-        );
-        levelButton.setSize(buttonGrid.buttonWidth, buttonGrid.buttonHeight);
-        this.add.existing(levelButton);
+    positions.forEach((pos, index) => {
+      const button = this.add
+        .image(pos.x, pos.y, AssetKeys.ITEMS.BUTTONS.CIRCLE) // they all have the same image
+        .setInteractive({ useHandCursor: true })
+        .setScale(0.4)
+        .on("pointerdown", () => this.startLevel(index + 1))
+        .setName(`levelImageButton${index + 1}`);
+      if (index >= 1) {
+        // Apply grey tint to all buttons except the first one
+        button.setTint(0x808080);
       }
+      this.add.existing(button);
+    });
+  }
+
+  enableLevelButton(levelNumber: number) {
+    const button = this.children.getByName(
+      `levelImageButton${levelNumber}`,
+    ) as Phaser.GameObjects.Image;
+    if (button) {
+      button.clearTint(); // Adds color to the button
     }
   }
+
   startGame() {
     this.scene.start(SceneKeys.LEVEL_1);
   }

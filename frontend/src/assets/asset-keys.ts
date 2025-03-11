@@ -1,6 +1,7 @@
 export const AssetKeys = {
   BACKGROUNDS: {
     MAIN_MENU: "MAIN-MENU-BACKGROUND",
+    LEVELS: "LEVELS-BACKGROUND",
   },
   DATA: {
     ANIMATIONS: "ANIMATIONS",
@@ -27,6 +28,9 @@ export const AssetKeys = {
         STAR_FRAME: 0,
         END_FRAME: 17,
       },
+    },
+    BUTTONS: {
+      CIRCLE: "CIRCLE",
     },
   },
   HEALTH_BAR: {

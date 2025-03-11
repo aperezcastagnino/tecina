@@ -35,6 +35,11 @@ export class Preloader extends Scene {
       `/backgrounds/main-menu-background.png`,
     );
 
+    this.load.image(
+      AssetKeys.BACKGROUNDS.LEVELS,
+      `/backgrounds/levels-background.png`,
+    );
+
     // Load data
     this.load.json("level_1", "/data/level_1.json");
     this.load.json("level_deprecated", "/data/level_deprecated.json");
@@ -80,6 +85,10 @@ export class Preloader extends Scene {
     this.load.image(AssetKeys.TILES.FLOWER, "/tiles/flower.png");
     this.load.image(AssetKeys.TILES.TREE, "/tiles/tree.png");
     this.load.image(AssetKeys.TILES.FLOWER_GRASS, "/tiles/flower_grass.png");
+    this.load.image(
+      AssetKeys.ITEMS.BUTTONS.CIRCLE,
+      "/items/buttons/circle.png",
+    );
 
     // Load items
     this.load.spritesheet(
