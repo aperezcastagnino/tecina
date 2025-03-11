@@ -3,9 +3,6 @@ export const AssetKeys = {
     MAIN_MENU: "MAIN-MENU-BACKGROUND",
     LEVELS: "LEVELS-BACKGROUND",
   },
-  DATA: {
-    ANIMATIONS: "ANIMATIONS",
-  },
   CHARACTERS: {
     PLAYER: "PLAYER",
     NPC: "NPC",
@@ -19,10 +16,19 @@ export const AssetKeys = {
     TREE: "TREE",
     FLOWER_GRASS: "FLOWER_GRASS",
   },
-  ITEMS: {
+  OBJECTS: {
     FRUITS: {
       ORANGE: {
-        NAME: "ORANGE",
+        ASSET_KEY: "ORANGE",
+        ANIMATION_KEY: "ORANGE_ANIMATION",
+        FRAME_WIDTH: 32,
+        FRAME_HEIGHT: 32,
+        STAR_FRAME: 0,
+        END_FRAME: 17,
+      },
+      STRAWBERRY: {
+        ASSET_KEY: "STRAWBERRY",
+        ANIMATION_KEY: "STRAWBERRY_ANIMATION",
         FRAME_WIDTH: 32,
         FRAME_HEIGHT: 32,
         STAR_FRAME: 0,
