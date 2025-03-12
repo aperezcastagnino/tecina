@@ -9,6 +9,7 @@ export const AssetKeys = {
   },
   UI_COMPONENTS: {
     CURSOR: "CURSOR",
+    BUTTON_CIRCLE: "BUTTON_CIRCLE",
   },
   TILES: {
     GRASS: "GRASS",
@@ -34,9 +35,6 @@ export const AssetKeys = {
         STAR_FRAME: 0,
         END_FRAME: 17,
       },
-    },
-    BUTTONS: {
-      CIRCLE: "CIRCLE",
     },
   },
 };

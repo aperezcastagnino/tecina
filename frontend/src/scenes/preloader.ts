@@ -69,16 +69,16 @@ export class Preloader extends Scene {
       AssetKeys.UI_COMPONENTS.CURSOR,
       `/ui-components/cursor.png`,
     );
+    this.load.image(
+      AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE,
+      "/ui-components/button-circle.png",
+    );
 
     // Load tiles
     this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
     this.load.image(AssetKeys.TILES.FLOWER, "/tiles/flower.png");
     this.load.image(AssetKeys.TILES.TREE, "/tiles/tree.png");
     this.load.image(AssetKeys.TILES.FLOWER_GRASS, "/tiles/flower_grass.png");
-    this.load.image(
-      AssetKeys.OBJECTS.BUTTONS.CIRCLE,
-      "/items/buttons/circle.png",
-    );
 
     // Load items
     this.load.spritesheet(

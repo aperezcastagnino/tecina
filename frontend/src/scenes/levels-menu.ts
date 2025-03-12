@@ -7,10 +7,6 @@ export default class LevelsMenu extends Phaser.Scene {
     super(SceneKeys.LEVELS_MENU);
   }
 
-  preload() {
-    // Load any assets here if needed
-  }
-
   create() {
     const background = this.add
       .image(0, 0, AssetKeys.BACKGROUNDS.LEVELS)
@@ -30,7 +26,7 @@ export default class LevelsMenu extends Phaser.Scene {
 
     positions.forEach((pos, index) => {
       const button = this.add
-        .image(pos.x, pos.y, AssetKeys.OBJECTS.BUTTONS.CIRCLE) // they all have the same image
+        .image(pos.x, pos.y, AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE) // they all have the same image
         .setInteractive({ useHandCursor: true })
         .setScale(0.4)
         .on("pointerdown", () => this.startLevel(index + 1))
@@ -50,10 +46,6 @@ export default class LevelsMenu extends Phaser.Scene {
     if (button) {
       button.clearTint(); // Adds color to the button
     }
-  }
-
-  startGame() {
-    this.scene.start(SceneKeys.LEVEL_1);
   }
 
   startLevel(levelNumber: number) {

@@ -2,11 +2,11 @@ import { Game, type Types } from "phaser";
 import { GAME_DIMENSIONS } from "config/config";
 import { LevelDeprecated } from "./scenes/level-deprecated";
 import { Boot } from "./scenes/boot";
-import { Level1 } from "./scenes/level1";
 import { MainMenu } from "./scenes/main-menu";
+import LevelsMenu from "./scenes/levels-menu";
+import { Level1 } from "./scenes/level1";
 import { Preloader } from "./scenes/preloader";
 import { GameOver } from "./scenes/game-over";
-import LevelsMenu from "./scenes/levels-menu";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.WEBGL,
@@ -26,10 +26,10 @@ const config: Types.Core.GameConfig = {
     Boot,
     Preloader,
     MainMenu,
+    LevelsMenu,
     Level1,
     GameOver,
     LevelDeprecated,
-    LevelsMenu,
   ],
 };
 
