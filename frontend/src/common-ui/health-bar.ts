@@ -12,7 +12,9 @@ const HEALTH_BAR_CONFIG = {
 export class HealthBar {
   #scene: Phaser.Scene;
 
-  #fillBar!: Phaser.GameObjects.Image;
+  #fillBarLeft!: Phaser.GameObjects.Image;
+
+  #fillBarRight!: Phaser.GameObjects.Image;
 
   #background!: Phaser.GameObjects.Image;
 
@@ -39,7 +41,8 @@ export class HealthBar {
   createUI(x: number, y: number): void {
     this.#createBackgroundBar();
     this.#createFillBar();
-    this.#scene.add.container(x, y, [this.#background, this.#fillBar]);
+    
+    this.#scene.add.container(x, y, [this.#background, this.#fillBarLeft, this.#fillBarRight]);
   }
 
   increaseHealth(amount: number): void {
@@ -53,7 +56,7 @@ export class HealthBar {
 
   #createBackgroundBar(): void {
     this.#background = this.#scene.add
-      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND)
+      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.ASSET_KEY)
       .setOrigin(0, 0.5)
       .setScrollFactor(0);
     this.#background.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
@@ -61,19 +64,41 @@ export class HealthBar {
   }
 
   #createFillBar(): void {
-    this.#fillBar = this.#scene.add
-      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.FILL)
+    this.#fillBarLeft = this.#scene.add
+      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.ASSET_KEY)
       .setOrigin(0, 0.5)
       .setScrollFactor(0);
-    this.#fillBar.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
-    this.#fillBar.displayWidth = this.#originalWidth;
+    this.#fillBarLeft.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
+    this.#fillBarLeft.displayWidth = AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.WIDTH*this.#originalWidth / AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.WIDTH;
+    
+    this.#fillBarRight = this.#scene.add
+      .image(this.#originalWidth * 0.25, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.RIGHT.ASSET_KEY)
+      .setOrigin(0, 0.5)
+      .setScrollFactor(0);
+    this.#fillBarRight.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
+    this.#fillBarRight.displayWidth = this.#originalWidth * 0.75;
+  
   }
 
   #setFillBarPercentage(percent = 1): void {
     const width = this.#originalWidth * percent;
-
+    if(percent < 0.01){
+      this.#scene.tweens.add({
+        targets: this.#fillBarRight,
+        displayWidth: 0,
+        duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
+        ease: Phaser.Math.Easing.Sine.InOut,
+      });    
+      this.#scene.tweens.add({
+        targets: this.#fillBarLeft,
+        displayWidth: 0,
+        duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
+        ease: Phaser.Math.Easing.Sine.InOut,
+      });    
+    }
+    else
     this.#scene.tweens.add({
-      targets: this.#fillBar,
+      targets: this.#fillBarRight,
       displayWidth: width,
       duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
       ease: Phaser.Math.Easing.Sine.InOut,

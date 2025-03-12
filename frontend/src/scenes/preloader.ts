@@ -69,12 +69,16 @@ export class Preloader extends Scene {
       "/ui-components/cursor.png",
     );
     this.load.image(
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND,
+      AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.ASSET_KEY,
       "/ui-components/health-bar-background.png",
     );
     this.load.image(
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.FILL,
-      "/ui-components/health-bar-fill.png",
+      AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.ASSET_KEY,
+      "/ui-components/health-bar-fill-left.png",
+    );
+    this.load.image(
+      AssetKeys.UI_COMPONENTS.HEALTH_BAR.RIGHT.ASSET_KEY,
+      "/ui-components/health-bar-fill-right.png",
     );
     this.load.image(
       AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE,

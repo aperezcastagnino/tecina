@@ -10,8 +10,18 @@ export const AssetKeys = {
   UI_COMPONENTS: {
     CURSOR: "CURSOR",
     HEALTH_BAR: {
-      FILL: "HEALTH_BAR_FILL",
-      BACKGROUND: "HEALTH_BAR_BACKGROUND",
+      LEFT: {
+        ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
+        WIDTH: 235,
+      },
+      RIGHT: {
+        ASSET_KEY: "HEALTH_BAR_FILL_RIGHT",
+        WIDTH: 690,
+      },
+      BACKGROUND: {
+        ASSET_KEY: "HEALTH_BAR_BACKGROUND",
+        WIDTH: 928,
+      },
     },
     BUTTON_CIRCLE: "BUTTON_CIRCLE",
   },
