@@ -1,6 +1,7 @@
 export const AssetKeys = {
   BACKGROUNDS: {
     MAIN_MENU: "MAIN-MENU-BACKGROUND",
+    LEVELS: "LEVELS-BACKGROUND",
   },
   CHARACTERS: {
     PLAYER: "PLAYER",
@@ -8,6 +9,7 @@ export const AssetKeys = {
   },
   UI_COMPONENTS: {
     CURSOR: "CURSOR",
+    BUTTON_CIRCLE: "BUTTON_CIRCLE",
   },
   TILES: {
     GRASS: "GRASS",
