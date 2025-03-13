@@ -24,7 +24,7 @@ export class Awards {
 
   constructor(config: AwardConfig) {
     this.#positionX = config.width - config.padding;
-    this.#positionY = (config.spriteConfig.frameHeight! / 2)
+    this.#positionY = config.spriteConfig.frameHeight! / 2;
     this.#spriteConfig = config.spriteConfig;
     this.#scene = config.scene;
     this.#assetKey = config.assetKey;
@@ -42,8 +42,7 @@ export class Awards {
     for (let i = 0; i < count; i += 1) {
       const sprite = this.#scene.add
         .sprite(
-          this.#positionX -
-            this.#spriteConfig.frameWidth * (i + initialLength),
+          this.#positionX - this.#spriteConfig.frameWidth * (i + initialLength),
           this.#positionY,
           this.#assetKey,
         )

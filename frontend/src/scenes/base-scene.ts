@@ -238,7 +238,6 @@ export abstract class BaseScene extends Scene {
       assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
       frameRate: 19,
       padding: 0,
-      scale: 2,
       scene: this,
       width: MAP_WIDTH * TILE_SIZE,
       spriteConfig: {
