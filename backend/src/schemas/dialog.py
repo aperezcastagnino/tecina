@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 class Dialog(BaseModel):
@@ -14,5 +14,5 @@ class Dialog(BaseModel):
     hintsIAGenerated: List[str]
     assetKey: str
     quantityToCollect: int
-    options: List[str]
-    correctOption: str
+    options: Optional[List[str]] = None
+    correctOption: Optional[str] = None

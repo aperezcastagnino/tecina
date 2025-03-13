@@ -1,28 +1,22 @@
-from typing import List
+from src.services.gemini import GeminiService
 from fastapi import APIRouter
 from src.schemas.dialog import Dialog
-from src.services.gemini import GeminiService
+from concurrent.futures import ThreadPoolExecutor
 
 router = APIRouter()
 
 @router.post("", response_model=Dialog)
-def get_items(
-    jsonObject: Dialog
-) -> Dialog:
-    previousText = "Give me only, without presentation text, paraphrases of the following sentences as an array separated by ';':"
+def get_paraphrase(dialogData: Dialog) -> Dialog:
+    previousPrompt = "Give me only, without presentation text, paraphrases of the following sentences as an array separated by ';':"
     
-    process_paraphrase("questStart", previousText, jsonObject)
-    process_paraphrase("questInProgress", previousText, jsonObject)
-    process_paraphrase("questFinished", previousText, jsonObject)
+    with ThreadPoolExecutor() as executor:
+        futures = [
+            executor.submit(GeminiService.process_paraphrase, "questStart", previousPrompt, dialogData),
+            executor.submit(GeminiService.process_paraphrase, "questInProgress", previousPrompt, dialogData),
+            executor.submit(GeminiService.process_paraphrase, "questFinished", previousPrompt, dialogData),
+        ]
 
-    return jsonObject 
+        for future in futures:
+            future.result() 
 
-
-def process_paraphrase(questKey, previousText, jsonObject):
-    if hasattr(jsonObject, questKey): 
-        questToParaphrases = getattr(jsonObject, questKey)
-        modelResponse = GeminiService.get_paraphrase(previousText + ";".join(questToParaphrases))
-        
-        generated_key = f"{questKey}IAGenerated"
-        setattr(jsonObject, generated_key, [x.strip() for x in modelResponse.split(";")])
-        
+    return dialogData
