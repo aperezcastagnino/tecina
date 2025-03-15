@@ -22,7 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.position.x,
       config.position.y,
       AssetKeys.CHARACTERS.PLAYER,
-      config.frame
+      config.frame,
     );
 
     this.isMoving = false;
@@ -41,14 +41,21 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.anims.stop();
       this.setVelocity(0);
     } else {
-      if (direction === DIRECTION.UP) {
-        this.setVelocity(0, -this.#velocity);
-      } else if (direction === DIRECTION.DOWN) {
-        this.setVelocity(0, this.#velocity);
-      } else if (direction === DIRECTION.LEFT) {
-        this.setVelocity(-this.#velocity, 0);
-      } else if (direction === DIRECTION.RIGHT) {
-        this.setVelocity(this.#velocity, 0);
+      switch (direction) {
+        case DIRECTION.UP:
+          this.setVelocity(0, -this.#velocity);
+          break;
+        case DIRECTION.DOWN:
+          this.setVelocity(0, this.#velocity);
+          break;
+        case DIRECTION.LEFT:
+          this.setVelocity(-this.#velocity, 0);
+          break;
+        case DIRECTION.RIGHT:
+          this.setVelocity(this.#velocity, 0);
+          break;
+        default:
+          this.setVelocity(0, 0);
       }
 
       this.isMoving = true;

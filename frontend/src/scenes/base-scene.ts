@@ -17,8 +17,8 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
-import { SceneKeys } from "./scene-keys";
 import { DIRECTION } from "common/player-keys";
+import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
@@ -174,7 +174,7 @@ export abstract class BaseScene extends Scene {
         this.player.x,
         this.player.y,
         npcSprite.x,
-        npcSprite.y
+        npcSprite.y,
       );
 
       if (distance <= 70) {
@@ -200,18 +200,24 @@ export abstract class BaseScene extends Scene {
     const playerDirection = this.player.getDirection();
     let dropX = 0;
     let dropY = 0;
-    if (playerDirection === DIRECTION.UP) {
-      dropX = this.player.x;
-      dropY = this.player.y - TILE_SIZE;
-    } else if (playerDirection === DIRECTION.DOWN) {
-      dropX = this.player.x;
-      dropY = this.player.y + TILE_SIZE;
-    } else if (playerDirection === DIRECTION.LEFT) {
-      dropX = this.player.x - TILE_SIZE;
-      dropY = this.player.y;
-    } else if (playerDirection === DIRECTION.RIGHT) {
-      dropX = this.player.x + TILE_SIZE;
-      dropY = this.player.y;
+    switch (playerDirection) {
+      case DIRECTION.UP:
+        dropX = this.player.x;
+        dropY = this.player.y - TILE_SIZE;
+        break;
+      case DIRECTION.DOWN:
+        dropX = this.player.x;
+        dropY = this.player.y + TILE_SIZE;
+        break;
+      case DIRECTION.LEFT:
+        dropX = this.player.x - TILE_SIZE;
+        dropY = this.player.y;
+        break;
+      case DIRECTION.RIGHT:
+        dropX = this.player.x + TILE_SIZE;
+        dropY = this.player.y;
+        break;
+      default:
     }
 
     const canDrop =
@@ -221,7 +227,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC)
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -242,7 +248,7 @@ export abstract class BaseScene extends Scene {
       0,
       MAP_WIDTH * TILE_SIZE * 400,
       MAP_HEIGHT * TILE_SIZE * 400,
-      true
+      true,
     );
     this.cameras.main.startFollow(this.player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
