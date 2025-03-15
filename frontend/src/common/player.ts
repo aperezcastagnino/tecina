@@ -22,7 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.position.x,
       config.position.y,
       AssetKeys.CHARACTERS.PLAYER,
-      config.frame,
+      config.frame
     );
 
     this.isMoving = false;
@@ -55,5 +55,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.#direction = direction;
       this.anims.play(`PLAYER_${this.#direction}_ANIMATION`, true);
     }
+  }
+
+  getDirection(): Direction {
+    return this.#direction;
   }
 }
