@@ -2,7 +2,6 @@ export type AwardConfig = {
   scene: Phaser.Scene;
   width: number;
   padding: number;
-  scale?: number;
   frameRate: number;
   assetKey: string;
   spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
@@ -10,8 +9,6 @@ export type AwardConfig = {
 
 export class Awards {
   #scene: Phaser.Scene;
-
-  #scale: number;
 
   #positionX: number;
 
@@ -23,12 +20,11 @@ export class Awards {
 
   #keyAnim: string;
 
-  #sprites: Phaser.GameObjects.Sprite[];
+  #sprites: Phaser.GameObjects.Sprite[] = [];
 
   constructor(config: AwardConfig) {
-    this.#scale = config.scale ?? 1;
     this.#positionX = config.width - config.padding;
-    this.#positionY = (config.spriteConfig.frameHeight! / 2) * this.#scale;
+    this.#positionY = config.spriteConfig.frameHeight! / 2;
     this.#spriteConfig = config.spriteConfig;
     this.#scene = config.scene;
     this.#assetKey = config.assetKey;
@@ -39,7 +35,6 @@ export class Awards {
       frameRate: config.frameRate,
       repeat: -1,
     });
-    this.#sprites = [];
   }
 
   #addAnims(count: number): void {
@@ -47,12 +42,10 @@ export class Awards {
     for (let i = 0; i < count; i += 1) {
       const sprite = this.#scene.add
         .sprite(
-          this.#positionX -
-            this.#spriteConfig.frameWidth * (i + initialLength) * this.#scale,
+          this.#positionX - this.#spriteConfig.frameWidth * (i + initialLength),
           this.#positionY,
           this.#assetKey,
         )
-        .setScale(this.#scale)
         .setScrollFactor(0);
 
       this.#sprites.push(sprite);

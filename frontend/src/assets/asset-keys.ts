@@ -9,6 +9,20 @@ export const AssetKeys = {
   },
   UI_COMPONENTS: {
     CURSOR: "CURSOR",
+    HEALTH_BAR: {
+      LEFT: {
+        ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
+        WIDTH: 235,
+      },
+      RIGHT: {
+        ASSET_KEY: "HEALTH_BAR_FILL_RIGHT",
+        WIDTH: 690,
+      },
+      BACKGROUND: {
+        ASSET_KEY: "HEALTH_BAR_BACKGROUND",
+        WIDTH: 928,
+      },
+    },
     BUTTON_CIRCLE: "BUTTON_CIRCLE",
   },
   TILES: {
@@ -17,7 +31,7 @@ export const AssetKeys = {
     TREE: "TREE",
     FLOWER_GRASS: "FLOWER_GRASS",
   },
-  OBJECTS: {
+  ITEMS: {
     FRUITS: {
       ORANGE: {
         ASSET_KEY: "ORANGE",

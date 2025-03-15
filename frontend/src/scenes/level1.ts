@@ -36,14 +36,14 @@ export const level1Config: TileConfig[] = [
   {
     tile: {
       type: TileType.INTERACTIVE_OBJECT,
-      asset: AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY,
+      asset: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
     },
     frequency: 2,
   },
   {
     tile: {
       type: TileType.INTERACTIVE_OBJECT,
-      asset: AssetKeys.OBJECTS.FRUITS.STRAWBERRY.ASSET_KEY,
+      asset: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
     },
     frequency: 10,
   },
@@ -62,7 +62,7 @@ export class Level1 extends BaseScene {
     await super.create();
 
     this.hideElements(
-      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
+      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY)!,
     );
   }
 
@@ -76,7 +76,15 @@ export class Level1 extends BaseScene {
 
     this.physics.add.collider(
       this.player,
-      this.map.assetGroups.get(AssetKeys.OBJECTS.FRUITS.ORANGE.ASSET_KEY)!,
+      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY)!,
+      (_player, element) => {
+        this.defineInteractionWithItems(element as Phaser.GameObjects.Sprite);
+      },
+    );
+
+    this.physics.add.collider(
+      this.player,
+      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY)!,
       (_player, element) => {
         this.defineInteractionWithItems(element as Phaser.GameObjects.Sprite);
       },
