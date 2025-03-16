@@ -5,5 +5,4 @@ export const SceneKeys = {
   LEVELS_MENU: "LEVELS_MENU",
   LEVEL_1: "LEVEL_1",
   GAME_OVER: "GAME_OVER",
-  LEVEL_DEPRECATED: "LEVEL_DEPRECATED",
 };

@@ -1,6 +1,5 @@
 import { Game, type Types } from "phaser";
 import { GAME_DIMENSIONS } from "config/config";
-import { LevelDeprecated } from "./scenes/level-deprecated";
 import { Boot } from "./scenes/boot";
 import { MainMenu } from "./scenes/main-menu";
 import LevelsMenu from "./scenes/levels-menu";
@@ -22,15 +21,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [
-    Boot,
-    Preloader,
-    MainMenu,
-    LevelsMenu,
-    Level1,
-    GameOver,
-    LevelDeprecated,
-  ],
+  scene: [Boot, Preloader, MainMenu, LevelsMenu, Level1, GameOver],
 };
 
 export default new Game(config);
