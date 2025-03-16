@@ -17,6 +17,7 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
+import { DIRECTION } from "common/player-keys";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -97,7 +98,7 @@ export abstract class BaseScene extends Scene {
   }
 
   makeItemDraggable(groupName: string): void {
-    this.physics.add.overlap(
+    this.physics.add.collider(
       this.player,
       this.map.assetGroups.get(groupName)!,
       (_player, element) => {
@@ -230,8 +231,31 @@ export abstract class BaseScene extends Scene {
   }
 
   private tryDropHeldItem() {
-    const dropX = this.player.x + TILE_SIZE;
-    const dropY = this.player.y;
+    const playerDirection = this.player.direction;
+    let dropX = 0;
+    let dropY = 0;
+    switch (playerDirection) {
+      case DIRECTION.UP:
+        dropX = this.player.x;
+        dropY = this.player.y - TILE_SIZE;
+        break;
+      case DIRECTION.DOWN:
+        dropX = this.player.x;
+        dropY = this.player.y + TILE_SIZE;
+        break;
+      case DIRECTION.LEFT:
+        dropX = this.player.x - TILE_SIZE;
+        dropY = this.player.y;
+        break;
+      case DIRECTION.RIGHT:
+        dropX = this.player.x + TILE_SIZE;
+        dropY = this.player.y;
+        break;
+      default:
+        console.error(`Unexpected player direction: ${playerDirection}`);
+        dropX = this.player.x;
+        dropY = this.player.y;
+    }
 
     const canDrop =
       this.physics
@@ -239,8 +263,8 @@ export abstract class BaseScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            ol.gameObject.texture.key !== AssetKeys.TILES.TREE &&
-            ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC,
+            (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
         ).length === 0;
 
     if (canDrop) {
