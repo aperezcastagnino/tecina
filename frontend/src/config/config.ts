@@ -10,7 +10,7 @@ export const DEBUG_MODE_ACTIVE = 1;
 export const FIRST_SCENE_TO_PLAY = SceneKeys.LEVEL_1;
 
 // MAP
-export const MAP_WIDTH = 12;
-export const MAP_HEIGHT = 12;
+export const MAP_WIDTH = 24;
+export const MAP_HEIGHT = 24;
 export const MIN_PARTITION_SIZE = 5; // MIN_PARTITION_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2

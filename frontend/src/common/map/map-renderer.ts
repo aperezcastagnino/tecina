@@ -11,18 +11,18 @@ export class MapRenderer {
 
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
-        const x = TILE_SIZE + column * TILE_SIZE;
-        const y = TILE_SIZE + row * TILE_SIZE;
+        const x = TILE_SIZE/2 + column * TILE_SIZE;
+        const y = TILE_SIZE/2 + row * TILE_SIZE;
 
         const tile = map.tiles[row]![column]!;
 
-        this.#ensureAssetGroup(scene, map, tile.asset, tile.type);
-        this.#renderTile(scene, map, x, y, tile.asset, tile.type);
+        this.ensureAssetGroup(scene, map, tile.asset, tile.type);
+        this.renderTile(scene, map, x, y, tile.asset, tile.type);
       }
     }
   }
 
-  static #ensureAssetGroup(
+  private static ensureAssetGroup(
     scene: Scene,
     map: MapStructure,
     assetName: string,
@@ -35,7 +35,7 @@ export class MapRenderer {
     }
   }
 
-  static #renderTile(
+  private static renderTile(
     scene: Scene,
     map: MapStructure,
     x: number,
@@ -45,20 +45,20 @@ export class MapRenderer {
   ): void {
     switch (type) {
       case TileType.WALKABLE_SPACE:
-        this.#renderWalkableSpace(scene, x, y, assetName);
+        this.renderWalkableSpace(scene, x, y, assetName);
         break;
       case TileType.INTERACTIVE_OBJECT:
-        this.#renderInteractiveObject(scene, map, x, y, assetName);
+        this.renderInteractiveObject(scene, map, x, y, assetName);
         break;
       case TileType.INTERACTIVE_STATIC_OBJECT:
-        this.#renderInteractiveImmovableObject(scene, map, x, y, assetName);
+        this.renderInteractiveImmovableObject(scene, map, x, y, assetName);
         break;
       default:
-        this.#renderObstacle(scene, map, x, y, assetName);
+        this.renderObstacle(scene, map, x, y, assetName);
     }
   }
 
-  static #renderWalkableSpace(
+  private static renderWalkableSpace(
     scene: Scene,
     x: number,
     y: number,
@@ -67,7 +67,7 @@ export class MapRenderer {
     scene.add.image(x, y, assetName).setDisplaySize(TILE_SIZE, TILE_SIZE);
   }
 
-  static #renderInteractiveObject(
+  private static renderInteractiveObject(
     scene: Scene,
     map: MapStructure,
     x: number,
@@ -87,7 +87,7 @@ export class MapRenderer {
     group.add(sprite);
   }
 
-  static #renderInteractiveImmovableObject(
+  private static renderInteractiveImmovableObject(
     scene: Scene,
     map: MapStructure,
     x: number,
@@ -107,7 +107,7 @@ export class MapRenderer {
     group.add(sprite);
   }
 
-  static #renderObstacle(
+  private static renderObstacle(
     scene: Scene,
     map: MapStructure,
     x: number,

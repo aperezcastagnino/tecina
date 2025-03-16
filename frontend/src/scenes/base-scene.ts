@@ -23,237 +23,156 @@ type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
 
 export abstract class BaseScene extends Scene {
-  map!: MapStructure;
+  protected map!: MapStructure;
 
-  player!: Player;
+  protected player!: Player;
 
-  controls!: Controls;
+  protected controls!: Controls;
 
-  dialog: Dialog | undefined;
+  protected dialog!: Dialog;
 
-  dialogWithOptions: DialogWithOptions | undefined;
+  protected dialogWithOptions?: DialogWithOptions;
 
-  healthBar!: HealthBar;
+  protected healthBar!: HealthBar;
 
-  awards!: Awards;
+  protected awards!: Awards;
 
-  objectBag: Phaser.GameObjects.Sprite | undefined;
+  protected heldItem?: Phaser.GameObjects.Sprite;
 
-  #collected_items = 0;
+  protected remainingQuestItems = 0;
 
-  abstract createAnimations(): void;
+  // =========================================================================
+  // Abstract Methods
+  // =========================================================================
 
-  preload(config: MapMinimalConfiguration): void {
-    this.map = MapGenerator.create({
-      name: this.scene.key,
-      tilesConfig: config.tilesConfig,
-      mapWidth: config.mapHeight || MAP_WIDTH,
-      mapHeight: config.mapWidth || MAP_HEIGHT,
-      minPartitionSize: config.minPartitionSize || MIN_PARTITION_SIZE,
-      minRoomSize: config.minRoomSize || MIN_ROOM_SIZE,
-    });
+  protected abstract createAnimations(): void;
 
-    this.createAnimations();
+  // =========================================================================
+  // Lifecycle Methods
+  // =========================================================================
+
+  protected async preload(config: MapMinimalConfiguration): Promise<void> {
+    try {
+      this.map = MapGenerator.create(this.validateMapConfig(config));
+      this.createAnimations();
+    } catch (error) {
+      console.error("Failed to initialize scene:", error);
+    }
   }
 
-  async create() {
-    MapRenderer.render(this, this.map);
-
-    this.#createPlayer();
-
-    this.#createDialogs();
-
-    this.#createHealthBar();
-
-    this.#createAwards();
-
-    this.#setupCamera();
-
-    this.defineInteractions();
+  protected async create(): Promise<void> {
+    try {
+      await this.initializeScene();
+    } catch (error) {
+      console.error("Failed to create scene:", error);
+    }
   }
 
   update(): void {
     if (this.controls.wasSpaceKeyPressed()) {
-      this.#handlePlayerInteraction();
+      this.handlePlayerInteraction();
       return;
     }
 
     const directionSelected = this.controls.getDirectionKeyPressed();
     this.player.move(directionSelected);
 
-    if (this.objectBag) {
-      this.objectBag.setPosition(this.player.x, this.player.y);
+    if (this.heldItem) {
+      this.heldItem.setPosition(this.player.x, this.player.y);
     }
   }
 
-  showElements(group: GameObjects.Group): void {
-    group.children.iterate((child) => {
-      const sprite = child as Phaser.GameObjects.Sprite;
-      sprite.setVisible(true);
-      if (sprite.body)
-        (sprite.body as Phaser.Physics.Arcade.Body).enable = true;
+  // =========================================================================
+  // Public Methods
+  // =========================================================================
 
-      return true;
-    });
+  showElements(groupName: string): void {
+    const group = this.map.assetGroups.get(groupName);
+    this.setElementsVisibility(group!, true);
   }
 
-  hideElements(group: GameObjects.Group): void {
-    group.children.iterate((child) => {
-      const sprite = child as Phaser.GameObjects.Sprite;
-      sprite.setVisible(false);
-      if (sprite.body)
-        (sprite.body as Phaser.Physics.Arcade.Body).enable = false;
-
-      return true;
-    });
+  hideElements(groupName: string): void {
+    const group = this.map.assetGroups.get(groupName);
+    this.setElementsVisibility(group!, false);
   }
 
-  defineInteractions(): void {
-    // Obstacles or interactive static objects
-    const treeGroup = this.map.assetGroups.get(AssetKeys.TILES.TREE)!;
-    const npcGroup = this.map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
-
-    this.physics.add.collider(this.player, treeGroup);
-    this.physics.add.collider(this.player, npcGroup);
-  }
-
-  defineInteractionWithItems(item: Phaser.GameObjects.Sprite): void {
-    if (item.visible && !this.objectBag) {
-      this.objectBag = item;
-      this.children.bringToTop(this.objectBag);
-      if (item.body) {
-        const body = item.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = true;
+  makeItemDraggable(groupName: string): void {
+    this.physics.add.overlap(
+      this.player,
+      this.map.assetGroups.get(groupName)!,
+      (_player, element) => {
+        this.pickupItem(element as Phaser.GameObjects.Sprite);
       }
-    }
-  }
-
-  defineInteractionWithNPCs(npc: Phaser.GameObjects.Sprite): void {
-    if (!this.dialog?.isDialogActive()) {
-      this.dialog?.show(npc.name);
-
-      const assetKey = this.dialog?.getAssetKey()!;
-      if (!assetKey) return;
-
-      this.#collected_items = this.dialog?.getQuantityToCollect() || 0;
-      this.awards.setAwardsCount(this.#collected_items);
-
-      this.showElements(this.map.assetGroups.get(assetKey)!);
-    } else if (this.objectBag) {
-      const assetKey = this.dialog?.getAssetKey()!;
-      if (npc.name === this.dialog?.getQuestGiverNpcId()) {
-        if (assetKey === this.objectBag.texture.key) {
-          this.#collected_items -= 1;
-          this.awards.setAwardsCount(this.#collected_items);
-
-          if (this.#collected_items === 0) {
-            this.dialog?.setMessageComplete(npc.name);
-            this.dialog?.show(npc.name);
-          }
-        } else {
-          const imDead = this.healthBar.decreaseHealth(30);
-          if (imDead) {
-            this.scene.start(SceneKeys.GAME_OVER);
-          }
-        }
-
-        this.objectBag.destroy();
-        this.objectBag = undefined;
-      } else {
-        this.dialog?.show(npc.name);
-      }
-    }
-  }
-
-  #handleNPCProximity(): void {
-    const npcGroup = this.map.assetGroups.get(AssetKeys.CHARACTERS.NPC)!;
-    npcGroup.getChildren().forEach((npc) => {
-      const npcSprite = npc as Phaser.GameObjects.Sprite;
-      const distance = Phaser.Math.Distance.Between(
-        this.player.x,
-        this.player.y,
-        npcSprite.x,
-        npcSprite.y,
-      );
-
-      if (distance <= 70) {
-        this.defineInteractionWithNPCs(npcSprite);
-      }
-    });
-  }
-
-  #handlePlayerInteraction(): void {
-    if (this.dialog?.isVisible()) {
-      this.dialog.showNextMessage();
-      return;
-    }
-
-    this.#handleNPCProximity();
-
-    if (this.objectBag) {
-      this.#attemptObjectDrop();
-    }
-  }
-
-  #attemptObjectDrop() {
-    const dropX = this.player.x + TILE_SIZE;
-    const dropY = this.player.y;
-
-    const canDrop =
-      this.physics
-        .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
-        .filter(
-          (ol) =>
-            ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
-        ).length === 0;
-
-    if (canDrop) {
-      this.objectBag!.setPosition(dropX, dropY);
-
-      if (this.objectBag!.body) {
-        const body = this.objectBag!.body as Phaser.Physics.Arcade.Body;
-        body.checkCollision.none = false;
-        body.updateFromGameObject();
-      }
-      this.objectBag = undefined;
-    }
-  }
-
-  #setupCamera(): void {
-    this.cameras.main.setBounds(
-      0,
-      0,
-      MAP_WIDTH * TILE_SIZE * 400,
-      MAP_HEIGHT * TILE_SIZE * 400,
-      true,
     );
+  }
+
+  // =========================================================================
+  // Protected Methods
+  // =========================================================================
+
+  // Obstacles or interactive static objects
+  protected setupCollisions(): void {
+    const collisionGroups = [
+      AssetKeys.TILES.TREE,
+      AssetKeys.CHARACTERS.NPC,
+    ].map((key) => this.map.assetGroups.get(key)!);
+
+    collisionGroups.forEach((group) => {
+      this.physics.add.collider(this.player, group);
+    });
+  }
+
+  // =========================================================================
+  // Private Methods
+  // =========================================================================
+
+  private async initializeScene(): Promise<void> {
+    MapRenderer.render(this, this.map);
+
+    await Promise.all([
+      this.initializePlayer(),
+      this.initializeUI(),
+      this.initializeCamera(),
+    ]);
+
+    this.setupCollisions();
+  }
+
+  private initializePlayer(): void {
+    const startPosition = {
+      x: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
+      y: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
+    };
+
+    this.player = new Player({
+      scene: this,
+      position: startPosition,
+      velocity: 700,
+    });
+
+    this.controls = new Controls(this);
+  }
+
+  private initializeUI(): void {
+    this.initializeDialogs();
+    this.initializeHealthBar();
+    this.initializeAwards();
+  }
+
+  private initializeCamera(): void {
+    const worldWidth = MAP_WIDTH * TILE_SIZE;
+    const worldHeight = MAP_HEIGHT * TILE_SIZE;
+
+    this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
+
+    this.player.setCollideWorldBounds(true);
+
+    this.cameras.main.setBounds(0, 0, worldWidth, worldHeight, true);
     this.cameras.main.startFollow(this.player);
     this.cameras.main.fadeIn(1000, 0, 0, 0);
   }
 
-  #createAwards(): void {
-    this.awards = new Awards({
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
-      frameRate: 19,
-      padding: 0,
-      scene: this,
-      width: MAP_WIDTH * TILE_SIZE,
-      spriteConfig: {
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
-      },
-    });
-  }
-
-  #createHealthBar(): void {
-    this.healthBar = new HealthBar(this);
-  }
-
-  #createDialogs(): void {
+  private initializeDialogs(): void {
     const levelData = loadLevelData(this, this.scene.key.toLowerCase());
 
     this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
@@ -266,16 +185,182 @@ export abstract class BaseScene extends Scene {
     });
   }
 
-  #createPlayer(): void {
-    this.player = new Player({
-      scene: this,
-      position: {
-        x: 0 + TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
-        y: 0 + TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
-      },
-      velocity: 700,
-    });
+  private initializeHealthBar(): void {
+    this.healthBar = new HealthBar(this);
+  }
 
-    this.controls = new Controls(this);
+  private initializeAwards(): void {
+    this.awards = new Awards({
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
+      frameRate: 19,
+      padding: 0,
+      scene: this,
+      width: MAP_WIDTH/6 * TILE_SIZE,
+      spriteConfig: {
+        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+      },
+    });
+  }
+
+  private pickupItem(item: Phaser.GameObjects.Sprite): void {
+    if (item.visible && !this.heldItem) {
+      this.heldItem = item;
+      this.children.bringToTop(this.heldItem);
+      if (item.body) {
+        const body = item.body as Phaser.Physics.Arcade.Body;
+        body.checkCollision.none = true;
+      }
+    }
+  }
+
+  private handlePlayerInteraction(): void {
+    if (this.dialog?.isVisible()) {
+      this.dialog.showNextMessage();
+      return;
+    }
+
+    this.interactWithNearNPC();
+
+    if (this.heldItem) {
+      this.tryDropHeldItem();
+    }
+  }
+
+  private tryDropHeldItem() {
+    const dropX = this.player.x + TILE_SIZE;
+    const dropY = this.player.y;
+
+    const canDrop =
+      this.physics
+        .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
+        .filter(
+          (ol) =>
+            ol.gameObject instanceof GameObjects.Image &&
+            ol.gameObject.texture.key !== AssetKeys.TILES.TREE &&
+            ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC
+        ).length === 0;
+
+    if (canDrop) {
+      this.heldItem!.setPosition(dropX, dropY);
+
+      if (this.heldItem!.body) {
+        const body = this.heldItem!.body as Phaser.Physics.Arcade.Body;
+        body.checkCollision.none = false;
+        body.updateFromGameObject();
+      }
+      this.heldItem = undefined;
+    }
+  }
+
+  private interactWithNearNPC(): void {
+    this.map.assetGroups
+      .get(AssetKeys.CHARACTERS.NPC)!
+      .getChildren()
+      .forEach((npc) => {
+        const npcSprite = npc as Phaser.GameObjects.Sprite;
+        const distance = Phaser.Math.Distance.Between(
+          this.player.x,
+          this.player.y,
+          npcSprite.x,
+          npcSprite.y
+        );
+
+        if (distance <= 70) {
+          this.handleInteractionNPC(npcSprite);
+        }
+      });
+  }
+
+  private handleInteractionNPC(npc: Phaser.GameObjects.Sprite): void {
+    if (!this.dialog?.isDialogActive()) {
+      this.startDialogWithNPC(npc);
+      return;
+    }
+
+    if (this.heldItem) {
+      this.handleItemInteraction(npc);
+    } else {
+      this.dialog?.show(npc.name);
+    }
+  }
+
+  private startDialogWithNPC(npc: Phaser.GameObjects.Sprite): void {
+    this.dialog?.show(npc.name);
+    const assetKey = this.dialog?.getAssetKey();
+
+    if (!assetKey) return;
+
+    this.remainingQuestItems = this.dialog?.getQuantityToCollect() || 0;
+    this.awards.setAwardsCount(this.remainingQuestItems);
+    this.showElements(assetKey);
+  }
+
+  private handleItemInteraction(npc: Phaser.GameObjects.Sprite): void {
+    const assetKey = this.dialog?.getAssetKey();
+
+    if (npc.name === this.dialog?.getQuestGiverNpcId()) {
+      if (this.heldItem!.texture.key === assetKey) {
+        this.updateQuestProgress(npc);
+      } else {
+        this.applyWrongItemPenalty();
+      }
+
+      this.heldItem!.destroy();
+      this.heldItem = undefined;
+    } else {
+      this.dialog?.show(npc.name);
+    }
+  }
+
+  private updateQuestProgress(npc: Phaser.GameObjects.Sprite): void {
+    this.remainingQuestItems -= 1;
+    this.awards.setAwardsCount(this.remainingQuestItems);
+
+    if (this.remainingQuestItems === 0) {
+      this.dialog?.setMessageComplete(npc.name);
+      this.dialog?.show(npc.name);
+    }
+  }
+
+  private applyWrongItemPenalty(): void {
+    const isDead = this.healthBar.decreaseHealth(30);
+    if (isDead) {
+      this.scene.start(SceneKeys.GAME_OVER);
+    }
+  }
+
+  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
+    if (!config.tilesConfig?.length) {
+      throw new Error("Invalid map configuration: Missing tiles config");
+    }
+
+    return {
+      name: this.scene.key,
+      tilesConfig: config.tilesConfig,
+      mapWidth: config.mapWidth ?? MAP_WIDTH,
+      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
+      minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
+    };
+  }
+
+  private setElementsVisibility(
+    group: GameObjects.Group,
+    visible: boolean
+  ): void {
+    group.children.iterate((child) => {
+      const sprite = child as Phaser.GameObjects.Sprite;
+      sprite.setVisible(visible);
+
+      const body = sprite.body as Phaser.Physics.Arcade.Body;
+      if (body) {
+        body.enable = visible;
+      }
+
+      return true;
+    });
   }
 }
