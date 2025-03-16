@@ -218,6 +218,9 @@ export abstract class BaseScene extends Scene {
         dropY = this.player.y;
         break;
       default:
+        console.error(`Unexpected player direction: ${playerDirection}`);
+        dropX = this.player.x;
+        dropY = this.player.y;
     }
 
     const canDrop =
