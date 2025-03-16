@@ -48,11 +48,11 @@ export class Animations {
     });
   };
 
-  static orangeAnimation = (scene: Scene): void => {
+  static useOrangeAnimation = (scene: Scene): void => {
     this.#createAnimations(scene, AssetKeys.ITEMS.FRUITS.ORANGE);
   };
 
-  static strawberryAnimation = (scene: Scene): void => {
+  static useStrawberryAnimation = (scene: Scene): void => {
     this.#createAnimations(scene, AssetKeys.ITEMS.FRUITS.STRAWBERRY);
   };
 }

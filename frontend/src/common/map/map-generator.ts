@@ -27,7 +27,77 @@ const UNUSED_CELL = -2;
 const USED_CELL = -1;
 
 export class MapGenerator {
-  static #createMapStructure(
+  static create(config: MapConfiguration): MapStructure {
+    /**
+    The idea behind this algorithm is as follows:
+    1) The screen is divided into partitions using recursion.
+    2) Then, rooms are assigned to the different leaves of the partition tree.
+       At this point, we have a partition tree where the leaves represent rooms.
+    3) Next, the rooms are filled with usable space, where elements can be placed.
+    Additionally, the rooms are connected to each other.
+    4) **TilesConfig** objects are placed inside the rooms.
+    These objects will later determine what should be rendered.
+    5) NPCs, or more precisely, immovable interactive objectives,
+    are placed at the center of each room.
+    */
+
+    if (
+      config.mapWidth < config.minPartitionSize * 2 ||
+      config.mapHeight < config.minPartitionSize * 2
+    ) {
+      throw new Error(
+        "Map dimensions must be at least twice the minimum partition size",
+      );
+    }
+
+    if (config.minRoomSize > config.minPartitionSize) {
+      throw new Error(
+        "Minimum room size must be smaller than minimum partition size",
+      );
+    }
+
+    if (!config.tilesConfig.length) {
+      throw new Error("Tiles configuration cannot be empty");
+    }
+
+    const map: MapStructure = MapGenerator.createMapStructure(
+      config.name,
+      config.mapWidth,
+      config.mapHeight,
+    );
+    map.initialParameters = config;
+
+    const rootPartition = this.createPartitions(
+      {
+        x: 0,
+        y: 0,
+        width: config.mapWidth,
+        height: config.mapHeight,
+      },
+      config.minPartitionSize,
+    );
+    this.assignRooms(rootPartition, config.minRoomSize);
+
+    const matrix = new Array(config.mapWidth)
+      .fill([])
+      .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
+
+    this.fillAndConnectRooms(matrix, rootPartition);
+    this.assignTiles(map, matrix, config.tilesConfig);
+
+    const privateStaticObjects = config.tilesConfig.filter(
+      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
+    );
+    this.assignInteractiveStaticObject(
+      map,
+      rootPartition,
+      privateStaticObjects,
+    );
+
+    return map;
+  }
+
+  private static createMapStructure(
     name: string,
     rows: number,
     columns: number,
@@ -44,7 +114,7 @@ export class MapGenerator {
     };
   }
 
-  static #createPartitions(
+  private static createPartitions(
     partition: Partition,
     minPartitionSize: number,
   ): Partition {
@@ -101,8 +171,8 @@ export class MapGenerator {
       };
     }
 
-    const leftPartition = this.#createPartitions(left, minPartitionSize);
-    const rightPartition = this.#createPartitions(right, minPartitionSize);
+    const leftPartition = this.createPartitions(left, minPartitionSize);
+    const rightPartition = this.createPartitions(right, minPartitionSize);
 
     return {
       x: partition.x,
@@ -114,22 +184,28 @@ export class MapGenerator {
     };
   }
 
-  static #assignRooms(partition: Partition, minRoomSize: number): Partition {
+  private static assignRooms(
+    partition: Partition,
+    minRoomSize: number,
+  ): Partition {
     if (!partition.left && !partition.right) {
-      const updatedPartition = this.#createRoom(partition, minRoomSize);
+      const updatedPartition = this.createRoom(partition, minRoomSize);
       partition.room = updatedPartition.room;
     } else {
       if (partition.left) {
-        partition.left = this.#assignRooms(partition.left, minRoomSize);
+        partition.left = this.assignRooms(partition.left, minRoomSize);
       }
       if (partition.right) {
-        partition.right = this.#assignRooms(partition.right, minRoomSize);
+        partition.right = this.assignRooms(partition.right, minRoomSize);
       }
     }
     return partition;
   }
 
-  static #createRoom(partition: Partition, minRoomSize: number): Partition {
+  private static createRoom(
+    partition: Partition,
+    minRoomSize: number,
+  ): Partition {
     const roomWidth = Math.floor(
       Math.random() * (partition.width - minRoomSize) + minRoomSize,
     );
@@ -153,7 +229,10 @@ export class MapGenerator {
     return partition;
   }
 
-  static #fillAndConnectRooms(matrix: number[][], partition: Partition): void {
+  private static fillAndConnectRooms(
+    matrix: number[][],
+    partition: Partition,
+  ): void {
     if (partition.room) {
       const { x, y, width, height } = partition.room;
       for (let i = y; i < y + height; i += 1) {
@@ -164,26 +243,26 @@ export class MapGenerator {
     }
 
     if (partition.left && partition.right) {
-      const leftRoom = this.#findRoom(partition.left);
-      const rightRoom = this.#findRoom(partition.right);
+      const leftRoom = this.findRoom(partition.left);
+      const rightRoom = this.findRoom(partition.right);
 
       if (leftRoom && rightRoom) {
-        this.#connectRooms(matrix, leftRoom, rightRoom);
+        this.connectRooms(matrix, leftRoom, rightRoom);
       }
 
-      this.#fillAndConnectRooms(matrix, partition.left);
-      this.#fillAndConnectRooms(matrix, partition.right);
+      this.fillAndConnectRooms(matrix, partition.left);
+      this.fillAndConnectRooms(matrix, partition.right);
     }
   }
 
-  static #findRoom(partition: Partition): Room | undefined {
+  private static findRoom(partition: Partition): Room | undefined {
     if (partition.room) return partition.room;
-    if (partition.left) return this.#findRoom(partition.left);
-    if (partition.right) return this.#findRoom(partition.right);
+    if (partition.left) return this.findRoom(partition.left);
+    if (partition.right) return this.findRoom(partition.right);
     return undefined;
   }
 
-  static #connectRooms(
+  private static connectRooms(
     matrix: number[][],
     roomA: Room,
     roomB: Room,
@@ -210,18 +289,18 @@ export class MapGenerator {
     return matrix;
   }
 
-  static #assignTiles(
+  private static assignTiles(
     map: MapStructure,
     matrix: number[][],
     tilesConfig: TileConfig[],
   ): void {
     const [interactiveTiles, obstacleTiles] =
-      this.#prepareTileConfigs(tilesConfig);
+      this.prepareTileConfigs(tilesConfig);
 
     matrix.forEach((column, columnIndex) => {
       column.forEach((element, rowIndex) => {
         if (element === USED_CELL) {
-          map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
+          map.tiles[columnIndex]![rowIndex] = this.getTileBasedOnFrequency(
             interactiveTiles!.frequencies,
             interactiveTiles!.tiles,
           );
@@ -231,7 +310,7 @@ export class MapGenerator {
           }
         }
         if (element === UNUSED_CELL) {
-          map.tiles[columnIndex]![rowIndex] = this.#getTileBasedOnFrequency(
+          map.tiles[columnIndex]![rowIndex] = this.getTileBasedOnFrequency(
             obstacleTiles!.frequencies,
             obstacleTiles!.tiles,
           );
@@ -240,7 +319,7 @@ export class MapGenerator {
     });
   }
 
-  static #prepareTileConfigs(tilesConfig: TileConfig[]) {
+  private static prepareTileConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
         f.tile.type === TileType.INTERACTIVE_OBJECT ||
@@ -263,7 +342,10 @@ export class MapGenerator {
     ];
   }
 
-  static #getTileBasedOnFrequency<T>(frequencies: number[], tiles: T[]): T {
+  private static getTileBasedOnFrequency<T>(
+    frequencies: number[],
+    tiles: T[],
+  ): T {
     const totalFrequency = frequencies.reduce((a, b) => a + b, 0);
     const randomValue = Math.random() * totalFrequency;
 
@@ -278,16 +360,16 @@ export class MapGenerator {
     return tiles[0]!;
   }
 
-  static #assignInteractiveStaticObject(
+  private static assignInteractiveStaticObject(
     map: MapStructure,
     partition: Partition,
     tiles: TileConfig[],
   ) {
-    const rooms = this.#getAllRooms(partition);
+    const rooms = this.getAllRooms(partition);
 
     tiles.forEach((tile) => {
       for (let i = 0; i < (tile.quantity || 0); i += 1) {
-        const room = this.#getTileBasedOnFrequency(
+        const room = this.getTileBasedOnFrequency(
           new Array(rooms.length).fill(1),
           rooms,
         );
@@ -301,7 +383,7 @@ export class MapGenerator {
     });
   }
 
-  static #getAllRooms(partition: Partition | undefined): Room[] {
+  private static getAllRooms(partition: Partition | undefined): Room[] {
     if (!partition) return [];
 
     const rooms: Room[] = [];
@@ -309,75 +391,9 @@ export class MapGenerator {
       rooms.push(partition.room);
     }
 
-    rooms.push(...this.#getAllRooms(partition.left));
-    rooms.push(...this.#getAllRooms(partition.right));
+    rooms.push(...this.getAllRooms(partition.left));
+    rooms.push(...this.getAllRooms(partition.right));
 
     return rooms;
-  }
-
-  static create(config: MapConfiguration): MapStructure {
-    /**
-    The idea behind this algorithm is as follows:
-    1) The screen is divided into partitions using recursion.
-    2) Then, rooms are assigned to the different leaves of the partition tree.
-       At this point, we have a partition tree where the leaves represent rooms.
-    3) Next, the rooms are filled with usable space, where elements can be placed.
-    Additionally, the rooms are connected to each other.
-    4) **TilesConfig** objects are placed inside the rooms.
-    These objects will later determine what should be rendered.
-    5) NPCs, or more precisely, immovable interactive objectives,
-    are placed at the center of each room.
-    */
-
-    if (
-      config.mapWidth < config.minPartitionSize * 2 ||
-      config.mapHeight < config.minPartitionSize * 2
-    ) {
-      throw new Error(
-        "Map dimensions must be at least twice the minimum partition size",
-      );
-    }
-
-    if (config.minRoomSize > config.minPartitionSize) {
-      throw new Error(
-        "Minimum room size must be smaller than minimum partition size",
-      );
-    }
-
-    if (!config.tilesConfig.length) {
-      throw new Error("Tiles configuration cannot be empty");
-    }
-
-    const map: MapStructure = MapGenerator.#createMapStructure(
-      config.name,
-      config.mapWidth,
-      config.mapHeight,
-    );
-    map.initialParameters = config;
-
-    const rootPartition = this.#createPartitions(
-      {
-        x: 0,
-        y: 0,
-        width: config.mapWidth,
-        height: config.mapHeight,
-      },
-      config.minPartitionSize,
-    );
-    this.#assignRooms(rootPartition, config.minRoomSize);
-
-    const matrix = new Array(config.mapWidth)
-      .fill([])
-      .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
-
-    this.#fillAndConnectRooms(matrix, rootPartition);
-    this.#assignTiles(map, matrix, config.tilesConfig);
-
-    const staticObjects = config.tilesConfig.filter(
-      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
-    );
-    this.#assignInteractiveStaticObject(map, rootPartition, staticObjects);
-
-    return map;
   }
 }

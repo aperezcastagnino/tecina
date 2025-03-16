@@ -54,40 +54,25 @@ export class Level1 extends BaseScene {
     super(SceneKeys.LEVEL_1);
   }
 
-  preload(): void {
-    super.preload({ tilesConfig: level1Config });
+  async preload(): Promise<void> {
+    await super.preload({ tilesConfig: level1Config });
   }
 
   async create(): Promise<void> {
     await super.create();
 
-    this.hideElements(
-      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY)!,
-    );
+    this.hideElements(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY);
   }
 
-  createAnimations(): void {
-    Animations.orangeAnimation(this);
-    Animations.strawberryAnimation(this);
+  protected createAnimations(): void {
+    Animations.useOrangeAnimation(this);
+    Animations.useStrawberryAnimation(this);
   }
 
-  defineInteractions(): void {
-    super.defineInteractions();
+  protected setupCollisions(): void {
+    super.setupCollisions();
 
-    this.physics.add.collider(
-      this.player,
-      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY)!,
-      (_player, element) => {
-        this.defineInteractionWithItems(element as Phaser.GameObjects.Sprite);
-      },
-    );
-
-    this.physics.add.collider(
-      this.player,
-      this.map.assetGroups.get(AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY)!,
-      (_player, element) => {
-        this.defineInteractionWithItems(element as Phaser.GameObjects.Sprite);
-      },
-    );
+    this.makeItemDraggable(AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY);
+    this.makeItemDraggable(AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY);
   }
 }
