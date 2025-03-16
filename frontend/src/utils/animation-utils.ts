@@ -1,30 +1,10 @@
 import { AssetKeys } from "assets/asset-keys";
 import type { Scene } from "phaser";
+import type { AnimationConfig } from "types/animation";
 
-type AnimationConfig = {
-  ASSET_KEY: string;
-  ANIMATION_KEY: string;
-  FRAME_WIDTH: number;
-  FRAME_HEIGHT: number;
-  STAR_FRAME: number;
-  END_FRAME: number;
-};
-
-const FRAME_RATE = 19;
+export const FRAME_RATE = 19;
 
 export class Animations {
-  static #createAnimations = (
-    scene: Scene,
-    animation: AnimationConfig,
-  ): void => {
-    scene.anims.create({
-      key: animation.ANIMATION_KEY,
-      frames: scene.anims.generateFrameNumbers(animation.ASSET_KEY),
-      frameRate: FRAME_RATE,
-      repeat: -1,
-    });
-  };
-
   static animateText = (
     scene: Phaser.Scene,
     target: Phaser.GameObjects.Text,
@@ -48,11 +28,44 @@ export class Animations {
     });
   };
 
+  static createPlayerAnimation(
+    scene: Scene,
+    key: string,
+    assetKey: string,
+    frames: number[],
+  ) {
+    this.createAnimations(scene, { key, assetKey, frames, frameRate: 6 });
+  }
+
   static useOrangeAnimation = (scene: Scene): void => {
-    this.#createAnimations(scene, AssetKeys.ITEMS.FRUITS.ORANGE);
+    this.createAnimations(scene, {
+      key: AssetKeys.ITEMS.FRUITS.ORANGE.ANIMATION_KEY,
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
+    });
   };
 
   static useStrawberryAnimation = (scene: Scene): void => {
-    this.#createAnimations(scene, AssetKeys.ITEMS.FRUITS.STRAWBERRY);
+    this.createAnimations(scene, {
+      key: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ANIMATION_KEY,
+      assetKey: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
+    });
+  };
+
+  static createAnimations = (
+    scene: Scene,
+    animation: AnimationConfig,
+  ): void => {
+    scene.anims.create({
+      key: animation.key || animation.assetKey,
+      frames: animation.frames
+        ? scene.anims.generateFrameNumbers(animation.assetKey, {
+            frames: animation.frames,
+          })
+        : scene.anims.generateFrameNumbers(animation.assetKey),
+      frameRate: animation.frameRate || FRAME_RATE,
+      repeat: animation.repeat || -1,
+      delay: animation.delay || 0,
+      yoyo: animation.yoyo || true,
+    });
   };
 }

@@ -16,6 +16,8 @@ export type DialogConfig = {
 };
 
 export abstract class BaseDialog extends UIComponent {
+  private container!: Phaser.GameObjects.Container;
+
   protected scene: Phaser.Scene;
 
   protected data: DialogData[];
@@ -28,13 +30,23 @@ export abstract class BaseDialog extends UIComponent {
 
   protected statementUI!: Phaser.GameObjects.Text;
 
-  protected textAnimationPlaying: boolean;
+  protected textAnimationPlaying: boolean = false;
 
-  protected activeDialog: DialogData | undefined;
+  protected activeDialog?: DialogData;
 
-  protected questGiverNpcId: string | undefined;
+  protected questGiverNpcId?: string;
 
-  container!: Phaser.GameObjects.Container;
+  get isVisible(): boolean {
+    return this.container.visible;
+  }
+
+  set isVisible(value: boolean) {
+    this.container.visible = value;
+  }
+
+  abstract show(npcId?: string): void;
+  abstract hide(): void;
+  abstract setMessageComplete(npcId?: string): void;
 
   constructor(config: DialogConfig) {
     super();
@@ -44,13 +56,11 @@ export abstract class BaseDialog extends UIComponent {
     this.padding = config.padding || 60;
     this.width =
       config.width || this.scene.cameras.main.width - this.padding * 2;
-    this.textAnimationPlaying = false;
   }
 
-  createUI(): void {
-    const panel = this.createPanel();
+  protected initializeUI(): void {
     this.statementUI = this.createUIText();
-    this.createContainer([panel, this.statementUI]);
+    this.createContainer([this.createPanel(), this.statementUI]);
   }
 
   private createUIText(): Phaser.GameObjects.Text {
@@ -64,7 +74,7 @@ export abstract class BaseDialog extends UIComponent {
       .setScrollFactor(0);
   }
 
-  protected createContainer(children: Phaser.GameObjects.GameObject[]): void {
+  private createContainer(children: Phaser.GameObjects.GameObject[]): void {
     const positionX = this.padding;
     const positionY =
       this.scene.cameras.main.height - this.height - this.padding / 4;
@@ -79,22 +89,4 @@ export abstract class BaseDialog extends UIComponent {
       .setStrokeStyle(8, DialogColors.border, 1)
       .setScrollFactor(0);
   }
-
-  protected findMessageInCompleted(
-    dialogs?: DialogData[],
-  ): DialogData | undefined {
-    return dialogs?.find((dialog) => !dialog.completed);
-  }
-
-  protected setIsVisible(value: boolean): void {
-    this.container.visible = value;
-  }
-
-  isVisible(): boolean {
-    return this.container.visible;
-  }
-
-  abstract show(npcId?: string): void;
-  abstract hide(): void;
-  abstract setMessageComplete(npcId?: string): void;
 }

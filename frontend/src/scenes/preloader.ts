@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
 import { AnimationsKeys } from "assets/animation-keys";
 import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
+import { Animations } from "utils/animation-utils";
 import { SceneKeys } from "./scene-keys";
 
 export class Preloader extends Scene {
@@ -115,46 +116,37 @@ export class Preloader extends Scene {
   }
 
   create() {
-    this.#createAnimations();
+    this.createAnimations();
 
     this.scene.start(
       DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
   }
 
-  #createAnimations() {
-    this.#createPlayerAnimation(
+  private createAnimations() {
+    Animations.createPlayerAnimation(
+      this,
       AnimationsKeys.PLAYER_UP,
       AssetKeys.CHARACTERS.PLAYER,
       [0, 1, 2],
     );
-    this.#createPlayerAnimation(
+    Animations.createPlayerAnimation(
+      this,
       AnimationsKeys.PLAYER_RIGHT,
       AssetKeys.CHARACTERS.PLAYER,
       [3, 4, 5],
     );
-    this.#createPlayerAnimation(
+    Animations.createPlayerAnimation(
+      this,
       AnimationsKeys.PLAYER_DOWN,
       AssetKeys.CHARACTERS.PLAYER,
       [6, 7, 8],
     );
-    this.#createPlayerAnimation(
+    Animations.createPlayerAnimation(
+      this,
       AnimationsKeys.PLAYER_LEFT,
       AssetKeys.CHARACTERS.PLAYER,
       [9, 10, 11],
     );
-  }
-
-  #createPlayerAnimation(key: string, assetKey: string, frames: number[]) {
-    this.anims.create({
-      key,
-      frames: this.anims.generateFrameNumbers(assetKey, {
-        frames,
-      }),
-      frameRate: 6,
-      repeat: -1,
-      delay: 0,
-      yoyo: true,
-    });
   }
 }

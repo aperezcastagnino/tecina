@@ -51,7 +51,7 @@ export class MapRenderer {
         this.renderInteractiveObject(scene, map, x, y, assetName);
         break;
       case TileType.INTERACTIVE_STATIC_OBJECT:
-        this.renderInteractiveImmovableObject(scene, map, x, y, assetName);
+        this.renderInteractiveStaticObject(scene, map, x, y, assetName);
         break;
       default:
         this.renderObstacle(scene, map, x, y, assetName);
@@ -87,7 +87,7 @@ export class MapRenderer {
     group.add(sprite);
   }
 
-  private static renderInteractiveImmovableObject(
+  private static renderInteractiveStaticObject(
     scene: Scene,
     map: MapStructure,
     x: number,

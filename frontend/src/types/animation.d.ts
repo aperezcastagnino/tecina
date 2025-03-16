@@ -1,9 +1,9 @@
-export type Animation = {
-  key: string;
+export type AnimationConfig = {
+  key?: string;
   assetKey: string;
   frames?: number[];
-  frameRate: number;
-  repeat: number;
-  delay: number;
-  yoyo: boolean;
+  frameRate?: number;
+  repeat?: number;
+  delay?: number;
+  yoyo?: boolean;
 };
