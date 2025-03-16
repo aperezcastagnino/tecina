@@ -10,11 +10,19 @@ type PlayerConfig = {
 };
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  #direction: Direction;
+  private _direction: Direction = DIRECTION.NONE;
 
-  #velocity: number;
+  private velocity: number;
 
-  isMoving: boolean;
+  isMoving: boolean = false;
+
+  get direction(): Direction {
+    return this._direction;
+  }
+
+  set direction(direction: Direction) {
+    this._direction = direction;
+  }
 
   constructor(config: PlayerConfig) {
     super(
@@ -25,13 +33,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.frame,
     );
 
-    this.isMoving = false;
     config.scene.add.existing(this);
     config.scene.physics.add.existing(this);
 
     (this.body as Phaser.Physics.Arcade.Body).setMaxVelocity(config.velocity);
-    this.#direction = DIRECTION.NONE;
-    this.#velocity = config.velocity;
+    this.velocity = config.velocity;
     this.setScale(0.8);
   }
 
@@ -41,19 +47,26 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.anims.stop();
       this.setVelocity(0);
     } else {
-      if (direction === DIRECTION.UP) {
-        this.setVelocity(0, -this.#velocity);
-      } else if (direction === DIRECTION.DOWN) {
-        this.setVelocity(0, this.#velocity);
-      } else if (direction === DIRECTION.LEFT) {
-        this.setVelocity(-this.#velocity, 0);
-      } else if (direction === DIRECTION.RIGHT) {
-        this.setVelocity(this.#velocity, 0);
+      switch (direction) {
+        case DIRECTION.UP:
+          this.setVelocity(0, -this.velocity);
+          break;
+        case DIRECTION.DOWN:
+          this.setVelocity(0, this.velocity);
+          break;
+        case DIRECTION.LEFT:
+          this.setVelocity(-this.velocity, 0);
+          break;
+        case DIRECTION.RIGHT:
+          this.setVelocity(this.velocity, 0);
+          break;
+        default:
+          this.setVelocity(0, 0);
       }
 
       this.isMoving = true;
-      this.#direction = direction;
-      this.anims.play(`PLAYER_${this.#direction}_ANIMATION`, true);
+      this._direction = direction;
+      this.anims.play(`PLAYER_${this._direction}_ANIMATION`, true);
     }
   }
 }
