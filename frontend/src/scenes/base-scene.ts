@@ -102,7 +102,7 @@ export abstract class BaseScene extends Scene {
       this.map.assetGroups.get(groupName)!,
       (_player, element) => {
         this.pickupItem(element as Phaser.GameObjects.Sprite);
-      }
+      },
     );
   }
 
@@ -195,7 +195,7 @@ export abstract class BaseScene extends Scene {
       frameRate: 19,
       padding: 0,
       scene: this,
-      width: MAP_WIDTH/6 * TILE_SIZE,
+      width: (MAP_WIDTH / 6) * TILE_SIZE,
       spriteConfig: {
         startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
@@ -240,7 +240,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             ol.gameObject.texture.key !== AssetKeys.TILES.TREE &&
-            ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC
+            ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC,
         ).length === 0;
 
     if (canDrop) {
@@ -265,7 +265,7 @@ export abstract class BaseScene extends Scene {
           this.player.x,
           this.player.y,
           npcSprite.x,
-          npcSprite.y
+          npcSprite.y,
         );
 
         if (distance <= 70) {
@@ -349,7 +349,7 @@ export abstract class BaseScene extends Scene {
 
   private setElementsVisibility(
     group: GameObjects.Group,
-    visible: boolean
+    visible: boolean,
   ): void {
     group.children.iterate((child) => {
       const sprite = child as Phaser.GameObjects.Sprite;

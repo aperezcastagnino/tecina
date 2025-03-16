@@ -11,8 +11,8 @@ export class MapRenderer {
 
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
-        const x = TILE_SIZE/2 + column * TILE_SIZE;
-        const y = TILE_SIZE/2 + row * TILE_SIZE;
+        const x = TILE_SIZE / 2 + column * TILE_SIZE;
+        const y = TILE_SIZE / 2 + row * TILE_SIZE;
 
         const tile = map.tiles[row]![column]!;
 
