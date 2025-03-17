@@ -5,10 +5,12 @@ const AWARDS_CONFIG = {
   POSITION_X: MAP_WIDTH * 75 + 60,
   POSITION_Y: TILE_SIZE / 2 + 0,
   WIDTH: (MAP_WIDTH / 6) * TILE_SIZE,
+  HEIGHT: 16,
   // eslint-disable-next-line object-shorthand
   FRAME_RATE: FRAME_RATE,
   SCALE: 3,
-  MAX_AWARDS: 10,
+  MAX_AWARDS: 5,
+  PADDING: 35,
 };
 
 export type AwardConfig = {
@@ -22,23 +24,25 @@ export type AwardConfig = {
 export class Awards {
   private scene: Phaser.Scene;
 
+  private assetKey: string;
+
+  private keyAnim: string;
+
   private positionX: number;
 
   private positionY: number;
 
-  private assetKey: string;
+  private scale: number;
+
+  private padding: number;
 
   private spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
 
-  private keyAnim: string;
-
   private sprites: Phaser.GameObjects.Sprite[] = [];
 
-  private scale: number;
+  private background!: Phaser.GameObjects.Image;
 
-  private background!: Phaser.GameObjects.Image; // Background panel
-
-  private container!: Phaser.GameObjects.Container; // Container for all elements
+  private container!: Phaser.GameObjects.Container;
 
   constructor(config: AwardConfig) {
     if (!config.scene || !config.assetKey) {
@@ -50,7 +54,8 @@ export class Awards {
     this.keyAnim = "AwardsKeyAnim";
     this.positionX = AWARDS_CONFIG.POSITION_X;
     this.positionY = AWARDS_CONFIG.POSITION_Y;
-    this.scale = config.scale || AWARDS_CONFIG.SCALE;
+    this.scale = AWARDS_CONFIG.SCALE;
+    this.padding = AWARDS_CONFIG.PADDING;
     this.spriteConfig = config.spriteConfig;
 
     Animations.createAnimations(this.scene, {
@@ -90,7 +95,7 @@ export class Awards {
 
     const maxAwards = 5; // Default or from config
     const totalWidth = this.spriteConfig.frameWidth * this.scale * maxAwards;
-    const height = 16 * this.scale;
+    const height = AWARDS_CONFIG.HEIGHT * this.scale + this.padding / 2;
 
     // Draw the background
     graphics.fillStyle(0x333333, 0.8); // Dark gray with some transparency
@@ -115,7 +120,7 @@ export class Awards {
     if (count <= 0) return;
 
     const initialLength = this.sprites.length;
-    const spacing = this.spriteConfig.frameWidth * this.scale;
+    const spacing = this.spriteConfig.frameWidth + this.padding;
     const actualCount = Math.min(
       count,
       AWARDS_CONFIG.MAX_AWARDS - initialLength,
@@ -124,7 +129,7 @@ export class Awards {
     for (let i = 0; i < actualCount; i += 1) {
       const sprite = this.scene.add
         .sprite(
-          this.background.displayWidth - spacing * (i + initialLength),
+          this.background.x + this.padding + spacing * (i + initialLength),
           0,
           this.assetKey,
         )
