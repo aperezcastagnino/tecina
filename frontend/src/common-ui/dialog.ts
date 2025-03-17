@@ -7,21 +7,21 @@ export class Dialog extends BaseDialog {
 
   constructor(config: DialogConfig) {
     super(config);
-    this.createUI();
+    this.initializeUI();
     this.hide();
   }
 
   showNextMessage(): void {
     if (this.textAnimationPlaying) return;
 
-    if (this.messagesToShow.length === 0 && this.isVisible()) {
+    if (this.messagesToShow.length === 0 && this.isVisible) {
       this.hide();
       return;
     }
 
     if (this.messagesToShow.length === 0) return;
 
-    this.setIsVisible(true);
+    this.isVisible = true;
     this.statementUI.setText("").setAlpha(1);
     this.textAnimationPlaying = true;
     Animations.animateText(
@@ -75,7 +75,7 @@ export class Dialog extends BaseDialog {
   }
 
   hide(): void {
-    this.setIsVisible(false);
+    this.isVisible = false;
   }
 
   setMessageComplete(npcId?: string): void {

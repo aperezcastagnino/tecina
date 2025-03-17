@@ -192,11 +192,8 @@ export abstract class BaseScene extends Scene {
 
   private initializeAwards(): void {
     this.awards = new Awards({
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
-      frameRate: 19,
-      padding: 0,
       scene: this,
-      width: (MAP_WIDTH / 6) * TILE_SIZE,
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
       spriteConfig: {
         startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
@@ -218,7 +215,7 @@ export abstract class BaseScene extends Scene {
   }
 
   private handlePlayerInteraction(): void {
-    if (this.dialog?.isVisible()) {
+    if (this.dialog?.isVisible) {
       this.dialog.showNextMessage();
       return;
     }
