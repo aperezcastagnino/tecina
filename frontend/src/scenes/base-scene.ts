@@ -201,8 +201,6 @@ export abstract class BaseScene extends Scene {
         frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
       },
     });
-
-    this.awards.setAwardsCount(5);
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {

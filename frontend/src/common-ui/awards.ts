@@ -78,6 +78,8 @@ export class Awards {
     } else {
       this.removeAward(countDifference * -1);
     }
+
+    this.container.visible = countDifference > 0;
   }
 
   private initializeUI(): void {
@@ -88,6 +90,8 @@ export class Awards {
       this.positionY,
       [this.background],
     );
+
+    this.container.visible = false;
   }
 
   private createBackground(): void {
