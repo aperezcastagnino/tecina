@@ -261,7 +261,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
+              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPCS),
         ).length === 0;
 
     if (canDrop) {

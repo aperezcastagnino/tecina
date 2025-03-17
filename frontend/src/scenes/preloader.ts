@@ -56,7 +56,7 @@ export class Preloader extends Scene {
       },
     );
     this.load.spritesheet(
-      AssetKeys.CHARACTERS.NPC,
+      AssetKeys.CHARACTERS.NPCS,
       `characters/characters.png`,
       {
         frameWidth: 16,

@@ -5,7 +5,19 @@ export const AssetKeys = {
   },
   CHARACTERS: {
     PLAYER: "PLAYER",
-    NPC: "NPC",
+    NPCS: "NPCS",
+    OLD_MAN: {
+      ASSET_KEY: "OLD_MAN",
+      FRAME: 10,
+    },
+    GUY: {
+      ASSET_KEY: "GUY",
+      FRAME: 20,
+    },
+    GIRL: {
+      ASSET_KEY: "GIRL",
+      FRAME: 30,
+    },
   },
   UI_COMPONENTS: {
     CURSOR: "CURSOR",
