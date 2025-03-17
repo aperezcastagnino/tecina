@@ -16,8 +16,8 @@ export class MapRenderer {
 
         const tile = map.tiles[row]![column]!;
 
-        this.ensureAssetGroup(scene, map, tile.asset, tile.type);
-        this.renderTile(scene, map, x, y, tile.asset, tile.type);
+        this.ensureAssetGroup(scene, map, tile.type, tile.asset);
+        this.renderTile(scene, map, x, y, tile.type, tile.asset, tile.frame);
       }
     }
   }
@@ -25,8 +25,8 @@ export class MapRenderer {
   private static ensureAssetGroup(
     scene: Scene,
     map: MapStructure,
-    assetName: string,
     type: TileType,
+    assetName: string,
   ): void {
     if (type !== TileType.WALKABLE_SPACE && !map.assetGroups.has(assetName)) {
       const group = scene.physics.add.staticGroup();
@@ -40,8 +40,9 @@ export class MapRenderer {
     map: MapStructure,
     x: number,
     y: number,
-    assetName: string,
     type: TileType,
+    assetName: string,
+    frame: number = 0
   ): void {
     switch (type) {
       case TileType.WALKABLE_SPACE:
@@ -51,7 +52,7 @@ export class MapRenderer {
         this.renderInteractiveObject(scene, map, x, y, assetName);
         break;
       case TileType.INTERACTIVE_STATIC_OBJECT:
-        this.renderInteractiveStaticObject(scene, map, x, y, assetName);
+        this.renderInteractiveStaticObject(scene, map, x, y, assetName, frame);
         break;
       default:
         this.renderObstacle(scene, map, x, y, assetName);
@@ -87,22 +88,23 @@ export class MapRenderer {
     group.add(sprite);
   }
 
-  private static renderInteractiveStaticObject(
+  static renderInteractiveStaticObject(
     scene: Scene,
     map: MapStructure,
     x: number,
     y: number,
     assetName: string,
+    frame: number
   ): void {
     scene.add
       .image(x, y, DEFAULT_FLOOR_ASSET)
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
-    const sprite = scene.add.image(x, y, AssetKeys.CHARACTERS.NPC, assetName);
+    const sprite = scene.add.image(x, y, assetName, frame);
     sprite.setScale(3);
-    sprite.name = `npc-${Math.floor(Math.random() * 1000)}`;
+    sprite.name = assetName;
 
-    const group = map.assetGroups.get(assetName);
+    const group = map.assetGroups.get(AssetKeys.CHARACTERS.NPCS);
     if (!group) throw new Error(`Missing asset group for ${assetName}`);
     group.add(sprite);
   }

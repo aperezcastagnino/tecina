@@ -8,9 +8,18 @@ export const level1Config: TileConfig[] = [
   {
     tile: {
       type: TileType.INTERACTIVE_STATIC_OBJECT,
-      asset: AssetKeys.CHARACTERS.NPC,
+      asset: AssetKeys.CHARACTERS.GUY.ASSET_KEY,
+      frame: AssetKeys.CHARACTERS.GUY.FRAME
     },
-    quantity: 2,
+    quantity: 1,
+  },
+  {
+    tile: {
+      type: TileType.INTERACTIVE_STATIC_OBJECT,
+      asset: AssetKeys.CHARACTERS.GIRL.ASSET_KEY,
+      frame: AssetKeys.CHARACTERS.GIRL.FRAME
+    },
+    quantity: 1,
   },
   {
     tile: {
