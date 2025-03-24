@@ -1,13 +1,29 @@
 import Phaser from "phaser";
 import { AssetKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
+import { StorageManager } from "utils/storage-utils";
+import { InitialConfig } from "config/levels-config";
+import type { LevelData } from "types/level-stored";
 
 export default class LevelsMenu extends Phaser.Scene {
+
+  storageUtils! : StorageManager;
+  levelData!: LevelData[];
+
+
   constructor() {
     super(SceneKeys.LEVELS_MENU);
   }
 
   create() {
+    this.storageUtils = new StorageManager(this.game);
+    var levelData = this.storageUtils.getLevelDateFromCache();
+    levelData.forEach(element => {
+      if(element.active){
+        this.startLevel(element.key)
+      }
+    });
+
     const background = this.add
       .image(0, 0, AssetKeys.BACKGROUNDS.LEVELS)
       .setOrigin(0);
