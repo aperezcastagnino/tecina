@@ -79,7 +79,7 @@ export class Awards {
       this.removeAward(countDifference * -1);
     }
 
-    this.container.visible = countDifference > 0;
+    this.container.visible = this.sprites.length > 0;
   }
 
   private initializeUI(): void {

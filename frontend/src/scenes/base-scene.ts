@@ -345,10 +345,15 @@ export abstract class BaseScene extends Scene {
       this.dialog?.show(npc.name);
 
       if (this.dialog?.areAllDialogsCompleted()) {
-        this.cameras.main.fadeOut(1000, 0, 0, 0);
-        this.scene.start(SceneKeys.GAME_OVER);
+        this.levelCompleted();
       }
     }
+  }
+
+  private levelCompleted(): void {
+    this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
+      this.scene.start(SceneKeys.LEVELS_MENU);
+    });
   }
 
   private applyWrongItemPenalty(): void {
