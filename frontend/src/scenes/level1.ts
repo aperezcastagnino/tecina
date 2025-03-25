@@ -45,7 +45,7 @@ export const level1Config: TileConfig[] = [
       type: TileType.INTERACTIVE_OBJECT,
       asset: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
     },
-    frequency: 10,
+    frequency: 5,
   },
 ];
 

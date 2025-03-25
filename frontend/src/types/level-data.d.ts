@@ -10,6 +10,7 @@ export type DialogData = {
   assetKey: string | undefined;
   quantityToCollect: number | undefined;
   completed: boolean | undefined;
+  disable: boolean | undefined;
 };
 
 export type RawDialogData = {
@@ -27,6 +28,7 @@ export type RawDialogData = {
   correctOption: string | undefined;
   assetKey: string | undefined;
   quantityToCollect: number | undefined;
+  disable: boolean | undefined;
 };
 
 export type LevelData = {
