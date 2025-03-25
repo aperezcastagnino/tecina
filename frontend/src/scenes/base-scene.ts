@@ -351,11 +351,9 @@ export abstract class BaseScene extends Scene {
   }
 
   private levelCompleted(): void {
-    this.cameras.main.fadeOut(20000, 0, 0, 0,
-      () => {
-        this.scene.start(SceneKeys.LEVELS_MENU);
-      }
-    );
+    this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
+      this.scene.start(SceneKeys.LEVELS_MENU);
+    });
   }
 
   private applyWrongItemPenalty(): void {
