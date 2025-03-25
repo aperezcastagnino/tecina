@@ -19,6 +19,7 @@ import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
 import { SceneKeys } from "./scene-keys";
+import { StorageManager } from "utils/storage-utils";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
@@ -41,6 +42,7 @@ export abstract class BaseScene extends Scene {
   protected heldItem?: Phaser.GameObjects.Sprite;
 
   protected remainingQuestItems = 0;
+  protected storageUtils!: StorageManager;
 
   // =========================================================================
   // Abstract Methods
@@ -54,8 +56,24 @@ export abstract class BaseScene extends Scene {
 
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
     try {
+    this.storageUtils = new StorageManager(this.game);
+    var levelData = this.storageUtils.getLevelDateFromCache();
+    var activeLevel;
+    levelData.forEach(element => {
+      if(element.key == 1){ //Definir key a nivel de escena
+        activeLevel = element;
+        if(element.map){
+          this.map = element.map;
+          this.map.assetGroups = new Map();
+        }
+      }
+    });
+    if(!this.map){
       this.map = MapGenerator.create(this.validateMapConfig(config));
-      this.createAnimations();
+    }
+    activeLevel!.map = this.map;
+    this.storageUtils.setLevelData(levelData);
+    this.createAnimations();
     } catch (error) {
       console.error("Failed to initialize scene:", error);
     }
