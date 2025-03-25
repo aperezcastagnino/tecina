@@ -58,6 +58,10 @@ export abstract class BaseDialog extends UIComponent {
       config.width || this.scene.cameras.main.width - this.padding * 2;
   }
 
+  areAllDialogsCompleted(): boolean {
+    return this.data.every((dialog) => dialog.completed);
+  }
+
   protected initializeUI(): void {
     this.statementUI = this.createUIText();
     this.createContainer([this.createPanel(), this.statementUI]);

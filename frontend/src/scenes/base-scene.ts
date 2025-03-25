@@ -343,6 +343,11 @@ export abstract class BaseScene extends Scene {
     if (this.remainingQuestItems === 0) {
       this.dialog?.setMessageComplete(npc.name);
       this.dialog?.show(npc.name);
+
+      if (this.dialog?.areAllDialogsCompleted()) {
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.scene.start(SceneKeys.GAME_OVER);
+      }
     }
   }
 
