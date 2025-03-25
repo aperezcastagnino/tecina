@@ -31,7 +31,7 @@ export const loadLevelData = (
       assetKey: dialog.assetKey,
       quantityToCollect: dialog.quantityToCollect,
       completed: false,
-      disable: dialog.disable ?? true,
+      disable: dialog.disable ?? false,
     }),
   );
 
