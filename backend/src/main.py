@@ -12,7 +12,7 @@ app = FastAPI()
 app.include_router(router)
 
 origins = [
-    '*'
+    "*"
     # settings.server_url,
 ]
 

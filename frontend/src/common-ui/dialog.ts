@@ -11,6 +11,14 @@ export class Dialog extends BaseDialog {
     this.hide();
   }
 
+  show(npcId?: string): void {
+    this.getDialogData(npcId);
+  }
+
+  hide(): void {
+    this.isVisible = false;
+  }
+
   showNextMessage(): void {
     if (this.textAnimationPlaying) return;
 
@@ -33,49 +41,6 @@ export class Dialog extends BaseDialog {
         this.textAnimationPlaying = false;
       },
     );
-  }
-
-  #getDialogData(npcId?: string): void {
-    const dialog = this.activeDialog || this.#findMessageInCompleted(this.data);
-
-    if (!dialog) {
-      console.error("No dialogs not shown were found.");
-      this.hide();
-      return;
-    }
-
-    if (!this.activeDialog) {
-      this.activeDialog = dialog;
-      this.questGiverNpcId = npcId;
-    }
-
-    const textsToShow = this.#resolveDialogsToShow(dialog, npcId);
-    this.messagesToShow = [...textsToShow];
-    this.showNextMessage();
-  }
-
-  #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
-    if (this.questGiverNpcId === npcId) return dialog.questInProgress;
-    if (this.questGiverNpcId) return dialog.hints;
-
-    // eslint-disable-next-line no-param-reassign
-    this.questGiverNpcId = npcId || "";
-    return dialog.questStart;
-  }
-
-  #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
-    return dialogs?.find(
-      (dialog) =>
-        !dialog.completed && (!dialog.options || dialog.options.length === 0),
-    );
-  }
-
-  show(npcId?: string): void {
-    this.#getDialogData(npcId);
-  }
-
-  hide(): void {
-    this.isVisible = false;
   }
 
   setMessageComplete(npcId?: string): void {
@@ -102,5 +67,41 @@ export class Dialog extends BaseDialog {
 
   getQuantityToCollect(): number | undefined {
     return this.activeDialog?.quantityToCollect;
+  }
+
+  private getDialogData(npcId?: string): void {
+    const dialog = this.activeDialog || this.findMessageInCompleted(this.data);
+
+    if (!dialog) {
+      console.error("No dialogs not shown were found.");
+      this.hide();
+      return;
+    }
+
+    if (!this.activeDialog) {
+      this.activeDialog = dialog;
+      this.questGiverNpcId = npcId;
+    }
+
+    const textsToShow = this.resolveDialogsToShow(dialog, npcId);
+    this.messagesToShow = [...textsToShow];
+    this.showNextMessage();
+  }
+
+  private resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
+    if (this.questGiverNpcId === npcId) return this.selectRandomText(dialog.questInProgress);
+    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
+
+    // eslint-disable-next-line no-param-reassign
+    this.questGiverNpcId = npcId || "";
+    return this.selectRandomText(dialog.questStart);
+
+  }
+
+  private findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
+    return dialogs?.find(
+      (dialog) =>
+        !dialog.completed && (!dialog.options || dialog.options.length === 0),
+    );
   }
 }
