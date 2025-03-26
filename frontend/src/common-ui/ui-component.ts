@@ -1,5 +1,5 @@
 export abstract class UIComponent {
-  abstract createUI(): void;
+  protected abstract initializeUI(): void;
   abstract show(): void;
   abstract hide(): void;
 }

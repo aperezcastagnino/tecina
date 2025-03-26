@@ -210,11 +210,8 @@ export abstract class BaseScene extends Scene {
 
   private initializeAwards(): void {
     this.awards = new Awards({
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
-      frameRate: 19,
-      padding: 0,
       scene: this,
-      width: (MAP_WIDTH / 6) * TILE_SIZE,
+      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
       spriteConfig: {
         startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
         endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
@@ -236,7 +233,7 @@ export abstract class BaseScene extends Scene {
   }
 
   private handlePlayerInteraction(): void {
-    if (this.dialog?.isVisible()) {
+    if (this.dialog?.isVisible) {
       this.dialog.showNextMessage();
       return;
     }
@@ -364,7 +361,17 @@ export abstract class BaseScene extends Scene {
     if (this.remainingQuestItems === 0) {
       this.dialog?.setMessageComplete(npc.name);
       this.dialog?.show(npc.name);
+
+      if (this.dialog?.areAllDialogsCompleted()) {
+        this.levelCompleted();
+      }
     }
+  }
+
+  private levelCompleted(): void {
+    this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
+      this.scene.start(SceneKeys.LEVELS_MENU);
+    });
   }
 
   private applyWrongItemPenalty(): void {

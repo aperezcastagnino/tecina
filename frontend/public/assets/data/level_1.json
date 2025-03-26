@@ -8,22 +8,23 @@
         "Can you pick the oranges?",
         "They're for making marmalade."
       ],
-      "questStartIAGenerated": ["EXAMPLE"],
+      "questStartIAGenerated": [""],
       "questInProgress": [
         "I need all the oranges you can find so I can cook them!"
       ],
-      "questInProgressIAGenerated": ["EXAMPLE"],
+      "questInProgressIAGenerated": [""],
       "questFinished": [
         "Thank you! Now I can make the marmalade my grandma used to make!"
       ],
-      "questFinishedIAGenerated": ["EXAMPLE"],
+      "questFinishedIAGenerated": [""],
       "hints": [
         "I'll give you a hint! Oranges are round and orange!",
         "I don't have nothing more to say!"
       ],
-      "hintsIAGenerated": ["EXAMPLE"],
+      "hintsIAGenerated": [""],
       "assetKey": "ORANGE",
-      "quantityToCollect": 5
+      "quantityToCollect": 1,
+      "disable": false
     },
     {
       "id": "d-2",
@@ -34,7 +35,8 @@
       ],
       "questInProgress": [],
       "questFinished": ["Thank you so much!"],
-      "hints": []
+      "hints": [],
+      "disable": true
     },
     {
       "id": "dwo-1",
@@ -43,7 +45,8 @@
       "questInProgress": [],
       "questFinished": [],
       "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
-      "correctOption": "opcion 1"
+      "correctOption": "opcion 1",
+      "disable": true
     }
   ]
 }
