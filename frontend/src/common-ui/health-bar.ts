@@ -1,5 +1,5 @@
-import { AssetKeys } from "assets/asset-keys";
 import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
+import { UIComponentKeys } from "assets/asset-keys";
 
 const HEALTH_BAR_CONFIG = {
   WIDTH: GAME_DIMENSIONS.WIDTH / 7,
@@ -64,7 +64,7 @@ export class HealthBar {
 
   private createBackgroundBar(): void {
     this.background = this.scene.add
-      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.ASSET_KEY)
+      .image(0, 0, UIComponentKeys.HEALTH_BAR.BACKGROUND.ASSET_KEY)
       .setOrigin(0, 0.5)
       .setScrollFactor(0);
     this.background.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
@@ -73,19 +73,19 @@ export class HealthBar {
 
   private createFillBar(): void {
     this.fillBarLeft = this.scene.add
-      .image(0, 0, AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.ASSET_KEY)
+      .image(0, 0, UIComponentKeys.HEALTH_BAR.LEFT.ASSET_KEY)
       .setOrigin(0, 0.5)
       .setScrollFactor(0);
     this.fillBarLeft.displayHeight = HEALTH_BAR_CONFIG.HEIGHT;
     this.fillBarLeft.displayWidth =
-      (AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.WIDTH * this.originalWidth) /
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.WIDTH;
+      (UIComponentKeys.HEALTH_BAR.LEFT.WIDTH * this.originalWidth) /
+      UIComponentKeys.HEALTH_BAR.BACKGROUND.WIDTH;
 
     this.fillBarRight = this.scene.add
       .image(
         this.originalWidth * 0.25,
         0,
-        AssetKeys.UI_COMPONENTS.HEALTH_BAR.RIGHT.ASSET_KEY,
+        UIComponentKeys.HEALTH_BAR.RIGHT.ASSET_KEY,
       )
       .setOrigin(0, 0.5)
       .setScrollFactor(0);

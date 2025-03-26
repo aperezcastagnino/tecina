@@ -13,6 +13,7 @@ export enum TileType {
 export type Tile = {
   type: TileType;
   asset: string;
+  frame?: number;
 };
 
 export type TileConfig = {

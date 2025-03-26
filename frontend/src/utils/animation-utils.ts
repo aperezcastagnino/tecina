@@ -1,6 +1,6 @@
-import { AssetKeys } from "assets/asset-keys";
 import type { Scene } from "phaser";
 import type { AnimationConfig } from "types/animation";
+import { ItemKeys } from "assets/asset-keys";
 
 export const FRAME_RATE = 19;
 
@@ -39,15 +39,15 @@ export class Animations {
 
   static useOrangeAnimation = (scene: Scene): void => {
     this.createAnimations(scene, {
-      key: AssetKeys.ITEMS.FRUITS.ORANGE.ANIMATION_KEY,
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
+      key: ItemKeys.FRUITS.ORANGE.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
     });
   };
 
   static useStrawberryAnimation = (scene: Scene): void => {
     this.createAnimations(scene, {
-      key: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ANIMATION_KEY,
-      assetKey: AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
+      key: ItemKeys.FRUITS.STRAWBERRY.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
     });
   };
 

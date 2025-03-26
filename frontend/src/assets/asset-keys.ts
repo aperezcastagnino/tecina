@@ -1,54 +1,118 @@
-export const AssetKeys = {
-  BACKGROUNDS: {
-    MAIN_MENU: "MAIN-MENU-BACKGROUND",
-    LEVELS: "LEVELS-BACKGROUND",
+export const BackgroundKeys = {
+  MAIN_MENU: "MAIN_MENU_BACKGROUND",
+  LEVELS: "LEVELS_BACKGROUND",
+};
+
+export const CharacterKeys = {
+  PLAYER: "PLAYER",
+  NPC: "NPC",
+  OLD_MAN: {
+    ASSET_KEY: "NPC",
+    FRAME: 10,
   },
-  CHARACTERS: {
-    PLAYER: "PLAYER",
-    NPC: "NPC",
+  GUY: {
+    ASSET_KEY: "NPC",
+    FRAME: 20,
   },
-  UI_COMPONENTS: {
-    CURSOR: "CURSOR",
-    HEALTH_BAR: {
-      LEFT: {
-        ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
-        WIDTH: 235,
-      },
-      RIGHT: {
-        ASSET_KEY: "HEALTH_BAR_FILL_RIGHT",
-        WIDTH: 690,
-      },
-      BACKGROUND: {
-        ASSET_KEY: "HEALTH_BAR_BACKGROUND",
-        WIDTH: 928,
-      },
+  GIRL: {
+    ASSET_KEY: "NPC",
+    FRAME: 30,
+  },
+  GOBLIN: {
+    ASSET_KEY: "NPC",
+    FRAME: 100,
+  },
+  WARRIOR: {
+    ASSET_KEY: "NPC",
+    FRAME: 110,
+  },
+  VIKING: {
+    ASSET_KEY: "NPC",
+    FRAME: 130,
+  },
+  WIZARD: {
+    ASSET_KEY: "NPC",
+    FRAME: 140,
+  },
+  DETECTIVE: {
+    ASSET_KEY: "NPC",
+    FRAME: 150,
+  },
+};
+export const UIComponentKeys = {
+  CURSOR: "CURSOR",
+  BUTTON_CIRCLE: "BUTTON_CIRCLE",
+  HEALTH_BAR: {
+    LEFT: {
+      ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
+      WIDTH: 235,
     },
-    BUTTON_CIRCLE: "BUTTON_CIRCLE",
-  },
-  TILES: {
-    GRASS: "GRASS",
-    FLOWER: "FLOWER",
-    TREE: "TREE",
-    FLOWER_GRASS: "FLOWER_GRASS",
-  },
-  ITEMS: {
-    FRUITS: {
-      ORANGE: {
-        ASSET_KEY: "ORANGE",
-        ANIMATION_KEY: "ORANGE_ANIMATION",
-        FRAME_WIDTH: 32,
-        FRAME_HEIGHT: 32,
-        STAR_FRAME: 0,
-        END_FRAME: 17,
-      },
-      STRAWBERRY: {
-        ASSET_KEY: "STRAWBERRY",
-        ANIMATION_KEY: "STRAWBERRY_ANIMATION",
-        FRAME_WIDTH: 32,
-        FRAME_HEIGHT: 32,
-        STAR_FRAME: 0,
-        END_FRAME: 17,
-      },
+    RIGHT: {
+      ASSET_KEY: "HEALTH_BAR_FILL_RIGHT",
+      WIDTH: 690,
+    },
+    BACKGROUND: {
+      ASSET_KEY: "HEALTH_BAR_BACKGROUND",
+      WIDTH: 928,
     },
   },
 };
+
+export const TileKeys = {
+  GRASS: "GRASS",
+  FLOWER: "FLOWER",
+  TREE: "TREE",
+  FLOWER_GRASS: "FLOWER_GRASS",
+};
+
+export const ItemKeys = {
+  FRUITS: {
+    ORANGE: {
+      ASSET_KEY: "ORANGE",
+      ANIMATION_KEY: "ORANGE_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    STRAWBERRY: {
+      ASSET_KEY: "STRAWBERRY",
+      ANIMATION_KEY: "STRAWBERRY_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+  },
+};
+
+export const AssetLookup = new Map<
+  string,
+  { category: string; key: string; path: string[] }
+>();
+
+export function findAssetKeyByValue(value: string) {
+  return AssetLookup.get(value);
+}
+
+function buildLookupMap(obj: any, category: string, path: string[] = []) {
+  Object.entries(obj).forEach(([key, value]) => {
+    const currentPath = [...path, key];
+
+    if (typeof value === "object" && value !== null) {
+      buildLookupMap(value, category, currentPath);
+    } else if (typeof value === "string") {
+      AssetLookup.set(value, {
+        category,
+        key,
+        path: currentPath,
+      });
+    }
+  });
+}
+
+buildLookupMap(BackgroundKeys, "BACKGROUNDS");
+buildLookupMap(CharacterKeys, "NPCS");
+buildLookupMap(UIComponentKeys, "UI_COMPONENTS");
+buildLookupMap(TileKeys, "TILES");
+buildLookupMap(ItemKeys, "ITEMS");
