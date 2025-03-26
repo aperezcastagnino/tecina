@@ -16,6 +16,7 @@ uvicorn = "^0.32.1"
 pydantic = "^2.10.3"
 pydantic-settings = "^2.6.1"
 google-generativeai = "^0.8.3"
+black = "^25.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -27,3 +28,7 @@ isort = "^5.13.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py37"
