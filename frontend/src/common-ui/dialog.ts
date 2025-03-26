@@ -89,16 +89,18 @@ export class Dialog extends BaseDialog {
   }
 
   private resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
-    if (this.questGiverNpcId === npcId) return this.selectRandomText(dialog.questInProgress);
+    if (this.questGiverNpcId === npcId)
+      return this.selectRandomText(dialog.questInProgress);
     if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
 
     // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";
     return this.selectRandomText(dialog.questStart);
-
   }
 
-  private findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
+  private findMessageInCompleted(
+    dialogs?: DialogData[],
+  ): DialogData | undefined {
     return dialogs?.find(
       (dialog) =>
         !dialog.completed && (!dialog.options || dialog.options.length === 0),

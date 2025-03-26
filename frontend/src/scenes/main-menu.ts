@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
-import { AssetKeys } from "assets/asset-keys";
 import { TextButton } from "common-ui/text-button";
 import { buttonStyles } from "styles/menu-styles";
+import { BackgroundKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
 export class MainMenu extends Scene {
@@ -11,7 +11,7 @@ export class MainMenu extends Scene {
 
   create() {
     const background = this.add
-      .image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU)
+      .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;

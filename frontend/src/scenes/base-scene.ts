@@ -15,9 +15,9 @@ import {
 } from "config/config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
-import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
+import { ItemKeys, TileKeys, CharacterKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -70,6 +70,8 @@ export abstract class BaseScene extends Scene {
   }
 
   update(): void {
+    if (!this.controls) return;
+
     if (this.controls.wasSpaceKeyPressed()) {
       this.handlePlayerInteraction();
       return;
@@ -113,10 +115,9 @@ export abstract class BaseScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [
-      AssetKeys.TILES.TREE,
-      AssetKeys.CHARACTERS.NPC,
-    ].map((key) => this.map.assetGroups.get(key)!);
+    const collisionGroups = [TileKeys.TREE, CharacterKeys.NPC].map(
+      (key) => this.map.assetGroups.get(key)!,
+    );
 
     collisionGroups.forEach((group) => {
       this.physics.add.collider(this.player, group);
@@ -140,14 +141,10 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializePlayer(): void {
-    const startPosition = {
-      x: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
-      y: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
-    };
-
     this.player = new Player({
       scene: this,
-      position: startPosition,
+      positionX: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
+      positionY: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
       velocity: 700,
     });
 
@@ -193,12 +190,12 @@ export abstract class BaseScene extends Scene {
   private initializeAwards(): void {
     this.awards = new Awards({
       scene: this,
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
+      assetKey: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
       spriteConfig: {
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: ItemKeys.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: ItemKeys.FRUITS.ORANGE.END_FRAME,
+        frameWidth: ItemKeys.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: ItemKeys.FRUITS.ORANGE.FRAME_HEIGHT,
       },
     });
   }
@@ -260,8 +257,8 @@ export abstract class BaseScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPCS),
+            (ol.gameObject.texture.key !== TileKeys.TREE ||
+              ol.gameObject.texture.key !== CharacterKeys.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -278,7 +275,7 @@ export abstract class BaseScene extends Scene {
 
   private interactWithNearNPC(): void {
     this.map.assetGroups
-      .get(AssetKeys.CHARACTERS.NPC)!
+      .get(CharacterKeys.NPC)!
       .getChildren()
       .forEach((npc) => {
         const npcSprite = npc as Phaser.GameObjects.Sprite;

@@ -1,9 +1,9 @@
 import type { Scene } from "phaser";
-import { AssetKeys } from "assets/asset-keys";
 import { TileType, type MapStructure } from "types/map.d";
 import { TILE_SIZE } from "config/config";
+import { TileKeys } from "assets/asset-keys";
 
-const DEFAULT_FLOOR_ASSET = AssetKeys.TILES.GRASS;
+const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
 
 export class MapRenderer {
   static render(scene: Scene, map: MapStructure): void {
@@ -42,7 +42,7 @@ export class MapRenderer {
     y: number,
     type: TileType,
     assetName: string,
-    frame: number = 0
+    frame: number = 0,
   ): void {
     switch (type) {
       case TileType.WALKABLE_SPACE:
@@ -94,7 +94,7 @@ export class MapRenderer {
     x: number,
     y: number,
     assetName: string,
-    frame: number
+    frame: number,
   ): void {
     scene.add
       .image(x, y, DEFAULT_FLOOR_ASSET)
@@ -104,7 +104,7 @@ export class MapRenderer {
     sprite.setScale(3);
     sprite.name = assetName;
 
-    const group = map.assetGroups.get(AssetKeys.CHARACTERS.NPCS);
+    const group = map.assetGroups.get(assetName);
     if (!group) throw new Error(`Missing asset group for ${assetName}`);
     group.add(sprite);
   }

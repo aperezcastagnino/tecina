@@ -1,8 +1,14 @@
 import { Scene } from "phaser";
-import { AssetKeys } from "assets/asset-keys";
-import { AnimationsKeys } from "assets/animation-keys";
 import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
 import { Animations } from "utils/animation-utils";
+import {
+  BackgroundKeys,
+  CharacterKeys,
+  ItemKeys,
+  TileKeys,
+  UIComponentKeys,
+} from "assets/asset-keys";
+import { PlayerAnimationKeys } from "common/player";
 import { SceneKeys } from "./scene-keys";
 
 export class Preloader extends Scene {
@@ -32,12 +38,12 @@ export class Preloader extends Scene {
 
     // Backgrounds
     this.load.image(
-      AssetKeys.BACKGROUNDS.MAIN_MENU,
+      BackgroundKeys.MAIN_MENU,
       `/backgrounds/main-menu-background.png`,
     );
 
     this.load.image(
-      AssetKeys.BACKGROUNDS.LEVELS,
+      BackgroundKeys.LEVELS,
       `/backgrounds/levels-background.png`,
     );
 
@@ -47,70 +53,59 @@ export class Preloader extends Scene {
     // Level 1
 
     // Load Characters
-    this.load.spritesheet(
-      AssetKeys.CHARACTERS.PLAYER,
-      `characters/player.png`,
-      {
-        frameWidth: 64,
-        frameHeight: 88,
-      },
-    );
-    this.load.spritesheet(
-      AssetKeys.CHARACTERS.NPCS,
-      `characters/characters.png`,
-      {
-        frameWidth: 16,
-        frameHeight: 16,
-      },
-    );
+    this.load.spritesheet(CharacterKeys.PLAYER, `characters/player.png`, {
+      frameWidth: 64,
+      frameHeight: 88,
+    });
+    this.load.spritesheet(CharacterKeys.NPC, `characters/characters.png`, {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
 
     // Load UI Components
+    this.load.image(UIComponentKeys.CURSOR, "/ui-components/cursor.png");
     this.load.image(
-      AssetKeys.UI_COMPONENTS.CURSOR,
-      "/ui-components/cursor.png",
-    );
-    this.load.image(
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.BACKGROUND.ASSET_KEY,
+      UIComponentKeys.HEALTH_BAR.BACKGROUND.ASSET_KEY,
       "/ui-components/health-bar-background.png",
     );
     this.load.image(
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.LEFT.ASSET_KEY,
+      UIComponentKeys.HEALTH_BAR.LEFT.ASSET_KEY,
       "/ui-components/health-bar-fill-left.png",
     );
     this.load.image(
-      AssetKeys.UI_COMPONENTS.HEALTH_BAR.RIGHT.ASSET_KEY,
+      UIComponentKeys.HEALTH_BAR.RIGHT.ASSET_KEY,
       "/ui-components/health-bar-fill-right.png",
     );
     this.load.image(
-      AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE,
+      UIComponentKeys.BUTTON_CIRCLE,
       "/ui-components/button-circle.png",
     );
 
     // Load tiles
-    this.load.image(AssetKeys.TILES.GRASS, "/tiles/grass.png");
-    this.load.image(AssetKeys.TILES.FLOWER, "/tiles/flower.png");
-    this.load.image(AssetKeys.TILES.TREE, "/tiles/tree.png");
-    this.load.image(AssetKeys.TILES.FLOWER_GRASS, "/tiles/flower_grass.png");
+    this.load.image(TileKeys.GRASS, "/tiles/grass.png");
+    this.load.image(TileKeys.FLOWER, "/tiles/flower.png");
+    this.load.image(TileKeys.TREE, "/tiles/tree.png");
+    this.load.image(TileKeys.FLOWER_GRASS, "/tiles/flower_grass.png");
 
     // Load elements
     this.load.spritesheet(
-      AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
+      ItemKeys.FRUITS.ORANGE.ASSET_KEY,
       "/items/fruits/orange.png",
       {
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
+        frameWidth: ItemKeys.FRUITS.ORANGE.FRAME_WIDTH,
+        frameHeight: ItemKeys.FRUITS.ORANGE.FRAME_HEIGHT,
+        startFrame: ItemKeys.FRUITS.ORANGE.STAR_FRAME,
+        endFrame: ItemKeys.FRUITS.ORANGE.END_FRAME,
       },
     );
     this.load.spritesheet(
-      AssetKeys.ITEMS.FRUITS.STRAWBERRY.ASSET_KEY,
+      ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
       "/items/fruits/strawberry.png",
       {
-        frameWidth: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.STRAWBERRY.FRAME_HEIGHT,
-        startFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.STRAWBERRY.END_FRAME,
+        frameWidth: ItemKeys.FRUITS.STRAWBERRY.FRAME_WIDTH,
+        frameHeight: ItemKeys.FRUITS.STRAWBERRY.FRAME_HEIGHT,
+        startFrame: ItemKeys.FRUITS.STRAWBERRY.STAR_FRAME,
+        endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
       },
     );
   }
@@ -126,26 +121,26 @@ export class Preloader extends Scene {
   private createAnimations() {
     Animations.createPlayerAnimation(
       this,
-      AnimationsKeys.PLAYER_UP,
-      AssetKeys.CHARACTERS.PLAYER,
+      PlayerAnimationKeys.PLAYER_UP,
+      CharacterKeys.PLAYER,
       [0, 1, 2],
     );
     Animations.createPlayerAnimation(
       this,
-      AnimationsKeys.PLAYER_RIGHT,
-      AssetKeys.CHARACTERS.PLAYER,
+      PlayerAnimationKeys.PLAYER_RIGHT,
+      CharacterKeys.PLAYER,
       [3, 4, 5],
     );
     Animations.createPlayerAnimation(
       this,
-      AnimationsKeys.PLAYER_DOWN,
-      AssetKeys.CHARACTERS.PLAYER,
+      PlayerAnimationKeys.PLAYER_DOWN,
+      CharacterKeys.PLAYER,
       [6, 7, 8],
     );
     Animations.createPlayerAnimation(
       this,
-      AnimationsKeys.PLAYER_LEFT,
-      AssetKeys.CHARACTERS.PLAYER,
+      PlayerAnimationKeys.PLAYER_LEFT,
+      CharacterKeys.PLAYER,
       [9, 10, 11],
     );
   }
