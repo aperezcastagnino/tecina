@@ -11,7 +11,7 @@ router = APIRouter(tags=["Gemini"])
 @router.post("", response_model=DialogContentParaphrased)
 async def get_paraphrase(dialogData: DialogContentInput):
     PROMPT_TEMPLATE = (
-        "Give me only, without presentation text, paraphases of the following "
+        "Give me only, without presentation text, paraphrases of the following "
         "sentences as an array separated by ';':"
     )
 
