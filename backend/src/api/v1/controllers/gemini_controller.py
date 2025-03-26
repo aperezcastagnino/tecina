@@ -1,9 +1,11 @@
-from src.services.gemini_service import GeminiService
-from fastapi import APIRouter
-from src.schemas.dialog import DialogContentInput, DialogContentParaphrased
 from concurrent.futures import ThreadPoolExecutor
 
-router = APIRouter()
+from fastapi import APIRouter
+
+from src.schemas.dialog import DialogContentInput, DialogContentParaphrased
+from src.services.gemini_service import GeminiService
+
+router = APIRouter(tags=["Gemini"])
 
 
 @router.post("", response_model=DialogContentParaphrased)
