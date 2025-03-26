@@ -229,12 +229,12 @@ export class DialogWithOptions {
   }
 
   #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
-    if (this.questGiverNpcId === npcId) return dialog.questInProgress;
-    if (this.questGiverNpcId) return dialog.hints;
+    if (this.questGiverNpcId === npcId) return this.selectRandomText(dialog.questInProgress);
+    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
 
     // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";
-    return dialog.questStart;
+    return this.selectRandomText(dialog.questStart);
   }
 
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
@@ -251,21 +251,6 @@ export class DialogWithOptions {
   hide(): void {
     this.setIsVisible(false);
   }
-
-  // show(npcId: string): void {
-
-  //   if (npcId) {
-  //     this.#container.setAlpha(1);
-  //     this.isVisible = true;
-  //     const npcDialogs = this.#findDialogsByNpcId(npcId);
-  //     this.#handleDialogData(npcDialogs);
-  //   }
-  // }
-
-  // hide(): void {
-  //   this.#container.setAlpha(0);
-  //   this.isVisible = false;
-  // }
 
   playInputCursorAnimation() {
     this.#cursor.setPosition(this.#cursor.displayWidth * 2.7, this.#cursor.y);
@@ -382,4 +367,9 @@ export class DialogWithOptions {
       this.questGiverNpcId = undefined;
     }
   }
+
+  protected selectRandomText(array: string[][]): string[] {
+    return array[Math.floor(Math.random() * array.length)]!;
+  }
+
 }

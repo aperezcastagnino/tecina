@@ -11,20 +11,20 @@ export const loadLevelData = (
       id: dialog.id,
       description: dialog.description,
       questStart: [
-        ...(dialog.questStart ?? []).filter(Boolean),
-        ...(dialog.questStartIAGenerated ?? []).filter(Boolean),
+        (dialog.questStart ?? []).filter(Boolean),
+        (dialog.questStartIAGenerated ?? []).filter(Boolean),
       ],
       questInProgress: [
-        ...(dialog.questInProgress ?? []).filter(Boolean),
-        ...(dialog.questInProgressIAGenerated ?? []).filter(Boolean),
+        (dialog.questInProgress ?? []).filter(Boolean),
+        (dialog.questInProgressIAGenerated ?? []).filter(Boolean),
       ],
       questFinished: [
-        ...(dialog.questFinished ?? []).filter(Boolean),
-        ...(dialog.questFinishedIAGenerated ?? []).filter(Boolean),
+        (dialog.questFinished ?? []).filter(Boolean),
+        (dialog.questFinishedIAGenerated ?? []).filter(Boolean),
       ],
       hints: [
-        ...(dialog.hints ?? []).filter(Boolean),
-        ...(dialog.hintsIAGenerated ?? []).filter(Boolean),
+        (dialog.hints ?? []).filter(Boolean),
+        (dialog.hintsIAGenerated ?? []).filter(Boolean),
       ],
       options: dialog.options,
       correctOption: dialog.correctOption,
