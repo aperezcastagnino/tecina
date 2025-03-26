@@ -1,0 +1,52 @@
+{
+  "title": "Level 1",
+  "dialogs": [
+    {
+      "id": "d-1",
+      "description": "primer dialogo",
+      "questStart": [
+        "Can you pick the oranges?",
+        "They're for making marmalade."
+      ],
+      "questStartIAGenerated": [""],
+      "questInProgress": [
+        "I need all the oranges you can find so I can cook them!"
+      ],
+      "questInProgressIAGenerated": [""],
+      "questFinished": [
+        "Thank you! Now I can make the marmalade my grandma used to make!"
+      ],
+      "questFinishedIAGenerated": [""],
+      "hints": [
+        "I'll give you a hint! Oranges are round and orange!",
+        "I don't have nothing more to say!"
+      ],
+      "hintsIAGenerated": [""],
+      "assetKey": "ORANGE",
+      "quantityToCollect": 1,
+      "disable": false
+    },
+    {
+      "id": "d-2",
+      "description": "segundo dialogo",
+      "questStart": [
+        "My favorite fruits are apples!",
+        "Could you pick some for me?"
+      ],
+      "questInProgress": [],
+      "questFinished": ["Thank you so much!"],
+      "hints": [],
+      "disable": true
+    },
+    {
+      "id": "dwo-1",
+      "description": "primer dialogo",
+      "questStart": ["esto debe ser una pregunta?"],
+      "questInProgress": [],
+      "questFinished": [],
+      "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
+      "correctOption": "opcion 1",
+      "disable": true
+    }
+  ]
+}
