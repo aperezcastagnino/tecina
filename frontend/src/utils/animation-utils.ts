@@ -37,10 +37,52 @@ export class Animations {
     this.createAnimations(scene, { key, assetKey, frames, frameRate: 6 });
   }
 
+  static useAppleAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.APPLE.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.APPLE.ASSET_KEY,
+    });
+  };
+
+  static useBananasAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.BANANAS.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.BANANAS.ASSET_KEY,
+    });
+  };
+
+  static useCherriesAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.CHERRIES.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.CHERRIES.ASSET_KEY,
+    });
+  };
+
+  static useKiwiAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.KIWI.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.KIWI.ASSET_KEY,
+    });
+  };
+
+  static useMelonAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.MELON.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.MELON.ASSET_KEY,
+    });
+  };
+
   static useOrangeAnimation = (scene: Scene): void => {
     this.createAnimations(scene, {
       key: ItemKeys.FRUITS.ORANGE.ANIMATION_KEY,
       assetKey: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
+    });
+  };
+
+  static usePineappleAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.FRUITS.PINEAPPLE.ANIMATION_KEY,
+      assetKey: ItemKeys.FRUITS.PINEAPPLE.ASSET_KEY,
     });
   };
 
