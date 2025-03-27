@@ -67,9 +67,57 @@ export const TileKeys = {
 
 export const ItemKeys = {
   FRUITS: {
+    APPLE: {
+      ASSET_KEY: "APPLE",
+      ANIMATION_KEY: "APPLE_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    BANANAS: {
+      ASSET_KEY: "BANANAS",
+      ANIMATION_KEY: "BANANAS_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    CHERRIES: {
+      ASSET_KEY: "CHERRIES",
+      ANIMATION_KEY: "CHERRIES_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    KIWI: {
+      ASSET_KEY: "KIWI",
+      ANIMATION_KEY: "KIWI_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    MELON: {
+      ASSET_KEY: "MELON",
+      ANIMATION_KEY: "MELON_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
     ORANGE: {
       ASSET_KEY: "ORANGE",
       ANIMATION_KEY: "ORANGE_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+    PINEAPPLE: {
+      ASSET_KEY: "PINEAPPLE",
+      ANIMATION_KEY: "PINEAPPLE_ANIMATION",
       FRAME_WIDTH: 32,
       FRAME_HEIGHT: 32,
       STAR_FRAME: 0,
