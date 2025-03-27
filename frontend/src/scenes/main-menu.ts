@@ -2,19 +2,18 @@ import { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
 import { TextButton } from "common-ui/text-button";
 import { buttonStyles } from "styles/menu-styles";
-import { SceneKeys } from "./scene-keys";
 import { StorageManager } from "utils/storage-utils";
 import { InitialConfig } from "config/levels-config";
-import type { LevelData } from "types/level-stored";
+import type { LevelMetadata } from "types/level-stored";
+import { SceneKeys } from "./scene-keys";
 
 export class MainMenu extends Scene {
-  storageUtils! : StorageManager;
-  
+  storageUtils!: StorageManager;
+
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
 
-  //Hay que crear el boton y setear el estado del juego
   create() {
     this.storageUtils = new StorageManager(this.game);
 
@@ -43,7 +42,7 @@ export class MainMenu extends Scene {
       this.sys.canvas.height / 2 - 50 + 140,
       "Comenzar a jugar",
       buttonStyles.startButton,
-      () => this.startGame(InitialConfig),
+      () => this.startNewGame(InitialConfig),
     );
     startGameButton.setOrigin(0.5);
     startGameButton.setSize(
@@ -65,17 +64,23 @@ export class MainMenu extends Scene {
       buttonStyles.startButton.height,
     ); // Set fixed size
 
+    if (!this.storageUtils.hasLevelStoredData()) {
+      loadPreviousGameButton.setStyle(buttonStyles.loadButtonDisabled);
+      loadPreviousGameButton.setInteractive(false); // Desactivar la interactividad
+    }
+
     this.add.existing(startGameButton);
     this.add.existing(loadPreviousGameButton);
   }
 
-  startGame(levelData : LevelData[]) {
-    this.storageUtils.setLevelData(levelData)
+  startNewGame(levelData: LevelMetadata[]) {
+    this.storageUtils.setLevelData(levelData);
     this.scene.start(SceneKeys.LEVELS_MENU);
   }
-  continueGame(){
-    if(this.storageUtils.hasLevelStoredData()){
-      this.startGame(this.storageUtils.getStoredLevelData());
+
+  continueGame() {
+    if (this.storageUtils.hasLevelStoredData()) {
+      this.startNewGame(this.storageUtils.getStoredLevelData());
     }
   }
 }

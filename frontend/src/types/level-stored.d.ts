@@ -1,10 +1,14 @@
-import type { MapStructure } from "./map"
+import type { MapStructure } from "./map";
 
-export type LevelData = {
-    key:number,
-    map?:MapStructure,
-    enable: boolean,
-    completed: boolean,
-    active: boolean,
-    nextLevel?:[number]
-}
+export type LevelMetadata = {
+  key: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  map?: MapStructure;
+  enable: boolean;
+  completed: boolean;
+  active: boolean;
+  nextLevel?: string[];
+};

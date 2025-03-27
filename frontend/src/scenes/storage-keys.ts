@@ -1,3 +1,3 @@
 export const StorageKeys = {
-    LevelData: "LevelData",
-}
+  LevelData: "LevelData",
+};
