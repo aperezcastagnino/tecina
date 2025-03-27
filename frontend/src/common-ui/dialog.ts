@@ -48,8 +48,13 @@ export class Dialog extends BaseDialog {
 
     if (this.questGiverNpcId === npcId) {
       this.activeDialog!.completed = true;
-      this.activeDialog = undefined;
       this.questGiverNpcId = undefined;
+
+      const textFinished = this.selectRandomText(
+        this.activeDialog.questFinished,
+      );
+      this.messagesToShow = [...textFinished];
+      this.showNextMessage();
     }
   }
 

@@ -102,7 +102,7 @@ export class MapRenderer {
 
     const sprite = scene.add.image(x, y, assetName, frame);
     sprite.setScale(3);
-    sprite.name = assetName;
+    sprite.name = `${assetName}_${frame}`;
 
     const group = map.assetGroups.get(assetName);
     if (!group) throw new Error(`Missing asset group for ${assetName}`);

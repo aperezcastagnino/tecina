@@ -6,20 +6,19 @@
       "description": "primer dialogo",
       "questStart": [
         "Can you pick the oranges?",
-        "They're for making marmalade."
+        "They're for making marmalade. I need only 1 orange."
       ],
       "questStartIAGenerated": [""],
       "questInProgress": [
-        "I need all the oranges you can find so I can cook them!"
+        "I really want to make marmalade my grandma used to make!",
+        "I need only 1 orange."
       ],
       "questInProgressIAGenerated": [""],
-      "questFinished": [
-        "Thank you! Now I can make the marmalade my grandma used to make!"
-      ],
+      "questFinished": ["Thank you! Now I can make the marmalade!"],
       "questFinishedIAGenerated": [""],
       "hints": [
         "I'll give you a hint! Oranges are round and orange!",
-        "I don't have nothing more to say!"
+        "I don't have nothing more to say! Good luck!"
       ],
       "hintsIAGenerated": [""],
       "assetKey": "ORANGE",
