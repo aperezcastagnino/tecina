@@ -1,15 +1,13 @@
 import Phaser from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import { SceneKeys } from "./scene-keys";
 import { StorageManager } from "utils/storage-utils";
-import { InitialConfig } from "config/levels-config";
-import type { LevelData } from "types/level-stored";
+import type { LevelMetadata } from "types/level-stored";
+import { SceneKeys } from "./scene-keys";
 
 export default class LevelsMenu extends Phaser.Scene {
+  storageUtils!: StorageManager;
 
-  storageUtils! : StorageManager;
-  levelData!: LevelData[];
-
+  levelData!: LevelMetadata[];
 
   constructor() {
     super(SceneKeys.LEVELS_MENU);
@@ -17,10 +15,10 @@ export default class LevelsMenu extends Phaser.Scene {
 
   create() {
     this.storageUtils = new StorageManager(this.game);
-    var levelData = this.storageUtils.getLevelDateFromCache();
-    levelData.forEach(element => {
-      if(element.active){
-        this.startLevel(element.key)
+    const levelData = this.storageUtils.getLevelDateFromCache();
+    levelData.forEach((element) => {
+      if (element.active) {
+        this.startLevel(element.key);
       }
     });
 
@@ -30,24 +28,18 @@ export default class LevelsMenu extends Phaser.Scene {
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
 
-    const positions = [
-      { x: 360, y: 430 },
-      { x: 620, y: 650 },
-      { x: 1050, y: 550 },
-      { x: 860, y: 180 },
-      { x: 1500, y: 550 },
-      { x: 1550, y: 240 },
-      { x: 1090, y: 900 },
-    ];
-
-    positions.forEach((pos, index) => {
+    levelData.forEach((pos, index) => {
       const button = this.add
-        .image(pos.x, pos.y, AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE) // they all have the same image
+        .image(
+          pos.position.x,
+          pos.position.y,
+          AssetKeys.UI_COMPONENTS.BUTTON_CIRCLE,
+        ) // they all have the same image
         .setInteractive({ useHandCursor: true })
         .setScale(0.4)
-        .on("pointerdown", () => this.startLevel(index + 1))
+        .on("pointerdown", () => this.startLevel(pos.key))
         .setName(`levelImageButton${index + 1}`);
-      if (index >= 1) {
+      if (!pos.enable) {
         // Apply grey tint to all buttons except the first one
         button.setTint(0x808080);
       }
@@ -64,8 +56,7 @@ export default class LevelsMenu extends Phaser.Scene {
     }
   }
 
-  startLevel(levelNumber: number) {
-    const level = `LEVEL_${levelNumber}` as keyof typeof SceneKeys;
-    this.scene.start(SceneKeys[level]);
+  startLevel(levelKey: string) {
+    this.scene.start(levelKey);
   }
 }

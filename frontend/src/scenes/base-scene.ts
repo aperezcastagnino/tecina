@@ -18,8 +18,9 @@ import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { SceneKeys } from "./scene-keys";
 import { StorageManager } from "utils/storage-utils";
+import type { LevelMetadata } from "types/level-stored";
+import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
@@ -42,7 +43,10 @@ export abstract class BaseScene extends Scene {
   protected heldItem?: Phaser.GameObjects.Sprite;
 
   protected remainingQuestItems = 0;
-  protected storageUtils!: StorageManager;
+
+  protected storageManager!: StorageManager;
+
+  protected levelMetadata!: LevelMetadata[];
 
   // =========================================================================
   // Abstract Methods
@@ -56,24 +60,24 @@ export abstract class BaseScene extends Scene {
 
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
     try {
-    this.storageUtils = new StorageManager(this.game);
-    var levelData = this.storageUtils.getLevelDateFromCache();
-    var activeLevel;
-    levelData.forEach(element => {
-      if(element.key == 1){ //Definir key a nivel de escena
-        activeLevel = element;
-        if(element.map){
-          this.map = element.map;
-          this.map.assetGroups = new Map();
+      let activeLevel;
+      this.storageManager = new StorageManager(this.game);
+      this.levelMetadata = this.storageManager.getLevelDateFromCache();
+      this.levelMetadata.forEach((element) => {
+        if (element.key === this.scene.key) {
+          activeLevel = element;
+          if (element.map) {
+            this.map = element.map;
+            this.map.assetGroups = new Map();
+          }
         }
+      });
+      if (!this.map) {
+        this.map = MapGenerator.create(this.validateMapConfig(config));
       }
-    });
-    if(!this.map){
-      this.map = MapGenerator.create(this.validateMapConfig(config));
-    }
-    activeLevel!.map = this.map;
-    this.storageUtils.setLevelData(levelData);
-    this.createAnimations();
+      activeLevel!.map = this.map;
+      this.storageManager.setLevelData(this.levelMetadata);
+      this.createAnimations();
     } catch (error) {
       console.error("Failed to initialize scene:", error);
     }
@@ -369,9 +373,28 @@ export abstract class BaseScene extends Scene {
   }
 
   private levelCompleted(): void {
+    this.unlockNextLevel();
+
     this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
       this.scene.start(SceneKeys.LEVELS_MENU);
     });
+  }
+
+  private unlockNextLevel(): void {
+    const actualLevel = this.levelMetadata.find(
+      (element) => element.key === this.scene.key,
+    );
+    actualLevel!.map = undefined;
+    actualLevel!.active = false;
+    actualLevel!.completed = true;
+
+    actualLevel?.nextLevel?.forEach((elem) => {
+      const nextLevel = this.levelMetadata.find(
+        (element) => element.key === elem,
+      );
+      nextLevel!.enable = true;
+    });
+    this.storageManager.setLevelData(this.levelMetadata);
   }
 
   private applyWrongItemPenalty(): void {
