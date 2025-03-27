@@ -3,6 +3,6 @@ export const Colors = {
 };
 
 export const DialogColors = {
-  main: 0x324c3a,
+  main: 0xffffff,
   border: 0x6da87d,
 };

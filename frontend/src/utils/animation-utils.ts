@@ -2,7 +2,7 @@ import type { Scene } from "phaser";
 import type { AnimationConfig } from "types/animation";
 import { ItemKeys } from "assets/asset-keys";
 
-export const FRAME_RATE = 19;
+export const FRAME_RATE = 24;
 
 export class Animations {
   static animateText = (
@@ -34,7 +34,7 @@ export class Animations {
     assetKey: string,
     frames: number[],
   ) {
-    this.createAnimations(scene, { key, assetKey, frames, frameRate: 6 });
+    this.createAnimations(scene, { key, assetKey, frames });
   }
 
   static useAppleAnimation = (scene: Scene): void => {
