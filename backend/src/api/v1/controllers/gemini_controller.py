@@ -15,7 +15,13 @@ async def get_paraphrase(dialogData: DialogContentInput):
         "sentences as an array separated by ';':"
     )
 
-    DIALOG_TYPES = ["questStart", "questInProgress", "questFinished", "hints"]
+    DIALOG_TYPES = [
+        "questStart",
+        "questInProgress",
+        "questFinished",
+        "hints",
+        "questWrongItem",
+    ]
     generated_results = {}
 
     with ThreadPoolExecutor() as executor:

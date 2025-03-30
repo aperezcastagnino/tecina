@@ -4,6 +4,7 @@ export type DialogData = {
   questStart: string[][];
   questInProgress: string[][];
   questFinished: string[][];
+  questWrongItem: string[][];
   hints: string[][];
   options: string[] | undefined;
   correctOption: string | undefined;
@@ -22,6 +23,8 @@ export type RawDialogData = {
   questInProgressIAGenerated: string[];
   questFinished: string[];
   questFinishedIAGenerated: string[];
+  questWrongItem: string[];
+  questWrongItemIAGenerated: string[];
   hints: string[];
   hintsIAGenerated: string[];
   options: string[] | undefined;

@@ -16,6 +16,11 @@
       "questInProgressIAGenerated": [""],
       "questFinished": ["Thank you! Now I can make the marmalade!"],
       "questFinishedIAGenerated": [""],
+      "questWrongItem": [
+        "That's not an orange! I need oranges for the marmalade.",
+        "Sorry, but I specifically asked for oranges. That won't work!"
+      ],
+      "questWrongItemIAGenerated": [""],
       "hints": [
         "I'll give you a hint! Oranges are round and orange!",
         "I don't have nothing more to say! Good luck!"

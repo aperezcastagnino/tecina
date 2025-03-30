@@ -22,6 +22,10 @@ export const loadLevelData = (
         (dialog.questFinished ?? []).filter(Boolean),
         (dialog.questFinishedIAGenerated ?? []).filter(Boolean),
       ],
+      questWrongItem: [
+        (dialog.questWrongItem ?? []).filter(Boolean),
+        (dialog.questWrongItemIAGenerated ?? []).filter(Boolean),
+      ],
       hints: [
         (dialog.hints ?? []).filter(Boolean),
         (dialog.hintsIAGenerated ?? []).filter(Boolean),
