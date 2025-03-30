@@ -58,6 +58,16 @@ export class Dialog extends BaseDialog {
     }
   }
 
+  showWrongItemDialog(npcId?: string): void {
+    if (!this.activeDialog || this.questGiverNpcId !== npcId) return;
+
+    const textWrongItem = this.selectRandomText(
+      this.activeDialog.questWrongItem,
+    );
+    this.messagesToShow = [...textWrongItem];
+    this.showNextMessage();
+  }
+
   getQuestGiverNpcId(): string | undefined {
     return this.questGiverNpcId;
   }
