@@ -1,13 +1,13 @@
 import Phaser from "phaser";
 import { AssetKeys } from "assets/asset-keys";
-import { StorageManager } from "utils/storage-utils";
+import { StorageManager } from "utils/storage-manager";
 import type { LevelMetadata } from "types/level-stored";
 import { SceneKeys } from "./scene-keys";
 
 export default class LevelsMenu extends Phaser.Scene {
-  storageUtils!: StorageManager;
+  private storageUtils!: StorageManager;
 
-  levelData!: LevelMetadata[];
+  private levelData!: LevelMetadata[];
 
   constructor() {
     super(SceneKeys.LEVELS_MENU);
