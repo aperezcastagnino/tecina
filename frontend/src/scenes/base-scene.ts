@@ -18,7 +18,7 @@ import { Awards } from "common-ui/awards";
 import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { StorageManager } from "utils/storage-utils";
+import { StorageManager } from "utils/storage-manager";
 import type { LevelMetadata } from "types/level-stored";
 import { SceneKeys } from "./scene-keys";
 

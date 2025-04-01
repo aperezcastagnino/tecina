@@ -2,8 +2,8 @@ import { Scene } from "phaser";
 import { AssetKeys } from "assets/asset-keys";
 import { TextButton } from "common-ui/text-button";
 import { buttonStyles } from "styles/menu-styles";
-import { StorageManager } from "utils/storage-utils";
-import { InitialConfig } from "config/levels-config";
+import { StorageManager } from "utils/storage-manager";
+import { levelConfig } from "config/levels-config";
 import type { LevelMetadata } from "types/level-stored";
 import { SceneKeys } from "./scene-keys";
 
@@ -42,7 +42,7 @@ export class MainMenu extends Scene {
       this.sys.canvas.height / 2 - 50 + 140,
       "Comenzar a jugar",
       buttonStyles.startButton,
-      () => this.startNewGame(InitialConfig),
+      () => this.startNewGame(levelConfig),
     );
     startGameButton.setOrigin(0.5);
     startGameButton.setSize(
