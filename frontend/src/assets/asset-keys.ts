@@ -60,7 +60,6 @@ export const UIComponentKeys = {
 
 export const TileKeys = {
   GRASS: "GRASS",
-  FLOWER: "FLOWER",
   TREE: "TREE",
   FLOWER_GRASS: "FLOWER_GRASS",
 };

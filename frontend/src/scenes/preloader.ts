@@ -83,7 +83,6 @@ export class Preloader extends Scene {
 
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
-    this.load.image(TileKeys.FLOWER, "/tiles/flower.png");
     this.load.image(TileKeys.TREE, "/tiles/tree.png");
     this.load.image(TileKeys.FLOWER_GRASS, "/tiles/flower_grass.png");
 
