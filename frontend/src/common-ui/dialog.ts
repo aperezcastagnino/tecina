@@ -47,14 +47,15 @@ export class Dialog extends BaseDialog {
     if (!this.activeDialog) return;
 
     if (this.questGiverNpcId === npcId) {
-      this.activeDialog!.completed = true;
-      this.questGiverNpcId = undefined;
-
       const textFinished = this.selectRandomText(
         this.activeDialog.questFinished,
       );
       this.messagesToShow = [...textFinished];
       this.showNextMessage();
+
+      this.activeDialog!.completed = true;
+      this.questGiverNpcId = undefined;
+      this.activeDialog = undefined;
     }
   }
 

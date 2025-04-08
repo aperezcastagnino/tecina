@@ -51,7 +51,7 @@ export class Awards {
 
     this.scene = config.scene;
     this.assetKey = config.assetKey;
-    this.keyAnim = "AwardsKeyAnim";
+    this.keyAnim = `AwardsKeyAnim_${this.assetKey}`;
     this.positionX = AWARDS_CONFIG.POSITION_X;
     this.positionY = AWARDS_CONFIG.POSITION_Y;
     this.scale = AWARDS_CONFIG.SCALE;
@@ -79,7 +79,16 @@ export class Awards {
       this.removeAward(countDifference * -1);
     }
 
-    this.container.visible = this.sprites.length > 0;
+    this.container.visible = countDifference > 0;
+  }
+
+  destroy() {
+    this.sprites.forEach((sprite) => sprite.destroy());
+    if (this.container) {
+      this.container.removeAll(true);
+      this.container.destroy();
+    }
+    if (this.background) this.background.destroy();
   }
 
   private initializeUI(): void {

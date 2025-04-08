@@ -27,8 +27,7 @@
       ],
       "hintsIAGenerated": [""],
       "assetKey": "ORANGE",
-      "quantityToCollect": 1,
-      "disable": false
+      "quantityToCollect": 1
     },
     {
       "id": "d-2",
@@ -40,7 +39,8 @@
       "questInProgress": [],
       "questFinished": ["Thank you so much!"],
       "hints": [],
-      "disable": true
+      "assetKey": "BANANAS",
+      "quantityToCollect": 2
     },
     {
       "id": "dwo-1",
