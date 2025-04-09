@@ -80,8 +80,7 @@ export abstract class BaseScene extends Scene {
       return;
     }
 
-    const directionSelected = this.controls.getDirectionKeyPressed();
-    this.player.move(directionSelected);
+    this.player.move(this.controls.getDirectionKeyPressed());
 
     if (this.heldItem) {
       this.heldItem.setPosition(this.player.x, this.player.y);
@@ -302,7 +301,7 @@ export abstract class BaseScene extends Scene {
           npcSprite.y,
         );
 
-        if (distance <= 80) {
+        if (distance <= 70) {
           this.handleInteractionNPC(npcSprite);
         }
       });
