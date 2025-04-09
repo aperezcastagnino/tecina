@@ -46,7 +46,9 @@ export abstract class BaseScene extends Scene {
 
   protected storageManager!: StorageManager;
 
-  protected levelMetadata!: LevelMetadata[];
+  protected levelsMetadata!: LevelMetadata[];
+
+  protected currentLevel!: LevelMetadata;
 
   // =========================================================================
   // Abstract Methods
@@ -58,25 +60,26 @@ export abstract class BaseScene extends Scene {
   // Lifecycle Methods
   // =========================================================================
 
+  init(data: LevelMetadata[]) {
+    if (data) {
+      this.levelsMetadata = data;
+    }
+  }
+
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
     try {
-      let activeLevel;
-      this.storageManager = new StorageManager(this.game);
-      this.levelMetadata = this.storageManager.getLevelDateFromCache();
-      this.levelMetadata.forEach((element) => {
-        if (element.key === this.scene.key) {
-          activeLevel = element;
-          if (element.map) {
-            this.map = element.map;
-            this.map.assetGroups = new Map();
-          }
-        }
-      });
-      if (!this.map) {
+      this.currentLevel = this.levelsMetadata.find(
+        (level) => level.key === this.scene.key,
+      )!;
+      if (this.currentLevel.map) {
+        this.map = this.currentLevel.map;
+        this.map.assetGroups = new Map();
+      } else {
         this.map = MapGenerator.create(this.validateMapConfig(config));
+        this.currentLevel.map = this.map;
       }
-      activeLevel!.map = this.map;
-      this.storageManager.setLevelData(this.levelMetadata);
+
+      StorageManager.setLevelsMetadata(this.levelsMetadata);
       this.createAnimations();
     } catch (error) {
       console.error("Failed to initialize scene:", error);
@@ -373,28 +376,10 @@ export abstract class BaseScene extends Scene {
   }
 
   private levelCompleted(): void {
-    this.unlockNextLevel();
-
+    StorageManager.setLevelDateFromCache(this.game, this.currentLevel);
     this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
       this.scene.start(SceneKeys.LEVELS_MENU);
     });
-  }
-
-  private unlockNextLevel(): void {
-    const actualLevel = this.levelMetadata.find(
-      (element) => element.key === this.scene.key,
-    );
-    actualLevel!.map = undefined;
-    actualLevel!.active = false;
-    actualLevel!.completed = true;
-
-    actualLevel?.nextLevel?.forEach((elem) => {
-      const nextLevel = this.levelMetadata.find(
-        (element) => element.key === elem,
-      );
-      nextLevel!.enable = true;
-    });
-    this.storageManager.setLevelData(this.levelMetadata);
   }
 
   private applyWrongItemPenalty(): void {

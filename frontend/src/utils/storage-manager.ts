@@ -2,28 +2,29 @@ import { StorageKeys } from "scenes/storage-keys";
 import type { LevelMetadata } from "types/level-stored";
 
 export class StorageManager {
-  game!: Phaser.Game;
-
-  constructor(game: Phaser.Game) {
-    this.game = game;
+  static setLevelsMetadata(levelsData: LevelMetadata[]) {
+    localStorage.setItem(StorageKeys.LevelsData, JSON.stringify(levelsData));
   }
 
-  setLevelData(levelData: LevelMetadata[]) {
-    this.game.registry.set(StorageKeys.LevelData, levelData);
-    localStorage.setItem(StorageKeys.LevelData, JSON.stringify(levelData));
+  static getLevelDateFromCache(game: Phaser.Game): LevelMetadata {
+    return game.registry.get(StorageKeys.LevelData);
   }
 
-  getLevelDateFromCache(): LevelMetadata[] {
-    return this.game.registry.get(StorageKeys.LevelData);
+  static removeLevelDataFromCache(game: Phaser.Game) {
+    game.registry.remove(StorageKeys.LevelData);
   }
 
-  getStoredLevelData(): LevelMetadata[] {
-    return JSON.parse(localStorage.getItem(StorageKeys.LevelData)!) as [
+  static setLevelDateFromCache(game: Phaser.Game, levelData: LevelMetadata) {
+    game.registry.set(StorageKeys.LevelData, levelData);
+  }
+
+  static getStoredLevelsData(): LevelMetadata[] {
+    return JSON.parse(localStorage.getItem(StorageKeys.LevelsData)!) as [
       LevelMetadata,
     ];
   }
 
-  hasLevelStoredData(): boolean {
+  static hasLevelStoredData(): boolean {
     return localStorage.length > 0;
   }
 }
