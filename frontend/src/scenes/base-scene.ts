@@ -232,7 +232,6 @@ export abstract class BaseScene extends Scene {
       return;
     }
 
-    console.log("second hit. Im in the handlePlayerInteraction");
     this.interactWithNearNPC();
 
     if (this.heldItem) {
@@ -317,7 +316,6 @@ export abstract class BaseScene extends Scene {
     if (this.heldItem) {
       this.handleItemInteraction(npc);
     } else {
-      console.log("fifth hit. Im in the handleInteractionNPC");
       this.dialog?.show(npc.name);
     }
   }
