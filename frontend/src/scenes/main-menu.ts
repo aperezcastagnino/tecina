@@ -4,19 +4,14 @@ import { TextButton } from "common-ui/text-button";
 import { buttonStyles } from "styles/menu-styles";
 import { StorageManager } from "utils/storage-manager";
 import { levelConfig } from "config/levels-config";
-import type { LevelMetadata } from "types/level-stored";
 import { SceneKeys } from "./scene-keys";
 
 export class MainMenu extends Scene {
-  storageUtils!: StorageManager;
-
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
 
   create() {
-    this.storageUtils = new StorageManager(this.game);
-
     const background = this.add
       .image(0, 0, AssetKeys.BACKGROUNDS.MAIN_MENU)
       .setOrigin(0);
@@ -42,7 +37,7 @@ export class MainMenu extends Scene {
       this.sys.canvas.height / 2 - 50 + 140,
       "Comenzar a jugar",
       buttonStyles.startButton,
-      () => this.startNewGame(levelConfig),
+      () => this.startNewGame(),
     );
     startGameButton.setOrigin(0.5);
     startGameButton.setSize(
@@ -64,7 +59,7 @@ export class MainMenu extends Scene {
       buttonStyles.startButton.height,
     ); // Set fixed size
 
-    if (!this.storageUtils.hasLevelStoredData()) {
+    if (!StorageManager.hasLevelStoredData()) {
       loadPreviousGameButton.setStyle(buttonStyles.loadButtonDisabled);
       loadPreviousGameButton.setInteractive(false); // Desactivar la interactividad
     }
@@ -73,14 +68,14 @@ export class MainMenu extends Scene {
     this.add.existing(loadPreviousGameButton);
   }
 
-  startNewGame(levelData: LevelMetadata[]) {
-    this.storageUtils.setLevelData(levelData);
-    this.scene.start(SceneKeys.LEVELS_MENU);
+  startNewGame() {
+    StorageManager.setLevelsMetadata(levelConfig);
+    this.scene.start(SceneKeys.LEVELS_MENU, { continueGame: false });
   }
 
   continueGame() {
-    if (this.storageUtils.hasLevelStoredData()) {
-      this.startNewGame(this.storageUtils.getStoredLevelData());
+    if (StorageManager.hasLevelStoredData()) {
+      this.scene.start(SceneKeys.LEVELS_MENU, { continueGame: true });
     }
   }
 }
