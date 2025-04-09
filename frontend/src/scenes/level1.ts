@@ -40,7 +40,7 @@ export const level1Config: TileConfig[] = [
       type: TileType.OBSTACLE,
       asset: TileKeys.TREE,
     },
-    frequency: 100,
+    frequency: 1,
   },
   {
     tile: {

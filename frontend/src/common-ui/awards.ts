@@ -9,8 +9,8 @@ const AWARDS_CONFIG = {
   // eslint-disable-next-line object-shorthand
   FRAME_RATE: FRAME_RATE,
   SCALE: 3,
-  MAX_AWARDS: 5,
   PADDING: 35,
+  FADE_OUT_DURATION: 200,
 };
 
 export type AwardConfig = {
@@ -19,6 +19,7 @@ export type AwardConfig = {
   assetKey: string;
   spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
   scale?: number;
+  quantity: number;
 };
 
 export class Awards {
@@ -44,6 +45,10 @@ export class Awards {
 
   private container!: Phaser.GameObjects.Container;
 
+  get quantity(): number {
+    return this.sprites.length;
+  }
+
   constructor(config: AwardConfig) {
     if (!config.scene || !config.assetKey) {
       throw new Error("Invalid Awards configuration");
@@ -57,29 +62,40 @@ export class Awards {
     this.scale = AWARDS_CONFIG.SCALE;
     this.padding = AWARDS_CONFIG.PADDING;
     this.spriteConfig = config.spriteConfig;
-
     Animations.createAnimations(this.scene, {
       key: this.keyAnim,
       assetKey: this.assetKey,
       frameRate: config.frameRate,
     });
 
-    this.initializeUI();
+    this.initializeUI(config.quantity);
   }
 
-  setAwardsCount(count: number): void {
-    if (count < 0) {
-      throw new Error("Awards count cannot be negative");
-    }
+  removeAward(): number {
+    if (this.sprites.length === 0) return 0;
+    const sprite = this.sprites[this.sprites.length - 1];
 
-    const countDifference = count - this.sprites.length;
-    if (countDifference > 0) {
-      this.addAward(countDifference);
-    } else {
-      this.removeAward(countDifference * -1);
-    }
+    // Add a small delay between removals for a cascade effect
+    this.scene.time.delayedCall(25, () => {
+      if (sprite && sprite.active) {
+        // Add a fade-out effect
+        this.scene.tweens.add({
+          targets: sprite,
+          alpha: 0,
+          scale: this.scale * 0.8,
+          duration: AWARDS_CONFIG.FADE_OUT_DURATION,
+          onComplete: () => {
+            this.container.remove(sprite);
+            this.sprites.pop();
+            sprite.destroy();
 
-    this.container.visible = countDifference > 0;
+            this.container.visible = this.sprites.length !== 0;
+          },
+        });
+      }
+    });
+
+    return this.sprites.length - 1;
   }
 
   destroy() {
@@ -91,7 +107,7 @@ export class Awards {
     if (this.background) this.background.destroy();
   }
 
-  private initializeUI(): void {
+  private initializeUI(quantity: number): void {
     this.createBackground();
 
     this.container = this.scene.add.container(
@@ -100,7 +116,7 @@ export class Awards {
       [this.background],
     );
 
-    this.container.visible = false;
+    this.addAwards(quantity);
   }
 
   private createBackground(): void {
@@ -129,20 +145,14 @@ export class Awards {
       .setScrollFactor(0);
   }
 
-  private addAward(count: number): void {
+  private addAwards(count: number): void {
     if (count <= 0) return;
 
-    const initialLength = this.sprites.length;
     const spacing = this.spriteConfig.frameWidth + this.padding;
-    const actualCount = Math.min(
-      count,
-      AWARDS_CONFIG.MAX_AWARDS - initialLength,
-    );
-
-    for (let i = 0; i < actualCount; i += 1) {
+    for (let i = 0; i < count; i += 1) {
       const sprite = this.scene.add
         .sprite(
-          this.background.x + this.padding + spacing * (i + initialLength),
+          this.background.x + this.padding + spacing * i,
           0,
           this.assetKey,
         )
@@ -156,32 +166,6 @@ export class Awards {
       this.scene.time.delayedCall(i * 50, () => {
         if (sprite.active) {
           sprite.play(this.keyAnim);
-        }
-      });
-    }
-  }
-
-  private removeAward(count: number): void {
-    if (count <= 0 || this.sprites.length === 0) return;
-
-    for (let i = 0; i < count; i += 1) {
-      const sprite = this.sprites[this.sprites.length - 1 - i];
-
-      // Add a small delay between removals for a cascade effect
-      this.scene.time.delayedCall(i * 50, () => {
-        if (sprite && sprite.active) {
-          // Add a fade-out effect
-          this.scene.tweens.add({
-            targets: sprite,
-            alpha: 0,
-            scale: this.scale * 0.8,
-            duration: 200,
-            onComplete: () => {
-              this.container.remove(sprite);
-              this.sprites.splice(this.sprites.indexOf(sprite), 1);
-              sprite.destroy();
-            },
-          });
         }
       });
     }

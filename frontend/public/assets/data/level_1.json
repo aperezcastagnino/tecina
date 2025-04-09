@@ -33,12 +33,15 @@
       "id": "d-2",
       "description": "segundo dialogo",
       "questStart": [
-        "My favorite fruits are apples!",
-        "Could you pick some for me?"
+        "My favorite fruits are bananas!",
+        "Could you pick two bananas for me?"
       ],
-      "questInProgress": [],
-      "questFinished": ["Thank you so much!"],
-      "hints": [],
+      "questWrongItem": ["That's not a banana!"],
+      "questInProgress": ["Hurry up! I need two bananas!"],
+      "questFinished": [
+        "Thank you so much! I'll make the best banana bread ever!"
+      ],
+      "hints": ["I'll give you a hint! Bananas are yellow and curved!"],
       "assetKey": "BANANAS",
       "quantityToCollect": 2
     },

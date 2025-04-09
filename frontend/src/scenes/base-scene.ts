@@ -45,8 +45,6 @@ export abstract class BaseScene extends Scene {
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
-  protected remainingQuestItems = 0;
-
   // =========================================================================
   // Abstract Methods
   // =========================================================================
@@ -192,6 +190,8 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializeAwards(assetKey: string, quantity: number): void {
+    if (quantity === 0) return;
+
     if (this.awards) {
       this.awards.destroy();
     }
@@ -204,6 +204,7 @@ export abstract class BaseScene extends Scene {
         this.awards = new Awards({
           scene: this,
           assetKey,
+          quantity,
           spriteConfig: {
             startFrame: ItemKeys.FRUITS[fruitKey].STAR_FRAME,
             endFrame: ItemKeys.FRUITS[fruitKey].END_FRAME,
@@ -213,8 +214,6 @@ export abstract class BaseScene extends Scene {
         });
       }
     }
-
-    this.awards.setAwardsCount(quantity);
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
@@ -303,7 +302,7 @@ export abstract class BaseScene extends Scene {
           npcSprite.y,
         );
 
-        if (distance <= 50) {
+        if (distance <= 80) {
           this.handleInteractionNPC(npcSprite);
         }
       });
@@ -327,7 +326,6 @@ export abstract class BaseScene extends Scene {
     const assetKey = this.dialog?.getAssetKey();
 
     if (!assetKey) return;
-
     this.initializeAwards(assetKey, this.dialog?.getQuantityToCollect() || 0);
     this.showElements(assetKey);
   }
@@ -350,10 +348,8 @@ export abstract class BaseScene extends Scene {
   }
 
   private updateQuestProgress(npc: Phaser.GameObjects.Sprite): void {
-    this.remainingQuestItems -= 1;
-    this.awards.setAwardsCount(this.remainingQuestItems);
-
-    if (this.remainingQuestItems === 0) {
+    const quantity = this.awards.removeAward();
+    if (quantity === 0) {
       this.dialog?.setMessageComplete(npc.name);
 
       if (this.dialog?.areAllDialogsCompleted()) {
