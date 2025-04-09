@@ -40,7 +40,7 @@ export const level1Config: TileConfig[] = [
       type: TileType.OBSTACLE,
       asset: TileKeys.TREE,
     },
-    frequency: 100,
+    frequency: 1,
   },
   {
     tile: {
@@ -55,6 +55,13 @@ export const level1Config: TileConfig[] = [
       asset: ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
     },
     frequency: 5,
+  },
+  {
+    tile: {
+      type: TileType.INTERACTIVE_OBJECT,
+      asset: ItemKeys.FRUITS.BANANAS.ASSET_KEY,
+    },
+    frequency: 10,
   },
 ];
 
@@ -71,11 +78,13 @@ export class Level1 extends BaseScene {
     await super.create();
 
     this.hideElements(ItemKeys.FRUITS.ORANGE.ASSET_KEY);
+    this.hideElements(ItemKeys.FRUITS.BANANAS.ASSET_KEY);
   }
 
   protected createAnimations(): void {
     Animations.useOrangeAnimation(this);
     Animations.useStrawberryAnimation(this);
+    Animations.useBananasAnimation(this);
   }
 
   protected setupCollisions(): void {
@@ -83,5 +92,6 @@ export class Level1 extends BaseScene {
 
     this.makeItemDraggable(ItemKeys.FRUITS.ORANGE.ASSET_KEY);
     this.makeItemDraggable(ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.FRUITS.BANANAS.ASSET_KEY);
   }
 }

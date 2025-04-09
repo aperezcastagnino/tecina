@@ -17,7 +17,12 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { ItemKeys, TileKeys, CharacterKeys } from "assets/asset-keys";
+import {
+  ItemKeys,
+  TileKeys,
+  CharacterKeys,
+  findAssetKeyByValue,
+} from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -39,8 +44,6 @@ export abstract class BaseScene extends Scene {
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
-
-  protected remainingQuestItems = 0;
 
   // =========================================================================
   // Abstract Methods
@@ -154,7 +157,6 @@ export abstract class BaseScene extends Scene {
   private initializeUI(): void {
     this.initializeDialogs();
     this.initializeHealthBar();
-    this.initializeAwards();
   }
 
   private initializeCamera(): void {
@@ -187,17 +189,31 @@ export abstract class BaseScene extends Scene {
     this.healthBar = new HealthBar(this);
   }
 
-  private initializeAwards(): void {
-    this.awards = new Awards({
-      scene: this,
-      assetKey: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
-      spriteConfig: {
-        startFrame: ItemKeys.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.ORANGE.END_FRAME,
-        frameWidth: ItemKeys.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.ORANGE.FRAME_HEIGHT,
-      },
-    });
+  private initializeAwards(assetKey: string, quantity: number): void {
+    if (quantity === 0) return;
+
+    if (this.awards) {
+      this.awards.destroy();
+    }
+
+    const asset = findAssetKeyByValue(assetKey);
+    if (asset && asset.path.length > 1) {
+      const fruitKey = asset.path[1] as keyof typeof ItemKeys.FRUITS;
+
+      if (fruitKey && ItemKeys.FRUITS[fruitKey]) {
+        this.awards = new Awards({
+          scene: this,
+          assetKey,
+          quantity,
+          spriteConfig: {
+            startFrame: ItemKeys.FRUITS[fruitKey].STAR_FRAME,
+            endFrame: ItemKeys.FRUITS[fruitKey].END_FRAME,
+            frameWidth: ItemKeys.FRUITS[fruitKey].FRAME_WIDTH,
+            frameHeight: ItemKeys.FRUITS[fruitKey].FRAME_HEIGHT,
+          },
+        });
+      }
+    }
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
@@ -286,7 +302,7 @@ export abstract class BaseScene extends Scene {
           npcSprite.y,
         );
 
-        if (distance <= 70) {
+        if (distance <= 80) {
           this.handleInteractionNPC(npcSprite);
         }
       });
@@ -310,9 +326,7 @@ export abstract class BaseScene extends Scene {
     const assetKey = this.dialog?.getAssetKey();
 
     if (!assetKey) return;
-
-    this.remainingQuestItems = this.dialog?.getQuantityToCollect() || 0;
-    this.awards.setAwardsCount(this.remainingQuestItems);
+    this.initializeAwards(assetKey, this.dialog?.getQuantityToCollect() || 0);
     this.showElements(assetKey);
   }
 
@@ -334,25 +348,14 @@ export abstract class BaseScene extends Scene {
   }
 
   private updateQuestProgress(npc: Phaser.GameObjects.Sprite): void {
-    this.remainingQuestItems -= 1;
-    this.awards.setAwardsCount(this.remainingQuestItems);
-
-    if (this.remainingQuestItems === 0) {
+    const quantity = this.awards.removeAward();
+    if (quantity === 0) {
       this.dialog?.setMessageComplete(npc.name);
-      this.dialog?.show(npc.name);
 
       if (this.dialog?.areAllDialogsCompleted()) {
         this.levelCompleted();
       }
     }
-  }
-
-  private levelCompleted(): void {
-    this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
-      setTimeout(() => {
-        this.scene.start(SceneKeys.LEVELS_MENU);
-      }, 6000);
-    });
   }
 
   private applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
@@ -364,19 +367,12 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
-    if (!config.tilesConfig?.length) {
-      throw new Error("Invalid map configuration: Missing tiles config");
-    }
-
-    return {
-      name: this.scene.key,
-      tilesConfig: config.tilesConfig,
-      mapWidth: config.mapWidth ?? MAP_WIDTH,
-      mapHeight: config.mapHeight ?? MAP_HEIGHT,
-      minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
-      minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
-    };
+  private levelCompleted(): void {
+    this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
+      setTimeout(() => {
+        this.scene.start(SceneKeys.LEVELS_MENU);
+      }, 6000);
+    });
   }
 
   private setElementsVisibility(
@@ -394,5 +390,20 @@ export abstract class BaseScene extends Scene {
 
       return true;
     });
+  }
+
+  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
+    if (!config.tilesConfig?.length) {
+      throw new Error("Invalid map configuration: Missing tiles config");
+    }
+
+    return {
+      name: this.scene.key,
+      tilesConfig: config.tilesConfig,
+      mapWidth: config.mapWidth ?? MAP_WIDTH,
+      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
+      minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
+    };
   }
 }
