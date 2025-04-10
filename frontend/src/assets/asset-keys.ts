@@ -42,6 +42,7 @@ export const CharacterKeys = {
 export const UIComponentKeys = {
   CURSOR: "CURSOR",
   BUTTON_CIRCLE: "BUTTON_CIRCLE",
+  BUTTON_SHADOW: "BUTTON_SHADOW",
   HEALTH_BAR: {
     LEFT: {
       ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
