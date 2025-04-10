@@ -29,12 +29,12 @@ export default class LevelsMenu extends Phaser.Scene {
 
     const positions = [
       { x: 260, y: 420 },
-      { x: 520, y: 620 },
-      { x: 870, y: 500 },
-      { x: 760, y: 260 },
-      { x: 1400, y: 500 },
+      { x: 450, y: 620 },
+      { x: 820, y: 500 },
+      { x: 690, y: 260 },
+      { x: 1370, y: 500 },
       { x: 1510, y: 210 },
-      { x: 990, y: 860 },
+      { x: 940, y: 860 },
     ];
 
     positions.forEach((pos, index) => {
