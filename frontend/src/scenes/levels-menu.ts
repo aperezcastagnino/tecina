@@ -1,37 +1,46 @@
 import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
-import { SceneKeys } from "./scene-keys";
+import { SceneKeys } from "scenes/scene-keys";
+import { StorageManager } from "utils/storage-manager";
+import type { LevelMetadata } from "types/level-stored";
+import { levelConfig } from "config/levels-config";
 
 export default class LevelsMenu extends Phaser.Scene {
+  private levelMetadata!: LevelMetadata[];
+
   constructor() {
     super(SceneKeys.LEVELS_MENU);
   }
 
+  init(data: { continueGame: boolean }) {
+    if (data.continueGame) {
+      this.levelMetadata = StorageManager.getStoredLevelsData();
+    } else {
+      this.levelMetadata = levelConfig;
+      StorageManager.setLevelsMetadata(levelConfig);
+    }
+  }
+
   create() {
+    this.completeAndUnlockLevels();
     const background = this.add.image(0, 0, BackgroundKeys.LEVELS).setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
 
-    const positions = [
-      { x: 260, y: 420 },
-      { x: 520, y: 620 },
-      { x: 870, y: 500 },
-      { x: 760, y: 260 },
-      { x: 1400, y: 500 },
-      { x: 1510, y: 210 },
-      { x: 990, y: 860 },
-    ];
-
-    positions.forEach((pos, index) => {
+    this.levelMetadata.forEach((level, index) => {
       const button = this.add
-        .image(pos.x, pos.y, UIComponentKeys.BUTTON_CIRCLE) // they all have the same image
+        .image(
+          level.position.x,
+          level.position.y,
+          UIComponentKeys.BUTTON_CIRCLE,
+        ) // they all have the same image
         .setInteractive({ useHandCursor: true })
         .setScale(0.4)
-        .on("pointerdown", () => this.startLevel(index + 1))
+        .on("pointerdown", () => this.startLevel(level.key))
         .setName(`levelImageButton${index + 1}`);
-      if (index >= 1) {
-        // Apply grey tint to all buttons except the first one
+      if (!level.enable) {
         button.setTint(0x808080);
+        button.setInteractive({ useHandCursor: false });
       }
       this.add.existing(button);
     });
@@ -46,8 +55,27 @@ export default class LevelsMenu extends Phaser.Scene {
     }
   }
 
-  startLevel(levelNumber: number) {
-    const level = `LEVEL_${levelNumber}` as keyof typeof SceneKeys;
-    this.scene.start(SceneKeys[level]);
+  completeAndUnlockLevels() {
+    let previusLevel;
+    const levelCompleted = StorageManager.getLevelDateFromCache(this.game);
+    if (levelCompleted) {
+      previusLevel = this.levelMetadata.find(
+        (level) => level.key === levelCompleted.key,
+      );
+      previusLevel!.completed = true;
+      previusLevel!.map = undefined;
+      previusLevel!.active = false;
+      previusLevel!.nextLevel?.forEach((elem) => {
+        const nextLevel = this.levelMetadata.find(
+          (element) => element.key === elem,
+        );
+        nextLevel!.enable = true;
+      });
+      StorageManager.removeLevelDataFromCache(this.game);
+    }
+  }
+
+  startLevel(levelKey: string) {
+    this.scene.start(levelKey, this.levelMetadata);
   }
 }
