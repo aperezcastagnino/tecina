@@ -13,7 +13,7 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     log_level: LogLevel = LogLevel.debug
-    gemini_api_key: str
+    gemini_api_key: str = "DUMMY_API_KEY"
 
 
 settings = Settings()

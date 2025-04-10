@@ -15,11 +15,16 @@ import {
 } from "config/config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
-import { AssetKeys } from "assets/asset-keys";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
 import { StorageManager } from "utils/storage-manager";
 import type { LevelMetadata } from "types/level-stored";
+import {
+  ItemKeys,
+  TileKeys,
+  CharacterKeys,
+  findAssetKeyByValue,
+} from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -95,13 +100,14 @@ export abstract class BaseScene extends Scene {
   }
 
   update(): void {
+    if (!this.controls) return;
+
     if (this.controls.wasSpaceKeyPressed()) {
       this.handlePlayerInteraction();
       return;
     }
 
-    const directionSelected = this.controls.getDirectionKeyPressed();
-    this.player.move(directionSelected);
+    this.player.move(this.controls.getDirectionKeyPressed());
 
     if (this.heldItem) {
       this.heldItem.setPosition(this.player.x, this.player.y);
@@ -138,10 +144,9 @@ export abstract class BaseScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [
-      AssetKeys.TILES.TREE,
-      AssetKeys.CHARACTERS.NPC,
-    ].map((key) => this.map.assetGroups.get(key)!);
+    const collisionGroups = [TileKeys.TREE, CharacterKeys.NPC].map(
+      (key) => this.map.assetGroups.get(key)!,
+    );
 
     collisionGroups.forEach((group) => {
       this.physics.add.collider(this.player, group);
@@ -165,14 +170,10 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializePlayer(): void {
-    const startPosition = {
-      x: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
-      y: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
-    };
-
     this.player = new Player({
       scene: this,
-      position: startPosition,
+      positionX: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
+      positionY: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
       velocity: 700,
     });
 
@@ -182,7 +183,6 @@ export abstract class BaseScene extends Scene {
   private initializeUI(): void {
     this.initializeDialogs();
     this.initializeHealthBar();
-    this.initializeAwards();
   }
 
   private initializeCamera(): void {
@@ -215,17 +215,31 @@ export abstract class BaseScene extends Scene {
     this.healthBar = new HealthBar(this);
   }
 
-  private initializeAwards(): void {
-    this.awards = new Awards({
-      scene: this,
-      assetKey: AssetKeys.ITEMS.FRUITS.ORANGE.ASSET_KEY,
-      spriteConfig: {
-        startFrame: AssetKeys.ITEMS.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: AssetKeys.ITEMS.FRUITS.ORANGE.END_FRAME,
-        frameWidth: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: AssetKeys.ITEMS.FRUITS.ORANGE.FRAME_HEIGHT,
-      },
-    });
+  private initializeAwards(assetKey: string, quantity: number): void {
+    if (quantity === 0) return;
+
+    if (this.awards) {
+      this.awards.destroy();
+    }
+
+    const asset = findAssetKeyByValue(assetKey);
+    if (asset && asset.path.length > 1) {
+      const fruitKey = asset.path[1] as keyof typeof ItemKeys.FRUITS;
+
+      if (fruitKey && ItemKeys.FRUITS[fruitKey]) {
+        this.awards = new Awards({
+          scene: this,
+          assetKey,
+          quantity,
+          spriteConfig: {
+            startFrame: ItemKeys.FRUITS[fruitKey].STAR_FRAME,
+            endFrame: ItemKeys.FRUITS[fruitKey].END_FRAME,
+            frameWidth: ItemKeys.FRUITS[fruitKey].FRAME_WIDTH,
+            frameHeight: ItemKeys.FRUITS[fruitKey].FRAME_HEIGHT,
+          },
+        });
+      }
+    }
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
@@ -285,8 +299,8 @@ export abstract class BaseScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== AssetKeys.TILES.TREE ||
-              ol.gameObject.texture.key !== AssetKeys.CHARACTERS.NPC),
+            (ol.gameObject.texture.key !== TileKeys.TREE ||
+              ol.gameObject.texture.key !== CharacterKeys.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -303,7 +317,7 @@ export abstract class BaseScene extends Scene {
 
   private interactWithNearNPC(): void {
     this.map.assetGroups
-      .get(AssetKeys.CHARACTERS.NPC)!
+      .get(CharacterKeys.NPC)!
       .getChildren()
       .forEach((npc) => {
         const npcSprite = npc as Phaser.GameObjects.Sprite;
@@ -338,9 +352,7 @@ export abstract class BaseScene extends Scene {
     const assetKey = this.dialog?.getAssetKey();
 
     if (!assetKey) return;
-
-    this.remainingQuestItems = this.dialog?.getQuantityToCollect() || 0;
-    this.awards.setAwardsCount(this.remainingQuestItems);
+    this.initializeAwards(assetKey, this.dialog?.getQuantityToCollect() || 0);
     this.showElements(assetKey);
   }
 
@@ -351,7 +363,7 @@ export abstract class BaseScene extends Scene {
       if (this.heldItem!.texture.key === assetKey) {
         this.updateQuestProgress(npc);
       } else {
-        this.applyWrongItemPenalty();
+        this.applyWrongItemPenalty(npc);
       }
 
       this.heldItem!.destroy();
@@ -362,12 +374,9 @@ export abstract class BaseScene extends Scene {
   }
 
   private updateQuestProgress(npc: Phaser.GameObjects.Sprite): void {
-    this.remainingQuestItems -= 1;
-    this.awards.setAwardsCount(this.remainingQuestItems);
-
-    if (this.remainingQuestItems === 0) {
+    const quantity = this.awards.removeAward();
+    if (quantity === 0) {
       this.dialog?.setMessageComplete(npc.name);
-      this.dialog?.show(npc.name);
 
       if (this.dialog?.areAllDialogsCompleted()) {
         this.levelCompleted();
@@ -375,12 +384,6 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-  private levelCompleted(): void {
-    StorageManager.setLevelDateFromCache(this.game, this.currentLevel);
-    this.cameras.main.fadeOut(20000, 0, 0, 0, () => {
-      this.scene.start(SceneKeys.LEVELS_MENU);
-    });
-  }
 
   private applyWrongItemPenalty(): void {
     const isDead = this.healthBar.decreaseHealth(30);
@@ -389,19 +392,13 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
-    if (!config.tilesConfig?.length) {
-      throw new Error("Invalid map configuration: Missing tiles config");
-    }
-
-    return {
-      name: this.scene.key,
-      tilesConfig: config.tilesConfig,
-      mapWidth: config.mapWidth ?? MAP_WIDTH,
-      mapHeight: config.mapHeight ?? MAP_HEIGHT,
-      minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
-      minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
-    };
+  private levelCompleted(): void {
+    StorageManager.setLevelDateFromCache(this.game, this.currentLevel);
+    this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
+      setTimeout(() => {
+        this.scene.start(SceneKeys.LEVELS_MENU);
+      }, 6000);
+    });
   }
 
   private setElementsVisibility(
@@ -419,5 +416,20 @@ export abstract class BaseScene extends Scene {
 
       return true;
     });
+  }
+
+  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
+    if (!config.tilesConfig?.length) {
+      throw new Error("Invalid map configuration: Missing tiles config");
+    }
+
+    return {
+      name: this.scene.key,
+      tilesConfig: config.tilesConfig,
+      mapWidth: config.mapWidth ?? MAP_WIDTH,
+      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
+      minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
+    };
   }
 }

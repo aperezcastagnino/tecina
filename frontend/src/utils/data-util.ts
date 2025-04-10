@@ -1,5 +1,8 @@
 import type { DialogData, LevelData, RawDialogData } from "types/level-data";
 
+const isNotEmpty = (arr: string[]): boolean =>
+  arr.length > 0 && arr.some((t) => t.trim().length > 0);
+
 export const loadLevelData = (
   scene: Phaser.Scene,
   level: string,
@@ -11,21 +14,24 @@ export const loadLevelData = (
       id: dialog.id,
       description: dialog.description,
       questStart: [
-        ...(dialog.questStart ?? []).filter(Boolean),
-        ...(dialog.questStartIAGenerated ?? []).filter(Boolean),
-      ],
+        dialog.questStart ?? [],
+        dialog.questStartIAGenerated ?? [],
+      ].filter(isNotEmpty),
       questInProgress: [
-        ...(dialog.questInProgress ?? []).filter(Boolean),
-        ...(dialog.questInProgressIAGenerated ?? []).filter(Boolean),
-      ],
+        dialog.questInProgress ?? [],
+        dialog.questInProgressIAGenerated ?? [],
+      ].filter(isNotEmpty),
       questFinished: [
-        ...(dialog.questFinished ?? []).filter(Boolean),
-        ...(dialog.questFinishedIAGenerated ?? []).filter(Boolean),
-      ],
-      hints: [
-        ...(dialog.hints ?? []).filter(Boolean),
-        ...(dialog.hintsIAGenerated ?? []).filter(Boolean),
-      ],
+        dialog.questFinished ?? [],
+        dialog.questFinishedIAGenerated ?? [],
+      ].filter(isNotEmpty),
+      questWrongItem: [
+        dialog.questWrongItem ?? [],
+        dialog.questWrongItemIAGenerated ?? [],
+      ].filter(isNotEmpty),
+      hints: [dialog.hints ?? [], dialog.hintsIAGenerated ?? []].filter(
+        isNotEmpty,
+      ),
       options: dialog.options,
       correctOption: dialog.correctOption,
       assetKey: dialog.assetKey,

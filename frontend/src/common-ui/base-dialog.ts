@@ -67,6 +67,10 @@ export abstract class BaseDialog extends UIComponent {
     this.createContainer([this.createPanel(), this.statementUI]);
   }
 
+  protected selectRandomText(array: string[][]): string[] {
+    return array[Math.floor(Math.random() * array.length)]!;
+  }
+
   private createUIText(): Phaser.GameObjects.Text {
     return this.scene.add
       .text(18, 12, "", {

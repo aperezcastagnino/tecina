@@ -1,10 +1,11 @@
 export type DialogData = {
   id: string | undefined;
   description: string | undefined;
-  questStart: string[];
-  questInProgress: string[];
-  questFinished: string[];
-  hints: string[];
+  questStart: string[][];
+  questInProgress: string[][];
+  questFinished: string[][];
+  questWrongItem: string[][];
+  hints: string[][];
   options: string[] | undefined;
   correctOption: string | undefined;
   assetKey: string | undefined;
@@ -22,6 +23,8 @@ export type RawDialogData = {
   questInProgressIAGenerated: string[];
   questFinished: string[];
   questFinishedIAGenerated: string[];
+  questWrongItem: string[];
+  questWrongItemIAGenerated: string[];
   hints: string[];
   hintsIAGenerated: string[];
   options: string[] | undefined;

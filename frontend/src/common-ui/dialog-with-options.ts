@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { AssetKeys } from "assets/asset-keys";
 import { Colors, DialogColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import {
@@ -10,6 +9,7 @@ import {
 } from "common/player-keys";
 import type { DialogData } from "types/level-data";
 import { Animations } from "utils/animation-utils";
+import { UIComponentKeys } from "assets/asset-keys";
 import type { DialogConfig } from "./base-dialog";
 
 const MENU_CURSOR_POS = {
@@ -158,7 +158,7 @@ export class DialogWithOptions {
       .image(
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
-        AssetKeys.UI_COMPONENTS.CURSOR,
+        UIComponentKeys.CURSOR,
         0,
       )
       .setOrigin(0.5)
@@ -229,12 +229,13 @@ export class DialogWithOptions {
   }
 
   #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
-    if (this.questGiverNpcId === npcId) return dialog.questInProgress;
-    if (this.questGiverNpcId) return dialog.hints;
+    if (this.questGiverNpcId === npcId)
+      return this.selectRandomText(dialog.questInProgress);
+    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
 
     // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";
-    return dialog.questStart;
+    return this.selectRandomText(dialog.questStart);
   }
 
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
@@ -251,21 +252,6 @@ export class DialogWithOptions {
   hide(): void {
     this.setIsVisible(false);
   }
-
-  // show(npcId: string): void {
-
-  //   if (npcId) {
-  //     this.#container.setAlpha(1);
-  //     this.isVisible = true;
-  //     const npcDialogs = this.#findDialogsByNpcId(npcId);
-  //     this.#handleDialogData(npcDialogs);
-  //   }
-  // }
-
-  // hide(): void {
-  //   this.#container.setAlpha(0);
-  //   this.isVisible = false;
-  // }
 
   playInputCursorAnimation() {
     this.#cursor.setPosition(this.#cursor.displayWidth * 2.7, this.#cursor.y);
@@ -381,5 +367,9 @@ export class DialogWithOptions {
       this.activeDialog = undefined;
       this.questGiverNpcId = undefined;
     }
+  }
+
+  protected selectRandomText(array: string[][]): string[] {
+    return array[Math.floor(Math.random() * array.length)]!;
   }
 }
