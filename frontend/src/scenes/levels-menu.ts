@@ -22,14 +22,18 @@ export default class LevelsMenu extends Phaser.Scene {
   }
 
   create() {
-    this.completeAndUnlockLevels()
+    this.completeAndUnlockLevels();
     const background = this.add.image(0, 0, BackgroundKeys.LEVELS).setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
 
     this.levelMetadata.forEach((level, index) => {
       const button = this.add
-        .image(level.position.x, level.position.y, UIComponentKeys.BUTTON_CIRCLE) // they all have the same image
+        .image(
+          level.position.x,
+          level.position.y,
+          UIComponentKeys.BUTTON_CIRCLE,
+        ) // they all have the same image
         .setInteractive({ useHandCursor: true })
         .setScale(0.4)
         .on("pointerdown", () => this.startLevel(level.key))

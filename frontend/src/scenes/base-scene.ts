@@ -384,7 +384,6 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-
   private applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
     this.dialog?.showWrongItemDialog(npc.name);
 
