@@ -7,7 +7,7 @@ import {
   type Direction,
   type PlayerKeys,
 } from "common/player-keys";
-import type { DialogData } from "types/level-data";
+import type { DialogData } from "types/dialog-data";
 import { Animations } from "utils/animation-utils";
 import { UIComponentKeys } from "assets/asset-keys";
 import type { DialogConfig } from "./base-dialog";

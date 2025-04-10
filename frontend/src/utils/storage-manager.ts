@@ -1,27 +1,39 @@
-import { StorageKeys } from "scenes/storage-keys";
-import type { LevelMetadata } from "types/level-stored";
+import type { LevelMetadata } from "types/level-data";
+
+const StorageKeys = {
+  LevelsMetadaData: "LevelsMetadaData",
+  LevelMetadaData: "LevelMetadaData",
+};
 
 export class StorageManager {
-  static setLevelsMetadata(levelsData: LevelMetadata[]) {
-    localStorage.setItem(StorageKeys.LevelsData, JSON.stringify(levelsData));
+  static setLevelsMetadataToStorage(levelsData: LevelMetadata[]): void {
+    localStorage.setItem(
+      StorageKeys.LevelsMetadaData,
+      JSON.stringify(levelsData),
+    );
   }
 
-  static getLevelDateFromCache(game: Phaser.Game): LevelMetadata {
-    return game.registry.get(StorageKeys.LevelData);
+  static getLevelsMetadataDataFromStorage(): LevelMetadata[] {
+    return JSON.parse(
+      localStorage.getItem(StorageKeys.LevelsMetadaData)!,
+    ) as LevelMetadata[];
   }
 
-  static removeLevelDataFromCache(game: Phaser.Game) {
-    game.registry.remove(StorageKeys.LevelData);
+  static setLevelMetadaDataInRegistry(
+    game: Phaser.Game,
+    levelData: LevelMetadata,
+  ): void {
+    game.registry.set(StorageKeys.LevelMetadaData, levelData);
   }
 
-  static setLevelDateFromCache(game: Phaser.Game, levelData: LevelMetadata) {
-    game.registry.set(StorageKeys.LevelData, levelData);
+  static getLevelMetadataFromRegistry(
+    game: Phaser.Game,
+  ): LevelMetadata | undefined {
+    return game.registry.get(StorageKeys.LevelMetadaData);
   }
 
-  static getStoredLevelsData(): LevelMetadata[] {
-    return JSON.parse(localStorage.getItem(StorageKeys.LevelsData)!) as [
-      LevelMetadata,
-    ];
+  static removeLevelMetadaDataFromRegistry(game: Phaser.Game): void {
+    game.registry.remove(StorageKeys.LevelMetadaData);
   }
 
   static hasLevelStoredData(): boolean {

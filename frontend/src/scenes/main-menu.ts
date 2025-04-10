@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 import { TextButton } from "common-ui/text-button";
 import { buttonStyles } from "styles/menu-styles";
 import { StorageManager } from "utils/storage-manager";
-import { levelConfig } from "config/levels-config";
+import { levelsConfig } from "config/levels-config";
 import { BackgroundKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
@@ -43,7 +43,7 @@ export class MainMenu extends Scene {
     startGameButton.setSize(
       buttonStyles.startButton.width,
       buttonStyles.startButton.height,
-    ); // Set fixed size
+    );
 
     const loadPreviousGameButton = new TextButton(
       this,
@@ -57,11 +57,11 @@ export class MainMenu extends Scene {
     loadPreviousGameButton.setSize(
       buttonStyles.startButton.width,
       buttonStyles.startButton.height,
-    ); // Set fixed size
+    );
 
     if (!StorageManager.hasLevelStoredData()) {
       loadPreviousGameButton.setStyle(buttonStyles.loadButtonDisabled);
-      loadPreviousGameButton.setInteractive(false); // Desactivar la interactividad
+      loadPreviousGameButton.setInteractive(false);
     }
 
     this.add.existing(startGameButton);
@@ -69,7 +69,7 @@ export class MainMenu extends Scene {
   }
 
   startNewGame() {
-    StorageManager.setLevelsMetadata(levelConfig);
+    StorageManager.setLevelsMetadataToStorage(levelsConfig);
     this.scene.start(SceneKeys.LEVELS_MENU);
   }
 

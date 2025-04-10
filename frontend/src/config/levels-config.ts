@@ -1,7 +1,7 @@
 import { SceneKeys } from "scenes/scene-keys";
-import type { LevelMetadata } from "types/level-stored";
+import type { LevelMetadata } from "types/level-data";
 
-export const levelConfig: LevelMetadata[] = [
+export const levelsConfig: LevelMetadata[] = [
   {
     key: SceneKeys.LEVEL_1,
     position: { x: 360, y: 430 },

@@ -2,8 +2,8 @@ import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "scenes/scene-keys";
 import { StorageManager } from "utils/storage-manager";
-import type { LevelMetadata } from "types/level-stored";
-import { levelConfig } from "config/levels-config";
+import type { LevelMetadata } from "types/level-data";
+import { levelsConfig } from "config/levels-config";
 
 export default class LevelsMenu extends Phaser.Scene {
   private levelMetadata!: LevelMetadata[];
@@ -14,10 +14,10 @@ export default class LevelsMenu extends Phaser.Scene {
 
   init(data: { continueGame: boolean }) {
     if (data.continueGame) {
-      this.levelMetadata = StorageManager.getStoredLevelsData();
+      this.levelMetadata = StorageManager.getLevelsMetadataDataFromStorage();
     } else {
-      this.levelMetadata = levelConfig;
-      StorageManager.setLevelsMetadata(levelConfig);
+      this.levelMetadata = levelsConfig;
+      StorageManager.setLevelsMetadataToStorage(levelsConfig);
     }
   }
 
@@ -56,23 +56,29 @@ export default class LevelsMenu extends Phaser.Scene {
   }
 
   completeAndUnlockLevels() {
-    let previusLevel;
-    const levelCompleted = StorageManager.getLevelDateFromCache(this.game);
-    if (levelCompleted) {
-      previusLevel = this.levelMetadata.find(
-        (level) => level.key === levelCompleted.key,
+    const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
+      this.game,
+    );
+    if (!levelCompleted) return;
+
+    const oldVersionLevelCompleted = this.levelMetadata.find(
+      (level) => level.key === levelCompleted.key,
+    );
+
+    if (!oldVersionLevelCompleted) return;
+
+    oldVersionLevelCompleted.completed = true;
+    oldVersionLevelCompleted.map = undefined;
+    oldVersionLevelCompleted.active = false;
+
+    oldVersionLevelCompleted.nextLevel?.forEach((elem) => {
+      const nextLevel = this.levelMetadata.find(
+        (element) => element.key === elem,
       );
-      previusLevel!.completed = true;
-      previusLevel!.map = undefined;
-      previusLevel!.active = false;
-      previusLevel!.nextLevel?.forEach((elem) => {
-        const nextLevel = this.levelMetadata.find(
-          (element) => element.key === elem,
-        );
-        nextLevel!.enable = true;
-      });
-      StorageManager.removeLevelDataFromCache(this.game);
-    }
+      nextLevel!.enable = true;
+    });
+
+    StorageManager.removeLevelMetadaDataFromRegistry(this.game);
   }
 
   startLevel(levelKey: string) {

@@ -24,7 +24,7 @@ import {
   CharacterKeys,
   findAssetKeyByValue,
 } from "assets/asset-keys";
-import type { LevelMetadata } from "types/level-stored";
+import type { LevelMetadata } from "types/level-data";
 import { StorageManager } from "utils/storage-manager";
 import { SceneKeys } from "./scene-keys";
 
@@ -47,10 +47,6 @@ export abstract class BaseScene extends Scene {
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
-
-  protected remainingQuestItems = 0;
-
-  protected storageManager!: StorageManager;
 
   protected levelsMetadata!: LevelMetadata[];
 
@@ -80,7 +76,6 @@ export abstract class BaseScene extends Scene {
       } catch (error) {
         console.error("Failed to initialize scene:", error);
       }
-
     } else {
       try {
         this.currentLevel = this.levelsMetadata.find(
@@ -92,9 +87,9 @@ export abstract class BaseScene extends Scene {
         } else {
           this.map = MapGenerator.create(this.validateMapConfig(config));
           this.currentLevel.map = this.map;
+          StorageManager.setLevelsMetadataToStorage(this.levelsMetadata);
         }
-  
-        StorageManager.setLevelsMetadata(this.levelsMetadata);
+
         this.createAnimations();
       } catch (error) {
         console.error("Failed to initialize scene:", error);
@@ -405,7 +400,8 @@ export abstract class BaseScene extends Scene {
   }
 
   private levelCompleted(): void {
-    StorageManager.setLevelDateFromCache(this.game, this.currentLevel);
+    this.currentLevel.completed = true;
+    StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
     this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
       setTimeout(() => {
         this.scene.start(SceneKeys.LEVELS_MENU);

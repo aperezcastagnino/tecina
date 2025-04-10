@@ -1,4 +1,5 @@
-import type { DialogData, LevelData, RawDialogData } from "types/level-data";
+import type { DialogData, RawDialogData } from "types/dialog-data";
+import type { LevelData } from "types/level-data";
 
 const isNotEmpty = (arr: string[]): boolean =>
   arr.length > 0 && arr.some((t) => t.trim().length > 0);
