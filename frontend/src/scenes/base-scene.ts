@@ -149,7 +149,7 @@ export abstract class BaseScene extends Scene {
       positionY: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
       velocity: 700,
     });
-
+    this.player.body!.setSize(TILE_SIZE/2, TILE_SIZE/2);
     this.controls = new Controls(this);
   }
 
