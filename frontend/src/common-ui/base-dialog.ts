@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import type { DialogData } from "types/level-data";
+import type { DialogData } from "types/dialog-data";
 import { DialogColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { UIComponent } from "./ui-component";

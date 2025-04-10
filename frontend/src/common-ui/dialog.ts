@@ -1,4 +1,4 @@
-import type { DialogData } from "types/level-data";
+import type { DialogData } from "types/dialog-data";
 import { Animations } from "utils/animation-utils";
 import { BaseDialog, type DialogConfig } from "./base-dialog";
 

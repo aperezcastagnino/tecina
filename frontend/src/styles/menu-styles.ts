@@ -19,4 +19,15 @@ export const buttonStyles = {
     width: 400,
     height: 75,
   },
+  loadButtonDisabled: {
+    color: "#777777",
+    backgroundColor: "#D3D3D3",
+    padding: { left: 170, right: 170, top: 25, bottom: 25 },
+    fontSize: "32px",
+    fontFamily: "Courier New",
+    borderRadius: 10,
+    width: 400,
+    height: 75,
+    opacity: 0.5,
+  },
 };
