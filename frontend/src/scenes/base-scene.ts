@@ -385,7 +385,9 @@ export abstract class BaseScene extends Scene {
   }
 
 
-  private applyWrongItemPenalty(): void {
+  private applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
+    this.dialog?.showWrongItemDialog(npc.name);
+
     const isDead = this.healthBar.decreaseHealth(30);
     if (isDead) {
       this.scene.start(SceneKeys.GAME_OVER);

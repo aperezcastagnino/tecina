@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
-import { SceneKeys } from "./scene-keys";
+import { SceneKeys } from "scenes/scene-keys";
 import { StorageManager } from "utils/storage-manager";
 import type { LevelMetadata } from "types/level-stored";
 import { levelConfig } from "config/levels-config";
