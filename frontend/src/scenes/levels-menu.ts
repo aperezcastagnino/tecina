@@ -13,13 +13,13 @@ export default class LevelsMenu extends Phaser.Scene {
     background.displayHeight = this.sys.canvas.height;
 
     const positions = [
-      { x: 360, y: 430 },
-      { x: 620, y: 650 },
-      { x: 1050, y: 550 },
-      { x: 860, y: 180 },
-      { x: 1500, y: 550 },
-      { x: 1550, y: 240 },
-      { x: 1090, y: 900 },
+      { x: 260, y: 420 },
+      { x: 520, y: 620 },
+      { x: 870, y: 500 },
+      { x: 760, y: 260 },
+      { x: 1400, y: 500 },
+      { x: 1510, y: 210 },
+      { x: 990, y: 860 },
     ];
 
     positions.forEach((pos, index) => {
