@@ -297,7 +297,7 @@ export class MapGenerator {
   ): void {
     const [interactiveFrecuencyTiles, obstacleFrecuencyTiles] =
       this.prepareTileBasedOnFrecuencyConfigs(tilesConfig);
-  
+
     matrix.forEach((row, rowIndex) => {
       row.forEach((element, columnIndex) => {
         if (element === USED_CELL) {
@@ -317,38 +317,40 @@ export class MapGenerator {
         }
       });
     });
-  
+
     const interactiveQuantityTiles =
       this.prepareTileBasedOnQuantityConfigs(tilesConfig);
-  
-    const unusedCells = matrix.flatMap((fila, i) =>
-      fila.map((valor, j) => (valor === USED_CELL ? [i, j] : null))
-    ).filter(Boolean) as [number, number][];
-  
-    (interactiveQuantityTiles).forEach((interactiveObject: { Quantity: number; Tile: Tile; }) => {
-      for (let i = 0; i < interactiveObject.Quantity; i++) {
-        if (unusedCells.length === 0) break;
-  
-        const position = this.getTileBasedOnFrequency(
-          new Array(unusedCells.length).fill(1),
-          unusedCells,
-        );
-        const [y, x] = position;
-  
-        map.tiles[y]![x] = interactiveObject.Tile;
-  
-        const idx = unusedCells.findIndex(([i, j]) => i === y && j === x);
-        if (idx !== -1) unusedCells.splice(idx, 1);
-      }
-    });
+
+    const unusedCells = matrix
+      .flatMap((fila, i) =>
+        fila.map((valor, j) => (valor === USED_CELL ? [i, j] : null)),
+      )
+      .filter(Boolean) as [number, number][];
+
+    interactiveQuantityTiles.forEach(
+      (interactiveObject: { Quantity: number; Tile: Tile }) => {
+        for (let i = 0; i < interactiveObject.Quantity; i += 1) {
+          if (unusedCells.length === 0) break;
+
+          const position = this.getTileBasedOnFrequency(
+            new Array(unusedCells.length).fill(1),
+            unusedCells,
+          );
+          const [y, x] = position;
+
+          map.tiles[y]![x] = interactiveObject.Tile;
+
+          const idx = unusedCells.findIndex(([j, k]) => j === y && k === x);
+          if (idx !== -1) unusedCells.splice(idx, 1);
+        }
+      },
+    );
   }
-  
 
   private static prepareTileBasedOnFrecuencyConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
-        f.frequency &&
-        f.tile.type === TileType.INTERACTIVE_OBJECT ||
+        (f.frequency && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
         f.tile.type === TileType.WALKABLE_SPACE,
     );
 
@@ -371,16 +373,14 @@ export class MapGenerator {
   private static prepareTileBasedOnQuantityConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
-        f.quantity &&
-        f.tile.type === TileType.INTERACTIVE_OBJECT ||
+        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
         f.tile.type === TileType.WALKABLE_SPACE,
     );
 
-    const obstacleTiles = tilesConfig.filter(
-      (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
-    );
-
-    return interactiveTiles.map((m) => ({ Quantity: m.quantity || 0, Tile: m.tile }));
+    return interactiveTiles.map((m) => ({
+      Quantity: m.quantity || 0,
+      Tile: m.tile,
+    }));
   }
 
   private static getTileBasedOnFrequency<T>(
