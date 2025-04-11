@@ -24,6 +24,8 @@ export class Preloader extends Scene {
 
   private targetProgress: number = 0;
 
+  private assetsLoaded = false;
+
   constructor() {
     super(SceneKeys.PRELOADER);
   }
@@ -68,18 +70,7 @@ export class Preloader extends Scene {
     });
 
     this.load.once("complete", () => {
-      this.time.delayedCall(1000, () => {
-        this.progressBar.destroy();
-        this.progressBox.destroy();
-        this.loadingText.destroy();
-        this.percentText.destroy();
-
-        this.createAnimations();
-
-        this.scene.start(
-          DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
-        );
-      });
+      this.assetsLoaded = true;
     });
   }
 
@@ -91,7 +82,6 @@ export class Preloader extends Scene {
       BackgroundKeys.MAIN_MENU,
       `/backgrounds/main-menu-background.png`,
     );
-
     this.load.image(
       BackgroundKeys.LEVELS,
       `/backgrounds/levels-background.png`,
@@ -138,6 +128,24 @@ export class Preloader extends Scene {
 
     // Load elements
     this.loadFruits();
+  }
+
+  create() {
+    // delay to see the bar
+    if (this.assetsLoaded) {
+      this.time.delayedCall(2000, () => {
+        this.progressBar.destroy();
+        this.progressBox.destroy();
+        this.loadingText.destroy();
+        this.percentText.destroy();
+
+        this.createAnimations();
+
+        this.scene.start(
+          DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+        );
+      });
+    }
   }
 
   update() {
