@@ -1,9 +1,11 @@
+// src/scenes/LevelsMenu.ts
 import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
+import { Tooltip } from "../common-ui/tooltip";
 
 export default class LevelsMenu extends Phaser.Scene {
-  private tooltip!: Phaser.GameObjects.Text;
+  private tooltip!: Tooltip;
 
   constructor() {
     super(SceneKeys.LEVELS_MENU);
@@ -14,18 +16,10 @@ export default class LevelsMenu extends Phaser.Scene {
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
 
-    // Tooltip oculto inicialmente
-    this.tooltip = this.add
-      .text(0, 0, "Completa el nivel anterior para desbloquear", {
-        fontSize: "18px",
-        color: "#ffffff",
-        backgroundColor: "#000000aa",
-        padding: { x: 10, y: 5 },
-        align: "center",
-      })
-      .setDepth(100)
-      .setVisible(false)
-      .setName("tooltipText");
+    this.tooltip = new Tooltip(
+      this,
+      "Completa el nivel anterior para desbloquear",
+    );
 
     const positions = [
       { x: 260, y: 420 },
@@ -38,8 +32,6 @@ export default class LevelsMenu extends Phaser.Scene {
     ];
 
     positions.forEach((pos, index) => {
-      const isEnabled = index === 0;
-
       const shadow = this.add
         .image(pos.x + 6, pos.y + 6, UIComponentKeys.BUTTON_SHADOW)
         .setScale(0.2)
@@ -51,25 +43,25 @@ export default class LevelsMenu extends Phaser.Scene {
         .setName(`levelImageButton${index + 1}`)
         .setInteractive();
 
-      if (!isEnabled) {
+      if (index !== 0) {
         button.setTint(0x808080);
 
-        // Cursor prohibido + tooltip
         button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
           this.input.setDefaultCursor("not-allowed");
-
-          this.tooltip
-            .setPosition(pointer.worldX + 10, pointer.worldY - 10)
-            .setVisible(true);
+          this.tooltip.show(
+            "Completa el nivel anterior para desbloquear",
+            pointer.worldX,
+            pointer.worldY,
+          );
         });
 
         button.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-          this.tooltip.setPosition(pointer.worldX + 10, pointer.worldY - 10);
+          this.tooltip.move(pointer.worldX, pointer.worldY);
         });
 
         button.on("pointerout", () => {
           this.input.setDefaultCursor("default");
-          this.tooltip.setVisible(false);
+          this.tooltip.hide();
         });
       } else {
         button.on("pointerover", () => {
