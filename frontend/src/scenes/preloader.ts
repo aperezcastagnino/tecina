@@ -120,6 +120,11 @@ export class Preloader extends Scene {
       UIComponentKeys.BUTTON_CIRCLE,
       "/ui-components/button-circle.png",
     );
+    this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
+    this.load.image(
+      UIComponentKeys.INSTRUCTIONS,
+      "/ui-components/instructions.png",
+    );
 
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
@@ -131,21 +136,11 @@ export class Preloader extends Scene {
   }
 
   create() {
-    // delay to see the bar
-    if (this.assetsLoaded) {
-      this.time.delayedCall(2000, () => {
-        this.progressBar.destroy();
-        this.progressBox.destroy();
-        this.loadingText.destroy();
-        this.percentText.destroy();
+    this.createAnimations();
 
-        this.createAnimations();
-
-        this.scene.start(
-          DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
-        );
-      });
-    }
+    this.scene.start(
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU,
+    );
   }
 
   update() {
