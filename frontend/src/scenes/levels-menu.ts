@@ -1,4 +1,3 @@
-// src/scenes/LevelsMenu.ts
 import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
@@ -44,6 +43,7 @@ export default class LevelsMenu extends Phaser.Scene {
         .setInteractive();
 
       if (index !== 0) {
+        // Apply grey tint to all buttons except the first one
         button.setTint(0x808080);
 
         button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
@@ -98,9 +98,9 @@ export default class LevelsMenu extends Phaser.Scene {
     const button = this.children.getByName(
       `levelImageButton${levelNumber}`,
     ) as Phaser.GameObjects.Image;
-
+    
     if (button) {
-      button.clearTint();
+      button.clearTint(); // Adds color to the button
       button.setInteractive({ useHandCursor: true });
 
       button.on("pointerover", () => {

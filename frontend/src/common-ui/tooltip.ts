@@ -1,4 +1,3 @@
-// src/ui/Tooltip.ts
 import Phaser from "phaser";
 
 export class Tooltip {
