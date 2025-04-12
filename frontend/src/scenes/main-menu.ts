@@ -3,18 +3,23 @@ import { StorageManager } from "utils/storage-manager";
 import { levelsConfig } from "config/levels-config";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
+import { Tooltip } from "../common-ui/tooltip";
 
 export class MainMenu extends Scene {
-  private tooltip!: Phaser.GameObjects.Text;
+  private tooltip!: Tooltip;
 
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
 
   create() {
+    this.initializeUI();
+  }
+
+  private initializeUI() {
     this.createBackground();
     this.createTitle();
-    this.createTooltip();
+    this.tooltip = new Tooltip(this, ""); // se inicializa vacío, luego se setea el texto
     this.createButtons();
   }
 
@@ -31,28 +36,7 @@ export class MainMenu extends Scene {
     title.setOrigin(0.5);
   }
 
-  createTooltip() {
-    this.tooltip = this.add.text(0, 0, "", {
-      font: "20px Arial",
-      color: "#ffffff",
-      backgroundColor: "#000000aa",
-      padding: { x: 10, y: 5 },
-    });
-    this.tooltip.setDepth(1000).setVisible(false);
-  }
-
-  showTooltip(message: string, x: number, y: number) {
-    this.tooltip.setText(message);
-    this.tooltip.setPosition(x + 10, y - 10);
-    this.tooltip.setVisible(true);
-  }
-
-  hideTooltip() {
-    this.tooltip.setVisible(false);
-  }
-
   createButtons() {
-    // START GAME BUTTON
     const startGameButton = this.add
       .image(1400, 400, UIComponentKeys.START_BUTTON)
       .setInteractive()
@@ -89,15 +73,11 @@ export class MainMenu extends Scene {
       .setOrigin(0.5)
       .setScale(0.35);
 
-    const hasSavedGame = StorageManager.hasLevelStoredData();
-    this.configureLoadGameButton(loadGameButton, hasSavedGame);
+    this.configureLoadGameButton(loadGameButton);
   }
 
-  private configureLoadGameButton(
-    button: Phaser.GameObjects.Image,
-    enabled: boolean,
-  ) {
-    if (enabled) {
+  private configureLoadGameButton(button: Phaser.GameObjects.Image) {
+    if (StorageManager.hasLevelStoredData()) {
       button.setInteractive();
 
       button.on("pointerover", () => {
@@ -124,23 +104,21 @@ export class MainMenu extends Scene {
         this.continueGame();
       });
     } else {
-      // No saved game
       button.setTint(0x808080);
       button.setInteractive({ useHandCursor: true, pixelPerfect: true });
 
       button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
         this.input.setDefaultCursor("not-allowed");
-        this.showTooltip("No hay partida guardada ", pointer.x, pointer.y);
+        this.tooltip.show("No hay partida guardada", pointer.x, pointer.y);
       });
 
       button.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-        this.tooltip.setPosition(pointer.x + 20, pointer.y - 10);
+        this.tooltip.move(pointer.x, pointer.y);
       });
 
       button.on("pointerout", () => {
-        this.tooltip.setVisible(false);
+        this.tooltip.hide();
         this.input.setDefaultCursor("default");
-        this.hideTooltip();
       });
     }
   }

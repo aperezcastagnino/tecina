@@ -80,7 +80,7 @@ export class Preloader extends Scene {
       UIComponentKeys.BUTTON_CIRCLE,
       "/ui-components/button-circle.png",
     );
-    this.load.image(UIComponentKeys.TITLE, `/backgrounds/title.png`);
+    this.load.image(UIComponentKeys.TITLE, `/ui-components/title.png`);
 
     this.load.image(
       UIComponentKeys.START_BUTTON,
