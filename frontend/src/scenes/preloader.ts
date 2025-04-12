@@ -82,7 +82,7 @@ export class Preloader extends Scene {
       BackgroundKeys.MAIN_MENU,
       `/backgrounds/main-menu-background.png`,
     );
-    
+
     this.load.image(
       BackgroundKeys.LEVELS,
       `/backgrounds/levels-background.png`,
