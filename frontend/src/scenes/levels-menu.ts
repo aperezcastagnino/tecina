@@ -98,7 +98,7 @@ export default class LevelsMenu extends Phaser.Scene {
     const button = this.children.getByName(
       `levelImageButton${levelNumber}`,
     ) as Phaser.GameObjects.Image;
-    
+
     if (button) {
       button.clearTint(); // Adds color to the button
       button.setInteractive({ useHandCursor: true });
