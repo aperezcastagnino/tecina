@@ -82,6 +82,7 @@ export class Preloader extends Scene {
       BackgroundKeys.MAIN_MENU,
       `/backgrounds/main-menu-background.png`,
     );
+    
     this.load.image(
       BackgroundKeys.LEVELS,
       `/backgrounds/levels-background.png`,
@@ -139,7 +140,7 @@ export class Preloader extends Scene {
     this.createAnimations();
 
     this.scene.start(
-      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU,
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
   }
 
