@@ -56,6 +56,9 @@ export const UIComponentKeys = {
       WIDTH: 928,
     },
   },
+  TITLE: "TITLE",
+  START_BUTTON: "START_BUTTON",
+  LOAD_BUTTON: "LOAD_BUTTON",
 };
 
 export const TileKeys = {
