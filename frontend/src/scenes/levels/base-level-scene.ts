@@ -26,12 +26,12 @@ import {
 } from "assets/asset-keys";
 import type { LevelMetadata } from "types/level-data";
 import { StorageManager } from "utils/storage-manager";
-import { SceneKeys } from "./scene-keys";
+import { SceneKeys } from "scenes/scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
   Partial<Omit<MapConfiguration, "tilesConfig">>;
 
-export abstract class BaseScene extends Scene {
+export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
 
   protected player!: Player;
