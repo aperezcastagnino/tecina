@@ -19,7 +19,7 @@ export class MainMenu extends Scene {
   private initializeUI() {
     this.createBackground();
     this.createTitle();
-    this.tooltip = new Tooltip(this, ""); 
+    this.tooltip = new Tooltip(this, "");
     this.createButtons();
   }
 
