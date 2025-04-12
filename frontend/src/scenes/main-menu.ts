@@ -89,7 +89,7 @@ export class MainMenu extends Scene {
       .setOrigin(0.5)
       .setScale(0.35);
 
-    const hasSavedGame = false; // This should be replaced with a check for saved game data
+    const hasSavedGame = StorageManager.hasLevelStoredData();
     this.configureLoadGameButton(loadGameButton, hasSavedGame);
   }
 
