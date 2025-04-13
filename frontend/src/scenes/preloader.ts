@@ -12,65 +12,24 @@ import { PlayerAnimationKeys } from "common/player";
 import { SceneKeys } from "./scene-keys";
 
 export class Preloader extends Scene {
-  private progressBar!: Phaser.GameObjects.Graphics;
-
-  private progressBox!: Phaser.GameObjects.Graphics;
-
-  private loadingText!: Phaser.GameObjects.Text;
-
-  private percentText!: Phaser.GameObjects.Text;
-
-  private currentProgress: number = 0;
-
-  private targetProgress: number = 0;
-
-  private assetsLoaded = false;
-
   constructor() {
     super(SceneKeys.PRELOADER);
   }
 
   init() {
-    this.cameras.main.setBackgroundColor("#a6af48");
+    //  We loaded this image in our Boot Scene, so we can display it here
+    this.add.image(512, 384, "background");
 
-    const { centerX, centerY } = this.cameras.main;
+    //  A simple progress bar. This is the outline of the bar.
+    this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
 
-    this.progressBox = this.add.graphics();
-    this.progressBox.fillStyle(0x222222, 0.2);
-    this.progressBox.fillRect(centerX - 240, centerY - 20, 480, 40);
+    //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
+    const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
 
-    this.progressBar = this.add.graphics();
-
-    this.loadingText = this.make
-      .text({
-        x: centerX,
-        y: centerY - 50,
-        text: "Loading...",
-        style: {
-          font: "20px monospace",
-          color: "#000000",
-        },
-      })
-      .setOrigin(0.5, 0.5);
-
-    this.percentText = this.make
-      .text({
-        x: centerX,
-        y: centerY,
-        text: "0%",
-        style: {
-          font: "18px monospace",
-          color: "#a6af48",
-        },
-      })
-      .setOrigin(0.5, 0.5);
-
-    this.load.on("progress", (value: number) => {
-      this.targetProgress = value;
-    });
-
-    this.load.once("complete", () => {
-      this.assetsLoaded = true;
+    //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
+    this.load.on("progress", (progress: number) => {
+      //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
+      bar.width = 4 + 460 * progress;
     });
   }
 
@@ -121,6 +80,10 @@ export class Preloader extends Scene {
       UIComponentKeys.BUTTON_CIRCLE,
       "/ui-components/button-circle.png",
     );
+    this.load.image(
+      UIComponentKeys.BUTTON_SHADOW,
+      "/ui-components/button-shadow.png",
+    );
     this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
     this.load.image(
       UIComponentKeys.INSTRUCTIONS,
@@ -142,28 +105,6 @@ export class Preloader extends Scene {
     this.scene.start(
       DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
-  }
-
-  update() {
-    const { centerX, centerY } = this.cameras.main;
-
-    const speed = 0.05;
-    this.currentProgress = Phaser.Math.Linear(
-      this.currentProgress,
-      this.targetProgress,
-      speed,
-    );
-
-    this.progressBar.clear();
-    this.progressBar.fillStyle(0x000000, 1);
-    this.progressBar.fillRect(
-      centerX - 230,
-      centerY - 16,
-      460 * this.currentProgress,
-      32,
-    );
-
-    this.percentText.setText(`${Math.floor(this.currentProgress * 100)}%`);
   }
 
   private createAnimations() {
