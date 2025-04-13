@@ -7,6 +7,7 @@ import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
 import type { MapConfiguration, MapStructure } from "types/map";
 import {
+  DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
   MAP_WIDTH,
   MIN_PARTITION_SIZE,
@@ -23,6 +24,8 @@ import {
   CharacterKeys,
   findAssetKeyByValue,
 } from "assets/asset-keys";
+import type { LevelMetadata } from "types/level-data";
+import { StorageManager } from "utils/storage-manager";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -45,6 +48,10 @@ export abstract class BaseScene extends Scene {
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
+  protected levelsMetadata!: LevelMetadata[];
+
+  protected currentLevel!: LevelMetadata;
+
   // =========================================================================
   // Abstract Methods
   // =========================================================================
@@ -55,12 +62,38 @@ export abstract class BaseScene extends Scene {
   // Lifecycle Methods
   // =========================================================================
 
+  init(data: LevelMetadata[]) {
+    if (data) {
+      this.levelsMetadata = data;
+    }
+  }
+
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
-    try {
-      this.map = MapGenerator.create(this.validateMapConfig(config));
-      this.createAnimations();
-    } catch (error) {
-      console.error("Failed to initialize scene:", error);
+    if (DEBUG_MODE_ACTIVE) {
+      try {
+        this.map = MapGenerator.create(this.validateMapConfig(config));
+        this.createAnimations();
+      } catch (error) {
+        console.error("Failed to initialize scene:", error);
+      }
+    } else {
+      try {
+        this.currentLevel = this.levelsMetadata.find(
+          (level) => level.key === this.scene.key,
+        )!;
+        if (this.currentLevel.map) {
+          this.map = this.currentLevel.map;
+          this.map.assetGroups = new Map();
+        } else {
+          this.map = MapGenerator.create(this.validateMapConfig(config));
+          this.currentLevel.map = this.map;
+          StorageManager.setLevelsMetadataToStorage(this.levelsMetadata);
+        }
+
+        this.createAnimations();
+      } catch (error) {
+        console.error("Failed to initialize scene:", error);
+      }
     }
   }
 
@@ -367,6 +400,8 @@ export abstract class BaseScene extends Scene {
   }
 
   private levelCompleted(): void {
+    this.currentLevel.completed = true;
+    StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
     this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
       setTimeout(() => {
         this.scene.start(SceneKeys.LEVELS_MENU);
