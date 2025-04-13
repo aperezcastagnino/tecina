@@ -57,6 +57,8 @@ export const UIComponentKeys = {
       WIDTH: 928,
     },
   },
+  CROSS: "CROSS",
+  INSTRUCTIONS: "INSTRUCTIONS",
 };
 
 export const TileKeys = {
