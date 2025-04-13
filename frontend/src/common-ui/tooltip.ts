@@ -1,14 +1,10 @@
 import Phaser from "phaser";
 
 export class Tooltip {
-  private scene: Phaser.Scene;
-
   private textObject: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, initialText: string) {
-    this.scene = scene;
-
-    this.textObject = this.scene.add
+    this.textObject = scene.add
       .text(0, 0, initialText, {
         fontSize: "18px",
         color: "#ffffff",

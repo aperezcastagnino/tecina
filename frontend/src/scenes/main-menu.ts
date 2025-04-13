@@ -32,8 +32,10 @@ export class MainMenu extends Scene {
   }
 
   createTitle() {
-    const title = this.add.image(500, 500, UIComponentKeys.TITLE).setScale(0.8);
-    title.setOrigin(0.5);
+    this.add
+      .image(500, 500, UIComponentKeys.TITLE)
+      .setScale(0.8)
+      .setOrigin(0.5);
   }
 
   createButtons() {
