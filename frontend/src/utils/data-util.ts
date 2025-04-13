@@ -8,8 +8,8 @@ export const loadLevelData = (scene: Phaser.Scene): DialogData[] => {
 
   return rawData.dialogs
     .map(
-      (dialog: RawDialogData): DialogData => ({
-        id: dialog.id,
+      (dialog: RawDialogData, index: number): DialogData => ({
+        id: dialog.id || `d-${index}`,
         description: dialog.description,
         questStart: [
           dialog.questStart ?? [],
