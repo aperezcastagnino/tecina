@@ -13,7 +13,7 @@ import {
   MIN_PARTITION_SIZE,
   MIN_ROOM_SIZE,
   TILE_SIZE,
-} from "config/config";
+} from "config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";

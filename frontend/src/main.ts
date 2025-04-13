@@ -1,5 +1,5 @@
 import { Game, type Types } from "phaser";
-import { GAME_DIMENSIONS } from "config/config";
+import { GAME_DIMENSIONS } from "config";
 import { Level2 } from "scenes/levels/level2";
 import { Level3 } from "scenes/levels/level3";
 import { Level4 } from "scenes/levels/level4";

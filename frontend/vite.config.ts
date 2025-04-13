@@ -13,7 +13,6 @@ export default defineConfig({
       $characters: resolve("./src/characters"),
       $common: resolve("./src/common"),
       "$common-ui": resolve("./src/common-ui"),
-      $config: resolve("./src/config"),
       $networking: resolve("./src/networking"),
       $scene: resolve("./src/scene"),
       $types: resolve("./src/types"),
