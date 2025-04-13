@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "scenes/scene-keys";
 import { StorageManager } from "utils/storage-manager";
-import type { LevelMetadata } from "types/level-data";
+import type { LevelMetadata } from "types/level";
 import { levelsConfig } from "scenes/levels/levels-config";
 import { Tooltip } from "../common-ui/tooltip";
 
