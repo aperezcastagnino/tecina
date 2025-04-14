@@ -376,8 +376,8 @@ export class MapGenerator {
 
         rooms.splice(rooms.indexOf(room), 1);
 
-        map.tiles[room.x + Math.trunc(room.width / 2)]![
-          room.y + Math.trunc(room.height / 2)
+        map.tiles[room.y + Math.floor(room.width / 2)]![
+          room.x + Math.floor(room.height / 2)
         ] = tile.tile;
       }
     });
