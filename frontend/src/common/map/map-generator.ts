@@ -137,8 +137,8 @@ export class MapGenerator {
     if (splitHorizontally) {
       const splitY = Math.floor(
         Math.random() * (height - 2 * minPartitionSize) +
-          partition.y +
-          minPartitionSize,
+        partition.y +
+        minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -155,8 +155,8 @@ export class MapGenerator {
     } else {
       const splitX = Math.floor(
         Math.random() * (partition.width - 2 * minPartitionSize) +
-          partition.x +
-          minPartitionSize,
+        partition.x +
+        minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -295,15 +295,15 @@ export class MapGenerator {
     matrix: number[][],
     tilesConfig: TileConfig[],
   ): void {
-    const [interactiveFrecuencyTiles, obstacleFrecuencyTiles] =
-      this.prepareTileBasedOnFrecuencyConfigs(tilesConfig);
+    const [interactivefrequencyTiles, obstaclefrequencyTiles, interactiveQuantityTiles] =
+      this.prepareTileConfigs(tilesConfig);
 
     matrix.forEach((row, rowIndex) => {
       row.forEach((element, columnIndex) => {
         if (element === USED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
-            interactiveFrecuencyTiles!.frequencies,
-            interactiveFrecuencyTiles!.tiles,
+            interactivefrequencyTiles!.frequencies!,
+            interactivefrequencyTiles!.tiles,
           );
           if (map.startPosition.x === 0 && map.startPosition.y === 0) {
             map.startPosition.x = columnIndex + 1;
@@ -311,34 +311,31 @@ export class MapGenerator {
           }
         } else if (element === UNUSED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
-            obstacleFrecuencyTiles!.frequencies,
-            obstacleFrecuencyTiles!.tiles,
+            obstaclefrequencyTiles!.frequencies!,
+            obstaclefrequencyTiles!.tiles,
           );
         }
       });
     });
 
-    const interactiveQuantityTiles =
-      this.prepareTileBasedOnQuantityConfigs(tilesConfig);
-
     const unusedCells = matrix
-      .flatMap((fila, i) =>
-        fila.map((valor, j) => (valor === USED_CELL ? [i, j] : null)),
+      .flatMap((row, i) =>
+        row.map((value, j) => (value === USED_CELL ? [i, j] : null)),
       )
       .filter(Boolean) as [number, number][];
 
-    interactiveQuantityTiles.forEach(
-      (interactiveObject: { Quantity: number; Tile: Tile }) => {
-        for (let i = 0; i < interactiveObject.Quantity; i += 1) {
+    interactiveQuantityTiles?.quantities!.forEach(
+      (interactiveObject, index) => {
+        for (let i = 0; i < interactiveObject; i += 1) {
           if (unusedCells.length === 0) break;
 
           const position = this.getTileBasedOnFrequency(
             new Array(unusedCells.length).fill(1),
             unusedCells,
           );
-          const [y, x] = position;
+          const [x, y] = position;
 
-          map.tiles[y]![x] = interactiveObject.Tile;
+          map.tiles[x]![y] = interactiveQuantityTiles.tiles[index]!;
 
           const idx = unusedCells.findIndex(([j, k]) => j === y && k === x);
           if (idx !== -1) unusedCells.splice(idx, 1);
@@ -347,7 +344,7 @@ export class MapGenerator {
     );
   }
 
-  private static prepareTileBasedOnFrecuencyConfigs(tilesConfig: TileConfig[]) {
+  private static prepareTileConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
         (f.frequency && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
@@ -356,6 +353,12 @@ export class MapGenerator {
 
     const obstacleTiles = tilesConfig.filter(
       (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
+    );
+
+    const interactiveQuantityTiles = tilesConfig.filter(
+      (f) =>
+        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
+        f.tile.type === TileType.WALKABLE_SPACE,
     );
 
     return [
@@ -367,20 +370,12 @@ export class MapGenerator {
         frequencies: obstacleTiles.map((m) => m.frequency || 0),
         tiles: obstacleTiles.map((m) => m.tile),
       },
+      {
+
+        quantities: interactiveQuantityTiles.map((m) => (m.quantity || 0)),
+        tiles: interactiveQuantityTiles.map((m) => (m.tile))
+      }
     ];
-  }
-
-  private static prepareTileBasedOnQuantityConfigs(tilesConfig: TileConfig[]) {
-    const interactiveTiles = tilesConfig.filter(
-      (f) =>
-        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
-        f.tile.type === TileType.WALKABLE_SPACE,
-    );
-
-    return interactiveTiles.map((m) => ({
-      Quantity: m.quantity || 0,
-      Tile: m.tile,
-    }));
   }
 
   private static getTileBasedOnFrequency<T>(
