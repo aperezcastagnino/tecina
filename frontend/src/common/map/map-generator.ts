@@ -4,7 +4,6 @@ import {
   type MapConfiguration,
   type TileConfig,
   type MapStructure,
-  type Tile,
 } from "types/map.d";
 
 type Room = {
@@ -137,8 +136,8 @@ export class MapGenerator {
     if (splitHorizontally) {
       const splitY = Math.floor(
         Math.random() * (height - 2 * minPartitionSize) +
-        partition.y +
-        minPartitionSize,
+          partition.y +
+          minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -155,8 +154,8 @@ export class MapGenerator {
     } else {
       const splitX = Math.floor(
         Math.random() * (partition.width - 2 * minPartitionSize) +
-        partition.x +
-        minPartitionSize,
+          partition.x +
+          minPartitionSize,
       );
       left = {
         x: partition.x,
@@ -295,8 +294,11 @@ export class MapGenerator {
     matrix: number[][],
     tilesConfig: TileConfig[],
   ): void {
-    const [interactivefrequencyTiles, obstaclefrequencyTiles, interactiveQuantityTiles] =
-      this.prepareTileConfigs(tilesConfig);
+    const [
+      interactivefrequencyTiles,
+      obstaclefrequencyTiles,
+      interactiveQuantityTiles,
+    ] = this.prepareTileConfigs(tilesConfig);
 
     matrix.forEach((row, rowIndex) => {
       row.forEach((element, columnIndex) => {
@@ -371,10 +373,9 @@ export class MapGenerator {
         tiles: obstacleTiles.map((m) => m.tile),
       },
       {
-
-        quantities: interactiveQuantityTiles.map((m) => (m.quantity || 0)),
-        tiles: interactiveQuantityTiles.map((m) => (m.tile))
-      }
+        quantities: interactiveQuantityTiles.map((m) => m.quantity || 0),
+        tiles: interactiveQuantityTiles.map((m) => m.tile),
+      },
     ];
   }
 
