@@ -67,33 +67,33 @@ export class MapGenerator {
     );
     map.initialParameters = config;
 
-  const rootPartition = this.createPartitions(
-    {
-      x: 0,
-      y: 0,
-      width: config.mapWidth,
-      height: config.mapHeight,
-    },
-    config.minPartitionSize,
-  );
-      this.assignRooms(rootPartition, config.minRoomSize);
+    const rootPartition = this.createPartitions(
+      {
+        x: 0,
+        y: 0,
+        width: config.mapWidth,
+        height: config.mapHeight,
+      },
+      config.minPartitionSize,
+    );
+    this.assignRooms(rootPartition, config.minRoomSize);
 
-      const matrix = new Array(config.mapWidth)
+    const matrix = new Array(config.mapWidth)
       .fill([])
       .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
-      
-      this.fillAndConnectRooms(matrix, rootPartition);
-      this.assignTiles(map, matrix, config.tilesConfig);
-      
-      const privateStaticObjects = config.tilesConfig.filter(
-        (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
-      );
-      this.assignInteractiveStaticObject(
-        map,
-        rootPartition,
-        privateStaticObjects,
-      );
-    
+
+    this.fillAndConnectRooms(matrix, rootPartition);
+    this.assignTiles(map, matrix, config.tilesConfig);
+
+    const privateStaticObjects = config.tilesConfig.filter(
+      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
+    );
+    this.assignInteractiveStaticObject(
+      map,
+      rootPartition,
+      privateStaticObjects,
+    );
+
     return map;
   }
 
