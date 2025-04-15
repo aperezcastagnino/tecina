@@ -1,7 +1,8 @@
 {
-  "title": "Level 1",
+  "title": "Level 4",
   "dialogs": [
     {
+      "id": "d-1",
       "description": "primer dialogo",
       "questStart": [
         "Can you pick the oranges?",
@@ -24,6 +25,7 @@
       "quantityToCollect": 1
     },
     {
+      "id": "d-2",
       "description": "segundo dialogo",
       "questStart": [
         "My favorite fruits are bananas!",

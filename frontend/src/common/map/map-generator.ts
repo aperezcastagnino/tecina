@@ -42,8 +42,8 @@ export class MapGenerator {
     */
 
     if (
-      config.mapWidth < config.minPartitionSize * 2 ||
-      config.mapHeight < config.minPartitionSize * 2
+      config.dimensions.width < config.minPartitionSize * 2 ||
+      config.dimensions.height < config.minPartitionSize * 2
     ) {
       throw new Error(
         "Map dimensions must be at least twice the minimum partition size",
@@ -62,8 +62,8 @@ export class MapGenerator {
 
     const map: MapStructure = MapGenerator.createMapStructure(
       config.name,
-      config.mapWidth,
-      config.mapHeight,
+      config.dimensions.width,
+      config.dimensions.height,
     );
     map.initialParameters = config;
 
@@ -71,16 +71,16 @@ export class MapGenerator {
       {
         x: 0,
         y: 0,
-        width: config.mapWidth,
-        height: config.mapHeight,
+        width: config.dimensions.width,
+        height: config.dimensions.height,
       },
       config.minPartitionSize,
     );
     this.assignRooms(rootPartition, config.minRoomSize);
 
-    const matrix = new Array(config.mapWidth)
+    const matrix = new Array(config.dimensions.width)
       .fill([])
-      .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
+      .map(() => new Array(config.dimensions.height).fill(UNUSED_CELL));
 
     this.fillAndConnectRooms(matrix, rootPartition);
     this.assignTiles(map, matrix, config.tilesConfig);

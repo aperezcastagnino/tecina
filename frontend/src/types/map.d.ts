@@ -25,8 +25,10 @@ export type TileConfig = {
 export type MapConfiguration = {
   name: string;
   tilesConfig: TileConfig[];
-  mapWidth: number;
-  mapHeight: number;
+  dimensions: {
+    width: number;
+    height: number;
+  };
   minPartitionSize: number;
   minRoomSize: number;
 };

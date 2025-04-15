@@ -1,5 +1,5 @@
 import { SceneKeys } from "scenes/scene-keys";
-import { BaseScene } from "scenes/base-scene";
+import { BaseLevelScene } from "scenes/levels/base-level-scene";
 import { TileType, type TileConfig } from "types/map.d";
 import { Animations } from "utils/animation-utils";
 import {
@@ -70,7 +70,7 @@ export const level1Config: TileConfig[] = [
   },
 ];
 
-export class Level1 extends BaseScene {
+export class Level1 extends BaseLevelScene {
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
