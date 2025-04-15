@@ -390,7 +390,7 @@ export class MapGenerator {
     for (let i = 0; i < frequencies.length; i += 1) {
       cumulative += frequencies[i]!;
       if (randomValue < cumulative) {
-        return tiles[i]!; // Starts in 3
+        return tiles[i]!;
       }
     }
 
