@@ -57,6 +57,9 @@ export const UIComponentKeys = {
       WIDTH: 928,
     },
   },
+  TITLE: "TITLE",
+  START_BUTTON: "START_BUTTON",
+  LOAD_BUTTON: "LOAD_BUTTON",
   CROSS: "CROSS",
   INSTRUCTIONS: "INSTRUCTIONS",
 };
