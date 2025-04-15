@@ -297,7 +297,7 @@ export class MapGenerator {
     const [
       interactivefrequencyTiles,
       obstaclefrequencyTiles,
-      interactiveQuantityTiles,
+      fixedQuantityInteractiveTiles,
     ] = this.prepareTileConfigs(tilesConfig);
 
     matrix.forEach((row, rowIndex) => {
@@ -326,7 +326,7 @@ export class MapGenerator {
       )
       .filter(Boolean) as [number, number][];
 
-    interactiveQuantityTiles?.quantities!.forEach(
+    fixedQuantityInteractiveTiles?.quantities!.forEach(
       (interactiveObject, index) => {
         for (let i = 0; i < interactiveObject; i += 1) {
           if (unusedCells.length === 0) break;
@@ -337,7 +337,7 @@ export class MapGenerator {
           );
           const [y, x] = position;
 
-          map.tiles[y]![x] = interactiveQuantityTiles.tiles[index]!;
+          map.tiles[y]![x] = fixedQuantityInteractiveTiles.tiles[index]!;
 
           const idx = unusedCells.findIndex(([j, k]) => j === y && k === x);
           if (idx !== -1) unusedCells.splice(idx, 1);
@@ -357,7 +357,7 @@ export class MapGenerator {
       (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
     );
 
-    const interactiveQuantityTiles = tilesConfig.filter(
+    const fixedQuantityInteractiveTiles = tilesConfig.filter(
       (f) =>
         (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
         f.tile.type === TileType.WALKABLE_SPACE,
@@ -373,8 +373,8 @@ export class MapGenerator {
         tiles: obstacleTiles.map((m) => m.tile),
       },
       {
-        quantities: interactiveQuantityTiles.map((m) => m.quantity || 0),
-        tiles: interactiveQuantityTiles.map((m) => m.tile),
+        quantities: fixedQuantityInteractiveTiles.map((m) => m.quantity || 0),
+        tiles: fixedQuantityInteractiveTiles.map((m) => m.tile),
       },
     ];
   }
