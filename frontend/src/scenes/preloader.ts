@@ -1,5 +1,10 @@
 import { Scene } from "phaser";
-import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
+import {
+  DEBUG_MODE_ACTIVE,
+  FIRST_SCENE_TO_PLAY,
+  LOADING_SCREEN_TEXT_STYLE,
+  LOADING_SCREEN_PERCENT_TEXT_STYLE,
+} from "config/config";
 import { Animations } from "utils/animation-utils";
 import {
   BackgroundKeys,
@@ -46,10 +51,7 @@ export class Preloader extends Scene {
         x: centerX,
         y: centerY - 50,
         text: "Loading...",
-        style: {
-          font: "20px monospace",
-          color: "#000000",
-        },
+        style: LOADING_SCREEN_TEXT_STYLE,
       })
       .setOrigin(0.5, 0.5);
 
@@ -58,10 +60,7 @@ export class Preloader extends Scene {
         x: centerX,
         y: centerY,
         text: "0%",
-        style: {
-          font: "18px monospace",
-          color: "#a6af48",
-        },
+        style: LOADING_SCREEN_PERCENT_TEXT_STYLE,
       })
       .setOrigin(0.5, 0.5);
 

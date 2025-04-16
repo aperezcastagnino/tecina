@@ -14,3 +14,13 @@ export const MAP_WIDTH = 24;
 export const MAP_HEIGHT = 24;
 export const MIN_PARTITION_SIZE = 5; // MIN_PARTITION_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
+
+// LOADING SCREEN
+export const LOADING_SCREEN_TEXT_STYLE = {
+  font: "20px monospace",
+  color: "#000000",
+};
+export const LOADING_SCREEN_PERCENT_TEXT_STYLE = {
+  font: "18px monospace",
+  color: "#a6af48",
+};
