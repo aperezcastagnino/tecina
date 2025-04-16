@@ -1,71 +1,128 @@
 import { Scene } from "phaser";
-import { TextButton } from "common-ui/text-button";
-import { buttonStyles } from "styles/menu-styles";
 import { StorageManager } from "utils/storage-manager";
 import { levelsConfig } from "config/levels-config";
-import { BackgroundKeys } from "assets/asset-keys";
+import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
+import { Tooltip } from "../common-ui/tooltip";
 
 export class MainMenu extends Scene {
+  private tooltip!: Tooltip;
+
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
 
   create() {
+    this.initializeUI();
+  }
+
+  private initializeUI() {
+    this.createBackground();
+    this.createTitle();
+    this.tooltip = new Tooltip(this, "");
+    this.createButtons();
+  }
+
+  createBackground() {
     const background = this.add
       .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
+  }
 
-    const title = this.add.text(
-      this.sys.canvas.width / 2,
-      this.sys.canvas.height / 2 - 200,
-      "Climb the cina cina",
-      {
-        fontSize: "80px",
-        color: "#D89079",
-        stroke: "#D89079",
-        strokeThickness: 6,
-      },
-    );
-    title.setOrigin(0.5);
+  createTitle() {
+    this.add
+      .image(500, 500, UIComponentKeys.TITLE)
+      .setScale(0.8)
+      .setOrigin(0.5);
+  }
 
-    const startGameButton = new TextButton(
-      this,
-      this.sys.canvas.width / 2,
-      this.sys.canvas.height / 2 - 50 + 140,
-      "Comenzar a jugar",
-      buttonStyles.startButton,
-      () => this.startNewGame(),
-    );
-    startGameButton.setOrigin(0.5);
-    startGameButton.setSize(
-      buttonStyles.startButton.width,
-      buttonStyles.startButton.height,
-    );
+  createButtons() {
+    const startGameButton = this.add
+      .image(1400, 400, UIComponentKeys.START_BUTTON)
+      .setInteractive()
+      .setOrigin(0.5)
+      .setScale(0.35);
 
-    const loadPreviousGameButton = new TextButton(
-      this,
-      this.sys.canvas.width / 2,
-      this.sys.canvas.height / 2 + 50 + 140,
-      "Continuar partida",
-      buttonStyles.loadButton,
-      () => this.continueGame(),
-    );
-    loadPreviousGameButton.setOrigin(0.5);
-    loadPreviousGameButton.setSize(
-      buttonStyles.startButton.width,
-      buttonStyles.startButton.height,
-    );
+    startGameButton.on("pointerover", () => {
+      this.input.setDefaultCursor("pointer");
+      this.tweens.add({
+        targets: startGameButton,
+        scale: 0.4,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
 
-    if (!StorageManager.hasLevelStoredData()) {
-      loadPreviousGameButton.setStyle(buttonStyles.loadButtonDisabled);
-      loadPreviousGameButton.setInteractive(false);
+    startGameButton.on("pointerout", () => {
+      this.input.setDefaultCursor("default");
+      this.tweens.add({
+        targets: startGameButton,
+        scale: 0.35,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    startGameButton.on("pointerdown", () => {
+      this.startNewGame();
+    });
+
+    // LOAD GAME BUTTON
+    const loadGameButton = this.add
+      .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
+      .setOrigin(0.5)
+      .setScale(0.35);
+
+    this.configureLoadGameButton(loadGameButton);
+  }
+
+  private configureLoadGameButton(button: Phaser.GameObjects.Image) {
+    if (StorageManager.hasLevelStoredData()) {
+      button.setInteractive();
+
+      button.on("pointerover", () => {
+        this.input.setDefaultCursor("pointer");
+        this.tweens.add({
+          targets: button,
+          scale: 0.4,
+          duration: 150,
+          ease: "Power2",
+        });
+      });
+
+      button.on("pointerout", () => {
+        this.input.setDefaultCursor("default");
+        this.tweens.add({
+          targets: button,
+          scale: 0.35,
+          duration: 150,
+          ease: "Power2",
+        });
+      });
+
+      button.on("pointerdown", () => {
+        this.continueGame();
+      });
+    } else {
+      button.setTint(0x808080);
+      button.setInteractive({ useHandCursor: true, pixelPerfect: true });
+
+      button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
+        this.input.setDefaultCursor("not-allowed");
+        this.tooltip.show("No hay partida guardada", pointer.x, pointer.y);
+      });
+
+      button.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+        this.tooltip.move(pointer.x, pointer.y);
+      });
+
+      button.on("pointerout", () => {
+        this.tooltip.hide();
+        this.input.setDefaultCursor("default");
+      });
     }
-
-    this.add.existing(startGameButton);
-    this.add.existing(loadPreviousGameButton);
   }
 
   startNewGame() {

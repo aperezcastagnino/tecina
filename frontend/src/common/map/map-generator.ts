@@ -294,40 +294,73 @@ export class MapGenerator {
     matrix: number[][],
     tilesConfig: TileConfig[],
   ): void {
-    const [interactiveTiles, obstacleTiles] =
-      this.prepareTileConfigs(tilesConfig);
+    const [
+      interactivefrequencyTiles,
+      obstaclefrequencyTiles,
+      fixedQuantityInteractiveTiles,
+    ] = this.prepareTileConfigs(tilesConfig);
 
-    matrix.forEach((column, columnIndex) => {
-      column.forEach((element, rowIndex) => {
+    matrix.forEach((row, rowIndex) => {
+      row.forEach((element, columnIndex) => {
         if (element === USED_CELL) {
-          map.tiles[columnIndex]![rowIndex] = this.getTileBasedOnFrequency(
-            interactiveTiles!.frequencies,
-            interactiveTiles!.tiles,
+          map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
+            interactivefrequencyTiles!.frequencies!,
+            interactivefrequencyTiles!.tiles,
           );
           if (map.startPosition.x === 0 && map.startPosition.y === 0) {
             map.startPosition.x = columnIndex + 1;
             map.startPosition.y = rowIndex + 1;
           }
-        }
-        if (element === UNUSED_CELL) {
-          map.tiles[columnIndex]![rowIndex] = this.getTileBasedOnFrequency(
-            obstacleTiles!.frequencies,
-            obstacleTiles!.tiles,
+        } else if (element === UNUSED_CELL) {
+          map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
+            obstaclefrequencyTiles!.frequencies!,
+            obstaclefrequencyTiles!.tiles,
           );
         }
       });
     });
+
+    const unusedCells = matrix
+      .flatMap((row, i) =>
+        row.map((value, j) => (value === USED_CELL ? [i, j] : null)),
+      )
+      .filter(Boolean) as [number, number][];
+
+    fixedQuantityInteractiveTiles?.quantities!.forEach(
+      (interactiveObject, index) => {
+        for (let i = 0; i < interactiveObject; i += 1) {
+          if (unusedCells.length === 0) break;
+
+          const position = this.getTileBasedOnFrequency(
+            new Array(unusedCells.length).fill(1),
+            unusedCells,
+          );
+          const [y, x] = position;
+
+          map.tiles[y]![x] = fixedQuantityInteractiveTiles.tiles[index]!;
+
+          const idx = unusedCells.findIndex(([j, k]) => j === y && k === x);
+          if (idx !== -1) unusedCells.splice(idx, 1);
+        }
+      },
+    );
   }
 
   private static prepareTileConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
-        f.tile.type === TileType.INTERACTIVE_OBJECT ||
+        (f.frequency && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
         f.tile.type === TileType.WALKABLE_SPACE,
     );
 
     const obstacleTiles = tilesConfig.filter(
-      (f) => f.tile.type === TileType.OBSTACLE,
+      (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
+    );
+
+    const fixedQuantityInteractiveTiles = tilesConfig.filter(
+      (f) =>
+        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
+        f.tile.type === TileType.WALKABLE_SPACE,
     );
 
     return [
@@ -338,6 +371,10 @@ export class MapGenerator {
       {
         frequencies: obstacleTiles.map((m) => m.frequency || 0),
         tiles: obstacleTiles.map((m) => m.tile),
+      },
+      {
+        quantities: fixedQuantityInteractiveTiles.map((m) => m.quantity || 0),
+        tiles: fixedQuantityInteractiveTiles.map((m) => m.tile),
       },
     ];
   }
@@ -353,7 +390,7 @@ export class MapGenerator {
     for (let i = 0; i < frequencies.length; i += 1) {
       cumulative += frequencies[i]!;
       if (randomValue < cumulative) {
-        return tiles[i]!; // Starts in 3
+        return tiles[i]!;
       }
     }
 
@@ -376,8 +413,8 @@ export class MapGenerator {
 
         rooms.splice(rooms.indexOf(room), 1);
 
-        map.tiles[room.x + Math.trunc(room.width / 2)]![
-          room.y + Math.trunc(room.height / 2)
+        map.tiles[room.y + Math.floor(room.width / 2)]![
+          room.x + Math.floor(room.height / 2)
         ] = tile.tile;
       }
     });

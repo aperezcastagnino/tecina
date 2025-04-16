@@ -52,7 +52,7 @@ export const level1Config: TileConfig[] = [
       type: TileType.INTERACTIVE_OBJECT,
       asset: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
     },
-    frequency: 2,
+    quantity: 1,
   },
   {
     tile: {
@@ -66,7 +66,7 @@ export const level1Config: TileConfig[] = [
       type: TileType.INTERACTIVE_OBJECT,
       asset: ItemKeys.FRUITS.BANANAS.ASSET_KEY,
     },
-    frequency: 10,
+    quantity: 2,
   },
 ];
 
