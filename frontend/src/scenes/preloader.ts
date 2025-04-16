@@ -1,10 +1,5 @@
 import { Scene } from "phaser";
-import {
-  DEBUG_MODE_ACTIVE,
-  FIRST_SCENE_TO_PLAY,
-  LOADING_SCREEN_TEXT_STYLE,
-  LOADING_SCREEN_PERCENT_TEXT_STYLE,
-} from "config/config";
+import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
 import { Animations } from "utils/animation-utils";
 import {
   BackgroundKeys,
@@ -14,6 +9,10 @@ import {
   UIComponentKeys,
 } from "assets/asset-keys";
 import { PlayerAnimationKeys } from "common/player";
+import {
+  LOADING_SCREEN_PERCENT_TEXT_STYLE,
+  LOADING_SCREEN_TEXT_STYLE,
+} from "styles/loading-styles";
 import { SceneKeys } from "./scene-keys";
 
 export class Preloader extends Scene {
