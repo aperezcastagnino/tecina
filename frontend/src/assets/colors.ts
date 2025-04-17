@@ -2,7 +2,7 @@ export const Colors = {
   White: "#FFFFFF",
 };
 
-export const DialogColors = {
-  main: 0xffffff,
-  border: 0x6da87d,
+export const BoxColors = {
+  main: 0x644019,
+  border: 0x341c08,
 };
