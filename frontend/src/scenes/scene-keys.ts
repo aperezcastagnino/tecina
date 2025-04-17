@@ -6,4 +6,5 @@ export const SceneKeys = {
   LEVEL_1: "LEVEL_1",
   LEVEL_2: "LEVEL_2",
   GAME_OVER: "GAME_OVER",
+  WIN_SCENE: "WIN_SCENE",
 };

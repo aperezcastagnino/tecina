@@ -99,6 +99,8 @@ export class Preloader extends Scene {
       UIComponentKeys.INSTRUCTIONS,
       "/ui-components/instructions.png",
     );
+    this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
+    this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
 
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");

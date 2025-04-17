@@ -1,4 +1,6 @@
 import Phaser from "phaser";
+import { UIComponentKeys } from "assets/asset-keys";
+import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { SceneKeys } from "./scene-keys";
 
 export class GameOver extends Phaser.Scene {
@@ -9,17 +11,19 @@ export class GameOver extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
 
-    this.add
-      .text(width / 2, height / 2, "GAME OVER", {
-        fontSize: "100px",
-        color: "#ff0000",
-      })
-      .setOrigin(0.5);
+    // Set the background color to brown
+    this.cameras.main.setBackgroundColor("#341c08");
 
     this.add
-      .text(width / 2, height / 2 + 100, "Presiona ESPACIO para reiniciar", {
-        fontSize: "24px",
-        color: "#ffffff",
+      .image(width / 2, height / 2, UIComponentKeys.GAME_OVER)
+      .setOrigin(0.5)
+      .setScale(0.7);
+
+    this.add
+      .text(width / 2, height / 2 + 250, "Presiona ESPACIO para reiniciar", {
+        fontFamily: PRIMARY_FONT_FAMILY,
+        fontSize: FontSize.EXTRA_LARGE,
+        color: "#f8de6f",
       })
       .setOrigin(0.5);
 

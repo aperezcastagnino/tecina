@@ -62,6 +62,8 @@ export const UIComponentKeys = {
   LOAD_BUTTON: "LOAD_BUTTON",
   CROSS: "CROSS",
   INSTRUCTIONS: "INSTRUCTIONS",
+  GAME_OVER: "GAME_OVER",
+  WIN_TITLE: "WIN_TITLE",
 };
 
 export const TileKeys = {
