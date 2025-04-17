@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import type { DialogData } from "types/dialog-data";
-import { DialogColors } from "assets/colors";
+import { BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { UIComponent } from "./ui-component";
 
@@ -73,9 +73,9 @@ export abstract class BaseDialog extends UIComponent {
 
   private createUIText(): Phaser.GameObjects.Text {
     return this.scene.add
-      .text(18, 12, "", {
+      .text(32, 32, "", {
         fontFamily: PRIMARY_FONT_FAMILY,
-        color: "black",
+        color: "#f8de6f",
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: this.width - 18 },
       })
@@ -92,9 +92,9 @@ export abstract class BaseDialog extends UIComponent {
 
   private createPanel(): Phaser.GameObjects.Rectangle {
     return this.scene.add
-      .rectangle(0, 0, this.width, this.height, DialogColors.main, 0.9)
+      .rectangle(0, 0, this.width, this.height, BoxColors.main, 0.9)
       .setOrigin(0)
-      .setStrokeStyle(8, DialogColors.border, 1)
+      .setStrokeStyle(8, BoxColors.border, 1)
       .setScrollFactor(0);
   }
 }

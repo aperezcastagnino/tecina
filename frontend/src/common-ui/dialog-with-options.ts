@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Colors, DialogColors } from "assets/colors";
+import { Colors, BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import {
   DIRECTION,
@@ -110,11 +110,11 @@ export class DialogWithOptions {
         0,
         this.scene.cameras.main.width - this.#padding * 2,
         this.#height,
-        DialogColors.main,
+        BoxColors.main,
         1,
       )
       .setOrigin(0)
-      .setStrokeStyle(8, DialogColors.border, 1);
+      .setStrokeStyle(8, BoxColors.border, 1);
 
     this.statementUI = this.scene.add.text(
       this.#padding,

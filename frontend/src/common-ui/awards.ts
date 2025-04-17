@@ -1,3 +1,4 @@
+import { BoxColors } from "assets/colors";
 import { MAP_WIDTH, TILE_SIZE } from "config/config";
 import { Animations, FRAME_RATE } from "utils/animation-utils";
 
@@ -127,9 +128,9 @@ export class Awards {
     const height = AWARDS_CONFIG.HEIGHT * this.scale + this.padding / 2;
 
     // Draw the background
-    graphics.fillStyle(0x333333, 0.8); // Dark gray with some transparency
-    graphics.fillRoundedRect(0, 0, totalWidth, height, 10); // Rounded corners
-    graphics.lineStyle(2, 0xffffff, 1); // White border
+    graphics.fillStyle(BoxColors.main, 0.8);
+    graphics.fillRoundedRect(0, 0, totalWidth, height, 10);
+    graphics.lineStyle(6, BoxColors.border, 1);
     graphics.strokeRoundedRect(0, 0, totalWidth, height, 10);
 
     // Convert to texture and create image
