@@ -1,5 +1,6 @@
 import Phaser from "phaser";
-import { UIComponentKeys } from "assets/asset-keys";
+import { UIComponentKeys, ItemKeys } from "assets/asset-keys";
+import { Animations } from "utils/animation-utils";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { SceneKeys } from "./scene-keys";
 
@@ -11,7 +12,6 @@ export class GameOver extends Phaser.Scene {
   create() {
     const { width, height } = this.scale;
 
-    // Set the background color to brown
     this.cameras.main.setBackgroundColor("#341c08");
 
     this.add
@@ -26,6 +26,13 @@ export class GameOver extends Phaser.Scene {
         color: "#f8de6f",
       })
       .setOrigin(0.5);
+
+      Animations.useFrogAnimation(this);
+
+      const frog = this.add.sprite(width, height, ItemKeys.ANIMALS.FROG.ASSET_KEY)
+        .setOrigin(1.2, 1).setScale(6);
+      frog.play(ItemKeys.ANIMALS.FROG.ANIMATION_KEY);
+      
 
     this.input.keyboard?.once("keydown-SPACE", () => {
       this.scene.start(SceneKeys.LEVEL_1); // here we need a global variable to track in which level the user is

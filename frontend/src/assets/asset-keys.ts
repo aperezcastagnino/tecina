@@ -139,6 +139,16 @@ export const ItemKeys = {
       END_FRAME: 17,
     },
   },
+  ANIMALS: {
+    FROG: {
+      ASSET_KEY: "FROG",
+      ANIMATION_KEY: "FROG_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+  },
 };
 
 export const AssetLookup = new Map<

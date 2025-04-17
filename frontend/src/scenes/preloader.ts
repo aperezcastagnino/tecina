@@ -227,5 +227,18 @@ export class Preloader extends Scene {
         endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
       },
     );
+
+    // Animals
+
+    this.load.spritesheet(
+      ItemKeys.ANIMALS.FROG.ASSET_KEY,
+      "/items/animals/frog.png",
+      {
+        frameWidth: ItemKeys.ANIMALS.FROG.FRAME_WIDTH,
+        frameHeight: ItemKeys.ANIMALS.FROG.FRAME_HEIGHT,
+        startFrame: ItemKeys.ANIMALS.FROG.STAR_FRAME,
+        endFrame: ItemKeys.ANIMALS.FROG.END_FRAME,
+      },
+    );
   }
 }
