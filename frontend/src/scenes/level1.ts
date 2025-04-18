@@ -138,9 +138,18 @@ export class Level1 extends BaseScene {
       closeButton,
     ]);
 
-    closeButton.on("pointerdown", () => {
+    const closePopup = () => {
       popupContainer.destroy();
       popupBackground.destroy();
-    });
+      this.input.keyboard?.off("keydown-SPACE", closePopup); // limpiás el listener
+    };
+
+    closeButton.on("pointerdown", closePopup);
+
+    this.input.keyboard?.on("keydown-SPACE", closePopup);
+    this.input.keyboard?.on("keydown-LEFT", closePopup);
+    this.input.keyboard?.on("keydown-RIGHT", closePopup);
+    this.input.keyboard?.on("keydown-UP", closePopup);
+    this.input.keyboard?.on("keydown-DOWN", closePopup);
   }
 }
