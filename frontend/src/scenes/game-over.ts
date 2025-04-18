@@ -27,12 +27,13 @@ export class GameOver extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-      Animations.useFrogAnimation(this);
+    Animations.useFrogAnimation(this);
 
-      const frog = this.add.sprite(width, height, ItemKeys.ANIMALS.FROG.ASSET_KEY)
-        .setOrigin(1.2, 1).setScale(6);
-      frog.play(ItemKeys.ANIMALS.FROG.ANIMATION_KEY);
-      
+    const frog = this.add
+      .sprite(width, height, ItemKeys.ANIMALS.FROG.ASSET_KEY)
+      .setOrigin(1.2, 1)
+      .setScale(6);
+    frog.play(ItemKeys.ANIMALS.FROG.ANIMATION_KEY);
 
     this.input.keyboard?.once("keydown-SPACE", () => {
       this.scene.start(SceneKeys.LEVEL_1); // here we need a global variable to track in which level the user is

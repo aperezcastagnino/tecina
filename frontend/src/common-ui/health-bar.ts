@@ -47,7 +47,7 @@ export class HealthBar {
   }
 
   decreaseHealth(amount: number): boolean {
-    this.healthPercent -= amount + 1000;
+    this.healthPercent -= amount;
     return this.healthPercent <= 0;
   }
 

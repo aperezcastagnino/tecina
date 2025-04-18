@@ -97,7 +97,7 @@ export class Animations {
     this.createAnimations(scene, {
       key: ItemKeys.ANIMALS.FROG.ANIMATION_KEY,
       assetKey: ItemKeys.ANIMALS.FROG.ASSET_KEY,
-      frameRate: 2
+      frameRate: 2,
     });
   };
 
