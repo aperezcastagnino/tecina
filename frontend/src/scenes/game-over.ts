@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { UIComponentKeys, ItemKeys } from "assets/asset-keys";
 import { Animations } from "utils/animation-utils";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { StorageManager } from "utils/storage-manager";
 import { SceneKeys } from "./scene-keys";
 
 export class GameOver extends Phaser.Scene {
@@ -36,7 +37,12 @@ export class GameOver extends Phaser.Scene {
     frog.play(ItemKeys.ANIMALS.FROG.ANIMATION_KEY);
 
     this.input.keyboard?.once("keydown-SPACE", () => {
-      this.scene.start(SceneKeys.LEVEL_1); // here we need a global variable to track in which level the user is
+      const currentLevel = StorageManager.getLevelMetadataFromRegistry(
+        this.game,
+      );
+      if (currentLevel?.key) {
+        this.scene.start(currentLevel.key);
+      }
     });
   }
 }
