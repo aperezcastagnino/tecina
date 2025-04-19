@@ -138,18 +138,20 @@ export class Level1 extends BaseScene {
       closeButton,
     ]);
 
+    const keysToListen = ["SPACE", "LEFT", "RIGHT", "UP", "DOWN"];
+
     const closePopup = () => {
       popupContainer.destroy();
       popupBackground.destroy();
-      this.input.keyboard?.off("keydown-SPACE", closePopup); // limpiás el listener
+      keysToListen.forEach((key) => {
+        this.input.keyboard?.off(`keydown-${key}`, closePopup);
+      });
     };
 
     closeButton.on("pointerdown", closePopup);
 
-    this.input.keyboard?.on("keydown-SPACE", closePopup);
-    this.input.keyboard?.on("keydown-LEFT", closePopup);
-    this.input.keyboard?.on("keydown-RIGHT", closePopup);
-    this.input.keyboard?.on("keydown-UP", closePopup);
-    this.input.keyboard?.on("keydown-DOWN", closePopup);
+    keysToListen.forEach((key) => {
+      this.input.keyboard?.on(`keydown-${key}`, closePopup);
+    });
   }
 }
