@@ -1,4 +1,4 @@
-export const PRIMARY_FONT_FAMILY = "Kenney-Future-Narrow";
+export const PRIMARY_FONT_FAMILY = "Courier New";
 
 export const FontSize = {
   SMALL: "12px",
