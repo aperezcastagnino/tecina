@@ -62,6 +62,8 @@ export const UIComponentKeys = {
   LOAD_BUTTON: "LOAD_BUTTON",
   CROSS: "CROSS",
   INSTRUCTIONS: "INSTRUCTIONS",
+  GAME_OVER: "GAME_OVER",
+  WIN_TITLE: "WIN_TITLE",
 };
 
 export const TileKeys = {
@@ -131,6 +133,16 @@ export const ItemKeys = {
     STRAWBERRY: {
       ASSET_KEY: "STRAWBERRY",
       ANIMATION_KEY: "STRAWBERRY_ANIMATION",
+      FRAME_WIDTH: 32,
+      FRAME_HEIGHT: 32,
+      STAR_FRAME: 0,
+      END_FRAME: 17,
+    },
+  },
+  ANIMALS: {
+    FROG: {
+      ASSET_KEY: "FROG",
+      ANIMATION_KEY: "FROG_ANIMATION",
       FRAME_WIDTH: 32,
       FRAME_HEIGHT: 32,
       STAR_FRAME: 0,

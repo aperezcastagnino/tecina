@@ -99,6 +99,8 @@ export class Preloader extends Scene {
       UIComponentKeys.INSTRUCTIONS,
       "/ui-components/instructions.png",
     );
+    this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
+    this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
 
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
@@ -223,6 +225,19 @@ export class Preloader extends Scene {
         frameHeight: ItemKeys.FRUITS.STRAWBERRY.FRAME_HEIGHT,
         startFrame: ItemKeys.FRUITS.STRAWBERRY.STAR_FRAME,
         endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
+      },
+    );
+
+    // Animals
+
+    this.load.spritesheet(
+      ItemKeys.ANIMALS.FROG.ASSET_KEY,
+      "/items/animals/frog.png",
+      {
+        frameWidth: ItemKeys.ANIMALS.FROG.FRAME_WIDTH,
+        frameHeight: ItemKeys.ANIMALS.FROG.FRAME_HEIGHT,
+        startFrame: ItemKeys.ANIMALS.FROG.STAR_FRAME,
+        endFrame: ItemKeys.ANIMALS.FROG.END_FRAME,
       },
     );
   }

@@ -6,6 +6,7 @@ import LevelsMenu from "./scenes/levels-menu";
 import { Level1 } from "./scenes/level1";
 import { Preloader } from "./scenes/preloader";
 import { GameOver } from "./scenes/game-over";
+import { WinScene } from "./scenes/win-scene";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.WEBGL,
@@ -21,7 +22,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, LevelsMenu, Level1, GameOver],
+  scene: [Boot, Preloader, MainMenu, LevelsMenu, Level1, GameOver, WinScene],
 };
 
 export default new Game(config);
