@@ -39,43 +39,20 @@ export class MainMenu extends Scene {
   }
 
   createButtons() {
-    const startGameButton = this.add
-      .image(1400, 400, UIComponentKeys.START_BUTTON)
-      .setInteractive()
+    const loadGameButton = this.add
+      .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
+      .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
       .setScale(0.35);
 
-    startGameButton.on("pointerover", () => {
-      this.input.setDefaultCursor("pointer");
-      this.tweens.add({
-        targets: startGameButton,
-        scale: 0.4,
-        duration: 150,
-        ease: "Power2",
-      });
-    });
-
-    startGameButton.on("pointerout", () => {
-      this.input.setDefaultCursor("default");
-      this.tweens.add({
-        targets: startGameButton,
-        scale: 0.35,
-        duration: 150,
-        ease: "Power2",
-      });
-    });
-
-    startGameButton.on("pointerdown", () => {
-      this.startNewGame();
-    });
-
-    // LOAD GAME BUTTON
-    const loadGameButton = this.add
-      .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
+    const startGameButton = this.add
+      .image(1400, 400, UIComponentKeys.START_BUTTON)
+      .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
       .setScale(0.35);
 
     this.configureLoadGameButton(loadGameButton);
+    this.configureStartGameButton(startGameButton);
   }
 
   private configureLoadGameButton(button: Phaser.GameObjects.Image) {
@@ -123,6 +100,32 @@ export class MainMenu extends Scene {
         this.input.setDefaultCursor("default");
       });
     }
+  }
+
+  private configureStartGameButton(button: Phaser.GameObjects.Image) {
+    button.on("pointerover", () => {
+      this.input.setDefaultCursor("pointer");
+      this.tweens.add({
+        targets: button,
+        scale: 0.4,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerout", () => {
+      this.input.setDefaultCursor("default");
+      this.tweens.add({
+        targets: button,
+        scale: 0.35,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerdown", () => {
+      this.startNewGame();
+    });
   }
 
   startNewGame() {
