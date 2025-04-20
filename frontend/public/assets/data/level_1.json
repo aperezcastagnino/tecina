@@ -2,58 +2,22 @@
   "title": "Level 1",
   "dialogs": [
     {
-      "id": "d-1",
-      "description": "primer dialogo",
+      "description": "first quest",
       "questStart": [
-        "Can you pick the oranges?",
-        "They're for making marmalade. I need only 1 orange."
+        "Hello! My name is Sam, I hope you can help me with something. I found a cake recepie in my granmother's house and I want to make it for her birthday. I want to surprise her!",
+        "Can you help me?",
+        "I need one banana.",
+        "Can you pick it for me?"
       ],
-      "questStartIAGenerated": [""],
       "questInProgress": [
-        "I really want to make marmalade my grandma used to make!",
-        "I need only 1 orange."
+        "Hi friend! I need 1 banana for the cake. We can make it together! Is going to be delicious!"
       ],
-      "questInProgressIAGenerated": [""],
-      "questFinished": ["Thank you! Now I can make the marmalade!"],
-      "questFinishedIAGenerated": [""],
-      "questWrongItem": [
-        "That's not an orange! I need oranges for the marmalade.",
-        "Sorry, but I specifically asked for oranges. That won't work!"
-      ],
-      "questWrongItemIAGenerated": [""],
+      "questFinished": ["Oh! Thank you! You are amazing! Now we can start making the cake together! My grandmother is going to be very happy!"],
       "hints": [
-        "I'll give you a hint! Oranges are round and orange!",
-        "I don't have nothing more to say! Good luck!"
+        "Hello! I can give you a clue, what you need is yellow."
       ],
-      "hintsIAGenerated": [""],
-      "assetKey": "ORANGE",
-      "quantityToCollect": 1
-    },
-    {
-      "id": "d-2",
-      "description": "segundo dialogo",
-      "questStart": [
-        "My favorite fruits are bananas!",
-        "Could you pick two bananas for me?"
-      ],
-      "questWrongItem": ["That's not a banana!"],
-      "questInProgress": ["Hurry up! I need two bananas!"],
-      "questFinished": [
-        "Thank you so much! I'll make the best banana bread ever!"
-      ],
-      "hints": ["I'll give you a hint! Bananas are yellow and curved!"],
       "assetKey": "BANANAS",
-      "quantityToCollect": 2
-    },
-    {
-      "id": "dwo-1",
-      "description": "primer dialogo",
-      "questStart": ["esto debe ser una pregunta?"],
-      "questInProgress": [],
-      "questFinished": [],
-      "options": ["opcion 1", "opcion 2", "opcion 3", "opcion 4"],
-      "correctOption": "opcion 1",
-      "disable": true
+      "quantityToCollect": 1
     }
   ]
 }

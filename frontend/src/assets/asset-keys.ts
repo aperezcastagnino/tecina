@@ -39,6 +39,7 @@ export const CharacterKeys = {
     FRAME: 150,
   },
 };
+
 export const UIComponentKeys = {
   CURSOR: "CURSOR",
   BUTTON_CIRCLE: "BUTTON_CIRCLE",

@@ -1,6 +1,6 @@
 import type { Scene } from "phaser";
 import { TileType, type MapStructure } from "types/map.d";
-import { TILE_SIZE } from "config/config";
+import { TILE_SIZE } from "config";
 import { TileKeys } from "assets/asset-keys";
 
 const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
@@ -26,7 +26,7 @@ export class MapRenderer {
     scene: Scene,
     map: MapStructure,
     type: TileType,
-    assetName: string,
+    assetName: string
   ): void {
     if (type !== TileType.WALKABLE_SPACE && !map.assetGroups.has(assetName)) {
       const group = scene.physics.add.staticGroup();
@@ -42,7 +42,7 @@ export class MapRenderer {
     y: number,
     type: TileType,
     assetName: string,
-    frame: number = 0,
+    frame: number = 0
   ): void {
     switch (type) {
       case TileType.WALKABLE_SPACE:
@@ -63,7 +63,7 @@ export class MapRenderer {
     scene: Scene,
     x: number,
     y: number,
-    assetName: string,
+    assetName: string
   ): void {
     scene.add.image(x, y, assetName).setDisplaySize(TILE_SIZE, TILE_SIZE);
   }
@@ -73,7 +73,7 @@ export class MapRenderer {
     map: MapStructure,
     x: number,
     y: number,
-    assetName: string,
+    assetName: string
   ): void {
     scene.add
       .image(x, y, DEFAULT_FLOOR_ASSET)
@@ -94,7 +94,7 @@ export class MapRenderer {
     x: number,
     y: number,
     assetName: string,
-    frame: number,
+    frame: number
   ): void {
     scene.add
       .image(x, y, DEFAULT_FLOOR_ASSET)
@@ -103,7 +103,6 @@ export class MapRenderer {
     const sprite = scene.add.image(x, y, assetName, frame);
     sprite.setScale(3);
     sprite.name = `${assetName}_${frame}`;
-
     const group = map.assetGroups.get(assetName);
     if (!group) throw new Error(`Missing asset group for ${assetName}`);
     group.add(sprite);
@@ -114,7 +113,7 @@ export class MapRenderer {
     map: MapStructure,
     x: number,
     y: number,
-    assetName: string,
+    assetName: string
   ): void {
     const image = scene.add
       .image(x, y, assetName)

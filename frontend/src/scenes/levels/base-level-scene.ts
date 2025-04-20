@@ -13,7 +13,7 @@ import {
   MIN_PARTITION_SIZE,
   MIN_ROOM_SIZE,
   TILE_SIZE,
-} from "config/config";
+} from "config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
@@ -24,14 +24,14 @@ import {
   CharacterKeys,
   findAssetKeyByValue,
 } from "assets/asset-keys";
-import type { LevelMetadata } from "types/level-data";
+import type { LevelMetadata } from "types/level";
 import { StorageManager } from "utils/storage-manager";
-import { SceneKeys } from "./scene-keys";
+import { SceneKeys } from "scenes/scene-keys";
 
-type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
-  Partial<Omit<MapConfiguration, "tilesConfig">>;
+type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
+  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
 
-export abstract class BaseScene extends Scene {
+export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
 
   protected player!: Player;
@@ -63,9 +63,7 @@ export abstract class BaseScene extends Scene {
   // =========================================================================
 
   init(data: LevelMetadata[]) {
-    if (data) {
-      this.levelsMetadata = data;
-    }
+    this.levelsMetadata = data;
   }
 
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
@@ -79,7 +77,7 @@ export abstract class BaseScene extends Scene {
     } else {
       try {
         this.currentLevel = this.levelsMetadata.find(
-          (level) => level.key === this.scene.key,
+          (level) => level.key === this.scene.key
         )!;
         if (this.currentLevel.map) {
           this.map = this.currentLevel.map;
@@ -135,12 +133,14 @@ export abstract class BaseScene extends Scene {
   }
 
   makeItemDraggable(groupName: string): void {
+    debugger;
     this.physics.add.collider(
       this.player,
       this.map.assetGroups.get(groupName)!,
       (_player, element) => {
+        debugger;
         this.pickupItem(element as Phaser.GameObjects.Sprite);
-      },
+      }
     );
   }
 
@@ -151,7 +151,7 @@ export abstract class BaseScene extends Scene {
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
     const collisionGroups = [TileKeys.TREE, CharacterKeys.NPC].map(
-      (key) => this.map.assetGroups.get(key)!,
+      (key) => this.map.assetGroups.get(key)!
     );
 
     collisionGroups.forEach((group) => {
@@ -165,7 +165,7 @@ export abstract class BaseScene extends Scene {
 
   private async initializeScene(): Promise<void> {
     MapRenderer.render(this, this.map);
-
+    debugger;
     await Promise.all([
       this.initializePlayer(),
       this.initializeUI(),
@@ -205,16 +205,7 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializeDialogs(): void {
-    const levelData = loadLevelData(this, this.scene.key.toLowerCase());
-
-    this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this.dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: levelData.dialogs,
-      callback: (optionSelected: string) => {
-        console.log("Option selected: ", optionSelected);
-      },
-    });
+    this.dialog = new Dialog({ scene: this, data: loadLevelData(this) });
   }
 
   private initializeHealthBar(): void {
@@ -249,6 +240,7 @@ export abstract class BaseScene extends Scene {
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
+    debugger;
     if (item.visible && !this.heldItem) {
       this.heldItem = item;
       this.children.bringToTop(this.heldItem);
@@ -306,7 +298,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== TileKeys.TREE ||
-              ol.gameObject.texture.key !== CharacterKeys.NPC),
+              ol.gameObject.texture.key !== CharacterKeys.NPC)
         ).length === 0;
 
     if (canDrop) {
@@ -331,7 +323,7 @@ export abstract class BaseScene extends Scene {
           this.player.x,
           this.player.y,
           npcSprite.x,
-          npcSprite.y,
+          npcSprite.y
         );
 
         if (distance <= 70) {
@@ -390,7 +382,7 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-  private applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
+  public applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
     this.dialog?.showWrongItemDialog(npc.name);
 
     const isDead = this.healthBar.decreaseHealth(30);
@@ -411,7 +403,7 @@ export abstract class BaseScene extends Scene {
 
   private setElementsVisibility(
     group: GameObjects.Group,
-    visible: boolean,
+    visible: boolean
   ): void {
     group.children.iterate((child) => {
       const sprite = child as Phaser.GameObjects.Sprite;
@@ -432,10 +424,12 @@ export abstract class BaseScene extends Scene {
     }
 
     return {
-      name: this.scene.key,
+      name: config.name,
       tilesConfig: config.tilesConfig,
-      mapWidth: config.mapWidth ?? MAP_WIDTH,
-      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      dimensions: config.dimensions ?? {
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
+      },
       minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
       minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
     };

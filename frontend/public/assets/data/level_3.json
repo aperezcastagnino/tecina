@@ -1,0 +1,44 @@
+{
+  "title": "Level 3",
+  "dialogs": [
+    {
+      "id": "d-1",
+      "description": "primer dialogo",
+      "questStart": [
+        "Can you pick the oranges?",
+        "They're for making marmalade. I need only 1 orange."
+      ],
+      "questInProgress": [
+        "I really want to make marmalade my grandma used to make!",
+        "I need only 1 orange."
+      ],
+      "questFinished": ["Thank you! Now I can make the marmalade!"],
+      "questWrongItem": [
+        "That's not an orange! I need oranges for the marmalade.",
+        "Sorry, but I specifically asked for oranges. That won't work!"
+      ],
+      "hints": [
+        "I'll give you a hint! Oranges are round and orange!",
+        "I don't have nothing more to say! Good luck!"
+      ],
+      "assetKey": "ORANGE",
+      "quantityToCollect": 1
+    },
+    {
+      "id": "d-2",
+      "description": "segundo dialogo",
+      "questStart": [
+        "My favorite fruits are bananas!",
+        "Could you pick two bananas for me?"
+      ],
+      "questWrongItem": ["That's not a banana!"],
+      "questInProgress": ["Hurry up! I need two bananas!"],
+      "questFinished": [
+        "Thank you so much! I'll make the best banana bread ever!"
+      ],
+      "hints": ["I'll give you a hint! Bananas are yellow and curved!"],
+      "assetKey": "BANANAS",
+      "quantityToCollect": 2
+    }
+  ]
+}

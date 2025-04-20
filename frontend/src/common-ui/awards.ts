@@ -1,5 +1,5 @@
 import { BoxColors } from "assets/colors";
-import { MAP_WIDTH, TILE_SIZE } from "config/config";
+import { MAP_WIDTH, TILE_SIZE } from "config";
 import { Animations, FRAME_RATE } from "utils/animation-utils";
 
 const AWARDS_CONFIG = {

@@ -1,4 +1,4 @@
-import type { LevelMetadata } from "types/level-data";
+import type { LevelMetadata } from "types/level";
 
 const StorageKeys = {
   LevelsMetadaData: "LevelsMetadaData",
