@@ -22,14 +22,6 @@ export class WinScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setScale(0.7);
 
-    this.add
-      .text(width / 2, height / 2 + 150, "Desbloqueaste el siguiente nivel!", {
-        fontFamily: PRIMARY_FONT_FAMILY,
-        fontSize: FontSize.EXTRA_LARGE,
-        color: "#f8de6f",
-      })
-      .setOrigin(0.5);
-
     this.input.keyboard?.once("keydown-SPACE", () => {
       this.scene.start(SceneKeys.LEVELS_MENU);
     });
