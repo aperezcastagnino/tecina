@@ -93,6 +93,14 @@ export class Animations {
     });
   };
 
+  static useFrogAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.FROG.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.FROG.ASSET_KEY,
+      frameRate: 2,
+    });
+  };
+
   static createAnimations = (
     scene: Scene,
     animation: AnimationConfig,
