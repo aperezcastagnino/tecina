@@ -58,9 +58,9 @@ export const level1Config: TileConfig[] = [
   {
     tile: {
       type: TileType.INTERACTIVE_OBJECT,
-      asset: ItemKeys.ANIMALS.BUG.ASSET_KEY,
+      asset: ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
     },
-    frequency: 50,
+    frequency: 5,
   },
   {
     tile: {
@@ -93,7 +93,14 @@ export class Level1 extends BaseScene {
     Animations.useOrangeAnimation(this);
     Animations.useStrawberryAnimation(this);
     Animations.useBananasAnimation(this);
-    
+
+    Animations.useBunnyAnimation(this);
+    Animations.useCatAnimation(this);
+    Animations.useChickenAnimation(this);
+    Animations.useDeerAnimation(this);
+    Animations.useFoxAnimation(this);
+    Animations.useFrogAnimation(this);
+    Animations.usePigeonAnimation(this);
   }
 
   protected setupCollisions(): void {
@@ -102,6 +109,14 @@ export class Level1 extends BaseScene {
     this.makeItemDraggable(ItemKeys.FRUITS.ORANGE.ASSET_KEY);
     this.makeItemDraggable(ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY);
     this.makeItemDraggable(ItemKeys.FRUITS.BANANAS.ASSET_KEY);
+
+    this.makeItemDraggable(ItemKeys.ANIMALS.BUNNY.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.CAT.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.CHICKEN.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.DEER.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.FOX.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.FROG.ASSET_KEY);
+    this.makeItemDraggable(ItemKeys.ANIMALS.PIGEON.ASSET_KEY);
   }
 
   private showInstructionPopup(): void {

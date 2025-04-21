@@ -245,12 +245,10 @@ export class Preloader extends Scene {
 
   private loadAnimals() {
     const animals: (keyof typeof ItemKeys.ANIMALS)[] = [
-      "BUG",
       "BUNNY",
       "CAT",
       "CHICKEN",
       "DEER",
-      "ERIZO",
       "FOX",
       "FROG",
       "PIGEON",

@@ -140,21 +140,13 @@ export const ItemKeys = {
     },
   },
   ANIMALS: {
-    BUG: {
-      ASSET_KEY: "BUG",
-      ANIMATION_KEY: "BUG_ANIMATION",
-      FRAME_WIDTH: 32,
-      FRAME_HEIGHT: 32,
-      STAR_FRAME: 0,
-      END_FRAME: 17,
-    },
     BUNNY: {
       ASSET_KEY: "BUNNY",
       ANIMATION_KEY: "BUNNY_ANIMATION",
       FRAME_WIDTH: 32,
       FRAME_HEIGHT: 32,
       STAR_FRAME: 0,
-      END_FRAME: 17,
+      END_FRAME: 6,
     },
     CAT: {
       ASSET_KEY: "CAT",
@@ -178,23 +170,16 @@ export const ItemKeys = {
       FRAME_WIDTH: 32,
       FRAME_HEIGHT: 32,
       STAR_FRAME: 0,
-      END_FRAME: 17,
+      END_FRAME: 3,
     },
-    ERIZO: {
-      ASSET_KEY: "ERIZO",
-      ANIMATION_KEY: "ERIZO_ANIMATION",
-      FRAME_WIDTH: 32,
-      FRAME_HEIGHT: 32,
-      STAR_FRAME: 0,
-      END_FRAME: 17,
-    },
+
     FOX: {
       ASSET_KEY: "FOX",
       ANIMATION_KEY: "FOX_ANIMATION",
       FRAME_WIDTH: 32,
       FRAME_HEIGHT: 32,
       STAR_FRAME: 0,
-      END_FRAME: 17,
+      END_FRAME: 3,
     },
     FROG: {
       ASSET_KEY: "FROG",
@@ -207,8 +192,8 @@ export const ItemKeys = {
     PIGEON: {
       ASSET_KEY: "PIGEON",
       ANIMATION_KEY: "PIGEON_ANIMATION",
-      FRAME_WIDTH: 32,
-      FRAME_HEIGHT: 32,
+      FRAME_WIDTH: 16,
+      FRAME_HEIGHT: 16,
       STAR_FRAME: 0,
       END_FRAME: 17,
     },
