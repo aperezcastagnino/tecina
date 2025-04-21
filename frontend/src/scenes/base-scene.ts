@@ -395,6 +395,7 @@ export abstract class BaseScene extends Scene {
 
     const isDead = this.healthBar.decreaseHealth(30);
     if (isDead) {
+      StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
       this.scene.start(SceneKeys.GAME_OVER);
     }
   }
@@ -402,10 +403,10 @@ export abstract class BaseScene extends Scene {
   private levelCompleted(): void {
     this.currentLevel.completed = true;
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
-    this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
+    this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
       setTimeout(() => {
-        this.scene.start(SceneKeys.LEVELS_MENU);
-      }, 6000);
+        this.scene.start(SceneKeys.WIN_SCENE);
+      }, 2000);
     });
   }
 

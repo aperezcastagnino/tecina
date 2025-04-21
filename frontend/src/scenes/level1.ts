@@ -1,6 +1,7 @@
 import { SceneKeys } from "scenes/scene-keys";
 import { BaseScene } from "scenes/base-scene";
 import { TileType, type TileConfig } from "types/map.d";
+import { PLAYER_KEYS } from "common/player-keys";
 import { Animations } from "utils/animation-utils";
 import {
   TileKeys,
@@ -139,9 +140,18 @@ export class Level1 extends BaseScene {
       closeButton,
     ]);
 
-    closeButton.on("pointerdown", () => {
+    const closePopup = () => {
       popupContainer.destroy();
       popupBackground.destroy();
+      Object.values(PLAYER_KEYS).forEach((key) => {
+        this.input.keyboard?.off(`keydown-${key}`, closePopup);
+      });
+    };
+
+    closeButton.on("pointerdown", closePopup);
+
+    Object.values(PLAYER_KEYS).forEach((key) => {
+      this.input.keyboard?.on(`keydown-${key}`, closePopup);
     });
   }
 }
