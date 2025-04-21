@@ -113,9 +113,10 @@ export default class LevelsMenu extends Phaser.Scene {
     });
   }
 
-  enableLevelButton(levelKey: string) {
+  enableNextLevelButton(levelKey: string) {
+    const nextLevelKey = this.getNextLevelKey(levelKey);
     const button = this.children.getByName(
-      `${levelKey}`,
+      `${nextLevelKey}`,
     ) as Phaser.GameObjects.Image;
 
     if (button) {
@@ -146,9 +147,15 @@ export default class LevelsMenu extends Phaser.Scene {
         });
       });
       button.on("pointerdown", () => {
-        this.startLevel(levelKey);
+        this.startLevel(nextLevelKey);
       });
     }
+  }
+
+  getNextLevelKey(currentLevelKey: string): string {
+    const [prefix, number] = currentLevelKey.split("_");
+
+    return `${prefix}_${Number(number) + 1}`;
   }
 
   completeAndUnlockLevels() {

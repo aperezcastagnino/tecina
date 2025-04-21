@@ -401,15 +401,8 @@ export abstract class BaseScene extends Scene {
     }
   }
 
-  private getNextLevelKey(currentLevelKey: string): string {
-    const [prefix, number] = currentLevelKey.split("_");
-
-    return `${prefix}_${Number(number) + 1}`;
-  }
-
   private levelCompleted(): void {
     this.currentLevel.completed = true;
-    const nextLevelKey = this.getNextLevelKey(this.currentLevel.key);
 
     if (!this.scene.isActive(SceneKeys.LEVELS_MENU)) {
       this.scene.run(SceneKeys.LEVELS_MENU);
@@ -418,7 +411,7 @@ export abstract class BaseScene extends Scene {
     const levelsMenuScene = this.scene.get(SceneKeys.LEVELS_MENU) as LevelsMenu;
 
     levelsMenuScene.events.once(Phaser.Scenes.Events.CREATE, () => {
-      levelsMenuScene.enableLevelButton(nextLevelKey);
+      levelsMenuScene.enableNextLevelButton(this.currentLevel.key);
     });
 
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
