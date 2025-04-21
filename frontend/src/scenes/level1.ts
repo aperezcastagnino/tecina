@@ -57,9 +57,9 @@ export const level1Config: TileConfig[] = [
   {
     tile: {
       type: TileType.INTERACTIVE_OBJECT,
-      asset: ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
+      asset: ItemKeys.ANIMALS.BUG.ASSET_KEY,
     },
-    frequency: 5,
+    frequency: 50,
   },
   {
     tile: {
@@ -92,6 +92,7 @@ export class Level1 extends BaseScene {
     Animations.useOrangeAnimation(this);
     Animations.useStrawberryAnimation(this);
     Animations.useBananasAnimation(this);
+    
   }
 
   protected setupCollisions(): void {

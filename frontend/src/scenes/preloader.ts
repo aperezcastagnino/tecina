@@ -107,6 +107,7 @@ export class Preloader extends Scene {
 
     // Load elements
     this.loadFruits();
+    this.loadAnimals();
   }
 
   create() {
@@ -225,5 +226,32 @@ export class Preloader extends Scene {
         endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
       },
     );
+  }
+
+  private loadAnimals() {
+    const animals: (keyof typeof ItemKeys.ANIMALS)[] = [
+      "BUG",
+      "BUNNY",
+      "CAT",
+      "CHICKEN",
+      "DEER",
+      "ERIZO",
+      "FOX",
+      "FROG",
+      "PIGEON",
+    ];
+
+    animals.forEach((animal) => {
+      this.load.spritesheet(
+        ItemKeys.ANIMALS[animal].ASSET_KEY,
+        `/items/animals/${animal.toLowerCase()}.png`,
+        {
+          frameWidth: ItemKeys.ANIMALS[animal].FRAME_WIDTH,
+          frameHeight: ItemKeys.ANIMALS[animal].FRAME_HEIGHT,
+          startFrame: ItemKeys.ANIMALS[animal].STAR_FRAME,
+          endFrame: ItemKeys.ANIMALS[animal].END_FRAME,
+        },
+      );
+    });
   }
 }
