@@ -400,8 +400,10 @@ export abstract class BaseScene extends Scene {
       this.scene.start(SceneKeys.GAME_OVER);
     }
   }
+
   private getNextLevelKey(currentLevelKey: string): string {
     const [prefix, number] = currentLevelKey.split("_");
+
     return `${prefix}_${Number(number) + 1}`;
   }
 
