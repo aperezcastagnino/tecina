@@ -178,8 +178,8 @@ export abstract class BaseScene extends Scene {
   private initializePlayer(): void {
     this.player = new Player({
       scene: this,
-      positionX: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
-      positionY: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
+      positionX: TILE_SIZE / 2 + this.map.startPosition.x * TILE_SIZE,
+      positionY: TILE_SIZE / 2 + this.map.startPosition.y * TILE_SIZE,
       velocity: 700,
     });
     this.player.body!.setSize(TILE_SIZE / 2, TILE_SIZE / 2);
