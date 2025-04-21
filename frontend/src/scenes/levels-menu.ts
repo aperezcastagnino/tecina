@@ -53,14 +53,14 @@ export default class LevelsMenu extends Phaser.Scene {
         )
         .setInteractive({ useHandCursor: true })
         .setScale(0.34)
-        .setName(`levelImageButton${index + 1}`);
+        .setName(`${level.key}`);
 
       if (!level.enable) {
         button.setTint(0x808080);
         button.setInteractive({ useHandCursor: false });
       }
 
-      if (index !== 0) {
+      if (index !== 0 && !level.enable) {
         // Apply grey tint and tooltip to locked levels
         button.setTint(0x808080);
 
@@ -113,14 +113,18 @@ export default class LevelsMenu extends Phaser.Scene {
     });
   }
 
-  enableLevelButton(levelNumber: number) {
+  enableLevelButton(levelKey: string) {
     const button = this.children.getByName(
-      `levelImageButton${levelNumber}`,
+      `${levelKey}`,
     ) as Phaser.GameObjects.Image;
 
     if (button) {
-      button.clearTint();
+      console.log("Tint before:", button.tintTopLeft);
+
+      console.log("button", button.name);
+
       button.setInteractive({ useHandCursor: true });
+      button.clearTint();
 
       button.on("pointerover", () => {
         this.input.setDefaultCursor("pointer");
@@ -141,9 +145,8 @@ export default class LevelsMenu extends Phaser.Scene {
           ease: "Power2",
         });
       });
-
       button.on("pointerdown", () => {
-        this.startLevel(String(levelNumber));
+        this.startLevel(levelKey);
       });
     }
   }

@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { UIComponentKeys, BackgroundKeys } from "assets/asset-keys";
 import { SceneKeys } from "./scene-keys";
 
