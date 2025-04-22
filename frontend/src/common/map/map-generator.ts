@@ -347,9 +347,9 @@ export class MapGenerator {
     const result = map.tiles
       .flatMap((row, y) => row.map((tile, x) => ({ tile, x, y })))
       .find(({ tile }) => tile.type === TileType.WALKABLE_SPACE);
-      if (!result) {
-        throw new Error("No walkable space found for start position");
-      }
+    if (!result) {
+      throw new Error("No walkable space found for start position");
+    }
     map.startPosition.x = result.x;
     map.startPosition.y = result.y;
   }
