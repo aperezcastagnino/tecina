@@ -28,7 +28,6 @@
       "characters/*": ["characters/*"],
       "common/*": ["common/*"],
       "common-ui/*": ["common-ui/*"],
-      "config/*": ["config/*"],
       "networking/*": ["networking/*"],
       "scene/*": ["scene/*"],
       "types/*": ["types/*"],

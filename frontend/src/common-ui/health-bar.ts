@@ -1,4 +1,4 @@
-import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
+import { GAME_DIMENSIONS, TILE_SIZE } from "config";
 import { UIComponentKeys } from "assets/asset-keys";
 
 const HEALTH_BAR_CONFIG = {

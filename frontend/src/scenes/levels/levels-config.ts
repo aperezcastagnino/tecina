@@ -1,21 +1,16 @@
 import { SceneKeys } from "scenes/scene-keys";
-import type { LevelMetadata } from "types/level-data";
+import type { LevelMetadata } from "types/level";
 
 export const levelsConfig: LevelMetadata[] = [
   {
     key: SceneKeys.LEVEL_1,
     position: { x: 260, y: 420 },
     enable: true,
-    completed: false,
-    active: false,
     nextLevel: [SceneKeys.LEVEL_2],
   },
   {
     key: SceneKeys.LEVEL_2,
     position: { x: 450, y: 620 },
-    enable: false,
-    completed: false,
-    active: false,
     nextLevel: [SceneKeys.LEVEL_1], // Inaccurate
   },
   /* 
