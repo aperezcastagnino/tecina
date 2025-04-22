@@ -2,8 +2,8 @@ import Phaser from "phaser";
 import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
 import { SceneKeys } from "scenes/scene-keys";
 import { StorageManager } from "utils/storage-manager";
-import type { LevelMetadata } from "types/level-data";
-import { levelsConfig } from "config/levels-config";
+import type { LevelMetadata } from "types/level";
+import { levelsConfig } from "scenes/levels/levels-config";
 import { Tooltip } from "../common-ui/tooltip";
 
 export default class LevelsMenu extends Phaser.Scene {
@@ -113,7 +113,7 @@ export default class LevelsMenu extends Phaser.Scene {
     });
   }
 
-  enableLevelButton(levelNumber: number) {
+  private enableLevelButton(levelNumber: number) {
     const button = this.children.getByName(
       `levelImageButton${levelNumber}`,
     ) as Phaser.GameObjects.Image;
@@ -148,7 +148,7 @@ export default class LevelsMenu extends Phaser.Scene {
     }
   }
 
-  completeAndUnlockLevels() {
+  private completeAndUnlockLevels() {
     const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
       this.game,
     );
@@ -174,7 +174,7 @@ export default class LevelsMenu extends Phaser.Scene {
     StorageManager.removeLevelMetadaDataFromRegistry(this.game);
   }
 
-  startLevel(levelKey: string) {
+  private startLevel(levelKey: string) {
     this.scene.start(levelKey, this.levelMetadata);
   }
 }

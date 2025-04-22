@@ -1,9 +1,9 @@
 import { Game, type Types } from "phaser";
-import { GAME_DIMENSIONS } from "config/config";
+import { GAME_DIMENSIONS } from "config";
 import { Boot } from "./scenes/boot";
 import { MainMenu } from "./scenes/main-menu";
 import LevelsMenu from "./scenes/levels-menu";
-import { Level1 } from "./scenes/level1";
+import { Level1 } from "./scenes/levels/level1";
 import { Preloader } from "./scenes/preloader";
 import { GameOver } from "./scenes/game-over";
 import { WinScene } from "./scenes/win-scene";

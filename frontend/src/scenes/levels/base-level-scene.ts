@@ -3,7 +3,6 @@ import { loadLevelData } from "utils/data-util";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
-import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
 import type { MapConfiguration, MapStructure } from "types/map";
 import {
@@ -13,7 +12,7 @@ import {
   MIN_PARTITION_SIZE,
   MIN_ROOM_SIZE,
   TILE_SIZE,
-} from "config/config";
+} from "config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
@@ -24,14 +23,14 @@ import {
   CharacterKeys,
   findAssetKeyByValue,
 } from "assets/asset-keys";
-import type { LevelMetadata } from "types/level-data";
+import type { LevelMetadata } from "types/level";
 import { StorageManager } from "utils/storage-manager";
-import { SceneKeys } from "./scene-keys";
+import { SceneKeys } from "../scene-keys";
 
-type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
-  Partial<Omit<MapConfiguration, "tilesConfig">>;
+type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
+  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
 
-export abstract class BaseScene extends Scene {
+export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
 
   protected player!: Player;
@@ -39,8 +38,6 @@ export abstract class BaseScene extends Scene {
   protected controls!: Controls;
 
   protected dialog!: Dialog;
-
-  protected dialogWithOptions?: DialogWithOptions;
 
   protected healthBar!: HealthBar;
 
@@ -63,9 +60,7 @@ export abstract class BaseScene extends Scene {
   // =========================================================================
 
   init(data: LevelMetadata[]) {
-    if (data) {
-      this.levelsMetadata = data;
-    }
+    this.levelsMetadata = data;
   }
 
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
@@ -205,16 +200,7 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializeDialogs(): void {
-    const levelData = loadLevelData(this, this.scene.key.toLowerCase());
-
-    this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this.dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: levelData.dialogs,
-      callback: (optionSelected: string) => {
-        console.log("Option selected: ", optionSelected);
-      },
-    });
+    this.dialog = new Dialog({ scene: this, data: loadLevelData(this) });
   }
 
   private initializeHealthBar(): void {
@@ -433,10 +419,12 @@ export abstract class BaseScene extends Scene {
     }
 
     return {
-      name: this.scene.key,
+      name: config.name,
       tilesConfig: config.tilesConfig,
-      mapWidth: config.mapWidth ?? MAP_WIDTH,
-      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      dimensions: config.dimensions ?? {
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
+      },
       minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
       minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
     };

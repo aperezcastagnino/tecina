@@ -1,5 +1,5 @@
 import { SceneKeys } from "scenes/scene-keys";
-import { BaseScene } from "scenes/base-scene";
+import { BaseLevelScene } from "scenes/levels/base-level-scene";
 import { TileType, type TileConfig } from "types/map.d";
 import { PLAYER_KEYS } from "common/player-keys";
 import { Animations } from "utils/animation-utils";
@@ -71,13 +71,16 @@ export const level1Config: TileConfig[] = [
   },
 ];
 
-export class Level1 extends BaseScene {
+export class Level1 extends BaseLevelScene {
   constructor() {
     super(SceneKeys.LEVEL_1);
   }
 
   async preload(): Promise<void> {
-    await super.preload({ tilesConfig: level1Config });
+    await super.preload({
+      name: SceneKeys.LEVEL_1,
+      tilesConfig: level1Config,
+    });
   }
 
   async create(): Promise<void> {
