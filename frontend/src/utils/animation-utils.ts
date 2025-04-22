@@ -101,6 +101,54 @@ export class Animations {
     });
   };
 
+  static useBunnyAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.BUNNY.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.BUNNY.ASSET_KEY,
+      frameRate: 8,
+    });
+  };
+
+  static useCatAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.CAT.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.CAT.ASSET_KEY,
+      frameRate: 6,
+    });
+  };
+
+  static useChickenAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.CHICKEN.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.CHICKEN.ASSET_KEY,
+      frameRate: 5,
+    });
+  };
+
+  static useDeerAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.DEER.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.DEER.ASSET_KEY,
+      frameRate: 6,
+    });
+  };
+
+  static useFoxAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.FOX.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.FOX.ASSET_KEY,
+      frameRate: 3,
+    });
+  };
+
+  static usePigeonAnimation = (scene: Scene): void => {
+    this.createAnimations(scene, {
+      key: ItemKeys.ANIMALS.PIGEON.ANIMATION_KEY,
+      assetKey: ItemKeys.ANIMALS.PIGEON.ASSET_KEY,
+      frameRate: 3,
+    });
+  };
+
   static createAnimations = (
     scene: Scene,
     animation: AnimationConfig,
