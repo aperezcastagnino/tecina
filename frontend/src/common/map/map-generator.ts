@@ -93,6 +93,7 @@ export class MapGenerator {
       rootPartition,
       privateStaticObjects,
     );
+    this.calculateStartPosition(map);
 
     return map;
   }
@@ -307,10 +308,6 @@ export class MapGenerator {
             interactivefrequencyTiles!.frequencies!,
             interactivefrequencyTiles!.tiles,
           );
-          if (map.startPosition.x === 0 && map.startPosition.y === 0) {
-            map.startPosition.x = columnIndex + 1;
-            map.startPosition.y = rowIndex + 1;
-          }
         } else if (element === UNUSED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
             obstaclefrequencyTiles!.frequencies!,
@@ -344,6 +341,17 @@ export class MapGenerator {
         }
       },
     );
+  }
+
+  private static calculateStartPosition(map: MapStructure) {
+    const result = map.tiles
+      .flatMap((row, y) => row.map((tile, x) => ({ tile, x, y })))
+      .find(({ tile }) => tile.type === TileType.WALKABLE_SPACE);
+    if (!result) {
+      throw new Error("No walkable space found for start position");
+    }
+    map.startPosition.x = result.x;
+    map.startPosition.y = result.y;
   }
 
   private static prepareTileConfigs(tilesConfig: TileConfig[]) {
