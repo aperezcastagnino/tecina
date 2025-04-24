@@ -2,7 +2,7 @@ import { SceneKeys } from "scenes/scene-keys";
 import { TileType } from "types/map.d";
 import {
   TileKeys,
-  CharacterKeys,
+  CharacterAssets,
   UIComponentKeys,
   ItemAssets,
 } from "assets/assets";
@@ -23,7 +23,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     centerY - popupHeight / 2 - 25,
     popupWidth,
     popupHeight,
-    cornerRadius,
+    cornerRadius
   );
 
   const popupImage = scene.add
@@ -56,16 +56,16 @@ export const Level1 = new Level({
     {
       tile: {
         type: TileType.INTERACTIVE_STATIC_OBJECT,
-        asset: CharacterKeys.GUY.ASSET_KEY,
-        frame: CharacterKeys.GUY.FRAME,
+        asset: CharacterAssets.GUY.ASSET_KEY,
+        frame: CharacterAssets.GUY.FRAME,
       },
       quantity: 1,
     },
     {
       tile: {
         type: TileType.INTERACTIVE_STATIC_OBJECT,
-        asset: CharacterKeys.GIRL.ASSET_KEY,
-        frame: CharacterKeys.GIRL.FRAME,
+        asset: CharacterAssets.GIRL.ASSET_KEY,
+        frame: CharacterAssets.GIRL.FRAME,
       },
       quantity: 1,
     },

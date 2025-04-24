@@ -11,13 +11,14 @@ import {
   MAP_WIDTH,
   MIN_PARTITION_SIZE,
   MIN_ROOM_SIZE,
+  PLAYER_VELOCITY,
   TILE_SIZE,
 } from "config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { TileKeys, CharacterKeys } from "assets/assets";
+import { TileKeys, CharacterAssets } from "assets/assets";
 import type { LevelMetadata } from "types/level";
 import { StorageManager } from "managers/storage-manager";
 import type { AssetConfig } from "types/asset";
@@ -55,8 +56,11 @@ export abstract class BaseLevelScene extends Scene {
   // Lifecycle Methods
   // =========================================================================
 
-  init(data: LevelMetadata[]) {
-    this.levelsMetadata = data;
+  init(data: LevelMetadata[]): void {
+    if (data && data.length > 0) {
+      this.levelsMetadata = data;
+      this.currentLevel = data.find((level) => level.key === this.scene.key)!;
+    }
   }
 
   protected async preload(config: MapMinimalConfiguration): Promise<void> {
@@ -69,9 +73,6 @@ export abstract class BaseLevelScene extends Scene {
       }
     } else {
       try {
-        this.currentLevel = this.levelsMetadata.find(
-          (level) => level.key === this.scene.key,
-        )!;
         if (this.currentLevel.map) {
           this.map = this.currentLevel.map;
           this.map.assetGroups = new Map();
@@ -104,6 +105,8 @@ export abstract class BaseLevelScene extends Scene {
       return;
     }
 
+    if (this.dialog?.isDialogActive()) return;
+
     this.player.move(this.controls.getDirectionKeyPressed());
 
     if (this.heldItem) {
@@ -131,7 +134,7 @@ export abstract class BaseLevelScene extends Scene {
       this.map.assetGroups.get(asset.assetKey)!,
       (_player, element) => {
         this.pickupItem(element as Phaser.GameObjects.Sprite);
-      },
+      }
     );
   }
 
@@ -141,8 +144,8 @@ export abstract class BaseLevelScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [TileKeys.TREE, CharacterKeys.NPC].map(
-      (key) => this.map.assetGroups.get(key)!,
+    const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
+      (key) => this.map.assetGroups.get(key)!
     );
 
     collisionGroups.forEach((group) => {
@@ -171,7 +174,7 @@ export abstract class BaseLevelScene extends Scene {
       scene: this,
       positionX: TILE_SIZE / 2 + this.map.startPosition.x * TILE_SIZE,
       positionY: TILE_SIZE / 2 + this.map.startPosition.y * TILE_SIZE,
-      velocity: 700,
+      velocity: PLAYER_VELOCITY,
     });
     this.player.body!.setSize(TILE_SIZE / 2, TILE_SIZE / 2);
     this.controls = new Controls(this);
@@ -275,7 +278,7 @@ export abstract class BaseLevelScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== TileKeys.TREE ||
-              ol.gameObject.texture.key !== CharacterKeys.NPC),
+              ol.gameObject.texture.key !== CharacterAssets.NPC)
         ).length === 0;
 
     if (canDrop) {
@@ -292,7 +295,7 @@ export abstract class BaseLevelScene extends Scene {
 
   private interactWithNearNPC(): void {
     this.map.assetGroups
-      .get(CharacterKeys.NPC)!
+      .get(CharacterAssets.NPC)!
       .getChildren()
       .forEach((npc) => {
         const npcSprite = npc as Phaser.GameObjects.Sprite;
@@ -300,7 +303,7 @@ export abstract class BaseLevelScene extends Scene {
           this.player.x,
           this.player.y,
           npcSprite.x,
-          npcSprite.y,
+          npcSprite.y
         );
 
         if (distance <= 70) {
@@ -383,7 +386,7 @@ export abstract class BaseLevelScene extends Scene {
 
   private setElementsVisibility(
     group: GameObjects.Group,
-    visible: boolean,
+    visible: boolean
   ): void {
     group.children.iterate((child) => {
       const sprite = child as Phaser.GameObjects.Sprite;
