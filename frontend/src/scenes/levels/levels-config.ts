@@ -11,17 +11,15 @@ export const levelsConfig: LevelMetadata[] = [
   {
     key: SceneKeys.LEVEL_2,
     position: { x: 450, y: 620 },
-    nextLevel: [SceneKeys.LEVEL_1], // Inaccurate
+    nextLevel: [SceneKeys.LEVEL_3],
   },
-  /* 
   {
     key: SceneKeys.LEVEL_3,
     position: { x: 820, y: 500 },
-    enable: false,
-    completed: false,
-    active: false,
-    nextLevel: [SceneKeys.LEVEL_4],
+    nextLevel: [SceneKeys.WIN_SCENE],
   },
+  /* 
+
   {
     key: SceneKeys.LEVEL_4,
     position: { x: 690, y: 260 },

@@ -67,6 +67,8 @@ export abstract class BaseLevelScene extends Scene {
     if (DEBUG_MODE_ACTIVE) {
       try {
         this.map = MapGenerator.create(this.validateMapConfig(config));
+        this.currentLevel.map = this.map;
+        StorageManager.setLevelsMetadataToStorage(this.levelsMetadata);
         this.createAnimations();
       } catch (error) {
         console.error("Failed to initialize scene:", error);
@@ -377,7 +379,7 @@ export abstract class BaseLevelScene extends Scene {
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
     this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
       setTimeout(() => {
-        this.scene.start(SceneKeys.WIN_SCENE);
+        this.scene.start(SceneKeys.LEVELS_MENU);
       }, 2000);
     });
   }

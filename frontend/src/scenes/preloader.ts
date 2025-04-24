@@ -51,8 +51,8 @@ export class Preloader extends Scene {
 
     // Load data
     this.load.json("level_1", "/data/level_1.json");
-
-    // Level 1
+    this.load.json("level_2", "/data/level_2.json");
+    this.load.json("level_3", "/data/level_3.json");
 
     // Load Characters
     this.load.spritesheet(CharacterAssets.PLAYER, `characters/player.png`, {

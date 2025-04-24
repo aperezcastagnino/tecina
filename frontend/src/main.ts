@@ -1,5 +1,7 @@
 import { Game, type Types } from "phaser";
 import { GAME_DIMENSIONS } from "config";
+import { Level2 } from "scenes/levels/level2";
+import { Level3 } from "scenes/levels/level3";
 import { Boot } from "./scenes/boot";
 import { MainMenu } from "./scenes/main-menu";
 import LevelsMenu from "./scenes/levels-menu";
@@ -22,7 +24,17 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, Preloader, MainMenu, LevelsMenu, Level1, GameOver, WinScene],
+  scene: [
+    Boot,
+    Preloader,
+    MainMenu,
+    LevelsMenu,
+    Level1,
+    Level2,
+    Level3,
+    GameOver,
+    WinScene,
+  ],
 };
 
 export default new Game(config);

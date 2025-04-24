@@ -88,35 +88,20 @@ export const Level1 = new Level({
         type: TileType.OBSTACLE,
         asset: TileKeys.TREE,
       },
-      frequency: 1,
-    },
-    {
-      tile: {
-        type: TileType.INTERACTIVE_OBJECT,
-        asset: ItemAssets.ORANGE.assetKey,
-      },
-      quantity: 1,
-    },
-    {
-      tile: {
-        type: TileType.INTERACTIVE_OBJECT,
-        asset: ItemAssets.STRAWBERRY.assetKey,
-      },
-      frequency: 5,
+      frequency: 3,
     },
     {
       tile: {
         type: TileType.INTERACTIVE_OBJECT,
         asset: ItemAssets.BANANAS.assetKey,
       },
-      quantity: 2,
+      quantity: 1,
     },
   ],
   itemsToHide: [ItemAssets.BANANAS],
   itemsToAnimate: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
   itemsToMakeDraggable: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
   onCreate: (scene: Phaser.Scene) => {
-    console.log("onCreate");
     showInstructionPopup(scene);
   },
 });
