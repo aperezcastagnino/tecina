@@ -41,12 +41,12 @@ export class Preloader extends Scene {
     // Backgrounds
     this.load.image(
       BackgroundKeys.MAIN_MENU,
-      `/backgrounds/main-menu-background.png`
+      `/backgrounds/main-menu-background.png`,
     );
 
     this.load.image(
       BackgroundKeys.LEVELS,
-      `/backgrounds/levels-background.png`
+      `/backgrounds/levels-background.png`,
     );
 
     // Load data
@@ -68,38 +68,38 @@ export class Preloader extends Scene {
     this.load.image(UIComponentKeys.CURSOR, "/ui-components/cursor.png");
     this.load.image(
       UIComponentKeys.HEALTH_BAR.BACKGROUND.ASSET_KEY,
-      "/ui-components/health-bar-background.png"
+      "/ui-components/health-bar-background.png",
     );
     this.load.image(
       UIComponentKeys.HEALTH_BAR.LEFT.ASSET_KEY,
-      "/ui-components/health-bar-fill-left.png"
+      "/ui-components/health-bar-fill-left.png",
     );
     this.load.image(
       UIComponentKeys.HEALTH_BAR.RIGHT.ASSET_KEY,
-      "/ui-components/health-bar-fill-right.png"
+      "/ui-components/health-bar-fill-right.png",
     );
     this.load.image(
       UIComponentKeys.BUTTON_CIRCLE,
-      "/ui-components/button-circle.png"
+      "/ui-components/button-circle.png",
     );
     this.load.image(UIComponentKeys.TITLE, `/ui-components/title.png`);
 
     this.load.image(
       UIComponentKeys.START_BUTTON,
-      "/ui-components/start-button.png"
+      "/ui-components/start-button.png",
     );
     this.load.image(
       UIComponentKeys.LOAD_BUTTON,
-      "/ui-components/load-button.png"
+      "/ui-components/load-button.png",
     );
     this.load.image(
       UIComponentKeys.BUTTON_SHADOW,
-      "/ui-components/button-shadow.png"
+      "/ui-components/button-shadow.png",
     );
     this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
     this.load.image(
       UIComponentKeys.INSTRUCTIONS,
-      "/ui-components/instructions.png"
+      "/ui-components/instructions.png",
     );
     this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
     this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
@@ -118,7 +118,7 @@ export class Preloader extends Scene {
     this.createPlayerAnimations();
 
     this.scene.start(
-      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU
+      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
     );
   }
 
@@ -127,45 +127,45 @@ export class Preloader extends Scene {
       this,
       PlayerAnimationKeys.PLAYER_UP,
       CharacterAssets.PLAYER,
-      [0, 1, 2]
+      [0, 1, 2],
     );
     AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_RIGHT,
       CharacterAssets.PLAYER,
-      [3, 4, 5]
+      [3, 4, 5],
     );
     AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_DOWN,
       CharacterAssets.PLAYER,
-      [6, 7, 8]
+      [6, 7, 8],
     );
     AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_LEFT,
       CharacterAssets.PLAYER,
-      [9, 10, 11]
+      [9, 10, 11],
     );
   }
 
   private loadFruits() {
     const fruits = Object.keys(FruitAssets);
     fruits.forEach((fruit) =>
-      this.loadContent("/items/fruits", fruit as keyof typeof FruitAssets)
+      this.loadContent("/items/fruits", fruit as keyof typeof FruitAssets),
     );
   }
 
   private loadAnimals() {
     const animals = Object.keys(AnimalAssets);
     animals.forEach((animal) =>
-      this.loadContent("/items/animals", animal as keyof typeof AnimalAssets)
+      this.loadContent("/items/animals", animal as keyof typeof AnimalAssets),
     );
   }
 
   private loadContent(
     pathFile: string,
-    assetKey: keyof typeof ItemAssets
+    assetKey: keyof typeof ItemAssets,
   ): void {
     this.load.spritesheet(
       ItemAssets[assetKey].assetKey,
@@ -175,7 +175,7 @@ export class Preloader extends Scene {
         frameHeight: ItemAssets[assetKey].frameHeight,
         startFrame: ItemAssets[assetKey].starFrame,
         endFrame: ItemAssets[assetKey].endFrame,
-      }
+      },
     );
   }
 }

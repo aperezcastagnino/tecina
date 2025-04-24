@@ -134,7 +134,7 @@ export abstract class BaseLevelScene extends Scene {
       this.map.assetGroups.get(asset.assetKey)!,
       (_player, element) => {
         this.pickupItem(element as Phaser.GameObjects.Sprite);
-      }
+      },
     );
   }
 
@@ -145,7 +145,7 @@ export abstract class BaseLevelScene extends Scene {
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
     const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
-      (key) => this.map.assetGroups.get(key)!
+      (key) => this.map.assetGroups.get(key)!,
     );
 
     collisionGroups.forEach((group) => {
@@ -278,7 +278,7 @@ export abstract class BaseLevelScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== TileKeys.TREE ||
-              ol.gameObject.texture.key !== CharacterAssets.NPC)
+              ol.gameObject.texture.key !== CharacterAssets.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -303,7 +303,7 @@ export abstract class BaseLevelScene extends Scene {
           this.player.x,
           this.player.y,
           npcSprite.x,
-          npcSprite.y
+          npcSprite.y,
         );
 
         if (distance <= 70) {
@@ -386,7 +386,7 @@ export abstract class BaseLevelScene extends Scene {
 
   private setElementsVisibility(
     group: GameObjects.Group,
-    visible: boolean
+    visible: boolean,
   ): void {
     group.children.iterate((child) => {
       const sprite = child as Phaser.GameObjects.Sprite;

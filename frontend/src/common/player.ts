@@ -37,7 +37,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.positionX,
       config.positionY,
       CharacterAssets.PLAYER,
-      config.frame
+      config.frame,
     );
 
     config.scene.add.existing(this);

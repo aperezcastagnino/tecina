@@ -23,7 +23,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     centerY - popupHeight / 2 - 25,
     popupWidth,
     popupHeight,
-    cornerRadius
+    cornerRadius,
   );
 
   const popupImage = scene.add
