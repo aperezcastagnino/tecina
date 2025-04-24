@@ -16,7 +16,7 @@ export default defineConfig({
       $networking: resolve("./src/networking"),
       $scene: resolve("./src/scene"),
       $types: resolve("./src/types"),
-      $utils: resolve("./src/utils"),
+      $managers: resolve("./src/managers"),
     },
   },
   plugins: [tsconfigPaths()],

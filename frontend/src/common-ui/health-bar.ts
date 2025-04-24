@@ -1,5 +1,5 @@
 import { GAME_DIMENSIONS, TILE_SIZE } from "config";
-import { UIComponentKeys } from "assets/asset-keys";
+import { UIComponentKeys } from "assets/assets";
 
 const HEALTH_BAR_CONFIG = {
   WIDTH: GAME_DIMENSIONS.WIDTH / 7,

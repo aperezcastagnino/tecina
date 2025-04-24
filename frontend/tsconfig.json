@@ -31,7 +31,7 @@
       "networking/*": ["networking/*"],
       "scene/*": ["scene/*"],
       "types/*": ["types/*"],
-      "utils/*": ["utils/*"]
+      "managers/*": ["managers/*"]
     }
   },
   "include": ["src", "vite.config.ts"]

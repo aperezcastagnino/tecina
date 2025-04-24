@@ -1,13 +1,13 @@
-export type SpriteAssetConfig = {
-  ASSET_KEY: string;
-  ANIMATION_KEY: string;
-  FRAME_WIDTH: number;
-  FRAME_HEIGHT: number;
-  STAR_FRAME: number;
-  END_FRAME: number;
-};
-
-export type CharacterAssetConfig = {
-  ASSET_KEY: string;
-  FRAME: number;
+export type AssetConfig = {
+  assetKey: string;
+  animationKey?: string;
+  frameWidth?: number;
+  frameHeight?: number;
+  starFrame?: number;
+  endFrame?: number;
+  frames?: number[];
+  frameRate?: number;
+  repeat?: number;
+  delay?: number;
+  yoyo?: boolean;
 };

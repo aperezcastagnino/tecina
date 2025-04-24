@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { UIComponentKeys, BackgroundKeys } from "assets/asset-keys";
+import { UIComponentKeys, BackgroundKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 
 export class WinScene extends Phaser.Scene {

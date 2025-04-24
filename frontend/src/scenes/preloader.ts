@@ -1,13 +1,13 @@
 import { Scene } from "phaser";
 import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config";
-import { Animations } from "utils/animation-utils";
+import { AnimationManager } from "managers/animation-manager";
 import {
+  ItemAssets,
   BackgroundKeys,
   CharacterKeys,
-  ItemKeys,
   TileKeys,
   UIComponentKeys,
-} from "assets/asset-keys";
+} from "assets/assets";
 import { PlayerAnimationKeys } from "common/player";
 import { SceneKeys } from "./scene-keys";
 
@@ -109,7 +109,6 @@ export class Preloader extends Scene {
 
     // Load elements
     this.loadFruits();
-    this.loadAnimals();
   }
 
   create() {
@@ -121,25 +120,25 @@ export class Preloader extends Scene {
   }
 
   private createAnimations() {
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_UP,
       CharacterKeys.PLAYER,
       [0, 1, 2],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_RIGHT,
       CharacterKeys.PLAYER,
       [3, 4, 5],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_DOWN,
       CharacterKeys.PLAYER,
       [6, 7, 8],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_LEFT,
       CharacterKeys.PLAYER,
@@ -149,122 +148,82 @@ export class Preloader extends Scene {
 
   private loadFruits() {
     this.load.spritesheet(
-      ItemKeys.FRUITS.APPLE.ASSET_KEY,
+      ItemAssets.APPLE.assetKey,
       "/items/fruits/apple.png",
       {
-        frameWidth: ItemKeys.FRUITS.APPLE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.APPLE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.APPLE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.APPLE.END_FRAME,
+        frameWidth: ItemAssets.APPLE.frameWidth,
+        frameHeight: ItemAssets.APPLE.frameHeight,
+        startFrame: ItemAssets.APPLE.starFrame,
+        endFrame: ItemAssets.APPLE.endFrame,
       },
     );
     this.load.spritesheet(
-      ItemKeys.FRUITS.BANANAS.ASSET_KEY,
+      ItemAssets.BANANAS.assetKey,
       "/items/fruits/bananas.png",
       {
-        frameWidth: ItemKeys.FRUITS.BANANAS.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.BANANAS.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.BANANAS.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.BANANAS.END_FRAME,
+        frameWidth: ItemAssets.BANANAS.frameWidth,
+        frameHeight: ItemAssets.BANANAS.frameHeight,
+        startFrame: ItemAssets.BANANAS.starFrame,
+        endFrame: ItemAssets.BANANAS.endFrame,
       },
     );
     this.load.spritesheet(
-      ItemKeys.FRUITS.CHERRIES.ASSET_KEY,
+      ItemAssets.CHERRIES.assetKey,
       "/items/fruits/cherries.png",
       {
-        frameWidth: ItemKeys.FRUITS.CHERRIES.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.CHERRIES.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.CHERRIES.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.CHERRIES.END_FRAME,
+        frameWidth: ItemAssets.CHERRIES.frameWidth,
+        frameHeight: ItemAssets.CHERRIES.frameHeight,
+        startFrame: ItemAssets.CHERRIES.starFrame,
+        endFrame: ItemAssets.CHERRIES.endFrame,
       },
     );
+    this.load.spritesheet(ItemAssets.KIWI.assetKey, "/items/fruits/kiwi.png", {
+      frameWidth: ItemAssets.KIWI.frameWidth,
+      frameHeight: ItemAssets.KIWI.frameHeight,
+      startFrame: ItemAssets.KIWI.starFrame,
+      endFrame: ItemAssets.KIWI.endFrame,
+    });
     this.load.spritesheet(
-      ItemKeys.FRUITS.KIWI.ASSET_KEY,
-      "/items/fruits/kiwi.png",
-      {
-        frameWidth: ItemKeys.FRUITS.KIWI.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.KIWI.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.KIWI.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.KIWI.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.MELON.ASSET_KEY,
+      ItemAssets.MELON.assetKey,
       "/items/fruits/melon.png",
       {
-        frameWidth: ItemKeys.FRUITS.MELON.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.MELON.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.MELON.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.MELON.END_FRAME,
+        frameWidth: ItemAssets.MELON.frameWidth,
+        frameHeight: ItemAssets.MELON.frameHeight,
+        startFrame: ItemAssets.MELON.starFrame,
+        endFrame: ItemAssets.MELON.endFrame,
       },
     );
     this.load.spritesheet(
-      ItemKeys.FRUITS.ORANGE.ASSET_KEY,
+      ItemAssets.ORANGE.assetKey,
       "/items/fruits/orange.png",
       {
-        frameWidth: ItemKeys.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.ORANGE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.ORANGE.END_FRAME,
+        frameWidth: ItemAssets.ORANGE.frameWidth,
+        frameHeight: ItemAssets.ORANGE.frameHeight,
+        startFrame: ItemAssets.ORANGE.starFrame,
+        endFrame: ItemAssets.ORANGE.endFrame,
       },
     );
     this.load.spritesheet(
-      ItemKeys.FRUITS.PINEAPPLE.ASSET_KEY,
+      ItemAssets.PINEAPPLE.assetKey,
       "/items/fruits/pineapple.png",
       {
-        frameWidth: ItemKeys.FRUITS.PINEAPPLE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.PINEAPPLE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.PINEAPPLE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.PINEAPPLE.END_FRAME,
+        frameWidth: ItemAssets.PINEAPPLE.frameWidth,
+        frameHeight: ItemAssets.PINEAPPLE.frameHeight,
+        startFrame: ItemAssets.PINEAPPLE.starFrame,
+        endFrame: ItemAssets.PINEAPPLE.endFrame,
       },
     );
     this.load.spritesheet(
-      ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
+      ItemAssets.STRAWBERRY.assetKey,
       "/items/fruits/strawberry.png",
       {
-        frameWidth: ItemKeys.FRUITS.STRAWBERRY.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.STRAWBERRY.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.STRAWBERRY.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
+        frameWidth: ItemAssets.STRAWBERRY.frameWidth,
+        frameHeight: ItemAssets.STRAWBERRY.frameHeight,
+        startFrame: ItemAssets.STRAWBERRY.starFrame,
+        endFrame: ItemAssets.STRAWBERRY.endFrame,
       },
     );
 
     // Animals
-
-    this.load.spritesheet(
-      ItemKeys.ANIMALS.FROG.ASSET_KEY,
-      "/items/animals/frog.png",
-      {
-        frameWidth: ItemKeys.ANIMALS.FROG.FRAME_WIDTH,
-        frameHeight: ItemKeys.ANIMALS.FROG.FRAME_HEIGHT,
-        startFrame: ItemKeys.ANIMALS.FROG.STAR_FRAME,
-        endFrame: ItemKeys.ANIMALS.FROG.END_FRAME,
-      },
-    );
-  }
-
-  private loadAnimals() {
-    const animals: (keyof typeof ItemKeys.ANIMALS)[] = [
-      "BUNNY",
-      "CAT",
-      "CHICKEN",
-      "DEER",
-      "FOX",
-      "FROG",
-      "PIGEON",
-    ];
-
-    animals.forEach((animal) => {
-      this.load.spritesheet(
-        ItemKeys.ANIMALS[animal].ASSET_KEY,
-        `/items/animals/${animal.toLowerCase()}.png`,
-        {
-          frameWidth: ItemKeys.ANIMALS[animal].FRAME_WIDTH,
-          frameHeight: ItemKeys.ANIMALS[animal].FRAME_HEIGHT,
-          startFrame: ItemKeys.ANIMALS[animal].STAR_FRAME,
-          endFrame: ItemKeys.ANIMALS[animal].END_FRAME,
-        },
-      );
-    });
   }
 }

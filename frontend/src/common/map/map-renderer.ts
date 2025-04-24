@@ -1,7 +1,7 @@
 import type { Scene } from "phaser";
 import { TileType, type MapStructure } from "types/map.d";
 import { TILE_SIZE } from "config";
-import { TileKeys } from "assets/asset-keys";
+import { TileKeys } from "assets/assets";
 
 const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
 

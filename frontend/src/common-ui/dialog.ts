@@ -1,5 +1,6 @@
 import type { DialogData } from "types/dialog-data";
-import { Animations } from "utils/animation-utils";
+import { AnimationManager } from "managers/animation-manager";
+import type { AssetConfig } from "types/asset";
 import { BaseDialog, type DialogConfig } from "./base-dialog";
 
 export class Dialog extends BaseDialog {
@@ -32,7 +33,7 @@ export class Dialog extends BaseDialog {
     this.isVisible = true;
     this.statementUI.setText("").setAlpha(1);
     this.textAnimationPlaying = true;
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.statementUI,
       this.messagesToShow.shift() || "",
@@ -73,8 +74,8 @@ export class Dialog extends BaseDialog {
     return this.questGiverNpcId;
   }
 
-  getAssetKey(): string | undefined {
-    return this.activeDialog?.assetKey;
+  getAssetKey(): AssetConfig | undefined {
+    return this.activeDialog?.asset;
   }
 
   isDialogActive(): boolean {

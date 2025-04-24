@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
-import { StorageManager } from "utils/storage-manager";
+import { StorageManager } from "managers/storage-manager";
 import { levelsConfig } from "scenes/levels/levels-config";
-import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
+import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
 

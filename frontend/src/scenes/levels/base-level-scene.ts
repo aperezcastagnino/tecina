@@ -1,5 +1,5 @@
 import { Scene, GameObjects } from "phaser";
-import { loadLevelData } from "utils/data-util";
+import { loadDialogData } from "managers/dialog-data-manager";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
@@ -17,14 +17,10 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import {
-  ItemKeys,
-  TileKeys,
-  CharacterKeys,
-  findAssetKeyByValue,
-} from "assets/asset-keys";
+import { TileKeys, CharacterKeys } from "assets/assets";
 import type { LevelMetadata } from "types/level";
-import { StorageManager } from "utils/storage-manager";
+import { StorageManager } from "managers/storage-manager";
+import type { AssetConfig } from "types/asset";
 import { SceneKeys } from "../scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
@@ -119,20 +115,20 @@ export abstract class BaseLevelScene extends Scene {
   // Public Methods
   // =========================================================================
 
-  showElements(groupName: string): void {
-    const group = this.map.assetGroups.get(groupName);
+  showElements(asset: AssetConfig): void {
+    const group = this.map.assetGroups.get(asset.assetKey);
     this.setElementsVisibility(group!, true);
   }
 
-  hideElements(groupName: string): void {
-    const group = this.map.assetGroups.get(groupName);
+  hideElements(asset: AssetConfig): void {
+    const group = this.map.assetGroups.get(asset.assetKey);
     this.setElementsVisibility(group!, false);
   }
 
-  makeItemDraggable(groupName: string): void {
+  makeItemDraggable(asset: AssetConfig): void {
     this.physics.add.collider(
       this.player,
-      this.map.assetGroups.get(groupName)!,
+      this.map.assetGroups.get(asset.assetKey)!,
       (_player, element) => {
         this.pickupItem(element as Phaser.GameObjects.Sprite);
       },
@@ -200,38 +196,25 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private initializeDialogs(): void {
-    this.dialog = new Dialog({ scene: this, data: loadLevelData(this) });
+    this.dialog = new Dialog({ scene: this, data: loadDialogData(this) });
   }
 
   private initializeHealthBar(): void {
     this.healthBar = new HealthBar(this);
   }
 
-  private initializeAwards(assetKey: string, quantity: number): void {
-    if (quantity === 0) return;
+  private initializeAwards(asset: AssetConfig, quantity: number): void {
+    if (!asset || quantity === 0) return;
 
     if (this.awards) {
       this.awards.destroy();
     }
 
-    const asset = findAssetKeyByValue(assetKey);
-    if (asset && asset.path.length > 1) {
-      const fruitKey = asset.path[1] as keyof typeof ItemKeys.FRUITS;
-
-      if (fruitKey && ItemKeys.FRUITS[fruitKey]) {
-        this.awards = new Awards({
-          scene: this,
-          assetKey,
-          quantity,
-          spriteConfig: {
-            startFrame: ItemKeys.FRUITS[fruitKey].STAR_FRAME,
-            endFrame: ItemKeys.FRUITS[fruitKey].END_FRAME,
-            frameWidth: ItemKeys.FRUITS[fruitKey].FRAME_WIDTH,
-            frameHeight: ItemKeys.FRUITS[fruitKey].FRAME_HEIGHT,
-          },
-        });
-      }
-    }
+    this.awards = new Awards({
+      scene: this,
+      asset,
+      quantity,
+    });
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
@@ -349,10 +332,10 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private handleItemInteraction(npc: Phaser.GameObjects.Sprite): void {
-    const assetKey = this.dialog?.getAssetKey();
+    const asset = this.dialog?.getAssetKey();
 
     if (npc.name === this.dialog?.getQuestGiverNpcId()) {
-      if (this.heldItem!.texture.key === assetKey) {
+      if (this.heldItem!.texture.key === asset?.assetKey) {
         this.updateQuestProgress(npc);
       } else {
         this.applyWrongItemPenalty(npc);
