@@ -3,7 +3,7 @@ export const BackgroundKeys = {
   LEVELS: "LEVELS_BACKGROUND",
 };
 
-export const CharacterKeys = {
+export const CharacterAssets = {
   PLAYER: "PLAYER",
   NPC: "NPC",
   OLD_MAN: {
@@ -72,7 +72,7 @@ export const TileKeys = {
   FLOWER_GRASS: "FLOWER_GRASS",
 };
 
-const Fruits = {
+export const FruitAssets = {
   APPLE: {
     assetKey: "APPLE",
     animationKey: "APPLE_ANIMATION",
@@ -137,9 +137,9 @@ const Fruits = {
     starFrame: 0,
     endFrame: 17,
   },
-};
+} as const;
 
-const Animals = {
+export const AnimalAssets = {
   BUNNY: {
     assetKey: "BUNNY",
     animationKey: "BUNNY_ANIMATION",
@@ -172,7 +172,6 @@ const Animals = {
     starFrame: 0,
     endFrame: 3,
   },
-
   FOX: {
     assetKey: "FOX",
     animationKey: "FOX_ANIMATION",
@@ -197,11 +196,11 @@ const Animals = {
     starFrame: 0,
     endFrame: 17,
   },
-};
+} as const;
 
 export const ItemAssets = {
-  ...Fruits,
-  ...Animals,
+  ...FruitAssets,
+  ...AnimalAssets,
 } as const;
 
 export type AssetKey = keyof typeof ItemAssets;
