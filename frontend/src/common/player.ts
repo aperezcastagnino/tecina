@@ -1,5 +1,5 @@
 import { DIRECTION, type Direction } from "common/player-keys";
-import { CharacterKeys } from "assets/asset-keys";
+import { CharacterKeys } from "assets/assets";
 
 export const PlayerAnimationKeys = {
   PLAYER_UP: `${CharacterKeys.PLAYER}_UP_ANIMATION`,

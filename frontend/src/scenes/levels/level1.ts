@@ -1,175 +1,122 @@
 import { SceneKeys } from "scenes/scene-keys";
-import { BaseLevelScene } from "scenes/levels/base-level-scene";
-import { TileType, type TileConfig } from "types/map.d";
-import { PLAYER_KEYS } from "common/player-keys";
-import { Animations } from "utils/animation-utils";
+import { TileType } from "types/map.d";
 import {
   TileKeys,
   CharacterKeys,
-  ItemKeys,
   UIComponentKeys,
-} from "assets/asset-keys";
+  ItemAssets,
+} from "assets/assets";
+import { Level } from "./level-maker";
 
-export const level1Config: TileConfig[] = [
-  {
-    tile: {
-      type: TileType.INTERACTIVE_STATIC_OBJECT,
-      asset: CharacterKeys.GUY.ASSET_KEY,
-      frame: CharacterKeys.GUY.FRAME,
-    },
-    quantity: 1,
-  },
-  {
-    tile: {
-      type: TileType.INTERACTIVE_STATIC_OBJECT,
-      asset: CharacterKeys.GIRL.ASSET_KEY,
-      frame: CharacterKeys.GIRL.FRAME,
-    },
-    quantity: 1,
-  },
-  {
-    tile: {
-      type: TileType.WALKABLE_SPACE,
-      asset: TileKeys.GRASS,
-    },
-    frequency: 50,
-  },
-  {
-    tile: {
-      type: TileType.WALKABLE_SPACE,
-      asset: TileKeys.FLOWER_GRASS,
-    },
-    frequency: 50,
-  },
-  {
-    tile: {
-      type: TileType.OBSTACLE,
-      asset: TileKeys.TREE,
-    },
-    frequency: 1,
-  },
-  {
-    tile: {
-      type: TileType.INTERACTIVE_OBJECT,
-      asset: ItemKeys.FRUITS.ORANGE.ASSET_KEY,
-    },
-    quantity: 1,
-  },
-  {
-    tile: {
-      type: TileType.INTERACTIVE_OBJECT,
-      asset: ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
-    },
-    frequency: 5,
-  },
-  {
-    tile: {
-      type: TileType.INTERACTIVE_OBJECT,
-      asset: ItemKeys.FRUITS.BANANAS.ASSET_KEY,
-    },
-    quantity: 2,
-  },
-];
+function showInstructionPopup(scene: Phaser.Scene): void {
+  const { centerX, centerY } = scene.cameras.main;
 
-export class Level1 extends BaseLevelScene {
-  constructor() {
-    super(SceneKeys.LEVEL_1);
-  }
+  const popupBackground = scene.add.graphics();
+  const popupWidth = 1100;
+  const popupHeight = 600;
+  const cornerRadius = 30;
+  const backgroundAlpha = 0.6;
 
-  async preload(): Promise<void> {
-    await super.preload({
-      name: SceneKeys.LEVEL_1,
-      tilesConfig: level1Config,
-    });
-  }
+  popupBackground.fillStyle(0xfbc455, backgroundAlpha);
+  popupBackground.fillRoundedRect(
+    centerX - popupWidth / 2,
+    centerY - popupHeight / 2 - 25,
+    popupWidth,
+    popupHeight,
+    cornerRadius,
+  );
 
-  async create(): Promise<void> {
-    await super.create();
+  const popupImage = scene.add
+    .image(0, 0, UIComponentKeys.INSTRUCTIONS)
+    .setScale(0.6);
 
-    this.hideElements(ItemKeys.FRUITS.ORANGE.ASSET_KEY);
-    this.hideElements(ItemKeys.FRUITS.BANANAS.ASSET_KEY);
+  const closeButton = scene.add
+    .image(0, 0, UIComponentKeys.CROSS)
+    .setScale(0.07)
+    .setAlpha(0.5)
+    .setInteractive();
 
-    this.showInstructionPopup();
-  }
+  closeButton.x = popupWidth / 2 - 40;
+  closeButton.y = -popupHeight / 2 + 20;
 
-  protected createAnimations(): void {
-    Animations.useOrangeAnimation(this);
-    Animations.useStrawberryAnimation(this);
-    Animations.useBananasAnimation(this);
+  const popupContainer = scene.add.container(centerX, centerY, [
+    popupImage,
+    closeButton,
+  ]);
 
-    Animations.useBunnyAnimation(this);
-    Animations.useCatAnimation(this);
-    Animations.useChickenAnimation(this);
-    Animations.useDeerAnimation(this);
-    Animations.useFoxAnimation(this);
-    Animations.useFrogAnimation(this);
-    Animations.usePigeonAnimation(this);
-  }
-
-  protected setupCollisions(): void {
-    super.setupCollisions();
-
-    this.makeItemDraggable(ItemKeys.FRUITS.ORANGE.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.FRUITS.BANANAS.ASSET_KEY);
-
-    this.makeItemDraggable(ItemKeys.ANIMALS.BUNNY.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.CAT.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.CHICKEN.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.DEER.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.FOX.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.FROG.ASSET_KEY);
-    this.makeItemDraggable(ItemKeys.ANIMALS.PIGEON.ASSET_KEY);
-  }
-
-  private showInstructionPopup(): void {
-    const { centerX, centerY } = this.cameras.main;
-
-    const popupBackground = this.add.graphics();
-    const popupWidth = 1100;
-    const popupHeight = 600;
-    const cornerRadius = 30;
-    const backgroundAlpha = 0.6;
-
-    popupBackground.fillStyle(0xfbc455, backgroundAlpha);
-    popupBackground.fillRoundedRect(
-      centerX - popupWidth / 2,
-      centerY - popupHeight / 2 - 25,
-      popupWidth,
-      popupHeight,
-      cornerRadius,
-    );
-
-    const popupImage = this.add
-      .image(0, 0, UIComponentKeys.INSTRUCTIONS)
-      .setScale(0.6);
-
-    const closeButton = this.add
-      .image(0, 0, UIComponentKeys.CROSS)
-      .setScale(0.07)
-      .setAlpha(0.5)
-      .setInteractive();
-
-    closeButton.x = popupWidth / 2 - 40;
-    closeButton.y = -popupHeight / 2 + 20;
-
-    const popupContainer = this.add.container(centerX, centerY, [
-      popupImage,
-      closeButton,
-    ]);
-
-    const closePopup = () => {
-      popupContainer.destroy();
-      popupBackground.destroy();
-      Object.values(PLAYER_KEYS).forEach((key) => {
-        this.input.keyboard?.off(`keydown-${key}`, closePopup);
-      });
-    };
-
-    closeButton.on("pointerdown", closePopup);
-
-    Object.values(PLAYER_KEYS).forEach((key) => {
-      this.input.keyboard?.on(`keydown-${key}`, closePopup);
-    });
-  }
+  closeButton.on("pointerdown", () => {
+    popupContainer.destroy();
+    popupBackground.destroy();
+  });
 }
+
+export const Level1 = new Level({
+  name: SceneKeys.LEVEL_1,
+  tiles: [
+    {
+      tile: {
+        type: TileType.INTERACTIVE_STATIC_OBJECT,
+        asset: CharacterKeys.GUY.ASSET_KEY,
+        frame: CharacterKeys.GUY.FRAME,
+      },
+      quantity: 1,
+    },
+    {
+      tile: {
+        type: TileType.INTERACTIVE_STATIC_OBJECT,
+        asset: CharacterKeys.GIRL.ASSET_KEY,
+        frame: CharacterKeys.GIRL.FRAME,
+      },
+      quantity: 1,
+    },
+    {
+      tile: {
+        type: TileType.WALKABLE_SPACE,
+        asset: TileKeys.GRASS,
+      },
+      frequency: 50,
+    },
+    {
+      tile: {
+        type: TileType.WALKABLE_SPACE,
+        asset: TileKeys.FLOWER_GRASS,
+      },
+      frequency: 50,
+    },
+    {
+      tile: {
+        type: TileType.OBSTACLE,
+        asset: TileKeys.TREE,
+      },
+      frequency: 1,
+    },
+    {
+      tile: {
+        type: TileType.INTERACTIVE_OBJECT,
+        asset: ItemAssets.ORANGE.assetKey,
+      },
+      quantity: 1,
+    },
+    {
+      tile: {
+        type: TileType.INTERACTIVE_OBJECT,
+        asset: ItemAssets.STRAWBERRY.assetKey,
+      },
+      frequency: 5,
+    },
+    {
+      tile: {
+        type: TileType.INTERACTIVE_OBJECT,
+        asset: ItemAssets.BANANAS.assetKey,
+      },
+      quantity: 2,
+    },
+  ],
+  itemsToHide: [ItemAssets.BANANAS],
+  itemsToAnimate: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
+  itemsToMakeDraggable: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
+  onCreate: (scene: Phaser.Scene) => {
+    console.log("onCreate");
+    showInstructionPopup(scene);
+  },
+});

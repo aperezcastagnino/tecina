@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { UIComponentKeys, ItemKeys } from "assets/asset-keys";
-import { Animations } from "utils/animation-utils";
+import { ItemAssets, UIComponentKeys } from "assets/assets";
+import { AnimationManager } from "managers/animation-manager";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
-import { StorageManager } from "utils/storage-manager";
+import { StorageManager } from "managers/storage-manager";
 import { SceneKeys } from "./scene-keys";
 
 export class GameOver extends Phaser.Scene {
@@ -28,13 +28,16 @@ export class GameOver extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    Animations.useFrogAnimation(this);
+    AnimationManager.createAnimation(this, {
+      assetKey: ItemAssets.FROG.assetKey,
+      animationKey: ItemAssets.FROG.animationKey,
+    });
 
     const frog = this.add
-      .sprite(width, height, ItemKeys.ANIMALS.FROG.ASSET_KEY)
+      .sprite(width, height, ItemAssets.FROG.assetKey)
       .setOrigin(1.2, 1)
       .setScale(6);
-    frog.play(ItemKeys.ANIMALS.FROG.ANIMATION_KEY);
+    frog.play(ItemAssets.FROG.animationKey);
 
     this.input.keyboard?.once("keydown-SPACE", () => {
       const currentLevel = StorageManager.getLevelMetadataFromRegistry(

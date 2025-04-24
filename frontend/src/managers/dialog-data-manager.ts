@@ -1,9 +1,10 @@
+import { ItemAssets, type AssetKey } from "assets/assets";
 import type { DialogData, RawDialogData } from "types/dialog-data";
 
 const isNotEmpty = (arr: string[]): boolean =>
   arr.length > 0 && arr.some((t) => t.trim().length > 0);
 
-export const loadLevelData = (scene: Phaser.Scene): DialogData[] => {
+export const loadDialogData = (scene: Phaser.Scene): DialogData[] => {
   const rawData = scene.cache.json.get(scene.scene.key.toLowerCase());
 
   return rawData.dialogs
@@ -32,7 +33,9 @@ export const loadLevelData = (scene: Phaser.Scene): DialogData[] => {
         ),
         options: dialog.options,
         correctOption: dialog.correctOption,
-        assetKey: dialog.assetKey,
+        asset: dialog.assetKey
+          ? ItemAssets[dialog.assetKey as AssetKey]
+          : undefined,
         quantityToCollect: dialog.quantityToCollect,
         completed: false,
         disable: dialog.disable ?? false,
