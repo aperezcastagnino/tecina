@@ -1,6 +1,7 @@
 import { BoxColors } from "assets/colors";
-import { MAP_WIDTH, TILE_SIZE } from "config/config";
-import { Animations, FRAME_RATE } from "utils/animation-utils";
+import { MAP_WIDTH, TILE_SIZE } from "config";
+import { AnimationManager, FRAME_RATE } from "managers/animation-manager";
+import type { AssetConfig } from "types/asset";
 
 const AWARDS_CONFIG = {
   POSITION_X: MAP_WIDTH * 75 + 60,
@@ -16,17 +17,15 @@ const AWARDS_CONFIG = {
 
 export type AwardConfig = {
   scene: Phaser.Scene;
-  frameRate?: number;
-  assetKey: string;
-  spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
-  scale?: number;
+  asset: AssetConfig;
   quantity: number;
+  scale?: number;
 };
 
 export class Awards {
   private scene: Phaser.Scene;
 
-  private assetKey: string;
+  private asset: AssetConfig;
 
   private keyAnim: string;
 
@@ -37,8 +36,6 @@ export class Awards {
   private scale: number;
 
   private padding: number;
-
-  private spriteConfig: Phaser.Types.Loader.FileTypes.ImageFrameConfig;
 
   private sprites: Phaser.GameObjects.Sprite[] = [];
 
@@ -51,22 +48,20 @@ export class Awards {
   }
 
   constructor(config: AwardConfig) {
-    if (!config.scene || !config.assetKey) {
+    if (!config.scene || !config.asset) {
       throw new Error("Invalid Awards configuration");
     }
 
     this.scene = config.scene;
-    this.assetKey = config.assetKey;
-    this.keyAnim = `AwardsKeyAnim_${this.assetKey}`;
+    this.asset = config.asset;
+    this.keyAnim = `AwardsKeyAnim_${this.asset.assetKey}`;
     this.positionX = AWARDS_CONFIG.POSITION_X;
     this.positionY = AWARDS_CONFIG.POSITION_Y;
     this.scale = AWARDS_CONFIG.SCALE;
     this.padding = AWARDS_CONFIG.PADDING;
-    this.spriteConfig = config.spriteConfig;
-    Animations.createAnimations(this.scene, {
-      key: this.keyAnim,
-      assetKey: this.assetKey,
-      frameRate: config.frameRate,
+    AnimationManager.createAnimation(this.scene, {
+      ...this.asset,
+      animationKey: this.keyAnim,
     });
 
     this.initializeUI(config.quantity);
@@ -124,7 +119,7 @@ export class Awards {
     const graphics = this.scene.add.graphics();
 
     const maxAwards = 5; // Default or from config
-    const totalWidth = this.spriteConfig.frameWidth * this.scale * maxAwards;
+    const totalWidth = this.asset.frameWidth! * this.scale * maxAwards;
     const height = AWARDS_CONFIG.HEIGHT * this.scale + this.padding / 2;
 
     // Draw the background
@@ -149,13 +144,13 @@ export class Awards {
   private addAwards(count: number): void {
     if (count <= 0) return;
 
-    const spacing = this.spriteConfig.frameWidth + this.padding;
+    const spacing = this.asset.frameWidth! + this.padding;
     for (let i = 0; i < count; i += 1) {
       const sprite = this.scene.add
         .sprite(
           this.background.x + this.padding + spacing * i,
           0,
-          this.assetKey,
+          this.asset.assetKey,
         )
         .setScrollFactor(0)
         .setScale(this.scale);

@@ -1,3 +1,8 @@
+export enum ItemState {
+  HIDDEN = "HIDDEN",
+  VISIBLE = "VISIBLE",
+}
+
 export enum TileType {
   WALKABLE_SPACE = "WALKABLE_SPACE",
   // THIS IS WHERE THE PLAYER WALKS
@@ -10,33 +15,42 @@ export enum TileType {
   OBSTACLE = "OBSTACLE", // THESE ARE TREES OR OTHER OBJECTS THAT THE PLAYER COLLIDES WITH
 }
 
-export type Tile = {
-  type: TileType;
-  asset: string;
-  frame?: number;
-};
-
 export type TileConfig = {
-  tile: Tile;
+  type: TileType;
+  assetKey: string;
+  frame?: number;
   frequency?: number;
   quantity?: number;
+  initialState?: ItemState;
+  isAnimated?: boolean;
 };
 
 export type MapConfiguration = {
   name: string;
   tilesConfig: TileConfig[];
-  mapWidth: number;
-  mapHeight: number;
+  dimensions: {
+    width: number;
+    height: number;
+  };
   minPartitionSize: number;
   minRoomSize: number;
 };
 
+export type MinimalMapConfiguration = Pick<
+  MapConfiguration,
+  "name" | "tilesConfig"
+> &
+  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
+
 export type MapStructure = {
   id: string;
-  tiles: Tile[][];
+  tiles: TileConfig[][];
   rows: number;
   columns: number;
-  startPosition: Coordinate;
+  startPosition: {
+    x: number;
+    y: number;
+  };
   assetGroups: Map<string, Phaser.GameObjects.Group>;
   initialParameters?: MapConfiguration;
 };

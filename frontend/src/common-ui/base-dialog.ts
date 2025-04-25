@@ -2,7 +2,6 @@ import Phaser from "phaser";
 import type { DialogData } from "types/dialog-data";
 import { BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
-import { UIComponent } from "./ui-component";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -15,7 +14,7 @@ export type DialogConfig = {
   backgroundColor?: number;
 };
 
-export abstract class BaseDialog extends UIComponent {
+export abstract class BaseDialog {
   private container!: Phaser.GameObjects.Container;
 
   protected scene: Phaser.Scene;
@@ -49,7 +48,6 @@ export abstract class BaseDialog extends UIComponent {
   abstract setMessageComplete(npcId?: string): void;
 
   constructor(config: DialogConfig) {
-    super();
     this.scene = config.scene;
     this.data = config.data;
     this.height = config.height || 200;
@@ -68,6 +66,7 @@ export abstract class BaseDialog extends UIComponent {
   }
 
   protected selectRandomText(array: string[][]): string[] {
+    if (array.length === 0) return [];
     return array[Math.floor(Math.random() * array.length)]!;
   }
 

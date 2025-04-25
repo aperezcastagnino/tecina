@@ -42,8 +42,8 @@ export class MapGenerator {
     */
 
     if (
-      config.mapWidth < config.minPartitionSize * 2 ||
-      config.mapHeight < config.minPartitionSize * 2
+      config.dimensions.width < config.minPartitionSize * 2 ||
+      config.dimensions.height < config.minPartitionSize * 2
     ) {
       throw new Error(
         "Map dimensions must be at least twice the minimum partition size",
@@ -62,8 +62,8 @@ export class MapGenerator {
 
     const map: MapStructure = MapGenerator.createMapStructure(
       config.name,
-      config.mapWidth,
-      config.mapHeight,
+      config.dimensions.width,
+      config.dimensions.height,
     );
     map.initialParameters = config;
 
@@ -71,22 +71,22 @@ export class MapGenerator {
       {
         x: 0,
         y: 0,
-        width: config.mapWidth,
-        height: config.mapHeight,
+        width: config.dimensions.width,
+        height: config.dimensions.height,
       },
       config.minPartitionSize,
     );
     this.assignRooms(rootPartition, config.minRoomSize);
 
-    const matrix = new Array(config.mapWidth)
+    const matrix = new Array(config.dimensions.width)
       .fill([])
-      .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
+      .map(() => new Array(config.dimensions.height).fill(UNUSED_CELL));
 
     this.fillAndConnectRooms(matrix, rootPartition);
     this.assignTiles(map, matrix, config.tilesConfig);
 
     const privateStaticObjects = config.tilesConfig.filter(
-      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
+      (t) => t.type === TileType.INTERACTIVE_STATIC_OBJECT,
     );
     this.assignInteractiveStaticObject(
       map,
@@ -357,32 +357,32 @@ export class MapGenerator {
   private static prepareTileConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
-        (f.frequency && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
-        f.tile.type === TileType.WALKABLE_SPACE,
+        (f.frequency && f.type === TileType.INTERACTIVE_OBJECT) ||
+        f.type === TileType.WALKABLE_SPACE,
     );
 
     const obstacleTiles = tilesConfig.filter(
-      (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
+      (f) => f.frequency && f.type === TileType.OBSTACLE,
     );
 
     const fixedQuantityInteractiveTiles = tilesConfig.filter(
       (f) =>
-        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
-        f.tile.type === TileType.WALKABLE_SPACE,
+        (f.quantity && f.type === TileType.INTERACTIVE_OBJECT) ||
+        f.type === TileType.WALKABLE_SPACE,
     );
 
     return [
       {
         frequencies: interactiveTiles.map((m) => m.frequency || 0),
-        tiles: interactiveTiles.map((m) => m.tile!),
+        tiles: interactiveTiles,
       },
       {
         frequencies: obstacleTiles.map((m) => m.frequency || 0),
-        tiles: obstacleTiles.map((m) => m.tile),
+        tiles: obstacleTiles,
       },
       {
         quantities: fixedQuantityInteractiveTiles.map((m) => m.quantity || 0),
-        tiles: fixedQuantityInteractiveTiles.map((m) => m.tile),
+        tiles: fixedQuantityInteractiveTiles,
       },
     ];
   }
@@ -423,7 +423,7 @@ export class MapGenerator {
 
         map.tiles[room.y + Math.floor(room.width / 2)]![
           room.x + Math.floor(room.height / 2)
-        ] = tile.tile;
+        ] = tile;
       }
     });
   }

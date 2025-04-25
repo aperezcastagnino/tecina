@@ -1,11 +1,11 @@
 import { DIRECTION, type Direction } from "common/player-keys";
-import { CharacterKeys } from "assets/asset-keys";
+import { CharacterAssets } from "assets/assets";
 
 export const PlayerAnimationKeys = {
-  PLAYER_UP: `${CharacterKeys.PLAYER}_UP_ANIMATION`,
-  PLAYER_DOWN: `${CharacterKeys.PLAYER}_DOWN_ANIMATION`,
-  PLAYER_LEFT: `${CharacterKeys.PLAYER}_LEFT_ANIMATION`,
-  PLAYER_RIGHT: `${CharacterKeys.PLAYER}_RIGHT_ANIMATION`,
+  PLAYER_UP: `${CharacterAssets.PLAYER}_UP_ANIMATION`,
+  PLAYER_DOWN: `${CharacterAssets.PLAYER}_DOWN_ANIMATION`,
+  PLAYER_LEFT: `${CharacterAssets.PLAYER}_LEFT_ANIMATION`,
+  PLAYER_RIGHT: `${CharacterAssets.PLAYER}_RIGHT_ANIMATION`,
 };
 
 type PlayerConfig = {
@@ -36,7 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       config.scene,
       config.positionX,
       config.positionY,
-      CharacterKeys.PLAYER,
+      CharacterAssets.PLAYER,
       config.frame,
     );
 

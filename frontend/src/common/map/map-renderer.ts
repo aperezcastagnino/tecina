@@ -1,7 +1,7 @@
 import type { Scene } from "phaser";
-import { TileType, type MapStructure } from "types/map.d";
-import { TILE_SIZE } from "config/config";
-import { TileKeys } from "assets/asset-keys";
+import { TileType, type MapStructure, type TileConfig } from "types/map.d";
+import { TILE_SIZE } from "config";
+import { TileKeys } from "assets/assets";
 
 const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
 
@@ -14,10 +14,10 @@ export class MapRenderer {
         const x = TILE_SIZE / 2 + column * TILE_SIZE;
         const y = TILE_SIZE / 2 + row * TILE_SIZE;
 
-        const tile = map.tiles[row]![column]!;
+        const tile: TileConfig = map.tiles[row]![column]!;
 
-        this.ensureAssetGroup(scene, map, tile.type, tile.asset);
-        this.renderTile(scene, map, x, y, tile.type, tile.asset, tile.frame);
+        this.ensureAssetGroup(scene, map, tile.type, tile.assetKey);
+        this.renderTile(scene, map, x, y, tile.type, tile.assetKey, tile.frame);
       }
     }
   }
