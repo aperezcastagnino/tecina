@@ -6,6 +6,7 @@ import {
   UIComponentKeys,
   ItemAssets,
 } from "assets/assets";
+import { PLAYER_KEYS } from "common/player-keys";
 import { Level } from "./level-maker";
 
 function showInstructionPopup(scene: Phaser.Scene): void {
@@ -44,9 +45,18 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     closeButton,
   ]);
 
-  closeButton.on("pointerdown", () => {
+  const closePopup = () => {
     popupContainer.destroy();
     popupBackground.destroy();
+    Object.values(PLAYER_KEYS).forEach((key) => {
+      scene.input.keyboard?.off(`keydown-${key}`, closePopup);
+    });
+  };
+
+  closeButton.on("pointerdown", closePopup);
+
+  Object.values(PLAYER_KEYS).forEach((key) => {
+    scene.input.keyboard?.on(`keydown-${key}`, closePopup);
   });
 }
 
