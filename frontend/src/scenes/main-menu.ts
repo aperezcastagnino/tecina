@@ -12,18 +12,18 @@ export class MainMenu extends Scene {
     super(SceneKeys.MAIN_MENU);
   }
 
-  create() {
+  create(): void {
     this.initializeUI();
   }
 
   private initializeUI() {
     this.createBackground();
     this.createTitle();
-    this.tooltip = new Tooltip(this, "");
     this.createButtons();
+    this.tooltip = new Tooltip(this, "");
   }
 
-  createBackground() {
+  private createBackground(): void {
     const background = this.add
       .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0);
@@ -31,14 +31,14 @@ export class MainMenu extends Scene {
     background.displayHeight = this.sys.canvas.height;
   }
 
-  createTitle() {
+  private createTitle(): void {
     this.add
       .image(500, 500, UIComponentKeys.TITLE)
       .setScale(0.8)
       .setOrigin(0.5);
   }
 
-  createButtons() {
+  private createButtons(): void {
     const loadGameButton = this.add
       .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
       .setInteractive({ useHandCursor: true })
@@ -128,12 +128,12 @@ export class MainMenu extends Scene {
     });
   }
 
-  startNewGame() {
+  private startNewGame(): void {
     StorageManager.setLevelsMetadataToStorage(levelsConfig);
     this.scene.start(SceneKeys.LEVELS_MENU);
   }
 
-  continueGame() {
+  private continueGame(): void {
     if (StorageManager.hasLevelStoredData()) {
       this.scene.start(SceneKeys.LEVELS_MENU, { continueGame: true });
     }

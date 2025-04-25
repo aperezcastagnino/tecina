@@ -6,16 +6,16 @@ import type { LevelMetadata } from "types/level";
 import { levelsConfig } from "scenes/levels/levels-config";
 import { Tooltip } from "../common-ui/tooltip";
 
-export default class LevelsMenu extends Phaser.Scene {
+export class LevelsMenu extends Phaser.Scene {
   private tooltip!: Tooltip;
 
-  private levelMetadata!: LevelMetadata[];
+  private levelMetadata: LevelMetadata[] = [];
 
   constructor() {
     super(SceneKeys.LEVELS_MENU);
   }
 
-  init(data: { continueGame: boolean }) {
+  init(data: { continueGame: boolean }): void {
     if (data.continueGame) {
       this.levelMetadata = StorageManager.getLevelsMetadataDataFromStorage();
     } else {
@@ -24,17 +24,35 @@ export default class LevelsMenu extends Phaser.Scene {
     }
   }
 
-  create() {
-    this.completeAndUnlockLevels();
+  create(): void {
+    this.unlockLevels();
+    this.initializeUI();
+  }
+
+  private startLevel(levelKey: string): void {
+    this.scene.start(levelKey, this.levelMetadata);
+  }
+
+  private initializeUI(): void {
+    this.createBackground();
+    this.createTooltip();
+    this.createLevelButtons();
+  }
+
+  private createBackground(): void {
     const background = this.add.image(0, 0, BackgroundKeys.LEVELS).setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
+  }
 
+  private createTooltip(): void {
     this.tooltip = new Tooltip(
       this,
       "Completa el nivel anterior para desbloquear"
     );
+  }
 
+  private createLevelButtons(): void {
     this.levelMetadata.forEach((level, index) => {
       const shadow = this.add
         .image(
@@ -61,7 +79,6 @@ export default class LevelsMenu extends Phaser.Scene {
       }
 
       if (index !== 0 && !level.enable) {
-        // Apply grey tint and tooltip to locked levels
         button.setTint(0x808080);
 
         button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
@@ -113,52 +130,7 @@ export default class LevelsMenu extends Phaser.Scene {
     });
   }
 
-  enableNextLevelButton(levelKey: string) {
-    const nextLevelKey = this.getNextLevelKey(levelKey);
-    const button = this.children.getByName(
-      `${nextLevelKey}`
-    ) as Phaser.GameObjects.Image;
-
-    if (button) {
-      console.log("Tint before:", button.tintTopLeft);
-
-      console.log("button", button.name);
-
-      button.setInteractive({ useHandCursor: true });
-      button.clearTint();
-
-      button.on("pointerover", () => {
-        this.input.setDefaultCursor("pointer");
-        this.tweens.add({
-          targets: button,
-          scale: 0.45,
-          duration: 150,
-          ease: "Power2",
-        });
-      });
-
-      button.on("pointerout", () => {
-        this.input.setDefaultCursor("default");
-        this.tweens.add({
-          targets: button,
-          scale: 0.4,
-          duration: 150,
-          ease: "Power2",
-        });
-      });
-      button.on("pointerdown", () => {
-        this.startLevel(nextLevelKey);
-      });
-    }
-  }
-
-  getNextLevelKey(currentLevelKey: string): string {
-    const [prefix, number] = currentLevelKey.split("_");
-
-    return `${prefix}_${Number(number) + 1}`;
-  }
-
-  completeAndUnlockLevels() {
+  private unlockLevels(): void {
     const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
       this.game
     );
@@ -167,7 +139,6 @@ export default class LevelsMenu extends Phaser.Scene {
     const oldVersionLevelCompleted = this.levelMetadata.find(
       (level) => level.key === levelCompleted.key
     );
-
     if (!oldVersionLevelCompleted) return;
 
     oldVersionLevelCompleted.completed = true;
@@ -175,16 +146,10 @@ export default class LevelsMenu extends Phaser.Scene {
     oldVersionLevelCompleted.active = false;
 
     oldVersionLevelCompleted.nextLevel?.forEach((elem) => {
-      const nextLevel = this.levelMetadata.find(
-        (element) => element.key === elem
-      );
+      const nextLevel = this.levelMetadata.find((e) => e.key === elem);
       if (nextLevel) nextLevel.enable = true;
     });
 
     StorageManager.removeLevelMetadaDataFromRegistry(this.game);
-  }
-
-  private startLevel(levelKey: string) {
-    this.scene.start(levelKey, this.levelMetadata);
   }
 }
