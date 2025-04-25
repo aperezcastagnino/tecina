@@ -26,7 +26,6 @@ import {
 } from "assets/asset-keys";
 import type { LevelMetadata } from "types/level-data";
 import { StorageManager } from "utils/storage-manager";
-import LevelsMenu from "./levels-menu";
 import { SceneKeys } from "./scene-keys";
 
 type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
@@ -404,21 +403,12 @@ export abstract class BaseScene extends Scene {
   private levelCompleted(): void {
     this.currentLevel.completed = true;
 
-    if (!this.scene.isActive(SceneKeys.LEVELS_MENU)) {
-      this.scene.run(SceneKeys.LEVELS_MENU);
-    }
-
-    const levelsMenuScene = this.scene.get(SceneKeys.LEVELS_MENU) as LevelsMenu;
-
-    levelsMenuScene.events.once(Phaser.Scenes.Events.CREATE, () => {
-      levelsMenuScene.enableNextLevelButton(this.currentLevel.key);
-    });
-
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
+
     this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
       setTimeout(() => {
         this.scene.start(SceneKeys.WIN_SCENE);
-      }, 2000);
+      }, 1000);
     });
   }
 
