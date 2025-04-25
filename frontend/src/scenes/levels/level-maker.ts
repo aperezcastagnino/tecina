@@ -1,25 +1,31 @@
 import type { LevelConfig } from "types/level";
-import type { AssetConfig } from "types/asset";
+import { ItemState, TileType, type TileConfig } from "types/map.d";
+import { ItemAssets, type AssetKey } from "assets/assets";
 import { AnimationManager } from "managers/animation-manager";
 import { BaseLevelScene } from "./base-level-scene";
 
 export class Level extends BaseLevelScene {
   private params: LevelConfig;
 
+  private items: TileConfig[];
+
   constructor(params: LevelConfig) {
     super(params.name);
     this.params = params;
+    this.items = this.params.tilesConfig.filter(
+      (t) => t.type === TileType.INTERACTIVE_OBJECT,
+    );
   }
 
   protected async preload(): Promise<void> {
     await super.preload({
       name: this.scene.key,
-      tilesConfig: this.params.tiles,
+      tilesConfig: this.params.tilesConfig,
       dimensions: this.params.dimensions,
     });
 
     if (this.params.onPreload) {
-      await this.params.onPreload();
+      await this.params.onPreload(this);
     }
   }
 
@@ -30,22 +36,29 @@ export class Level extends BaseLevelScene {
       await this.params.onCreate(this);
     }
 
-    this.params.itemsToHide?.forEach((item: AssetConfig) => {
-      this.hideElements(item);
-    });
+    this.items
+      .filter((i) => i.initialState === ItemState.HIDDEN)
+      .forEach((item: TileConfig) => {
+        this.hideElements(ItemAssets[item.assetKey as AssetKey]);
+      });
   }
 
   protected createAnimations(): void {
-    this.params.itemsToAnimate?.forEach((item: AssetConfig) => {
-      AnimationManager.createAnimation(this, item);
-    });
+    this.items
+      .filter((i) => i.isAnimated)
+      .forEach((item: TileConfig) => {
+        AnimationManager.createAnimation(
+          this,
+          ItemAssets[item.assetKey as AssetKey],
+        );
+      });
   }
 
   protected setupCollisions(): void {
     super.setupCollisions();
 
-    this.params.itemsToMakeDraggable?.forEach((item: AssetConfig) => {
-      this.makeItemDraggable(item);
+    this.items.forEach((item: TileConfig) => {
+      this.makeItemDraggable(ItemAssets[item.assetKey as AssetKey]);
     });
   }
 }

@@ -1,4 +1,4 @@
-import type { MapStructure } from "./map";
+import type { MinimalMapConfiguration, MapStructure } from "./map";
 
 export type LevelMetadata = {
   key: string;
@@ -13,10 +13,7 @@ export type LevelMetadata = {
   nextLevel?: string[];
 };
 
-export type LevelConfig = MapConfiguration & {
-  itemsToHide?: string[];
-  itemsToAnimate?: string[];
-  itemsToMakeDraggable?: string[];
+export type LevelConfig = MinimalMapConfiguration & {
   onPreload?: (scene: Phaser.Scene) => Promise<void>;
   onCreate?: (scene: Phaser.Scene) => Promise<void>;
 };

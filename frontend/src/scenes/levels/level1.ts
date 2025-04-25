@@ -1,5 +1,5 @@
 import { SceneKeys } from "scenes/scene-keys";
-import { TileType } from "types/map.d";
+import { ItemState, TileType } from "types/map.d";
 import {
   TileKeys,
   CharacterAssets,
@@ -52,71 +52,57 @@ function showInstructionPopup(scene: Phaser.Scene): void {
 
 export const Level1 = new Level({
   name: SceneKeys.LEVEL_1,
-  tiles: [
+  tilesConfig: [
     {
-      tile: {
-        type: TileType.INTERACTIVE_STATIC_OBJECT,
-        asset: CharacterAssets.GUY.ASSET_KEY,
-        frame: CharacterAssets.GUY.FRAME,
-      },
+      type: TileType.INTERACTIVE_STATIC_OBJECT,
+      assetKey: CharacterAssets.GUY.ASSET_KEY,
+      frame: CharacterAssets.GUY.FRAME,
       quantity: 1,
     },
     {
-      tile: {
-        type: TileType.INTERACTIVE_STATIC_OBJECT,
-        asset: CharacterAssets.GIRL.ASSET_KEY,
-        frame: CharacterAssets.GIRL.FRAME,
-      },
+      type: TileType.INTERACTIVE_STATIC_OBJECT,
+      assetKey: CharacterAssets.GIRL.ASSET_KEY,
+      frame: CharacterAssets.GIRL.FRAME,
       quantity: 1,
     },
     {
-      tile: {
-        type: TileType.WALKABLE_SPACE,
-        asset: TileKeys.GRASS,
-      },
+      type: TileType.WALKABLE_SPACE,
+      assetKey: TileKeys.GRASS,
       frequency: 50,
     },
     {
-      tile: {
-        type: TileType.WALKABLE_SPACE,
-        asset: TileKeys.FLOWER_GRASS,
-      },
+      type: TileType.WALKABLE_SPACE,
+      assetKey: TileKeys.FLOWER_GRASS,
       frequency: 50,
     },
     {
-      tile: {
-        type: TileType.OBSTACLE,
-        asset: TileKeys.TREE,
-      },
+      type: TileType.OBSTACLE,
+      assetKey: TileKeys.TREE,
       frequency: 1,
     },
     {
-      tile: {
-        type: TileType.INTERACTIVE_OBJECT,
-        asset: ItemAssets.ORANGE.assetKey,
-      },
+      type: TileType.INTERACTIVE_OBJECT,
+      assetKey: ItemAssets.ORANGE.assetKey,
+      initialState: ItemState.VISIBLE,
+      isAnimated: true,
       quantity: 1,
     },
     {
-      tile: {
-        type: TileType.INTERACTIVE_OBJECT,
-        asset: ItemAssets.STRAWBERRY.assetKey,
-      },
-      frequency: 5,
+      type: TileType.INTERACTIVE_OBJECT,
+      assetKey: ItemAssets.STRAWBERRY.assetKey,
+      initialState: ItemState.VISIBLE,
+      isAnimated: true,
+      quantity: 5,
     },
     {
-      tile: {
-        type: TileType.INTERACTIVE_OBJECT,
-        asset: ItemAssets.BANANAS.assetKey,
-      },
+      type: TileType.INTERACTIVE_OBJECT,
+      assetKey: ItemAssets.BANANAS.assetKey,
       quantity: 2,
+      initialState: ItemState.HIDDEN,
+      isAnimated: true,
     },
   ],
-  itemsToHide: [ItemAssets.BANANAS],
-  itemsToAnimate: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
-  itemsToMakeDraggable: [ItemAssets.BANANAS, ItemAssets.STRAWBERRY],
-  onCreate: (scene: Phaser.Scene) => {
-    console.log("onCreate");
+  onCreate: async (scene: Phaser.Scene) => {
     showInstructionPopup(scene);
   },
 });

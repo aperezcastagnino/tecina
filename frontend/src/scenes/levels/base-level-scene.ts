@@ -4,7 +4,11 @@ import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { MapRenderer } from "common/map/map-renderer";
-import type { MapConfiguration, MapStructure } from "types/map";
+import type {
+  MapConfiguration,
+  MinimalMapConfiguration,
+  MapStructure,
+} from "types/map";
 import {
   DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
@@ -23,9 +27,6 @@ import type { LevelMetadata } from "types/level";
 import { StorageManager } from "managers/storage-manager";
 import type { AssetConfig } from "types/asset";
 import { SceneKeys } from "../scene-keys";
-
-type MapMinimalConfiguration = Pick<MapConfiguration, "name" | "tilesConfig"> &
-  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
 
 export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
@@ -63,7 +64,7 @@ export abstract class BaseLevelScene extends Scene {
     }
   }
 
-  protected async preload(config: MapMinimalConfiguration): Promise<void> {
+  protected async preload(config: MinimalMapConfiguration): Promise<void> {
     if (DEBUG_MODE_ACTIVE) {
       try {
         this.map = MapGenerator.create(this.validateMapConfig(config));
@@ -105,7 +106,7 @@ export abstract class BaseLevelScene extends Scene {
       return;
     }
 
-    if (this.dialog?.isDialogActive()) return;
+    if (this.dialog?.isVisible) return;
 
     this.player.move(this.controls.getDirectionKeyPressed());
 
@@ -401,7 +402,7 @@ export abstract class BaseLevelScene extends Scene {
     });
   }
 
-  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
+  private validateMapConfig(config: MinimalMapConfiguration): MapConfiguration {
     if (!config.tilesConfig?.length) {
       throw new Error("Invalid map configuration: Missing tiles config");
     }

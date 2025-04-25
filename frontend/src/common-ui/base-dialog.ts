@@ -66,6 +66,7 @@ export abstract class BaseDialog {
   }
 
   protected selectRandomText(array: string[][]): string[] {
+    if (array.length === 0) return [];
     return array[Math.floor(Math.random() * array.length)]!;
   }
 
