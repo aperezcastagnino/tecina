@@ -60,7 +60,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
   });
 }
 
-export const Level1 = new Level({
+export default new Level({
   name: SceneKeys.LEVEL_1,
   tilesConfig: [
     {
@@ -88,26 +88,12 @@ export const Level1 = new Level({
     {
       type: TileType.OBSTACLE,
       assetKey: TileKeys.TREE,
-      frequency: 1,
-    },
-    {
-      type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.ORANGE.assetKey,
-      initialState: ItemState.VISIBLE,
-      isAnimated: true,
-      quantity: 1,
-    },
-    {
-      type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.STRAWBERRY.assetKey,
-      initialState: ItemState.VISIBLE,
-      isAnimated: true,
-      quantity: 5,
+      frequency: 3,
     },
     {
       type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.BANANAS.assetKey,
-      quantity: 2,
+      quantity: 1,
       initialState: ItemState.HIDDEN,
       isAnimated: true,
     },

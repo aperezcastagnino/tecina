@@ -1,0 +1,41 @@
+{
+  "title": "Level 3",
+  "dialogs": [
+    {
+      "questStart": [
+        "Hey! We’re making a super juice!",
+        "Can you bring us 2 apples first?"
+      ],
+      "questInProgress": ["We need the 2 apples to start!"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["We need 2 apples, not that!"],
+      "questFinished": ["Nice! The apples are in the blender!"],
+      "hints": ["They are red and round."],
+      "assetKey": "APPLE",
+      "quantityToCollect": 2
+    },
+    {
+      "questStart": ["Great job with the apples!", "Now we need 3 bananas."],
+      "questInProgress": ["Still waiting for the 3 bananas!"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That’s not 3 bananas!"],
+      "questFinished": ["Yes! The bananas are in. Let’s go!"],
+      "hints": ["They are yellow and long."],
+      "assetKey": "BANANAS",
+      "quantityToCollect": 3
+    },
+    {
+      "questStart": ["Almost done!", "One last thing: we need 1 orange."],
+      "questInProgress": ["Can you find the orange?"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["Hmm... That’s not a kiwi."],
+      "questFinished": [
+        "Perfect! All fruits ready!",
+        "Time to drink the magic juice!"
+      ],
+      "hints": ["It’s orange."],
+      "assetKey": "ORANGE",
+      "quantityToCollect": 1
+    }
+  ]
+}

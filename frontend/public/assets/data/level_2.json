@@ -1,0 +1,36 @@
+{
+  "title": "Level 2",
+  "dialogs": [
+    {
+      "questStart": [
+        "Hello my friend!",
+        "I feel sick. I think a fruit juice is going to help me.",
+        "Can you pick some fruits?",
+        "First I need one apple."
+      ],
+      "questInProgress": ["Don’t forget the apple, please!"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": [
+        "I am sorry! But I need 1 apple to start preparing the juice."
+      ],
+      "questFinished": ["Oh! Perfect! Thank you!"],
+      "hints": ["The apple is red."],
+      "assetKey": "APPLE",
+      "quantityToCollect": 1
+    },
+    {
+      "questStart": [
+        "Hey there!",
+        "My friend is making a special juice.",
+        "Can you bring two oranges for the mix?"
+      ],
+      "questInProgress": ["Did you find the oranges?"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["Hmm... That’s not an orange!"],
+      "questFinished": ["Awesome! This will make the juice super tasty!"],
+      "hints": ["The orange is orange."],
+      "assetKey": "ORANGE",
+      "quantityToCollect": 2
+    }
+  ]
+}
