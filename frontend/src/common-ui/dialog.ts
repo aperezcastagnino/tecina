@@ -95,11 +95,6 @@ export class Dialog extends BaseDialog {
       return;
     }
 
-    if (!this.activeDialog) {
-      this.activeDialog = dialog;
-      this.questGiverNpcId = npcId;
-    }
-
     const textsToShow = this.resolveDialogsToShow(dialog, npcId);
     this.messagesToShow = [...textsToShow];
     this.showNextMessage();
@@ -110,8 +105,9 @@ export class Dialog extends BaseDialog {
       return this.selectRandomText(dialog.questInProgress);
     if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
 
-    // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";
+    this.activeDialog = dialog;
+
     return this.selectRandomText(dialog.questStart);
   }
 
