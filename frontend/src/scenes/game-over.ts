@@ -5,7 +5,7 @@ import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { StorageManager } from "managers/storage-manager";
 import { SceneKeys } from "./scene-keys";
 
-export class GameOver extends Phaser.Scene {
+export default class GameOver extends Phaser.Scene {
   constructor() {
     super(SceneKeys.GAME_OVER);
   }
@@ -15,7 +15,7 @@ export class GameOver extends Phaser.Scene {
 
     this.input.keyboard?.once("keydown-SPACE", () => {
       const currentLevel = StorageManager.getLevelMetadataFromRegistry(
-        this.game
+        this.game,
       );
       if (currentLevel?.key) {
         this.scene.start(currentLevel.key);

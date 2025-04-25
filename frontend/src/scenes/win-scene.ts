@@ -2,12 +2,12 @@ import Phaser from "phaser";
 import { UIComponentKeys, BackgroundKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 
-export class WinScene extends Phaser.Scene {
+export default class WinScene extends Phaser.Scene {
   constructor() {
     super(SceneKeys.WIN_SCENE);
   }
 
-  create() {
+  create(): void {
     this.initializeUI();
 
     this.input.keyboard?.once("keydown-SPACE", () => {
@@ -15,12 +15,12 @@ export class WinScene extends Phaser.Scene {
     });
   }
 
-  private initializeUI() {
+  private initializeUI(): void {
     this.createBackground();
     this.createWinTitle();
   }
 
-  private createBackground() {
+  private createBackground(): void {
     const background = this.add
       .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0);
@@ -28,7 +28,7 @@ export class WinScene extends Phaser.Scene {
     background.displayHeight = this.sys.canvas.height;
   }
 
-  private createWinTitle() {
+  private createWinTitle(): void {
     const { width, height } = this.scale;
 
     this.add

@@ -5,7 +5,7 @@ import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
 
-export class MainMenu extends Scene {
+export default class MainMenu extends Scene {
   private tooltip!: Tooltip;
 
   constructor() {

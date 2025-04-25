@@ -6,7 +6,7 @@ import type { LevelMetadata } from "types/level";
 import { levelsConfig } from "scenes/levels/levels-config";
 import { Tooltip } from "../common-ui/tooltip";
 
-export class LevelsMenu extends Phaser.Scene {
+export default class LevelsMenu extends Phaser.Scene {
   private tooltip!: Tooltip;
 
   private levelMetadata: LevelMetadata[] = [];
@@ -48,7 +48,7 @@ export class LevelsMenu extends Phaser.Scene {
   private createTooltip(): void {
     this.tooltip = new Tooltip(
       this,
-      "Completa el nivel anterior para desbloquear"
+      "Completa el nivel anterior para desbloquear",
     );
   }
 
@@ -58,7 +58,7 @@ export class LevelsMenu extends Phaser.Scene {
         .image(
           level.position.x + 6,
           level.position.y + 6,
-          UIComponentKeys.BUTTON_SHADOW
+          UIComponentKeys.BUTTON_SHADOW,
         )
         .setScale(0.2)
         .setAlpha(0.5);
@@ -67,7 +67,7 @@ export class LevelsMenu extends Phaser.Scene {
         .image(
           level.position.x,
           level.position.y,
-          UIComponentKeys.BUTTON_CIRCLE
+          UIComponentKeys.BUTTON_CIRCLE,
         )
         .setInteractive({ useHandCursor: true })
         .setScale(0.34)
@@ -86,7 +86,7 @@ export class LevelsMenu extends Phaser.Scene {
           this.tooltip.show(
             "Completa el nivel anterior para desbloquear",
             pointer.worldX,
-            pointer.worldY
+            pointer.worldY,
           );
         });
 
@@ -132,12 +132,12 @@ export class LevelsMenu extends Phaser.Scene {
 
   private unlockLevels(): void {
     const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
-      this.game
+      this.game,
     );
     if (!levelCompleted) return;
 
     const oldVersionLevelCompleted = this.levelMetadata.find(
-      (level) => level.key === levelCompleted.key
+      (level) => level.key === levelCompleted.key,
     );
     if (!oldVersionLevelCompleted) return;
 
