@@ -1,37 +1,34 @@
 import { Scene, GameObjects } from "phaser";
-import { loadLevelData } from "utils/data-util";
+import { loadDialogData } from "managers/dialog-data-manager";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
-import { DialogWithOptions } from "common-ui/dialog-with-options";
 import { MapRenderer } from "common/map/map-renderer";
-import type { MapConfiguration, MapStructure } from "types/map";
+import type {
+  MapConfiguration,
+  MinimalMapConfiguration,
+  MapStructure,
+} from "types/map";
 import {
   DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
   MAP_WIDTH,
   MIN_PARTITION_SIZE,
   MIN_ROOM_SIZE,
+  PLAYER_VELOCITY,
   TILE_SIZE,
-} from "config/config";
+} from "config";
 import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import {
-  ItemKeys,
-  TileKeys,
-  CharacterKeys,
-  findAssetKeyByValue,
-} from "assets/asset-keys";
-import type { LevelMetadata } from "types/level-data";
-import { StorageManager } from "utils/storage-manager";
-import { SceneKeys } from "./scene-keys";
+import { TileKeys, CharacterAssets } from "assets/assets";
+import type { LevelMetadata } from "types/level";
+import { StorageManager } from "managers/storage-manager";
+import type { AssetConfig } from "types/asset";
+import { SceneKeys } from "../scene-keys";
 
-type MapMinimalConfiguration = Pick<MapConfiguration, "tilesConfig"> &
-  Partial<Omit<MapConfiguration, "tilesConfig">>;
-
-export abstract class BaseScene extends Scene {
+export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
 
   protected player!: Player;
@@ -40,15 +37,13 @@ export abstract class BaseScene extends Scene {
 
   protected dialog!: Dialog;
 
-  protected dialogWithOptions?: DialogWithOptions;
-
   protected healthBar!: HealthBar;
 
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
-  protected levelsMetadata!: LevelMetadata[];
+  protected levelsMetadata: LevelMetadata[] = [];
 
   protected currentLevel!: LevelMetadata;
 
@@ -62,13 +57,14 @@ export abstract class BaseScene extends Scene {
   // Lifecycle Methods
   // =========================================================================
 
-  init(data: LevelMetadata[]) {
-    if (data) {
+  init(data: LevelMetadata[]): void {
+    if (data && data.length > 0) {
       this.levelsMetadata = data;
+      this.currentLevel = data.find((level) => level.key === this.scene.key)!;
     }
   }
 
-  protected async preload(config: MapMinimalConfiguration): Promise<void> {
+  protected async preload(config: MinimalMapConfiguration): Promise<void> {
     if (DEBUG_MODE_ACTIVE) {
       try {
         this.map = MapGenerator.create(this.validateMapConfig(config));
@@ -78,9 +74,6 @@ export abstract class BaseScene extends Scene {
       }
     } else {
       try {
-        this.currentLevel = this.levelsMetadata.find(
-          (level) => level.key === this.scene.key,
-        )!;
         if (this.currentLevel.map) {
           this.map = this.currentLevel.map;
           this.map.assetGroups = new Map();
@@ -113,6 +106,8 @@ export abstract class BaseScene extends Scene {
       return;
     }
 
+    if (this.dialog?.isVisible) return;
+
     this.player.move(this.controls.getDirectionKeyPressed());
 
     if (this.heldItem) {
@@ -124,20 +119,20 @@ export abstract class BaseScene extends Scene {
   // Public Methods
   // =========================================================================
 
-  showElements(groupName: string): void {
-    const group = this.map.assetGroups.get(groupName);
+  showElements(asset: AssetConfig): void {
+    const group = this.map.assetGroups.get(asset.assetKey);
     this.setElementsVisibility(group!, true);
   }
 
-  hideElements(groupName: string): void {
-    const group = this.map.assetGroups.get(groupName);
+  hideElements(asset: AssetConfig): void {
+    const group = this.map.assetGroups.get(asset.assetKey);
     this.setElementsVisibility(group!, false);
   }
 
-  makeItemDraggable(groupName: string): void {
+  makeItemDraggable(asset: AssetConfig): void {
     this.physics.add.collider(
       this.player,
-      this.map.assetGroups.get(groupName)!,
+      this.map.assetGroups.get(asset.assetKey)!,
       (_player, element) => {
         this.pickupItem(element as Phaser.GameObjects.Sprite);
       },
@@ -150,7 +145,7 @@ export abstract class BaseScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [TileKeys.TREE, CharacterKeys.NPC].map(
+    const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
       (key) => this.map.assetGroups.get(key)!,
     );
 
@@ -178,9 +173,9 @@ export abstract class BaseScene extends Scene {
   private initializePlayer(): void {
     this.player = new Player({
       scene: this,
-      positionX: TILE_SIZE + this.map.startPosition.x * TILE_SIZE,
-      positionY: TILE_SIZE + this.map.startPosition.y * TILE_SIZE,
-      velocity: 700,
+      positionX: TILE_SIZE / 2 + this.map.startPosition.x * TILE_SIZE,
+      positionY: TILE_SIZE / 2 + this.map.startPosition.y * TILE_SIZE,
+      velocity: PLAYER_VELOCITY,
     });
     this.player.body!.setSize(TILE_SIZE / 2, TILE_SIZE / 2);
     this.controls = new Controls(this);
@@ -205,47 +200,25 @@ export abstract class BaseScene extends Scene {
   }
 
   private initializeDialogs(): void {
-    const levelData = loadLevelData(this, this.scene.key.toLowerCase());
-
-    this.dialog = new Dialog({ scene: this, data: levelData.dialogs });
-    this.dialogWithOptions = new DialogWithOptions({
-      scene: this,
-      data: levelData.dialogs,
-      callback: (optionSelected: string) => {
-        console.log("Option selected: ", optionSelected);
-      },
-    });
+    this.dialog = new Dialog({ scene: this, data: loadDialogData(this) });
   }
 
   private initializeHealthBar(): void {
     this.healthBar = new HealthBar(this);
   }
 
-  private initializeAwards(assetKey: string, quantity: number): void {
-    if (quantity === 0) return;
+  private initializeAwards(asset: AssetConfig, quantity: number): void {
+    if (!asset || quantity === 0) return;
 
     if (this.awards) {
       this.awards.destroy();
     }
 
-    const asset = findAssetKeyByValue(assetKey);
-    if (asset && asset.path.length > 1) {
-      const fruitKey = asset.path[1] as keyof typeof ItemKeys.FRUITS;
-
-      if (fruitKey && ItemKeys.FRUITS[fruitKey]) {
-        this.awards = new Awards({
-          scene: this,
-          assetKey,
-          quantity,
-          spriteConfig: {
-            startFrame: ItemKeys.FRUITS[fruitKey].STAR_FRAME,
-            endFrame: ItemKeys.FRUITS[fruitKey].END_FRAME,
-            frameWidth: ItemKeys.FRUITS[fruitKey].FRAME_WIDTH,
-            frameHeight: ItemKeys.FRUITS[fruitKey].FRAME_HEIGHT,
-          },
-        });
-      }
-    }
+    this.awards = new Awards({
+      scene: this,
+      asset,
+      quantity,
+    });
   }
 
   private pickupItem(item: Phaser.GameObjects.Sprite): void {
@@ -306,7 +279,7 @@ export abstract class BaseScene extends Scene {
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
             (ol.gameObject.texture.key !== TileKeys.TREE ||
-              ol.gameObject.texture.key !== CharacterKeys.NPC),
+              ol.gameObject.texture.key !== CharacterAssets.NPC),
         ).length === 0;
 
     if (canDrop) {
@@ -323,7 +296,7 @@ export abstract class BaseScene extends Scene {
 
   private interactWithNearNPC(): void {
     this.map.assetGroups
-      .get(CharacterKeys.NPC)!
+      .get(CharacterAssets.NPC)!
       .getChildren()
       .forEach((npc) => {
         const npcSprite = npc as Phaser.GameObjects.Sprite;
@@ -363,10 +336,10 @@ export abstract class BaseScene extends Scene {
   }
 
   private handleItemInteraction(npc: Phaser.GameObjects.Sprite): void {
-    const assetKey = this.dialog?.getAssetKey();
+    const asset = this.dialog?.getAssetKey();
 
     if (npc.name === this.dialog?.getQuestGiverNpcId()) {
-      if (this.heldItem!.texture.key === assetKey) {
+      if (this.heldItem!.texture.key === asset?.assetKey) {
         this.updateQuestProgress(npc);
       } else {
         this.applyWrongItemPenalty(npc);
@@ -395,17 +368,20 @@ export abstract class BaseScene extends Scene {
 
     const isDead = this.healthBar.decreaseHealth(30);
     if (isDead) {
+      StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
       this.scene.start(SceneKeys.GAME_OVER);
     }
   }
 
   private levelCompleted(): void {
     this.currentLevel.completed = true;
+
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
-    this.cameras.main.fadeOut(3000, 0, 0, 0, () => {
+
+    this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
       setTimeout(() => {
-        this.scene.start(SceneKeys.LEVELS_MENU);
-      }, 6000);
+        this.scene.start(SceneKeys.WIN_SCENE);
+      }, 1000);
     });
   }
 
@@ -426,16 +402,18 @@ export abstract class BaseScene extends Scene {
     });
   }
 
-  private validateMapConfig(config: MapMinimalConfiguration): MapConfiguration {
+  private validateMapConfig(config: MinimalMapConfiguration): MapConfiguration {
     if (!config.tilesConfig?.length) {
       throw new Error("Invalid map configuration: Missing tiles config");
     }
 
     return {
-      name: this.scene.key,
+      name: config.name,
       tilesConfig: config.tilesConfig,
-      mapWidth: config.mapWidth ?? MAP_WIDTH,
-      mapHeight: config.mapHeight ?? MAP_HEIGHT,
+      dimensions: config.dimensions ?? {
+        width: MAP_WIDTH,
+        height: MAP_HEIGHT,
+      },
       minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
       minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
     };

@@ -1,21 +1,21 @@
 import Phaser from "phaser";
-import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
+import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { SceneKeys } from "scenes/scene-keys";
-import { StorageManager } from "utils/storage-manager";
-import type { LevelMetadata } from "types/level-data";
-import { levelsConfig } from "config/levels-config";
+import { StorageManager } from "managers/storage-manager";
+import type { LevelMetadata } from "types/level";
+import { levelsConfig } from "scenes/levels/levels-config";
 import { Tooltip } from "../common-ui/tooltip";
 
 export default class LevelsMenu extends Phaser.Scene {
   private tooltip!: Tooltip;
 
-  private levelMetadata!: LevelMetadata[];
+  private levelMetadata: LevelMetadata[] = [];
 
   constructor() {
     super(SceneKeys.LEVELS_MENU);
   }
 
-  init(data: { continueGame: boolean }) {
+  init(data: { continueGame: boolean }): void {
     if (data.continueGame) {
       this.levelMetadata = StorageManager.getLevelsMetadataDataFromStorage();
     } else {
@@ -24,17 +24,35 @@ export default class LevelsMenu extends Phaser.Scene {
     }
   }
 
-  create() {
-    this.completeAndUnlockLevels();
+  create(): void {
+    this.unlockLevels();
+    this.initializeUI();
+  }
+
+  private startLevel(levelKey: string): void {
+    this.scene.start(levelKey, this.levelMetadata);
+  }
+
+  private initializeUI(): void {
+    this.createBackground();
+    this.createTooltip();
+    this.createLevelButtons();
+  }
+
+  private createBackground(): void {
     const background = this.add.image(0, 0, BackgroundKeys.LEVELS).setOrigin(0);
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
+  }
 
+  private createTooltip(): void {
     this.tooltip = new Tooltip(
       this,
       "Completa el nivel anterior para desbloquear",
     );
+  }
 
+  private createLevelButtons(): void {
     this.levelMetadata.forEach((level, index) => {
       const shadow = this.add
         .image(
@@ -53,15 +71,14 @@ export default class LevelsMenu extends Phaser.Scene {
         )
         .setInteractive({ useHandCursor: true })
         .setScale(0.34)
-        .setName(`levelImageButton${index + 1}`);
+        .setName(`${level.key}`);
 
       if (!level.enable) {
         button.setTint(0x808080);
         button.setInteractive({ useHandCursor: false });
       }
 
-      if (index !== 0) {
-        // Apply grey tint and tooltip to locked levels
+      if (index !== 0 && !level.enable) {
         button.setTint(0x808080);
 
         button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
@@ -113,42 +130,7 @@ export default class LevelsMenu extends Phaser.Scene {
     });
   }
 
-  enableLevelButton(levelNumber: number) {
-    const button = this.children.getByName(
-      `levelImageButton${levelNumber}`,
-    ) as Phaser.GameObjects.Image;
-
-    if (button) {
-      button.clearTint();
-      button.setInteractive({ useHandCursor: true });
-
-      button.on("pointerover", () => {
-        this.input.setDefaultCursor("pointer");
-        this.tweens.add({
-          targets: button,
-          scale: 0.45,
-          duration: 150,
-          ease: "Power2",
-        });
-      });
-
-      button.on("pointerout", () => {
-        this.input.setDefaultCursor("default");
-        this.tweens.add({
-          targets: button,
-          scale: 0.4,
-          duration: 150,
-          ease: "Power2",
-        });
-      });
-
-      button.on("pointerdown", () => {
-        this.startLevel(String(levelNumber));
-      });
-    }
-  }
-
-  completeAndUnlockLevels() {
+  private unlockLevels(): void {
     const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
       this.game,
     );
@@ -157,7 +139,6 @@ export default class LevelsMenu extends Phaser.Scene {
     const oldVersionLevelCompleted = this.levelMetadata.find(
       (level) => level.key === levelCompleted.key,
     );
-
     if (!oldVersionLevelCompleted) return;
 
     oldVersionLevelCompleted.completed = true;
@@ -165,16 +146,10 @@ export default class LevelsMenu extends Phaser.Scene {
     oldVersionLevelCompleted.active = false;
 
     oldVersionLevelCompleted.nextLevel?.forEach((elem) => {
-      const nextLevel = this.levelMetadata.find(
-        (element) => element.key === elem,
-      );
+      const nextLevel = this.levelMetadata.find((e) => e.key === elem);
       if (nextLevel) nextLevel.enable = true;
     });
 
     StorageManager.removeLevelMetadaDataFromRegistry(this.game);
-  }
-
-  startLevel(levelKey: string) {
-    this.scene.start(levelKey, this.levelMetadata);
   }
 }

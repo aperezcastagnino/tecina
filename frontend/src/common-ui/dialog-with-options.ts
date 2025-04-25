@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { Colors, DialogColors } from "assets/colors";
+import { Colors, BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import {
   DIRECTION,
@@ -8,8 +8,8 @@ import {
   type PlayerKeys,
 } from "common/player-keys";
 import type { DialogData } from "types/dialog-data";
-import { Animations } from "utils/animation-utils";
-import { UIComponentKeys } from "assets/asset-keys";
+import { AnimationManager } from "managers/animation-manager";
+import { UIComponentKeys } from "assets/assets";
 import type { DialogConfig } from "./base-dialog";
 
 const MENU_CURSOR_POS = {
@@ -110,11 +110,11 @@ export class DialogWithOptions {
         0,
         this.scene.cameras.main.width - this.#padding * 2,
         this.#height,
-        DialogColors.main,
+        BoxColors.main,
         1,
       )
       .setOrigin(0)
-      .setStrokeStyle(8, DialogColors.border, 1);
+      .setStrokeStyle(8, BoxColors.border, 1);
 
     this.statementUI = this.scene.add.text(
       this.#padding,
@@ -198,7 +198,7 @@ export class DialogWithOptions {
     this.setIsVisible(true);
     this.statementUI.setText("").setAlpha(1);
     this.textAnimationPlaying = true;
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.statementUI,
       this.messagesToShow.shift() || "",
@@ -275,7 +275,7 @@ export class DialogWithOptions {
     this.#fourthOptionUI.text = "";
     const delay = 10;
 
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.statementUI,
       this.#statement,
@@ -285,7 +285,7 @@ export class DialogWithOptions {
       },
     );
 
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.#firstOptionUI,
       this.#options[0] || "",
@@ -294,7 +294,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.#secondOptionUI,
       this.#options[1] || "",
@@ -303,7 +303,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.#thirdOptionUI,
       this.#options[2] || "",
@@ -312,7 +312,7 @@ export class DialogWithOptions {
         this.textAnimationPlaying = false;
       },
     );
-    Animations.animateText(
+    AnimationManager.animateText(
       this.scene,
       this.#fourthOptionUI,
       this.#options[3] || "",

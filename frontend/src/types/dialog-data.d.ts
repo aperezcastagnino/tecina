@@ -1,3 +1,5 @@
+import type { AssetConfig } from "./asset";
+
 export type DialogData = {
   id: string | undefined;
   description: string | undefined;
@@ -8,7 +10,7 @@ export type DialogData = {
   hints: string[][];
   options: string[] | undefined;
   correctOption: string | undefined;
-  assetKey: string | undefined;
+  asset: AssetConfig | undefined;
   quantityToCollect: number | undefined;
   completed: boolean | undefined;
   disable: boolean | undefined;

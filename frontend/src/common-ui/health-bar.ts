@@ -1,5 +1,5 @@
-import { GAME_DIMENSIONS, TILE_SIZE } from "config/config";
-import { UIComponentKeys } from "assets/asset-keys";
+import { GAME_DIMENSIONS, TILE_SIZE } from "config";
+import { UIComponentKeys } from "assets/assets";
 
 const HEALTH_BAR_CONFIG = {
   WIDTH: GAME_DIMENSIONS.WIDTH / 7,
@@ -95,23 +95,25 @@ export class HealthBar {
 
   private setFillBarPercentage(percent = 1): void {
     const width = this.originalWidth * percent;
-    if (percent < 0.01) {
+    if (percent < 0.25) {
       this.scene.tweens.add({
         targets: this.fillBarRight,
         displayWidth: 0,
         duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
         ease: Phaser.Math.Easing.Sine.InOut,
       });
-      this.scene.tweens.add({
-        targets: this.fillBarLeft,
-        displayWidth: 0,
-        duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
-        ease: Phaser.Math.Easing.Sine.InOut,
-      });
+      if (percent === 0) {
+        this.scene.tweens.add({
+          targets: this.fillBarLeft,
+          displayWidth: 0,
+          duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
+          ease: Phaser.Math.Easing.Sine.InOut,
+        });
+      }
     } else
       this.scene.tweens.add({
         targets: this.fillBarRight,
-        displayWidth: width,
+        displayWidth: width * 0.75,
         duration: HEALTH_BAR_CONFIG.TWEEN_DURATION,
         ease: Phaser.Math.Easing.Sine.InOut,
       });

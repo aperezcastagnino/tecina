@@ -1,29 +1,29 @@
 import { Scene } from "phaser";
-import { StorageManager } from "utils/storage-manager";
-import { levelsConfig } from "config/levels-config";
-import { BackgroundKeys, UIComponentKeys } from "assets/asset-keys";
+import { StorageManager } from "managers/storage-manager";
+import { levelsConfig } from "scenes/levels/levels-config";
+import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
 
-export class MainMenu extends Scene {
+export default class MainMenu extends Scene {
   private tooltip!: Tooltip;
 
   constructor() {
     super(SceneKeys.MAIN_MENU);
   }
 
-  create() {
+  create(): void {
     this.initializeUI();
   }
 
   private initializeUI() {
     this.createBackground();
     this.createTitle();
-    this.tooltip = new Tooltip(this, "");
     this.createButtons();
+    this.tooltip = new Tooltip(this, "");
   }
 
-  createBackground() {
+  private createBackground(): void {
     const background = this.add
       .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0);
@@ -31,51 +31,28 @@ export class MainMenu extends Scene {
     background.displayHeight = this.sys.canvas.height;
   }
 
-  createTitle() {
+  private createTitle(): void {
     this.add
       .image(500, 500, UIComponentKeys.TITLE)
       .setScale(0.8)
       .setOrigin(0.5);
   }
 
-  createButtons() {
-    const startGameButton = this.add
-      .image(1400, 400, UIComponentKeys.START_BUTTON)
-      .setInteractive()
+  private createButtons(): void {
+    const loadGameButton = this.add
+      .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
+      .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
       .setScale(0.35);
 
-    startGameButton.on("pointerover", () => {
-      this.input.setDefaultCursor("pointer");
-      this.tweens.add({
-        targets: startGameButton,
-        scale: 0.4,
-        duration: 150,
-        ease: "Power2",
-      });
-    });
-
-    startGameButton.on("pointerout", () => {
-      this.input.setDefaultCursor("default");
-      this.tweens.add({
-        targets: startGameButton,
-        scale: 0.35,
-        duration: 150,
-        ease: "Power2",
-      });
-    });
-
-    startGameButton.on("pointerdown", () => {
-      this.startNewGame();
-    });
-
-    // LOAD GAME BUTTON
-    const loadGameButton = this.add
-      .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
+    const startGameButton = this.add
+      .image(1400, 400, UIComponentKeys.START_BUTTON)
+      .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
       .setScale(0.35);
 
     this.configureLoadGameButton(loadGameButton);
+    this.configureStartGameButton(startGameButton);
   }
 
   private configureLoadGameButton(button: Phaser.GameObjects.Image) {
@@ -125,12 +102,38 @@ export class MainMenu extends Scene {
     }
   }
 
-  startNewGame() {
+  private configureStartGameButton(button: Phaser.GameObjects.Image) {
+    button.on("pointerover", () => {
+      this.input.setDefaultCursor("pointer");
+      this.tweens.add({
+        targets: button,
+        scale: 0.4,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerout", () => {
+      this.input.setDefaultCursor("default");
+      this.tweens.add({
+        targets: button,
+        scale: 0.35,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerdown", () => {
+      this.startNewGame();
+    });
+  }
+
+  private startNewGame(): void {
     StorageManager.setLevelsMetadataToStorage(levelsConfig);
     this.scene.start(SceneKeys.LEVELS_MENU);
   }
 
-  continueGame() {
+  private continueGame(): void {
     if (StorageManager.hasLevelStoredData()) {
       this.scene.start(SceneKeys.LEVELS_MENU, { continueGame: true });
     }

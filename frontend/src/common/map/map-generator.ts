@@ -42,8 +42,8 @@ export class MapGenerator {
     */
 
     if (
-      config.mapWidth < config.minPartitionSize * 2 ||
-      config.mapHeight < config.minPartitionSize * 2
+      config.dimensions.width < config.minPartitionSize * 2 ||
+      config.dimensions.height < config.minPartitionSize * 2
     ) {
       throw new Error(
         "Map dimensions must be at least twice the minimum partition size",
@@ -62,8 +62,8 @@ export class MapGenerator {
 
     const map: MapStructure = MapGenerator.createMapStructure(
       config.name,
-      config.mapWidth,
-      config.mapHeight,
+      config.dimensions.width,
+      config.dimensions.height,
     );
     map.initialParameters = config;
 
@@ -71,28 +71,29 @@ export class MapGenerator {
       {
         x: 0,
         y: 0,
-        width: config.mapWidth,
-        height: config.mapHeight,
+        width: config.dimensions.width,
+        height: config.dimensions.height,
       },
       config.minPartitionSize,
     );
     this.assignRooms(rootPartition, config.minRoomSize);
 
-    const matrix = new Array(config.mapWidth)
+    const matrix = new Array(config.dimensions.width)
       .fill([])
-      .map(() => new Array(config.mapHeight).fill(UNUSED_CELL));
+      .map(() => new Array(config.dimensions.height).fill(UNUSED_CELL));
 
     this.fillAndConnectRooms(matrix, rootPartition);
     this.assignTiles(map, matrix, config.tilesConfig);
 
     const privateStaticObjects = config.tilesConfig.filter(
-      (t) => t.tile.type === TileType.INTERACTIVE_STATIC_OBJECT,
+      (t) => t.type === TileType.INTERACTIVE_STATIC_OBJECT,
     );
     this.assignInteractiveStaticObject(
       map,
       rootPartition,
       privateStaticObjects,
     );
+    this.calculateStartPosition(map);
 
     return map;
   }
@@ -307,10 +308,6 @@ export class MapGenerator {
             interactivefrequencyTiles!.frequencies!,
             interactivefrequencyTiles!.tiles,
           );
-          if (map.startPosition.x === 0 && map.startPosition.y === 0) {
-            map.startPosition.x = columnIndex + 1;
-            map.startPosition.y = rowIndex + 1;
-          }
         } else if (element === UNUSED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
             obstaclefrequencyTiles!.frequencies!,
@@ -346,35 +343,46 @@ export class MapGenerator {
     );
   }
 
+  private static calculateStartPosition(map: MapStructure) {
+    const result = map.tiles
+      .flatMap((row, y) => row.map((tile, x) => ({ tile, x, y })))
+      .find(({ tile }) => tile.type === TileType.WALKABLE_SPACE);
+    if (!result) {
+      throw new Error("No walkable space found for start position");
+    }
+    map.startPosition.x = result.x;
+    map.startPosition.y = result.y;
+  }
+
   private static prepareTileConfigs(tilesConfig: TileConfig[]) {
     const interactiveTiles = tilesConfig.filter(
       (f) =>
-        (f.frequency && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
-        f.tile.type === TileType.WALKABLE_SPACE,
+        (f.frequency && f.type === TileType.INTERACTIVE_OBJECT) ||
+        f.type === TileType.WALKABLE_SPACE,
     );
 
     const obstacleTiles = tilesConfig.filter(
-      (f) => f.frequency && f.tile.type === TileType.OBSTACLE,
+      (f) => f.frequency && f.type === TileType.OBSTACLE,
     );
 
     const fixedQuantityInteractiveTiles = tilesConfig.filter(
       (f) =>
-        (f.quantity && f.tile.type === TileType.INTERACTIVE_OBJECT) ||
-        f.tile.type === TileType.WALKABLE_SPACE,
+        (f.quantity && f.type === TileType.INTERACTIVE_OBJECT) ||
+        f.type === TileType.WALKABLE_SPACE,
     );
 
     return [
       {
         frequencies: interactiveTiles.map((m) => m.frequency || 0),
-        tiles: interactiveTiles.map((m) => m.tile!),
+        tiles: interactiveTiles,
       },
       {
         frequencies: obstacleTiles.map((m) => m.frequency || 0),
-        tiles: obstacleTiles.map((m) => m.tile),
+        tiles: obstacleTiles,
       },
       {
         quantities: fixedQuantityInteractiveTiles.map((m) => m.quantity || 0),
-        tiles: fixedQuantityInteractiveTiles.map((m) => m.tile),
+        tiles: fixedQuantityInteractiveTiles,
       },
     ];
   }
@@ -415,7 +423,7 @@ export class MapGenerator {
 
         map.tiles[room.y + Math.floor(room.width / 2)]![
           room.x + Math.floor(room.height / 2)
-        ] = tile.tile;
+        ] = tile;
       }
     });
   }

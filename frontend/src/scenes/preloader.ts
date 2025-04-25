@@ -1,13 +1,15 @@
 import { Scene } from "phaser";
-import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config/config";
-import { Animations } from "utils/animation-utils";
+import { DEBUG_MODE_ACTIVE, FIRST_SCENE_TO_PLAY } from "config";
+import { AnimationManager } from "managers/animation-manager";
 import {
+  ItemAssets,
   BackgroundKeys,
-  CharacterKeys,
-  ItemKeys,
+  CharacterAssets,
   TileKeys,
   UIComponentKeys,
-} from "assets/asset-keys";
+  AnimalAssets,
+  FruitAssets,
+} from "assets/assets";
 import { PlayerAnimationKeys } from "common/player";
 import {
   LOADING_SCREEN_PERCENT_TEXT_STYLE,
@@ -15,7 +17,7 @@ import {
 } from "styles/loading-styles";
 import { SceneKeys } from "./scene-keys";
 
-export class Preloader extends Scene {
+export default class Preloader extends Scene {
   private progressBar!: Phaser.GameObjects.Graphics;
 
   private percentText!: Phaser.GameObjects.Text;
@@ -32,7 +34,7 @@ export class Preloader extends Scene {
     super(SceneKeys.PRELOADER);
   }
 
-  init() {
+  init(): void {
     this.cameras.main.setBackgroundColor("#a6af48");
 
     const { centerX, centerY } = this.cameras.main;
@@ -85,15 +87,15 @@ export class Preloader extends Scene {
 
     // Load data
     this.load.json("level_1", "/data/level_1.json");
-
-    // Level 1
+    this.load.json("level_2", "/data/level_2.json");
+    this.load.json("level_3", "/data/level_3.json");
 
     // Load Characters
-    this.load.spritesheet(CharacterKeys.PLAYER, `characters/player.png`, {
+    this.load.spritesheet(CharacterAssets.PLAYER, `characters/player.png`, {
       frameWidth: 64,
       frameHeight: 88,
     });
-    this.load.spritesheet(CharacterKeys.NPC, `characters/characters.png`, {
+    this.load.spritesheet(CharacterAssets.NPC, `characters/characters.png`, {
       frameWidth: 16,
       frameHeight: 16,
     });
@@ -135,6 +137,8 @@ export class Preloader extends Scene {
       UIComponentKeys.INSTRUCTIONS,
       "/ui-components/instructions.png",
     );
+    this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
+    this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
 
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
@@ -143,12 +147,13 @@ export class Preloader extends Scene {
 
     // Load elements
     this.loadFruits();
+    this.loadAnimals();
   }
 
-  create() {
+  create(): void {
     // delay to see the bar
     this.time.delayedCall(2000, () => {
-      this.createAnimations();
+      this.createPlayerAnimations();
 
       this.scene.start(
         DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
@@ -177,112 +182,59 @@ export class Preloader extends Scene {
     this.percentText.setText(`${Math.floor(this.currentProgress * 100)}%`);
   }
 
-  private createAnimations() {
-    Animations.createPlayerAnimation(
+  private createPlayerAnimations() {
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_UP,
-      CharacterKeys.PLAYER,
+      CharacterAssets.PLAYER,
       [0, 1, 2],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_RIGHT,
-      CharacterKeys.PLAYER,
+      CharacterAssets.PLAYER,
       [3, 4, 5],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_DOWN,
-      CharacterKeys.PLAYER,
+      CharacterAssets.PLAYER,
       [6, 7, 8],
     );
-    Animations.createPlayerAnimation(
+    AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_LEFT,
-      CharacterKeys.PLAYER,
+      CharacterAssets.PLAYER,
       [9, 10, 11],
     );
   }
 
   private loadFruits() {
-    this.load.spritesheet(
-      ItemKeys.FRUITS.APPLE.ASSET_KEY,
-      "/items/fruits/apple.png",
-      {
-        frameWidth: ItemKeys.FRUITS.APPLE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.APPLE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.APPLE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.APPLE.END_FRAME,
-      },
+    const fruits = Object.keys(FruitAssets);
+    fruits.forEach((fruit) =>
+      this.loadContent("/items/fruits", fruit as keyof typeof FruitAssets),
     );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.BANANAS.ASSET_KEY,
-      "/items/fruits/bananas.png",
-      {
-        frameWidth: ItemKeys.FRUITS.BANANAS.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.BANANAS.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.BANANAS.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.BANANAS.END_FRAME,
-      },
+  }
+
+  private loadAnimals() {
+    const animals = Object.keys(AnimalAssets);
+    animals.forEach((animal) =>
+      this.loadContent("/items/animals", animal as keyof typeof AnimalAssets),
     );
+  }
+
+  private loadContent(
+    pathFile: string,
+    assetKey: keyof typeof ItemAssets,
+  ): void {
     this.load.spritesheet(
-      ItemKeys.FRUITS.CHERRIES.ASSET_KEY,
-      "/items/fruits/cherries.png",
+      ItemAssets[assetKey].assetKey,
+      `${pathFile}/${assetKey.toLowerCase()}.png`,
       {
-        frameWidth: ItemKeys.FRUITS.CHERRIES.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.CHERRIES.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.CHERRIES.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.CHERRIES.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.KIWI.ASSET_KEY,
-      "/items/fruits/kiwi.png",
-      {
-        frameWidth: ItemKeys.FRUITS.KIWI.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.KIWI.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.KIWI.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.KIWI.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.MELON.ASSET_KEY,
-      "/items/fruits/melon.png",
-      {
-        frameWidth: ItemKeys.FRUITS.MELON.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.MELON.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.MELON.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.MELON.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.ORANGE.ASSET_KEY,
-      "/items/fruits/orange.png",
-      {
-        frameWidth: ItemKeys.FRUITS.ORANGE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.ORANGE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.ORANGE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.ORANGE.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.PINEAPPLE.ASSET_KEY,
-      "/items/fruits/pineapple.png",
-      {
-        frameWidth: ItemKeys.FRUITS.PINEAPPLE.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.PINEAPPLE.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.PINEAPPLE.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.PINEAPPLE.END_FRAME,
-      },
-    );
-    this.load.spritesheet(
-      ItemKeys.FRUITS.STRAWBERRY.ASSET_KEY,
-      "/items/fruits/strawberry.png",
-      {
-        frameWidth: ItemKeys.FRUITS.STRAWBERRY.FRAME_WIDTH,
-        frameHeight: ItemKeys.FRUITS.STRAWBERRY.FRAME_HEIGHT,
-        startFrame: ItemKeys.FRUITS.STRAWBERRY.STAR_FRAME,
-        endFrame: ItemKeys.FRUITS.STRAWBERRY.END_FRAME,
+        frameWidth: ItemAssets[assetKey].frameWidth,
+        frameHeight: ItemAssets[assetKey].frameHeight,
+        startFrame: ItemAssets[assetKey].starFrame,
+        endFrame: ItemAssets[assetKey].endFrame,
       },
     );
   }
