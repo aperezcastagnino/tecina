@@ -402,11 +402,13 @@ export abstract class BaseScene extends Scene {
 
   private levelCompleted(): void {
     this.currentLevel.completed = true;
+
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
+
     this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
       setTimeout(() => {
         this.scene.start(SceneKeys.WIN_SCENE);
-      }, 2000);
+      }, 1000);
     });
   }
 
