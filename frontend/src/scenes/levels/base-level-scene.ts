@@ -43,7 +43,7 @@ export abstract class BaseLevelScene extends Scene {
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
-  protected levelsMetadata!: LevelMetadata[];
+  protected levelsMetadata: LevelMetadata[] = [];
 
   protected currentLevel!: LevelMetadata;
 
