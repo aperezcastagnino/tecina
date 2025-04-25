@@ -18,15 +18,13 @@ import { SceneKeys } from "./scene-keys";
 export class Preloader extends Scene {
   private progressBar!: Phaser.GameObjects.Graphics;
 
-  private progressBox!: Phaser.GameObjects.Graphics;
-
-  private loadingText!: Phaser.GameObjects.Text;
-
   private percentText!: Phaser.GameObjects.Text;
 
   private currentProgress: number = 0;
 
   private targetProgress: number = 0;
+
+  private PROGRESS_BAR_VELOCITY = 0.05;
 
   private assetsLoaded = false;
 
@@ -39,17 +37,17 @@ export class Preloader extends Scene {
 
     const { centerX, centerY } = this.cameras.main;
 
-    this.progressBox = this.add.graphics();
-    this.progressBox.fillStyle(0x222222, 0.2);
-    this.progressBox.fillRect(centerX - 240, centerY - 20, 480, 40);
-
+    this.add
+      .graphics()
+      .fillStyle(0x222222, 0.2)
+      .fillRect(centerX - 240, centerY - 20, 480, 40);
     this.progressBar = this.add.graphics();
 
-    this.loadingText = this.make
+    this.make
       .text({
         x: centerX,
         y: centerY - 50,
-        text: "Loading...",
+        text: "Cargando...",
         style: LOADING_SCREEN_TEXT_STYLE,
       })
       .setOrigin(0.5, 0.5);
@@ -149,30 +147,22 @@ export class Preloader extends Scene {
 
   create() {
     // delay to see the bar
-    if (this.assetsLoaded) {
-      this.time.delayedCall(2000, () => {
-        this.progressBar.destroy();
-        this.progressBox.destroy();
-        this.loadingText.destroy();
-        this.percentText.destroy();
+    this.time.delayedCall(2000, () => {
+      this.createAnimations();
 
-        this.createAnimations();
-
-        this.scene.start(
-          DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
-        );
-      });
-    }
+      this.scene.start(
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+      );
+    });
   }
 
   update() {
     const { centerX, centerY } = this.cameras.main;
 
-    const speed = 0.05;
     this.currentProgress = Phaser.Math.Linear(
       this.currentProgress,
       this.targetProgress,
-      speed,
+      this.PROGRESS_BAR_VELOCITY,
     );
 
     this.progressBar.clear();
