@@ -11,27 +11,64 @@ import {
   FruitAssets,
 } from "assets/assets";
 import { PlayerAnimationKeys } from "common/player";
+import {
+  LOADING_SCREEN_PERCENT_TEXT_STYLE,
+  LOADING_SCREEN_TEXT_STYLE,
+} from "styles/loading-styles";
 import { SceneKeys } from "./scene-keys";
 
 export default class Preloader extends Scene {
+  private progressBar!: Phaser.GameObjects.Graphics;
+
+  private percentText!: Phaser.GameObjects.Text;
+
+  private currentProgress: number = 0;
+
+  private targetProgress: number = 0;
+
+  private PROGRESS_BAR_VELOCITY = 0.05;
+
+  private assetsLoaded = false;
+
   constructor() {
     super(SceneKeys.PRELOADER);
   }
 
   init(): void {
-    //  We loaded this image in our Boot Scene, so we can display it here
-    this.add.image(512, 384, "background");
+    this.cameras.main.setBackgroundColor("#a6af48");
 
-    //  A simple progress bar. This is the outline of the bar.
-    this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+    const { centerX, centerY } = this.cameras.main;
 
-    //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-    const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+    this.add
+      .graphics()
+      .fillStyle(0x222222, 0.2)
+      .fillRect(centerX - 240, centerY - 20, 480, 40);
+    this.progressBar = this.add.graphics();
 
-    //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
-    this.load.on("progress", (progress: number) => {
-      //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-      bar.width = 4 + 460 * progress;
+    this.make
+      .text({
+        x: centerX,
+        y: centerY - 50,
+        text: "Cargando...",
+        style: LOADING_SCREEN_TEXT_STYLE,
+      })
+      .setOrigin(0.5, 0.5);
+
+    this.percentText = this.make
+      .text({
+        x: centerX,
+        y: centerY,
+        text: "0%",
+        style: LOADING_SCREEN_PERCENT_TEXT_STYLE,
+      })
+      .setOrigin(0.5, 0.5);
+
+    this.load.on("progress", (value: number) => {
+      this.targetProgress = value;
+    });
+
+    this.load.once("complete", () => {
+      this.assetsLoaded = true;
     });
   }
 
@@ -43,7 +80,6 @@ export default class Preloader extends Scene {
       BackgroundKeys.MAIN_MENU,
       `/backgrounds/main-menu-background.png`,
     );
-
     this.load.image(
       BackgroundKeys.LEVELS,
       `/backgrounds/levels-background.png`,
@@ -115,11 +151,35 @@ export default class Preloader extends Scene {
   }
 
   create(): void {
-    this.createPlayerAnimations();
+    // delay to see the bar
+    this.time.delayedCall(2000, () => {
+      this.createPlayerAnimations();
 
-    this.scene.start(
-      DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+      this.scene.start(
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+      );
+    });
+  }
+
+  update() {
+    const { centerX, centerY } = this.cameras.main;
+
+    this.currentProgress = Phaser.Math.Linear(
+      this.currentProgress,
+      this.targetProgress,
+      this.PROGRESS_BAR_VELOCITY,
     );
+
+    this.progressBar.clear();
+    this.progressBar.fillStyle(0x000000, 1);
+    this.progressBar.fillRect(
+      centerX - 230,
+      centerY - 16,
+      460 * this.currentProgress,
+      32,
+    );
+
+    this.percentText.setText(`${Math.floor(this.currentProgress * 100)}%`);
   }
 
   private createPlayerAnimations() {
