@@ -40,7 +40,7 @@ export class Dialog extends BaseDialog {
       10,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
   }
 
@@ -49,7 +49,7 @@ export class Dialog extends BaseDialog {
 
     if (this.questGiverNpcId === npcId) {
       const textFinished = this.selectRandomText(
-        this.activeDialog.questFinished,
+        this.activeDialog.questFinished
       );
       this.messagesToShow = [...textFinished];
       this.showNextMessage();
@@ -60,11 +60,21 @@ export class Dialog extends BaseDialog {
     }
   }
 
+  showPartiallyCompletedDialog(npcId?: string): void {
+    if (!this.activeDialog || this.questGiverNpcId !== npcId) return;
+
+    const textPartiallyCompleted = this.selectRandomText(
+      this.activeDialog.questPartiallyCompleted
+    );
+    this.messagesToShow = [...textPartiallyCompleted];
+    this.showNextMessage();
+  }
+
   showWrongItemDialog(npcId?: string): void {
     if (!this.activeDialog || this.questGiverNpcId !== npcId) return;
 
     const textWrongItem = this.selectRandomText(
-      this.activeDialog.questWrongItem,
+      this.activeDialog.questWrongItem
     );
     this.messagesToShow = [...textWrongItem];
     this.showNextMessage();
@@ -103,7 +113,8 @@ export class Dialog extends BaseDialog {
   private resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
     if (this.questGiverNpcId === npcId)
       return this.selectRandomText(dialog.questInProgress);
-    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
+    if (this.questGiverNpcId && dialog.hints)
+      return this.selectRandomText(dialog.hints);
 
     this.questGiverNpcId = npcId || "";
     this.activeDialog = dialog;
@@ -112,11 +123,11 @@ export class Dialog extends BaseDialog {
   }
 
   private findMessageInCompleted(
-    dialogs?: DialogData[],
+    dialogs?: DialogData[]
   ): DialogData | undefined {
     return dialogs?.find(
       (dialog) =>
-        !dialog.completed && (!dialog.options || dialog.options.length === 0),
+        !dialog.completed && (!dialog.options || dialog.options.length === 0)
     );
   }
 }

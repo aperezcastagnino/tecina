@@ -25,7 +25,7 @@
         "Can you bring two oranges for the mix?"
       ],
       "questInProgress": ["Did you find the oranges?"],
-      "questPartiallyCompleted": [],
+      "questPartiallyCompleted": ["Yeeeei! You are doing great! We are almost there!"],
       "questWrongItem": ["Hmm... That’s not an orange!"],
       "questFinished": ["Awesome! This will make the juice super tasty!"],
       "hints": ["The orange is orange."],
