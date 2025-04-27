@@ -111,7 +111,7 @@ export class DialogWithOptions {
         this.scene.cameras.main.width - this.#padding * 2,
         this.#height,
         BoxColors.main,
-        1,
+        1
       )
       .setOrigin(0)
       .setStrokeStyle(8, BoxColors.border, 1);
@@ -120,38 +120,38 @@ export class DialogWithOptions {
       this.#padding,
       55,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
 
     this.#firstOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       22,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#secondOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       22,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#thirdOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#thirdOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
     this.#fourthOptionUI = this.scene.add.text(
       this.#padding + this.#statementTextLength + optionTextLength,
       80,
       "",
-      DIALOG_TEXT_STYLE,
+      DIALOG_TEXT_STYLE
     );
 
     this.#cursor = this.scene.add
@@ -159,7 +159,7 @@ export class DialogWithOptions {
         this.#padding + this.#statementTextLength - 25,
         MENU_CURSOR_POS.y,
         UIComponentKeys.CURSOR,
-        0,
+        0
       )
       .setOrigin(0.5)
       .setScale(2.5);
@@ -205,7 +205,7 @@ export class DialogWithOptions {
       10,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
   }
 
@@ -231,7 +231,8 @@ export class DialogWithOptions {
   #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
     if (this.questGiverNpcId === npcId)
       return this.selectRandomText(dialog.questInProgress);
-    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
+    if (this.questGiverNpcId && dialog.hints)
+      return this.selectRandomText(dialog.hints);
 
     // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";
@@ -241,7 +242,7 @@ export class DialogWithOptions {
   #findMessageInCompleted(dialogs?: DialogData[]): DialogData | undefined {
     return dialogs?.find(
       (dialog) =>
-        !dialog.completed && (!dialog.options || dialog.options.length === 0),
+        !dialog.completed && (!dialog.options || dialog.options.length === 0)
     );
   }
 
@@ -282,7 +283,7 @@ export class DialogWithOptions {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
 
     AnimationManager.animateText(
@@ -292,7 +293,7 @@ export class DialogWithOptions {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     AnimationManager.animateText(
       this.scene,
@@ -301,7 +302,7 @@ export class DialogWithOptions {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     AnimationManager.animateText(
       this.scene,
@@ -310,7 +311,7 @@ export class DialogWithOptions {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
     AnimationManager.animateText(
       this.scene,
@@ -319,7 +320,7 @@ export class DialogWithOptions {
       delay,
       () => {
         this.textAnimationPlaying = false;
-      },
+      }
     );
   }
 

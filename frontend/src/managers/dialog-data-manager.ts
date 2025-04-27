@@ -33,7 +33,7 @@ export const loadDialogData = (scene: Phaser.Scene): DialogData[] => {
           dialog.questWrongItemIAGenerated ?? [],
         ].filter(isNotEmpty),
         hints: [dialog.hints ?? [], dialog.hintsIAGenerated ?? []].filter(
-          isNotEmpty
+          isNotEmpty,
         ),
         options: dialog.options,
         correctOption: dialog.correctOption,
@@ -43,7 +43,7 @@ export const loadDialogData = (scene: Phaser.Scene): DialogData[] => {
         quantityToCollect: dialog.quantityToCollect,
         completed: false,
         disable: dialog.disable ?? false,
-      })
+      }),
     )
     .filter((dialog: DialogData) => !dialog.disable);
 };
