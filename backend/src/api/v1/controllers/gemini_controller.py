@@ -18,9 +18,10 @@ async def get_paraphrase(dialogData: DialogContentInput):
     DIALOG_TYPES = [
         "questStart",
         "questInProgress",
+        "questPartiallyCompleted",
+        "questWrongItem",
         "questFinished",
         "hints",
-        "questWrongItem",
     ]
     generated_results = {}
 
