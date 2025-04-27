@@ -20,6 +20,10 @@ export const loadDialogData = (scene: Phaser.Scene): DialogData[] => {
           dialog.questInProgress ?? [],
           dialog.questInProgressIAGenerated ?? [],
         ].filter(isNotEmpty),
+        questPartiallyCompleted: [
+          dialog.questPartiallyCompleted ?? [],
+          dialog.questPartiallyCompletedIAGenerated ?? [],
+        ].filter(isNotEmpty),
         questFinished: [
           dialog.questFinished ?? [],
           dialog.questFinishedIAGenerated ?? [],

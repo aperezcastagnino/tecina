@@ -231,7 +231,8 @@ export class DialogWithOptions {
   #resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
     if (this.questGiverNpcId === npcId)
       return this.selectRandomText(dialog.questInProgress);
-    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
+    if (this.questGiverNpcId && dialog.hints)
+      return this.selectRandomText(dialog.hints);
 
     // eslint-disable-next-line no-param-reassign
     this.questGiverNpcId = npcId || "";

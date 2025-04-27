@@ -360,6 +360,8 @@ export abstract class BaseLevelScene extends Scene {
       if (this.dialog?.areAllDialogsCompleted()) {
         this.levelCompleted();
       }
+    } else {
+      this.dialog?.showPartiallyCompletedDialog(npc.name);
     }
   }
 

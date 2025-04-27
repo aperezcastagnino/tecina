@@ -60,6 +60,16 @@ export class Dialog extends BaseDialog {
     }
   }
 
+  showPartiallyCompletedDialog(npcId?: string): void {
+    if (!this.activeDialog || this.questGiverNpcId !== npcId) return;
+
+    const textPartiallyCompleted = this.selectRandomText(
+      this.activeDialog.questPartiallyCompleted,
+    );
+    this.messagesToShow = [...textPartiallyCompleted];
+    this.showNextMessage();
+  }
+
   showWrongItemDialog(npcId?: string): void {
     if (!this.activeDialog || this.questGiverNpcId !== npcId) return;
 
@@ -103,7 +113,8 @@ export class Dialog extends BaseDialog {
   private resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
     if (this.questGiverNpcId === npcId)
       return this.selectRandomText(dialog.questInProgress);
-    if (this.questGiverNpcId) return this.selectRandomText(dialog.hints);
+    if (this.questGiverNpcId && dialog.hints)
+      return this.selectRandomText(dialog.hints);
 
     this.questGiverNpcId = npcId || "";
     this.activeDialog = dialog;
