@@ -64,6 +64,6 @@ export default class GameOver extends Phaser.Scene {
       .setOrigin(1.2, 1)
       .setScale(6);
 
-    frog.play(ItemAssets.FROG.animationKey, true);
+    frog.play(ItemAssets.FROG.animationKey);
   }
 }

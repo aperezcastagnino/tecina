@@ -53,12 +53,12 @@ export default class LevelsMenu extends Phaser.Scene {
   }
 
   private createLevelButtons(): void {
-    this.levelMetadata.forEach((level) => {
-      this.createLevelButton(level);
+    this.levelMetadata.forEach((level, index) => {
+      this.createLevelButton(level, index);
     });
   }
 
-  private createLevelButton(level: LevelMetadata): void {
+  private createLevelButton(level: LevelMetadata, index: number): void {
     const shadow = this.add
       .image(
         level.position.x + 6,
@@ -73,13 +73,11 @@ export default class LevelsMenu extends Phaser.Scene {
       .setScale(0.34)
       .setName(`${level.key}`);
 
-    this.setupEnabledButton(button, level.key); // remove this
-
-    // if (!level.enable) {
-    //   this.setupDisabledButton(button, index);
-    // } else {
-    //   this.setupEnabledButton(button, level.key);
-    // }
+    if (!level.enable) {
+      this.setupDisabledButton(button, index);
+    } else {
+      this.setupEnabledButton(button, level.key);
+    }
 
     this.add.existing(shadow);
     this.add.existing(button);

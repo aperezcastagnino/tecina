@@ -284,7 +284,7 @@ export abstract class BaseLevelScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== TileKeys.TREE || // this cannot depend on the tree tile
+            (ol.gameObject.texture.key !== TileKeys.TREE || // this should not depend on the tree tile
               ol.gameObject.texture.key !== CharacterAssets.NPC),
         ).length === 0;
 
