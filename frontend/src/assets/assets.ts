@@ -70,6 +70,10 @@ export const TileKeys = {
   GRASS: "GRASS",
   TREE: "TREE",
   FLOWER_GRASS: "FLOWER_GRASS",
+  DRY_GRASS: "DRY_GRASS",
+  LEAVES_GRASS: "LEAVES_GRASS",
+  YELLOW_TREE: "YELLOW_TREE",
+  DRY_TREE: "DRY_TREE",
 };
 
 export const FruitAssets = {
@@ -147,6 +151,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 6,
+    frameRate: 8,
   },
   CAT: {
     assetKey: "CAT",
@@ -155,6 +160,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    frameRate: 6,
   },
   CHICKEN: {
     assetKey: "CHICKEN",
@@ -163,6 +169,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    frameRate: 5,
   },
   DEER: {
     assetKey: "DEER",
@@ -171,6 +178,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 3,
+    frameRate: 6,
   },
   FOX: {
     assetKey: "FOX",
@@ -179,6 +187,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 3,
+    frameRate: 3,
   },
   FROG: {
     assetKey: "FROG",
@@ -187,6 +196,7 @@ export const AnimalAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    frameRate: 2,
   },
   PIGEON: {
     assetKey: "PIGEON",
@@ -195,6 +205,7 @@ export const AnimalAssets = {
     frameHeight: 16,
     starFrame: 0,
     endFrame: 17,
+    frameRate: 3,
   },
 } as const;
 

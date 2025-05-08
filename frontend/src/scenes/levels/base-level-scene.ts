@@ -145,7 +145,13 @@ export abstract class BaseLevelScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
+    const collisionGroups = [
+      TileKeys.TREE,
+      TileKeys.DRY_TREE,
+      TileKeys.YELLOW_TREE,
+      CharacterAssets.NPC,
+    ].map(
+      // this cannot depend on the tree tile
       (key) => this.map.assetGroups.get(key)!,
     );
 
@@ -187,8 +193,8 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private initializeCamera(): void {
-    const worldWidth = MAP_WIDTH * TILE_SIZE;
-    const worldHeight = MAP_HEIGHT * TILE_SIZE;
+    const worldWidth = this.map.dimensions.width * TILE_SIZE;
+    const worldHeight = this.map.dimensions.height * TILE_SIZE;
 
     this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
 
@@ -278,7 +284,7 @@ export abstract class BaseLevelScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== TileKeys.TREE ||
+            (ol.gameObject.texture.key !== TileKeys.TREE || // this cannot depend on the tree tile
               ol.gameObject.texture.key !== CharacterAssets.NPC),
         ).length === 0;
 

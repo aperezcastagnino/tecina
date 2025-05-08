@@ -47,6 +47,10 @@ export type MapStructure = {
   tiles: TileConfig[][];
   rows: number;
   columns: number;
+  dimensions: {
+    width: number;
+    height: number;
+  };
   startPosition: {
     x: number;
     y: number;
