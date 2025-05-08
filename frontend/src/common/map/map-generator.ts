@@ -344,9 +344,16 @@ export class MapGenerator {
   }
 
   private static calculateStartPosition(map: MapStructure) {
+    const startPositionMargin = { x: 2, y: 5 };
+
     const result = map.tiles
       .flatMap((row, y) => row.map((tile, x) => ({ tile, x, y })))
-      .find(({ tile }) => tile.type === TileType.WALKABLE_SPACE);
+      .find(
+        ({ tile, x, y }) =>
+          x >= startPositionMargin.x &&
+          y >= startPositionMargin.y &&
+          tile.type === TileType.WALKABLE_SPACE,
+      );
     if (!result) {
       throw new Error("No walkable space found for start position");
     }
