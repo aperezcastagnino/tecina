@@ -1,0 +1,30 @@
+{
+  "title": "Level 4",
+  "dialogs": [
+    {
+      "questStart": ["Oh no! I lost my bunny!", "Can you help me find it?"],
+      "questInProgress": ["Have you seen my bunny?"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That's not my bunny!"],
+      "questFinished": ["Yay! You found my bunny!"],
+      "hints": ["Look for a cute hopping animal"],
+      "assetKey": "BUNNY",
+      "quantityToCollect": 1
+    },
+    {
+      "questStart": [
+        "My neighbor lost their cats!",
+        "Can you help find 2 of them?"
+      ],
+      "questInProgress": ["Still looking for those 2 cats!"],
+      "questPartiallyCompleted": [
+        "Great, you found one cat! Just one more to go!"
+      ],
+      "questWrongItem": ["That's not a cat!"],
+      "questFinished": ["Thank you! The cats are safe now!"],
+      "hints": ["Look for furry felines around here"],
+      "assetKey": "CAT",
+      "quantityToCollect": 2
+    }
+  ]
+}

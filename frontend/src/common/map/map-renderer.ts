@@ -3,7 +3,10 @@ import { TileType, type MapStructure, type TileConfig } from "types/map.d";
 import { TILE_SIZE } from "config";
 import { TileKeys } from "assets/assets";
 
-const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
+const DEFAULT_FLOOR_ASSET = (scene: Scene) => {
+  const level = parseInt(scene.scene.key.split("_")[1] || "0", 10);
+  return level <= 3 ? TileKeys.GRASS : TileKeys.DRY_GRASS;
+};
 
 export class MapRenderer {
   static render(scene: Scene, map: MapStructure): void {
@@ -76,7 +79,7 @@ export class MapRenderer {
     assetName: string,
   ): void {
     scene.add
-      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .image(x, y, DEFAULT_FLOOR_ASSET(scene))
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
     const sprite = scene.add.sprite(x, y, assetName);
@@ -97,7 +100,7 @@ export class MapRenderer {
     frame: number,
   ): void {
     scene.add
-      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .image(x, y, DEFAULT_FLOOR_ASSET(scene))
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
     const sprite = scene.add.image(x, y, assetName, frame);

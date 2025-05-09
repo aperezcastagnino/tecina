@@ -110,6 +110,10 @@ export class MapGenerator {
         .map(() => new Array(columns).fill(UNUSED_CELL)),
       rows,
       columns,
+      dimensions: {
+        width: rows,
+        height: columns,
+      },
       startPosition: { x: 0, y: 0 },
       assetGroups: new Map(),
     };
