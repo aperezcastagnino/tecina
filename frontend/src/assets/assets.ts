@@ -18,6 +18,10 @@ export const CharacterAssets = {
     ASSET_KEY: "NPC",
     FRAME: 30,
   },
+  SCIENTIST: {
+    ASSET_KEY: "NPC",
+    FRAME: 40,
+  },
   GOBLIN: {
     ASSET_KEY: "NPC",
     FRAME: 100,
@@ -37,6 +41,14 @@ export const CharacterAssets = {
   DETECTIVE: {
     ASSET_KEY: "NPC",
     FRAME: 150,
+  },
+  BLONDE_GIRL: {
+    ASSET_KEY: "NPC",
+    FRAME: 160,
+  },
+  PINK_GIRL: {
+    ASSET_KEY: "NPC",
+    FRAME: 190,
   },
 };
 export const UIComponentKeys = {

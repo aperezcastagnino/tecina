@@ -54,11 +54,11 @@ export default class LevelsMenu extends Phaser.Scene {
 
   private createLevelButtons(): void {
     this.levelMetadata.forEach((level, index) => {
-      this.createLevelButton(level, index);
+      this.createButton(level, index);
     });
   }
 
-  private createLevelButton(level: LevelMetadata, index: number): void {
+  private createButton(level: LevelMetadata, index: number): void {
     const shadow = this.add
       .image(
         level.position.x + 6,

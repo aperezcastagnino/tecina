@@ -12,14 +12,14 @@ export default new Level({
   tilesConfig: [
     {
       type: TileType.INTERACTIVE_STATIC_OBJECT,
-      assetKey: CharacterAssets.GUY.ASSET_KEY,
-      frame: CharacterAssets.GUY.FRAME,
+      assetKey: CharacterAssets.DETECTIVE.ASSET_KEY,
+      frame: CharacterAssets.DETECTIVE.FRAME,
       quantity: 1,
     },
     {
       type: TileType.INTERACTIVE_STATIC_OBJECT,
-      assetKey: CharacterAssets.GIRL.ASSET_KEY,
-      frame: CharacterAssets.GIRL.FRAME,
+      assetKey: CharacterAssets.BLONDE_GIRL.ASSET_KEY,
+      frame: CharacterAssets.BLONDE_GIRL.FRAME,
       quantity: 1,
     },
     {
