@@ -7,13 +7,18 @@ import { BaseLevelScene } from "./base-level-scene";
 export class Level extends BaseLevelScene {
   private params: LevelConfig;
 
-  private items: TileConfig[];
+  private interactiveItems: TileConfig[];
+
+  private staticItems: TileConfig[];
 
   constructor(params: LevelConfig) {
     super(params.name);
     this.params = params;
-    this.items = this.params.tilesConfig.filter(
+    this.interactiveItems = this.params.tilesConfig.filter(
       (t) => t.type === TileType.INTERACTIVE_OBJECT,
+    );
+    this.staticItems = this.params.tilesConfig.filter(
+      (t) => t.type === TileType.OBSTACLE || t.type === TileType.INTERACTIVE_STATIC_OBJECT,
     );
   }
 
@@ -36,7 +41,7 @@ export class Level extends BaseLevelScene {
       await this.params.onCreate(this);
     }
 
-    this.items
+    this.interactiveItems
       .filter((i) => i.initialState === ItemState.HIDDEN)
       .forEach((item: TileConfig) => {
         this.hideElements(ItemAssets[item.assetKey as AssetKey]);
@@ -44,7 +49,7 @@ export class Level extends BaseLevelScene {
   }
 
   protected createAnimations(): void {
-    this.items
+    this.interactiveItems
       .filter((i) => i.isAnimated)
       .forEach((item: TileConfig) => {
         AnimationManager.createAnimation(
@@ -55,9 +60,10 @@ export class Level extends BaseLevelScene {
   }
 
   protected setupCollisions(): void {
+    this.obstacles = this.staticItems
     super.setupCollisions();
 
-    this.items.forEach((item: TileConfig) => {
+    this.interactiveItems.forEach((item: TileConfig) => {
       this.makeItemDraggable(ItemAssets[item.assetKey as AssetKey]);
     });
   }

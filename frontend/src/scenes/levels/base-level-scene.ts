@@ -4,11 +4,12 @@ import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { MapRenderer } from "common/map/map-renderer";
-import type {
-  MapConfiguration,
-  MinimalMapConfiguration,
-  MapStructure,
-} from "types/map";
+import {
+  type MapConfiguration,
+  type MinimalMapConfiguration,
+  type MapStructure,
+  type TileConfig,
+} from "types/map.d";
 import {
   DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
@@ -42,11 +43,14 @@ export abstract class BaseLevelScene extends Scene {
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
+  
+  protected obstacles: TileConfig[] = [];
 
   protected levelsMetadata: LevelMetadata[] = [];
 
   protected currentLevel!: LevelMetadata;
 
+  
   // =========================================================================
   // Abstract Methods
   // =========================================================================
@@ -145,16 +149,11 @@ export abstract class BaseLevelScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [
-      TileKeys.TREE,
-      TileKeys.DRY_TREE,
-      TileKeys.YELLOW_TREE,
-      CharacterAssets.NPC,
-    ].map(
-      // this cannot depend on the tree tile
-      (key) => this.map.assetGroups.get(key)!,
-    );
+    if (!this.obstacles.length) return;
 
+    const collisionGroups = this.obstacles.map((t: TileConfig) => this.map.assetGroups.get(t.assetKey)!)!;
+
+    
     collisionGroups.forEach((group) => {
       this.physics.add.collider(this.player, group);
     });
