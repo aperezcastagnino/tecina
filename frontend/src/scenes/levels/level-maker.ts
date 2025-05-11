@@ -18,7 +18,9 @@ export class Level extends BaseLevelScene {
       (t) => t.type === TileType.INTERACTIVE_OBJECT,
     );
     this.staticItems = this.params.tilesConfig.filter(
-      (t) => t.type === TileType.OBSTACLE || t.type === TileType.INTERACTIVE_STATIC_OBJECT,
+      (t) =>
+        t.type === TileType.OBSTACLE ||
+        t.type === TileType.INTERACTIVE_STATIC_OBJECT,
     );
   }
 
@@ -26,6 +28,7 @@ export class Level extends BaseLevelScene {
     await super.preload({
       name: this.scene.key,
       tilesConfig: this.params.tilesConfig,
+      defaultFloorAsset: this.params.defaultFloorAsset,
       dimensions: this.params.dimensions,
     });
 
@@ -60,7 +63,7 @@ export class Level extends BaseLevelScene {
   }
 
   protected setupCollisions(): void {
-    this.obstacles = this.staticItems
+    this.obstacles = this.staticItems;
     super.setupCollisions();
 
     this.interactiveItems.forEach((item: TileConfig) => {

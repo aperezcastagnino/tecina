@@ -28,6 +28,7 @@ export type TileConfig = {
 export type MapConfiguration = {
   name: string;
   tilesConfig: TileConfig[];
+  defaultFloorAsset: TileConfig;
   dimensions: {
     width: number;
     height: number;
@@ -38,15 +39,14 @@ export type MapConfiguration = {
 
 export type MinimalMapConfiguration = Pick<
   MapConfiguration,
-  "name" | "tilesConfig"
+  "name" | "tilesConfig" | "defaultFloorAsset"
 > &
-  Partial<Omit<MapConfiguration, "name" | "tilesConfig">>;
+  Partial<Omit<MapConfiguration, "name" | "tilesConfig" | "defaultFloorAsset">>;
 
 export type MapStructure = {
   id: string;
   tiles: TileConfig[][];
-  rows: number;
-  columns: number;
+  defaultFloorAsset: TileConfig;
   dimensions: {
     width: number;
     height: number;

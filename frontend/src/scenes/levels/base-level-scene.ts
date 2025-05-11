@@ -43,14 +43,13 @@ export abstract class BaseLevelScene extends Scene {
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
-  
+
   protected obstacles: TileConfig[] = [];
 
   protected levelsMetadata: LevelMetadata[] = [];
 
   protected currentLevel!: LevelMetadata;
 
-  
   // =========================================================================
   // Abstract Methods
   // =========================================================================
@@ -151,9 +150,10 @@ export abstract class BaseLevelScene extends Scene {
   protected setupCollisions(): void {
     if (!this.obstacles.length) return;
 
-    const collisionGroups = this.obstacles.map((t: TileConfig) => this.map.assetGroups.get(t.assetKey)!)!;
+    const collisionGroups = this.obstacles.map(
+      (t: TileConfig) => this.map.assetGroups.get(t.assetKey)!,
+    )!;
 
-    
     collisionGroups.forEach((group) => {
       this.physics.add.collider(this.player, group);
     });
@@ -417,6 +417,7 @@ export abstract class BaseLevelScene extends Scene {
     return {
       name: config.name,
       tilesConfig: config.tilesConfig,
+      defaultFloorAsset: config.defaultFloorAsset,
       dimensions: config.dimensions ?? {
         width: MAP_WIDTH,
         height: MAP_HEIGHT,

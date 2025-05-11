@@ -93,4 +93,8 @@ export default new Level({
       isAnimated: true,
     },
   ],
+  defaultFloorAsset: {
+    type: TileType.WALKABLE_SPACE,
+    assetKey: TileKeys.DRY_GRASS,
+  },
 });

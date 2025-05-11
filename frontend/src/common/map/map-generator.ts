@@ -60,12 +60,7 @@ export class MapGenerator {
       throw new Error("Tiles configuration cannot be empty");
     }
 
-    const map: MapStructure = MapGenerator.createMapStructure(
-      config.name,
-      config.dimensions.width,
-      config.dimensions.height,
-    );
-    map.initialParameters = config;
+    const map = MapGenerator.createMapStructure(config);
 
     const rootPartition = this.createPartitions(
       {
@@ -98,24 +93,19 @@ export class MapGenerator {
     return map;
   }
 
-  private static createMapStructure(
-    name: string,
-    rows: number,
-    columns: number,
-  ): MapStructure {
+  private static createMapStructure(config: MapConfiguration): MapStructure {
     return {
-      id: `MAP-${name}`,
-      tiles: new Array(rows)
+      id: `MAP-${config.name}`,
+      tiles: new Array(config.dimensions.width)
         .fill([])
-        .map(() => new Array(columns).fill(UNUSED_CELL)),
-      rows,
-      columns,
+        .map(() => new Array(config.dimensions.height).fill(UNUSED_CELL)),
       dimensions: {
-        width: rows,
-        height: columns,
+        width: config.dimensions.width,
+        height: config.dimensions.height,
       },
       startPosition: { x: 0, y: 0 },
       assetGroups: new Map(),
+      defaultFloorAsset: config.defaultFloorAsset,
     };
   }
 
