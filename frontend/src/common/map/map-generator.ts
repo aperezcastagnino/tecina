@@ -304,10 +304,16 @@ export class MapGenerator {
 
     matrix.forEach((row, rowIndex) => {
       row.forEach((element, columnIndex) => {
-        if(element === USED_CELL && rowIndex <= ELEMENTS_POSITION_MARGIN.y && columnIndex <= ELEMENTS_POSITION_MARGIN.x) {
-          map.tiles[rowIndex]![columnIndex] = interactivefrequencyTiles?.tiles.find((tile) => tile.type === TileType.WALKABLE_SPACE)!;
-        }
-        else if (element === USED_CELL) {
+        if (
+          element === USED_CELL &&
+          rowIndex <= ELEMENTS_POSITION_MARGIN.y &&
+          columnIndex <= ELEMENTS_POSITION_MARGIN.x
+        ) {
+          map.tiles[rowIndex]![columnIndex] =
+            interactivefrequencyTiles?.tiles.find(
+              (tile) => tile.type === TileType.WALKABLE_SPACE,
+            )!;
+        } else if (element === USED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
             interactivefrequencyTiles!.frequencies!,
             interactivefrequencyTiles!.tiles,
