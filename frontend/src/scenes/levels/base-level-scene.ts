@@ -177,7 +177,7 @@ export abstract class BaseLevelScene extends Scene {
       positionY: TILE_SIZE / 2 + this.map.startPosition.y * TILE_SIZE,
       velocity: PLAYER_VELOCITY,
     });
-    this.player.body!.setSize(TILE_SIZE / 2, TILE_SIZE / 2);
+    this.player.body!.setSize(TILE_SIZE / 4, TILE_SIZE / 4);
     this.controls = new Controls(this);
   }
 
