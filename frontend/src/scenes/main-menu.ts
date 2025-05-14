@@ -4,6 +4,7 @@ import { levelsConfig } from "scenes/levels/levels-config";
 import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
+import { BoxColors, Colors } from "assets/colors";
 
 export default class MainMenu extends Scene {
   private tooltip!: Tooltip;
@@ -124,7 +125,15 @@ export default class MainMenu extends Scene {
     });
 
     button.on("pointerdown", () => {
-      this.startNewGame();
+      if (StorageManager.hasLevelStoredData()) {
+        this.showConfirmationDialog(
+          () => this.startNewGame(), // Confirmado
+          () => { } // Cancelado
+        );
+      }
+      else {
+        this.startNewGame()
+      }
     });
   }
 
@@ -137,5 +146,60 @@ export default class MainMenu extends Scene {
     if (StorageManager.hasLevelStoredData()) {
       this.scene.start(SceneKeys.LEVELS_MENU, { continueGame: true });
     }
+  }
+
+  //Confirmation Dialog
+  private showConfirmationDialog(onConfirm: () => void, onCancel: () => void): void {
+    // Fondo del diálogo
+    const dialogBg = this.add.rectangle(960, 540, 700, 300, BoxColors.main, 0.8)
+      .setStrokeStyle(4, BoxColors.border)
+      .setDepth(1000);
+
+    // Texto del diálogo
+    const dialogText = this.add.text(960, 480,
+      "¿Seguro que quieres empezar de nuevo? ¡Se borrará lo que hiciste!",
+      {
+        fontFamily: "monospace",
+        fontSize: "28px",
+        color: "#fcd278",
+        align: "center",
+        wordWrap: { width: 600 },
+      })
+      .setOrigin(0.5)
+      .setDepth(1001);
+
+    // Botón "Sí"
+    const yesButton = this.add.image(860, 600, UIComponentKeys.BUTTON_YES)
+      .setInteractive({ useHandCursor: true })
+      .setScale(0.2)
+      .setOrigin(0.5)
+      .setDepth(1001);
+
+    yesButton.on("pointerover", () => yesButton.setScale(0.25));
+    yesButton.on("pointerout", () => yesButton.setScale(0.2));
+    yesButton.on("pointerdown", () => {
+      dialogBg.destroy();
+      dialogText.destroy();
+      yesButton.destroy();
+      noButton.destroy();
+      onConfirm();
+    });
+
+    // Botón "No"
+    const noButton = this.add.image(1060, 600, UIComponentKeys.BUTTON_NO)
+      .setInteractive({ useHandCursor: true })
+      .setScale(0.2)
+      .setOrigin(0.5)
+      .setDepth(1001);
+
+    noButton.on("pointerover", () => noButton.setScale(0.25));
+    noButton.on("pointerout", () => noButton.setScale(0.2));
+    noButton.on("pointerdown", () => {
+      dialogBg.destroy();
+      dialogText.destroy();
+      yesButton.destroy();
+      noButton.destroy();
+      onCancel();
+    });
   }
 }
