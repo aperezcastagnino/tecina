@@ -25,6 +25,7 @@ type Partition = {
 
 const UNUSED_CELL = -2;
 const USED_CELL = -1;
+const ELEMENTS_POSITION_MARGIN = { x: 2, y: 5 };
 
 export class MapGenerator {
   static create(config: MapConfiguration): MapStructure {
@@ -297,7 +298,16 @@ export class MapGenerator {
 
     matrix.forEach((row, rowIndex) => {
       row.forEach((element, columnIndex) => {
-        if (element === USED_CELL) {
+        if (
+          element === USED_CELL &&
+          rowIndex <= ELEMENTS_POSITION_MARGIN.y &&
+          columnIndex <= ELEMENTS_POSITION_MARGIN.x
+        ) {
+          map.tiles[rowIndex]![columnIndex] =
+            interactivefrequencyTiles?.tiles.find(
+              (tile) => tile.type === TileType.WALKABLE_SPACE,
+            )!;
+        } else if (element === USED_CELL) {
           map.tiles[rowIndex]![columnIndex] = this.getTileBasedOnFrequency(
             interactivefrequencyTiles!.frequencies!,
             interactivefrequencyTiles!.tiles,
@@ -340,7 +350,12 @@ export class MapGenerator {
   private static calculateStartPosition(map: MapStructure) {
     const result = map.tiles
       .flatMap((row, y) => row.map((tile, x) => ({ tile, x, y })))
-      .find(({ tile }) => tile.type === TileType.WALKABLE_SPACE);
+      .find(
+        ({ tile, x, y }) =>
+          x >= ELEMENTS_POSITION_MARGIN.x &&
+          y >= ELEMENTS_POSITION_MARGIN.y &&
+          tile.type === TileType.WALKABLE_SPACE,
+      );
     if (!result) {
       throw new Error("No walkable space found for start position");
     }

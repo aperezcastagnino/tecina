@@ -163,7 +163,7 @@ export default class Preloader extends Scene {
       this.createPlayerAnimations();
 
       this.scene.start(
-        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU, // change this
       );
     });
   }
