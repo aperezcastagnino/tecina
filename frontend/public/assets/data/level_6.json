@@ -11,7 +11,7 @@
       "questFinished": ["Thank you! All the chickens are safe now!"],
       "hints": ["Look for feathered friends with a red comb"],
       "assetKey": "CHICKEN",
-      "quantityToCollect": 4
+      "quantityToCollect": 3
     },
     {
       "questStart": [

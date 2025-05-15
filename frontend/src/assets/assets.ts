@@ -96,6 +96,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   BANANAS: {
     assetKey: "BANANAS",
@@ -104,6 +105,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2000,
   },
   CHERRIES: {
     assetKey: "CHERRIES",
@@ -112,6 +114,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   KIWI: {
     assetKey: "KIWI",
@@ -120,6 +123,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   MELON: {
     assetKey: "MELON",
@@ -128,6 +132,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   ORANGE: {
     assetKey: "ORANGE",
@@ -136,6 +141,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   PINEAPPLE: {
     assetKey: "PINEAPPLE",
@@ -144,6 +150,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
   STRAWBERRY: {
     assetKey: "STRAWBERRY",
@@ -152,6 +159,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
+    scale: 2,
   },
 } as const;
 
@@ -164,6 +172,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 6,
     frameRate: 8,
+    scale: 3,
   },
   CAT: {
     assetKey: "CAT",
@@ -173,6 +182,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 17,
     frameRate: 6,
+    scale: 3,
   },
   CHICKEN: {
     assetKey: "CHICKEN",
@@ -182,6 +192,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 17,
     frameRate: 5,
+    scale: 1.3,
   },
   DEER: {
     assetKey: "DEER",
@@ -191,6 +202,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 3,
     frameRate: 6,
+    scale: 3,
   },
   FOX: {
     assetKey: "FOX",
@@ -200,6 +212,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 3,
     frameRate: 3,
+    scale: 3,
   },
   FROG: {
     assetKey: "FROG",
@@ -209,6 +222,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 17,
     frameRate: 2,
+    scale: 1.5,
   },
   PIGEON: {
     assetKey: "PIGEON",
@@ -218,6 +232,7 @@ export const AnimalAssets = {
     starFrame: 0,
     endFrame: 17,
     frameRate: 3,
+    scale: 1.5,
   },
 } as const;
 

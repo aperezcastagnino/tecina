@@ -1,6 +1,7 @@
 import type { Scene } from "phaser";
 import { TileType, type MapStructure, type TileConfig } from "types/map.d";
 import { TILE_SIZE } from "config";
+import { AnimalAssets, FruitAssets } from "assets/assets";
 
 export class MapRenderer {
   static render(scene: Scene, map: MapStructure): void {
@@ -81,7 +82,13 @@ export class MapRenderer {
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
     const sprite = scene.add.sprite(x, y, assetName);
-    sprite.setScale(2);
+
+    const scale =
+      (AnimalAssets as any)[assetName]?.scale ||
+      (FruitAssets as any)[assetName]?.scale ||
+      2;
+    sprite.setScale(scale);
+
     sprite.anims.play(`${assetName}_ANIMATION`, true);
 
     const group = map.assetGroups.get(assetName);
