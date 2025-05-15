@@ -89,6 +89,9 @@ export default class Preloader extends Scene {
     this.load.json("level_1", "/data/level_1.json");
     this.load.json("level_2", "/data/level_2.json");
     this.load.json("level_3", "/data/level_3.json");
+    this.load.json("level_4", "/data/level_4.json");
+    this.load.json("level_5", "/data/level_5.json");
+    this.load.json("level_6", "/data/level_6.json");
 
     // Load Characters
     this.load.spritesheet(CharacterAssets.PLAYER, `characters/player.png`, {
@@ -144,6 +147,10 @@ export default class Preloader extends Scene {
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
     this.load.image(TileKeys.TREE, "/tiles/tree.png");
     this.load.image(TileKeys.FLOWER_GRASS, "/tiles/flower_grass.png");
+    this.load.image(TileKeys.DRY_GRASS, "/tiles/dry_grass.png");
+    this.load.image(TileKeys.LEAVES_GRASS, "/tiles/leaves_grass.png");
+    this.load.image(TileKeys.YELLOW_TREE, "/tiles/yellow_tree.png");
+    this.load.image(TileKeys.DRY_TREE, "/tiles/dry_tree.png");
 
     // Load elements
     this.loadFruits();
@@ -156,7 +163,7 @@ export default class Preloader extends Scene {
       this.createPlayerAnimations();
 
       this.scene.start(
-        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU, // change this
       );
     });
   }

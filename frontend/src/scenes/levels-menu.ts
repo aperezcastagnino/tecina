@@ -54,79 +54,91 @@ export default class LevelsMenu extends Phaser.Scene {
 
   private createLevelButtons(): void {
     this.levelMetadata.forEach((level, index) => {
-      const shadow = this.add
-        .image(
-          level.position.x + 6,
-          level.position.y + 6,
-          UIComponentKeys.BUTTON_SHADOW,
-        )
-        .setScale(0.2)
-        .setAlpha(0.5);
+      this.createButton(level, index);
+    });
+  }
 
-      const button = this.add
-        .image(
-          level.position.x,
-          level.position.y,
-          UIComponentKeys.BUTTON_CIRCLE,
-        )
-        .setInteractive({ useHandCursor: true })
-        .setScale(0.34)
-        .setName(`${level.key}`);
+  private createButton(level: LevelMetadata, index: number): void {
+    const shadow = this.add
+      .image(
+        level.position.x + 6,
+        level.position.y + 6,
+        UIComponentKeys.BUTTON_SHADOW,
+      )
+      .setScale(0.2)
+      .setAlpha(0.5);
 
-      if (!level.enable) {
-        button.setTint(0x808080);
-        button.setInteractive({ useHandCursor: false });
-      }
+    const button = this.add
+      .image(level.position.x, level.position.y, UIComponentKeys.BUTTON_CIRCLE)
+      .setScale(0.34)
+      .setName(`${level.key}`);
 
-      if (index !== 0 && !level.enable) {
-        button.setTint(0x808080);
+    if (!level.enable) {
+      this.setupDisabledButton(button, index);
+    } else {
+      this.setupEnabledButton(button, level.key);
+    }
 
-        button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
-          this.input.setDefaultCursor("not-allowed");
-          this.tooltip.show(
-            "Completa el nivel anterior para desbloquear",
-            pointer.worldX,
-            pointer.worldY,
-          );
-        });
+    this.add.existing(shadow);
+    this.add.existing(button);
+  }
 
-        button.on("pointermove", (pointer: Phaser.Input.Pointer) => {
-          this.tooltip.move(pointer.worldX, pointer.worldY);
-        });
+  private setupDisabledButton(
+    button: Phaser.GameObjects.Image,
+    index: number,
+  ): void {
+    button.setTint(0x808080);
+    button.setInteractive({ useHandCursor: false });
 
-        button.on("pointerout", () => {
-          this.input.setDefaultCursor("default");
-          this.tooltip.hide();
-        });
-      } else {
-        // Only first level is interactive from the start
-        button.on("pointerover", () => {
-          this.input.setDefaultCursor("pointer");
-          this.tweens.add({
-            targets: button,
-            scale: 0.4,
-            duration: 150,
-            ease: "Power2",
-          });
-        });
+    if (index !== 0) {
+      button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
+        this.input.setDefaultCursor("not-allowed");
+        this.tooltip.show(
+          "Completa el nivel anterior para desbloquear",
+          pointer.worldX,
+          pointer.worldY,
+        );
+      });
 
-        button.on("pointerout", () => {
-          this.input.setDefaultCursor("default");
-          this.tweens.add({
-            targets: button,
-            scale: 0.34,
-            duration: 150,
-            ease: "Power2",
-          });
-        });
+      button.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+        this.tooltip.move(pointer.worldX, pointer.worldY);
+      });
 
-        button.on("pointerdown", () => {
-          this.startLevel(level.key);
-        });
-      }
+      button.on("pointerout", () => {
+        this.input.setDefaultCursor("default");
+        this.tooltip.hide();
+      });
+    }
+  }
 
-      this.add.existing(shadow);
-      this.add.existing(button);
+  private setupEnabledButton(
+    button: Phaser.GameObjects.Image,
+    levelKey: string,
+  ): void {
+    button.setInteractive({ useHandCursor: true });
+
+    button.on("pointerover", () => {
+      this.input.setDefaultCursor("pointer");
+      this.tweens.add({
+        targets: button,
+        scale: 0.4,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerout", () => {
+      this.input.setDefaultCursor("default");
+      this.tweens.add({
+        targets: button,
+        scale: 0.34,
+        duration: 150,
+        ease: "Power2",
+      });
+    });
+
+    button.on("pointerdown", () => {
+      this.startLevel(levelKey);
     });
   }
 
@@ -145,8 +157,8 @@ export default class LevelsMenu extends Phaser.Scene {
     oldVersionLevelCompleted.map = undefined;
     oldVersionLevelCompleted.active = false;
 
-    oldVersionLevelCompleted.nextLevel?.forEach((elem) => {
-      const nextLevel = this.levelMetadata.find((e) => e.key === elem);
+    oldVersionLevelCompleted.nextLevel?.forEach((key) => {
+      const nextLevel = this.levelMetadata.find((level) => level.key === key);
       if (nextLevel) nextLevel.enable = true;
     });
 

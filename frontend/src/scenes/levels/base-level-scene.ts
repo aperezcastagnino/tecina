@@ -4,11 +4,12 @@ import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
 import { MapRenderer } from "common/map/map-renderer";
-import type {
-  MapConfiguration,
-  MinimalMapConfiguration,
-  MapStructure,
-} from "types/map";
+import {
+  type MapConfiguration,
+  type MinimalMapConfiguration,
+  type MapStructure,
+  type TileConfig,
+} from "types/map.d";
 import {
   DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
@@ -42,6 +43,8 @@ export abstract class BaseLevelScene extends Scene {
   protected awards!: Awards;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
+
+  protected obstacles: TileConfig[] = [];
 
   protected levelsMetadata: LevelMetadata[] = [];
 
@@ -145,9 +148,11 @@ export abstract class BaseLevelScene extends Scene {
 
   // Obstacles or interactive static objects
   protected setupCollisions(): void {
-    const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
-      (key) => this.map.assetGroups.get(key)!,
-    );
+    if (!this.obstacles.length) return;
+
+    const collisionGroups = this.obstacles.map(
+      (t: TileConfig) => this.map.assetGroups.get(t.assetKey)!,
+    )!;
 
     collisionGroups.forEach((group) => {
       this.physics.add.collider(this.player, group);
@@ -187,8 +192,8 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private initializeCamera(): void {
-    const worldWidth = MAP_WIDTH * TILE_SIZE;
-    const worldHeight = MAP_HEIGHT * TILE_SIZE;
+    const worldWidth = this.map.dimensions.width * TILE_SIZE;
+    const worldHeight = this.map.dimensions.height * TILE_SIZE;
 
     this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
 
@@ -278,7 +283,7 @@ export abstract class BaseLevelScene extends Scene {
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== TileKeys.TREE ||
+            (ol.gameObject.texture.key !== TileKeys.TREE || // this should not depend on the tree tile
               ol.gameObject.texture.key !== CharacterAssets.NPC),
         ).length === 0;
 
@@ -412,6 +417,7 @@ export abstract class BaseLevelScene extends Scene {
     return {
       name: config.name,
       tilesConfig: config.tilesConfig,
+      defaultFloorAsset: config.defaultFloorAsset,
       dimensions: config.dimensions ?? {
         width: MAP_WIDTH,
         height: MAP_HEIGHT,

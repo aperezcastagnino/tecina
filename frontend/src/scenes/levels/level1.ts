@@ -98,6 +98,10 @@ export default new Level({
       isAnimated: true,
     },
   ],
+  defaultFloorAsset: {
+    type: TileType.WALKABLE_SPACE,
+    assetKey: TileKeys.GRASS,
+  },
   onCreate: async (scene: Phaser.Scene) => {
     showInstructionPopup(scene);
   },

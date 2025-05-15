@@ -1,14 +1,13 @@
 import type { Scene } from "phaser";
 import { TileType, type MapStructure, type TileConfig } from "types/map.d";
 import { TILE_SIZE } from "config";
-import { TileKeys } from "assets/assets";
-
-const DEFAULT_FLOOR_ASSET = TileKeys.GRASS;
+import { AnimalAssets, FruitAssets } from "assets/assets";
 
 export class MapRenderer {
   static render(scene: Scene, map: MapStructure): void {
-    const { rows: numberOfRows, columns: numberOfColumns } = map;
-
+    const {
+      dimensions: { width: numberOfColumns, height: numberOfRows },
+    } = map;
     for (let row = 0; row < numberOfRows; row += 1) {
       for (let column = 0; column < numberOfColumns; column += 1) {
         const x = TILE_SIZE / 2 + column * TILE_SIZE;
@@ -75,12 +74,21 @@ export class MapRenderer {
     y: number,
     assetName: string,
   ): void {
+    if (!map.defaultFloorAsset)
+      throw new Error("Default floor asset is not set");
+
     scene.add
-      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .image(x, y, map.defaultFloorAsset.assetKey)
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
     const sprite = scene.add.sprite(x, y, assetName);
-    sprite.setScale(2);
+
+    const scale =
+      (AnimalAssets as any)[assetName]?.scale ||
+      (FruitAssets as any)[assetName]?.scale ||
+      2;
+    sprite.setScale(scale);
+
     sprite.anims.play(`${assetName}_ANIMATION`, true);
 
     const group = map.assetGroups.get(assetName);
@@ -96,8 +104,11 @@ export class MapRenderer {
     assetName: string,
     frame: number,
   ): void {
+    if (!map.defaultFloorAsset)
+      throw new Error("Default floor asset is not set");
+
     scene.add
-      .image(x, y, DEFAULT_FLOOR_ASSET)
+      .image(x, y, map.defaultFloorAsset?.assetKey)
       .setDisplaySize(TILE_SIZE, TILE_SIZE);
 
     const sprite = scene.add.image(x, y, assetName, frame);
