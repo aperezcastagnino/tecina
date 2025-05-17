@@ -1,5 +1,4 @@
 import { BoxColors } from "assets/colors";
-import { AnimalAssets, FruitAssets } from "assets/assets";
 import { MAP_WIDTH, TILE_SIZE } from "config";
 import { AnimationManager, FRAME_RATE } from "managers/animation-manager";
 import type { AssetConfig } from "types/asset";
@@ -20,7 +19,6 @@ export type AwardConfig = {
   scene: Phaser.Scene;
   asset: AssetConfig;
   quantity: number;
-  scale?: number;
 };
 
 export class Awards {
@@ -55,13 +53,10 @@ export class Awards {
 
     this.scene = config.scene;
     this.asset = config.asset;
-    this.keyAnim = `AwardsKeyAnim_${this.asset.assetKey}`;
+    this.keyAnim = `AwardsKeyAnim_${config.asset.assetKey}`;
     this.positionX = AWARDS_CONFIG.POSITION_X;
     this.positionY = AWARDS_CONFIG.POSITION_Y;
-    this.scale =
-      (AnimalAssets as any)[this.asset.assetKey]?.scale ||
-      (FruitAssets as any)[this.asset.assetKey]?.scale ||
-      2;
+    this.scale = config.asset.scale || AWARDS_CONFIG.SCALE;
     this.padding = AWARDS_CONFIG.PADDING;
     AnimationManager.createAnimation(this.scene, {
       ...this.asset,

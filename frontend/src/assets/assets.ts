@@ -105,7 +105,7 @@ export const FruitAssets = {
     frameHeight: 32,
     starFrame: 0,
     endFrame: 17,
-    scale: 2000,
+    scale: 2,
   },
   CHERRIES: {
     assetKey: "CHERRIES",

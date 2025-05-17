@@ -1,6 +1,7 @@
 export type AssetConfig = {
   assetKey: string;
   animationKey?: string;
+  scale?: number;
   frameWidth?: number;
   frameHeight?: number;
   starFrame?: number;
