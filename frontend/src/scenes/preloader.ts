@@ -158,17 +158,16 @@ export default class Preloader extends Scene {
   }
 
   create(): void {
+    this.createPlayerAnimations();
     // delay to see the bar
-    this.time.delayedCall(2000, () => {
-      this.createPlayerAnimations();
-
+    this.time.delayedCall(1000, () => {
       this.scene.start(
         DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
       );
     });
   }
 
-  update() {
+  update(): void {
     const { centerX, centerY } = this.cameras.main;
 
     this.currentProgress = Phaser.Math.Linear(
@@ -189,7 +188,7 @@ export default class Preloader extends Scene {
     this.percentText.setText(`${Math.floor(this.currentProgress * 100)}%`);
   }
 
-  private createPlayerAnimations() {
+  private createPlayerAnimations(): void {
     AnimationManager.createPlayerAnimation(
       this,
       PlayerAnimationKeys.PLAYER_UP,
@@ -216,7 +215,7 @@ export default class Preloader extends Scene {
     );
   }
 
-  private loadFruits() {
+  private loadFruits(): void {
     const fruits = Object.keys(FruitAssets);
     fruits.forEach((fruit) =>
       this.loadContent("/items/fruits", fruit as keyof typeof FruitAssets),
