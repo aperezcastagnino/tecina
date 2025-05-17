@@ -36,7 +36,7 @@ export class Dialog extends BaseDialog {
     AnimationManager.animateText(
       this.scene,
       this.statementUI,
-      this.messagesToShow.shift() || "",
+      this.messagesToShow.shift()?.toUpperCase() || "",
       10,
       () => {
         this.textAnimationPlaying = false;
