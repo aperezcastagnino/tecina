@@ -22,7 +22,7 @@ import { MapGenerator } from "common/map/map-generator";
 import { Awards } from "common-ui/awards";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { TileKeys, CharacterAssets } from "assets/assets";
+import { TileKeys, CharacterAssets, UIComponentKeys } from "assets/assets";
 import type { LevelMetadata } from "types/level";
 import { StorageManager } from "managers/storage-manager";
 import type { AssetConfig } from "types/asset";
@@ -30,32 +30,27 @@ import { SceneKeys } from "../scene-keys";
 
 export abstract class BaseLevelScene extends Scene {
   protected map!: MapStructure;
-
   protected player!: Player;
-
   protected controls!: Controls;
-
   protected dialog!: Dialog;
-
   protected healthBar!: HealthBar;
-
   protected awards!: Awards;
-
   protected heldItem?: Phaser.GameObjects.Sprite;
-
   protected levelsMetadata: LevelMetadata[] = [];
-
   protected currentLevel!: LevelMetadata;
 
-  // =========================================================================
-  // Abstract Methods
-  // =========================================================================
+  private touchControls: {
+    up?: GameObjects.Image;
+    down?: GameObjects.Image;
+    left?: GameObjects.Image;
+    right?: GameObjects.Image;
+    action?: GameObjects.Image;
+  } = {};
+
+  private activeTouchDirection: string | null = null;
+  private isTouchingAction = false;
 
   protected abstract createAnimations(): void;
-
-  // =========================================================================
-  // Lifecycle Methods
-  // =========================================================================
 
   init(data: LevelMetadata[]): void {
     if (data && data.length > 0) {
@@ -93,6 +88,7 @@ export abstract class BaseLevelScene extends Scene {
   protected async create(): Promise<void> {
     try {
       await this.initializeScene();
+      this.initializeTouchControls(); // Nuevo
     } catch (error) {
       console.error("Failed to create scene:", error);
     }
@@ -101,23 +97,21 @@ export abstract class BaseLevelScene extends Scene {
   update(): void {
     if (!this.controls) return;
 
-    if (this.controls.wasSpaceKeyPressed()) {
+    if (this.controls.wasSpaceKeyPressed() || this.isTouchingAction) {
       this.handlePlayerInteraction();
+      this.isTouchingAction = false;
       return;
     }
 
     if (this.dialog?.isVisible) return;
 
-    this.player.move(this.controls.getDirectionKeyPressed());
+    const dir = this.getDirectionInput();
+    this.player.move(dir);
 
     if (this.heldItem) {
       this.heldItem.setPosition(this.player.x, this.player.y);
     }
   }
-
-  // =========================================================================
-  // Public Methods
-  // =========================================================================
 
   showElements(asset: AssetConfig): void {
     const group = this.map.assetGroups.get(asset.assetKey);
@@ -139,11 +133,6 @@ export abstract class BaseLevelScene extends Scene {
     );
   }
 
-  // =========================================================================
-  // Protected Methods
-  // =========================================================================
-
-  // Obstacles or interactive static objects
   protected setupCollisions(): void {
     const collisionGroups = [TileKeys.TREE, CharacterAssets.NPC].map(
       (key) => this.map.assetGroups.get(key)!,
@@ -153,10 +142,6 @@ export abstract class BaseLevelScene extends Scene {
       this.physics.add.collider(this.player, group);
     });
   }
-
-  // =========================================================================
-  // Private Methods
-  // =========================================================================
 
   private async initializeScene(): Promise<void> {
     MapRenderer.render(this, this.map);
@@ -191,7 +176,6 @@ export abstract class BaseLevelScene extends Scene {
     const worldHeight = MAP_HEIGHT * TILE_SIZE;
 
     this.physics.world.setBounds(0, 0, worldWidth, worldHeight);
-
     this.player.setCollideWorldBounds(true);
 
     this.cameras.main.setBounds(0, 0, worldWidth, worldHeight, true);
@@ -245,42 +229,24 @@ export abstract class BaseLevelScene extends Scene {
     }
   }
 
-  private tryDropHeldItem() {
+  private tryDropHeldItem(): void {
     const playerDirection = this.player.direction;
-    let dropX = 0;
-    let dropY = 0;
+    let dropX = this.player.x;
+    let dropY = this.player.y;
+
     switch (playerDirection) {
-      case DIRECTION.UP:
-        dropX = this.player.x;
-        dropY = this.player.y - TILE_SIZE;
-        break;
-      case DIRECTION.DOWN:
-        dropX = this.player.x;
-        dropY = this.player.y + TILE_SIZE;
-        break;
-      case DIRECTION.LEFT:
-        dropX = this.player.x - TILE_SIZE;
-        dropY = this.player.y;
-        break;
-      case DIRECTION.RIGHT:
-        dropX = this.player.x + TILE_SIZE;
-        dropY = this.player.y;
-        break;
-      default:
-        console.error(`Unexpected player direction: ${playerDirection}`);
-        dropX = this.player.x;
-        dropY = this.player.y;
+      case DIRECTION.UP: dropY -= TILE_SIZE; break;
+      case DIRECTION.DOWN: dropY += TILE_SIZE; break;
+      case DIRECTION.LEFT: dropX -= TILE_SIZE; break;
+      case DIRECTION.RIGHT: dropX += TILE_SIZE; break;
     }
 
-    const canDrop =
-      this.physics
-        .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
-        .filter(
-          (ol) =>
-            ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== TileKeys.TREE ||
-              ol.gameObject.texture.key !== CharacterAssets.NPC),
-        ).length === 0;
+    const canDrop = this.physics.overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
+      .filter(ol =>
+        ol.gameObject instanceof GameObjects.Image &&
+        (ol.gameObject.texture.key !== TileKeys.TREE ||
+          ol.gameObject.texture.key !== CharacterAssets.NPC)
+      ).length === 0;
 
     if (canDrop) {
       this.heldItem!.setPosition(dropX, dropY);
@@ -387,18 +353,13 @@ export abstract class BaseLevelScene extends Scene {
     });
   }
 
-  private setElementsVisibility(
-    group: GameObjects.Group,
-    visible: boolean,
-  ): void {
+  private setElementsVisibility(group: GameObjects.Group, visible: boolean): void {
     group.children.iterate((child) => {
       const sprite = child as Phaser.GameObjects.Sprite;
       sprite.setVisible(visible);
 
       const body = sprite.body as Phaser.Physics.Arcade.Body;
-      if (body) {
-        body.enable = visible;
-      }
+      if (body) body.enable = visible;
 
       return true;
     });
@@ -419,5 +380,68 @@ export abstract class BaseLevelScene extends Scene {
       minPartitionSize: config.minPartitionSize ?? MIN_PARTITION_SIZE,
       minRoomSize: config.minRoomSize ?? MIN_ROOM_SIZE,
     };
+  }
+
+  private initializeTouchControls(): void {
+    if (!this.sys.game.device.input.touch) return;
+
+    const padSize = 80;
+    const offset = 20;
+    const marginLeft = 60;
+    const marginDown = 60
+    const marginRight = 60;
+
+    this.touchControls.left = this.add.image(offset + marginLeft, this.scale.height - padSize - offset - marginDown, UIComponentKeys.CONTROLS.LEFT)
+      .setScrollFactor(0)
+      .setInteractive()
+      .setAlpha(0.6)
+      .setDisplaySize(padSize, padSize)
+      .on("pointerdown", () => this.activeTouchDirection = "left")
+      .on("pointerup", () => this.activeTouchDirection = null)
+      .on("pointerout", () => this.activeTouchDirection = null);
+
+    this.touchControls.right = this.add.image(offset + padSize * 2 + marginLeft, this.scale.height - padSize - offset - marginDown, UIComponentKeys.CONTROLS.RIGHT)
+      .setScrollFactor(0)
+      .setInteractive()
+      .setAlpha(0.6)
+      .setDisplaySize(padSize, padSize)
+      .on("pointerdown", () => this.activeTouchDirection = "right")
+      .on("pointerup", () => this.activeTouchDirection = null)
+      .on("pointerout", () => this.activeTouchDirection = null);
+
+    this.touchControls.up = this.add.image(offset + padSize + marginLeft, this.scale.height - padSize * 2 - offset * 2 - marginDown, UIComponentKeys.CONTROLS.UP)
+      .setScrollFactor(0)
+      .setInteractive()
+      .setAlpha(0.6)
+      .setDisplaySize(padSize, padSize)
+      .on("pointerdown", () => this.activeTouchDirection = "up")
+      .on("pointerup", () => this.activeTouchDirection = null)
+      .on("pointerout", () => this.activeTouchDirection = null);
+
+    this.touchControls.down = this.add.image(offset + padSize + marginLeft, this.scale.height - offset - marginDown, UIComponentKeys.CONTROLS.DOWN)
+      .setScrollFactor(0)
+      .setInteractive()
+      .setAlpha(0.6)
+      .setDisplaySize(padSize, padSize)
+      .on("pointerdown", () => this.activeTouchDirection = "down")
+      .on("pointerup", () => this.activeTouchDirection = null)
+      .on("pointerout", () => this.activeTouchDirection = null);
+
+    this.touchControls.action = this.add.image(this.scale.width - offset - padSize - marginRight, this.scale.height - padSize - offset - marginDown, UIComponentKeys.CONTROLS.INTERACT)
+      .setScrollFactor(0)
+      .setInteractive()
+      .setAlpha(0.8)
+      .setDisplaySize(padSize, padSize)
+      .on("pointerdown", () => this.isTouchingAction = true);
+  }
+
+  private getDirectionInput(): DIRECTION | null {
+    switch (this.activeTouchDirection) {
+      case "up": return DIRECTION.UP;
+      case "down": return DIRECTION.DOWN;
+      case "left": return DIRECTION.LEFT;
+      case "right": return DIRECTION.RIGHT;
+      default: return this.controls.getDirectionKeyPressed();
+    }
   }
 }

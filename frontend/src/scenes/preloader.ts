@@ -152,6 +152,8 @@ export default class Preloader extends Scene {
     // Load elements
     this.loadFruits();
     this.loadAnimals();
+
+    this.loadTouchControls();
   }
 
   create(): void {
@@ -226,6 +228,29 @@ export default class Preloader extends Scene {
       this.loadContent("/items/animals", animal as keyof typeof AnimalAssets),
     );
   }
+
+  private loadTouchControls() {
+    this.load.image(
+      UIComponentKeys.CONTROLS.INTERACT,
+      "/controls/interact.png",
+    );
+    this.load.image(
+      UIComponentKeys.CONTROLS.LEFT,
+      "/controls/arrow-left.png",
+    );
+    this.load.image(
+      UIComponentKeys.CONTROLS.RIGHT,
+      "/controls/arrow-right.png",
+    );
+    this.load.image(
+      UIComponentKeys.CONTROLS.UP,
+      "/controls/arrow-up.png",
+    );
+    this.load.image(
+      UIComponentKeys.CONTROLS.DOWN,
+      "/controls/arrow-down.png",
+    );
+  } 
 
   private loadContent(
     pathFile: string,

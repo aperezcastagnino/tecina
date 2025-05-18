@@ -33,6 +33,11 @@ const config: Types.Core.GameConfig = {
     GameOver,
     WinScene,
   ],
+  input: {
+    activePointers: 3, // para multitouch
+    touch: true,
+    mouse: true,
+  }
 };
 
 export default new Game(config);

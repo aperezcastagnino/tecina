@@ -1,3 +1,5 @@
+import { LEFT } from "phaser";
+
 export const BackgroundKeys = {
   MAIN_MENU: "MAIN_MENU_BACKGROUND",
   LEVELS: "LEVELS_BACKGROUND",
@@ -45,6 +47,13 @@ export const UIComponentKeys = {
   BUTTON_SHADOW: "BUTTON_SHADOW",
   BUTTON_YES: "BUTTON_YES",
   BUTTON_NO: "BUTTON_NO",
+  CONTROLS:{
+    LEFT: "CONTROLS_LEFT",
+    RIGHT: "CONTROLS_RIGHT",
+    UP: "CONTROLS_UP",
+    DOWN: "CONTROLS_DOWN",
+    INTERACT: "CONTROLS_INTERACT",
+  },
   HEALTH_BAR: {
     LEFT: {
       ASSET_KEY: "HEALTH_BAR_FILL_LEFT",
