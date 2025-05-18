@@ -58,7 +58,7 @@ export default class LevelsMenu extends Phaser.Scene {
         .image(
           level.position.x + 6,
           level.position.y + 6,
-          UIComponentKeys.BUTTON_SHADOW,
+          UIComponentKeys.SHADOW_BUTTON,
         )
         .setScale(0.2)
         .setAlpha(0.5);
@@ -67,7 +67,7 @@ export default class LevelsMenu extends Phaser.Scene {
         .image(
           level.position.x,
           level.position.y,
-          UIComponentKeys.BUTTON_CIRCLE,
+          UIComponentKeys.CIRCLE_BUTTON,
         )
         .setInteractive({ useHandCursor: true })
         .setScale(0.34)
