@@ -385,11 +385,13 @@ export abstract class BaseLevelScene extends Scene {
 
     StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
 
-    this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
-      setTimeout(() => {
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      () => {
         this.scene.start(SceneKeys.WIN_SCENE);
-      }, 1000);
-    });
+      },
+    );
+    this.cameras.main.fadeOut(6000, 0, 0, 0);
   }
 
   private setElementsVisibility(
