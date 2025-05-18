@@ -157,12 +157,12 @@ export default class MainMenu extends Scene {
       .setOrigin(0)
       .setInteractive()
       .setDepth(999);
-  
+
     const dialogBg = this.add
       .rectangle(960, 540, 700, 300, BoxColors.main, 0.8)
       .setStrokeStyle(4, BoxColors.border)
       .setDepth(1000);
-  
+
     const dialogText = this.add
       .text(
         960,
@@ -178,14 +178,14 @@ export default class MainMenu extends Scene {
       )
       .setOrigin(0.5)
       .setDepth(1001);
-  
+
     const yesButton = this.add
       .image(860, 600, UIComponentKeys.YES_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setScale(0.15)
       .setOrigin(0.5)
       .setDepth(1001);
-  
+
     const noButton = this.add
       .image(1060, 600, UIComponentKeys.NO_BUTTON)
       .setInteractive({ useHandCursor: true })
@@ -205,15 +205,15 @@ export default class MainMenu extends Scene {
       yesButton.destroy();
       noButton.destroy();
     };
-  
+
     yesButton.on("pointerdown", () => {
       destroyDialog();
       onConfirm();
     });
-  
+
     noButton.on("pointerdown", () => {
       destroyDialog();
       onCancel();
     });
-  }  
+  }
 }
