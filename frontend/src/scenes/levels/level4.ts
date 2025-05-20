@@ -45,7 +45,7 @@ export default new Level({
     {
       type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.BUNNY.assetKey,
-      frequency: 5,
+      quantity: 5,
       initialState: ItemState.VISIBLE,
       isAnimated: true,
     },

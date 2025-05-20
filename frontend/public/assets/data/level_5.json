@@ -2,8 +2,8 @@
   "title": "Level 5",
   "dialogs": [
     {
-      "questStart": ["My pigeons flew away!", "Can you help find 2 of them?"],
-      "questInProgress": ["Still looking for those 2 pigeons!"],
+      "questStart": ["My two pigeons flew away!", "Can you help find them?"],
+      "questInProgress": ["Still looking for my pigeons!"],
       "questPartiallyCompleted": [
         "Great, you found one pigeon! Just one more to go!"
       ],
@@ -16,7 +16,7 @@
     {
       "questStart": [
         "Hi! I'm a friendly scientist!",
-        "Can you help me find 4 tiny frogs?",
+        "Can you help me find four tiny frogs?",
         "I want to learn about how they hop!"
       ],
       "questInProgress": ["Have you seen any jumping frogs?"],

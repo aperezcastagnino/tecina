@@ -2,8 +2,8 @@
   "title": "Level 6",
   "dialogs": [
     {
-      "questStart": ["My chickens ran away!", "Can you help find 4 of them?"],
-      "questInProgress": ["Still looking for those 4 chickens!"],
+      "questStart": ["My four chickens ran away!", "Can you help find them?"],
+      "questInProgress": ["Still looking for my chickens!"],
       "questPartiallyCompleted": [
         "Great progress! Keep looking for more chickens!"
       ],
