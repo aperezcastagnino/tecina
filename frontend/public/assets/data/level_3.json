@@ -6,29 +6,32 @@
         "Hey! We’re making a super juice!",
         "Can you bring us 2 apples first?"
       ],
-      "questInProgress": ["We need the 2 apples to start!"],
+      "questInProgress": ["We need two apples to start!"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["We need 2 apples, not that!"],
+      "questWrongItem": ["We need apples, not that!"],
       "questFinished": ["Nice! The apples are in the blender!"],
       "hints": ["They are red and round."],
       "assetKey": "APPLE",
       "quantityToCollect": 2
     },
     {
-      "questStart": ["Great job with the apples!", "Now we need 3 bananas."],
-      "questInProgress": ["Still waiting for the 3 bananas!"],
+      "questStart": [
+        "Great job with the apples!",
+        "Now we need three bananas."
+      ],
+      "questInProgress": ["Still waiting for the bananas!"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["That’s not 3 bananas!"],
+      "questWrongItem": ["That’s not bananas!"],
       "questFinished": ["Yes! The bananas are in. Let’s go!"],
       "hints": ["They are yellow and long."],
       "assetKey": "BANANAS",
       "quantityToCollect": 3
     },
     {
-      "questStart": ["Almost done!", "One last thing: we need 1 orange."],
+      "questStart": ["Almost done!", "One last thing: we need one orange."],
       "questInProgress": ["Can you find the orange?"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["Hmm... That’s not a kiwi."],
+      "questWrongItem": ["Hmm... That’s not an orange."],
       "questFinished": [
         "Perfect! All fruits ready!",
         "Time to drink the magic juice!"

@@ -12,11 +12,8 @@
       "quantityToCollect": 1
     },
     {
-      "questStart": [
-        "My neighbor lost their cats!",
-        "Can you help find 2 of them?"
-      ],
-      "questInProgress": ["Still looking for those 2 cats!"],
+      "questStart": ["I lost my two cats!", "Can you help find them?"],
+      "questInProgress": ["Still looking for two cats!"],
       "questPartiallyCompleted": [
         "Great, you found one cat! Just one more to go!"
       ],

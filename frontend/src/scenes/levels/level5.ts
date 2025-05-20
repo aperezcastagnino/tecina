@@ -45,7 +45,7 @@ export default new Level({
     {
       type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.BUNNY.assetKey,
-      frequency: 5,
+      quantity: 5,
       initialState: ItemState.VISIBLE,
       isAnimated: true,
     },
@@ -74,7 +74,7 @@ export default new Level({
     {
       type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.DEER.assetKey,
-      quantity: 5,
+      quantity: 1,
       initialState: ItemState.VISIBLE,
       isAnimated: true,
     },
