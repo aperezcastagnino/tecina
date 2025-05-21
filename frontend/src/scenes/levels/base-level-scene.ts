@@ -105,11 +105,19 @@ export abstract class BaseLevelScene extends Scene {
     if (!this.controls) return;
 
     if (this.controls.wasSpaceKeyPressed()) {
-      this.handlePlayerInteraction();
+      if (this.dialog?.isVisible) {
+        this.dialog.showNextMessage();
+        return;
+      }
+
+      this.tryToInteractWithNearNPC();
+
+      if (this.heldItem && !this.dialog?.isVisible) {
+        this.tryDropHeldItem();
+      }
+
       return;
     }
-
-    if (this.dialog?.isVisible) return;
 
     this.player.move(this.controls.getDirectionKeyPressed());
 
@@ -237,19 +245,6 @@ export abstract class BaseLevelScene extends Scene {
     }
   }
 
-  private handlePlayerInteraction(): void {
-    if (this.dialog?.isVisible) {
-      this.dialog.showNextMessage();
-      return;
-    }
-
-    this.interactWithNearNPC();
-
-    if (this.heldItem) {
-      this.tryDropHeldItem();
-    }
-  }
-
   private tryDropHeldItem() {
     const playerDirection = this.player.direction;
     let dropX = 0;
@@ -304,7 +299,7 @@ export abstract class BaseLevelScene extends Scene {
     }
   }
 
-  private interactWithNearNPC(): void {
+  private tryToInteractWithNearNPC(): void {
     this.map.assetGroups
       .get(CharacterAssets.NPC)!
       .getChildren()
