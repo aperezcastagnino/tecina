@@ -1,5 +1,4 @@
 import { Scene, GameObjects } from "phaser";
-import { loadDialogData } from "managers/dialog-data-manager";
 import { Controls } from "common/controls";
 import { Player } from "common/player";
 import { Dialog } from "common-ui/dialog";
@@ -11,7 +10,6 @@ import {
   type TileConfig,
 } from "types/map.d";
 import {
-  DEBUG_MODE_ACTIVE,
   MAP_HEIGHT,
   MAP_WIDTH,
   MIN_PARTITION_SIZE,
@@ -46,9 +44,11 @@ export abstract class BaseLevelScene extends Scene {
 
   protected obstacles: TileConfig[] = [];
 
-  protected levelsMetadata: LevelMetadata[] = [];
+  protected allLevelsMetadata: LevelMetadata[] = [];
 
-  protected currentLevel!: LevelMetadata;
+  protected levelMetadata!: LevelMetadata;
+
+  protected closingSceneStarting: boolean = false;
 
   // =========================================================================
   // Abstract Methods
@@ -62,34 +62,25 @@ export abstract class BaseLevelScene extends Scene {
 
   init(data: LevelMetadata[]): void {
     if (data && data.length > 0) {
-      this.levelsMetadata = data;
-      this.currentLevel = data.find((level) => level.key === this.scene.key)!;
+      this.allLevelsMetadata = data;
+      this.levelMetadata = data.find((level) => level.key === this.scene.key)!;
     }
   }
 
   protected async preload(config: MinimalMapConfiguration): Promise<void> {
-    if (DEBUG_MODE_ACTIVE) {
-      try {
+    try {
+      if (this.levelMetadata.map) {
+        this.map = this.levelMetadata.map;
+        this.map.assetGroups = new Map();
+      } else {
         this.map = MapGenerator.create(this.validateMapConfig(config));
-        this.createAnimations();
-      } catch (error) {
-        console.error("Failed to initialize scene:", error);
+        this.levelMetadata.map = this.map;
+        StorageManager.setLevelsMetadataToStorage(this.allLevelsMetadata);
       }
-    } else {
-      try {
-        if (this.currentLevel.map) {
-          this.map = this.currentLevel.map;
-          this.map.assetGroups = new Map();
-        } else {
-          this.map = MapGenerator.create(this.validateMapConfig(config));
-          this.currentLevel.map = this.map;
-          StorageManager.setLevelsMetadataToStorage(this.levelsMetadata);
-        }
 
-        this.createAnimations();
-      } catch (error) {
-        console.error("Failed to initialize scene:", error);
-      }
+      this.createAnimations();
+    } catch (error) {
+      console.error("Failed to initialize scene:", error);
     }
   }
 
@@ -119,10 +110,17 @@ export abstract class BaseLevelScene extends Scene {
       return;
     }
 
+    if (this.dialog?.isVisible) return;
+
     this.player.move(this.controls.getDirectionKeyPressed());
 
     if (this.heldItem) {
       this.heldItem.setPosition(this.player.x, this.player.y);
+    }
+
+    if (this.dialog?.areAllDialogsCompleted && !this.closingSceneStarting) {
+      this.closingSceneStarting = true;
+      this.closingScene();
     }
   }
 
@@ -213,7 +211,9 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private initializeDialogs(): void {
-    this.dialog = new Dialog({ scene: this, data: loadDialogData(this) });
+    this.dialog = new Dialog({
+      scene: this,
+    });
   }
 
   private initializeHealthBar(): void {
@@ -362,8 +362,8 @@ export abstract class BaseLevelScene extends Scene {
     if (quantity === 0) {
       this.dialog?.setMessageComplete(npc.name);
 
-      if (this.dialog?.areAllDialogsCompleted()) {
-        this.levelCompleted();
+      if (this.dialog?.areAllDialogsCompleted) {
+        this.completeLevel();
       }
     } else {
       this.dialog?.showPartiallyCompletedDialog(npc.name);
@@ -375,23 +375,27 @@ export abstract class BaseLevelScene extends Scene {
 
     const isDead = this.healthBar.decreaseHealth(30);
     if (isDead) {
-      StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
+      StorageManager.setLevelMetadaDataInRegistry(
+        this.game,
+        this.levelMetadata,
+      );
       this.scene.start(SceneKeys.GAME_OVER);
     }
   }
 
-  private levelCompleted(): void {
-    this.currentLevel.completed = true;
+  private completeLevel(): void {
+    this.levelMetadata.completed = true;
+    StorageManager.setLevelMetadaDataInRegistry(this.game, this.levelMetadata);
+  }
 
-    StorageManager.setLevelMetadaDataInRegistry(this.game, this.currentLevel);
-
+  private closingScene(): void {
+    this.cameras.main.fadeOut(2000, 0, 0, 0);
     this.cameras.main.once(
       Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
       () => {
         this.scene.start(SceneKeys.WIN_SCENE);
       },
     );
-    this.cameras.main.fadeOut(6000, 0, 0, 0);
   }
 
   private setElementsVisibility(

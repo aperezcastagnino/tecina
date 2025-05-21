@@ -2,11 +2,11 @@ import Phaser from "phaser";
 import type { DialogData } from "types/dialog-data";
 import { BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { loadDialogData } from "managers/dialog-data-manager";
 import { DEPTH_1 } from "config";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
-  data: DialogData[];
   height?: number;
   width?: number;
   padding?: number;
@@ -44,21 +44,21 @@ export abstract class BaseDialog {
     this.container.visible = value;
   }
 
+  get areAllDialogsCompleted(): boolean {
+    return this.data.every((dialog) => dialog.completed);
+  }
+
   abstract show(npcId?: string): void;
   abstract hide(): void;
   abstract setMessageComplete(npcId?: string): void;
 
   constructor(config: DialogConfig) {
     this.scene = config.scene;
-    this.data = config.data;
+    this.data = loadDialogData(config.scene);
     this.height = config.height || 200;
     this.padding = config.padding || 60;
     this.width =
       config.width || this.scene.cameras.main.width - this.padding * 2;
-  }
-
-  areAllDialogsCompleted(): boolean {
-    return this.data.every((dialog) => dialog.completed);
   }
 
   protected initializeUI(): void {
