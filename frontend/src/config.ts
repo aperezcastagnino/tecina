@@ -17,4 +17,4 @@ export const MIN_PARTITION_SIZE = 5; // MIN_PARTITION_SIZE < MIN(MAP_WIDTH, MAP_
 export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 2
 
 // DEPTH VALUES
-export const DEPTH_100 = 100;
+export const DEPTH_1 = 100;

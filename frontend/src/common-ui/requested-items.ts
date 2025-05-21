@@ -1,5 +1,5 @@
 import { BoxColors } from "assets/colors";
-import { DEPTH_100, MAP_WIDTH, TILE_SIZE } from "config";
+import { DEPTH_1, MAP_WIDTH, TILE_SIZE } from "config";
 import { AnimationManager, FRAME_RATE } from "managers/animation-manager";
 import type { AssetConfig } from "types/asset";
 
@@ -111,7 +111,7 @@ export class RequestedItems {
         this.positionY,
         [this.background],
       )
-      .setDepth(DEPTH_100);
+      .setDepth(DEPTH_1);
 
     this.addAwards(quantity);
   }

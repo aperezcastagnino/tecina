@@ -1,4 +1,4 @@
-import { DEPTH_100, GAME_DIMENSIONS, TILE_SIZE } from "config";
+import { DEPTH_1, GAME_DIMENSIONS, TILE_SIZE } from "config";
 import { UIComponentKeys } from "assets/assets";
 
 const HEALTH_BAR_CONFIG = {
@@ -57,7 +57,7 @@ export class HealthBar {
 
     this.scene.add
       .container(x, y, [this.background, this.fillBarLeft, this.fillBarRight])
-      .setDepth(DEPTH_100);
+      .setDepth(DEPTH_1);
   }
 
   private createBackgroundBar(): void {
