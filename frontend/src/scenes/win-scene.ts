@@ -1,19 +1,25 @@
-import Phaser from "phaser";
+import { Scene } from "phaser";
 import { UIComponentKeys, BackgroundKeys } from "assets/assets";
 import { PRIMARY_FONT_FAMILY, FontSize } from "assets/fonts";
+import { Controls } from "common/controls";
 import { SceneKeys } from "./scene-keys";
 
-export default class WinScene extends Phaser.Scene {
+export default class WinScene extends Scene {
+  private controls!: Controls;
+
   constructor() {
     super(SceneKeys.WIN_SCENE);
   }
 
   create(): void {
     this.initializeUI();
+    this.controls = new Controls(this);
+  }
 
-    this.input.keyboard?.once("keydown-SPACE", () => {
+  update(): void {
+    if (this.controls.wasSpaceKeyPressed()) {
       this.scene.start(SceneKeys.LEVELS_MENU);
-    });
+    }
   }
 
   private initializeUI(): void {
