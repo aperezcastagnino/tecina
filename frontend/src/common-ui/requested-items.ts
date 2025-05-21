@@ -15,13 +15,13 @@ const AWARDS_CONFIG = {
   FADE_OUT_DURATION: 200,
 };
 
-export type AwardConfig = {
+export type RequestedItemConfig = {
   scene: Phaser.Scene;
   asset: AssetConfig;
   quantity: number;
 };
 
-export class Awards {
+export class RequestedItems {
   private scene: Phaser.Scene;
 
   private asset: AssetConfig;
@@ -46,14 +46,14 @@ export class Awards {
     return this.sprites.length;
   }
 
-  constructor(config: AwardConfig) {
+  constructor(config: RequestedItemConfig) {
     if (!config.scene || !config.asset) {
-      throw new Error("Invalid Awards configuration");
+      throw new Error("Invalid Requested Items configuration");
     }
 
     this.scene = config.scene;
     this.asset = config.asset;
-    this.keyAnim = `AwardsKeyAnim_${config.asset.assetKey}`;
+    this.keyAnim = `RequestedItemsKeyAnim_${config.asset.assetKey}`;
     this.positionX = AWARDS_CONFIG.POSITION_X;
     this.positionY = AWARDS_CONFIG.POSITION_Y;
     this.scale = config.asset.scale || AWARDS_CONFIG.SCALE;
