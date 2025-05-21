@@ -20,7 +20,7 @@ import {
   TILE_SIZE,
 } from "config";
 import { MapGenerator } from "common/map/map-generator";
-import { Awards } from "common-ui/awards";
+import { RequestedItems } from "common-ui/requested-items";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
 import { TileKeys, CharacterAssets } from "assets/assets";
@@ -40,7 +40,7 @@ export abstract class BaseLevelScene extends Scene {
 
   protected healthBar!: HealthBar;
 
-  protected awards!: Awards;
+  protected awards!: RequestedItems;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
@@ -219,7 +219,7 @@ export abstract class BaseLevelScene extends Scene {
       this.awards.destroy();
     }
 
-    this.awards = new Awards({
+    this.awards = new RequestedItems({
       scene: this,
       asset,
       quantity,
