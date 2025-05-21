@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import type { DialogData } from "types/dialog-data";
 import { BoxColors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { DEPTH_100 } from "config";
 
 export type DialogConfig = {
   scene: Phaser.Scene;
@@ -86,7 +87,9 @@ export abstract class BaseDialog {
     const positionY =
       this.scene.cameras.main.height - this.height - this.padding / 4;
 
-    this.container = this.scene.add.container(positionX, positionY, children);
+    this.container = this.scene.add
+      .container(positionX, positionY, children)
+      .setDepth(DEPTH_100);
   }
 
   private createPanel(): Phaser.GameObjects.Rectangle {
