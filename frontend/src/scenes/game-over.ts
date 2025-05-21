@@ -1,29 +1,36 @@
-import Phaser from "phaser";
+import { Scene } from "phaser";
 import { ItemAssets, UIComponentKeys } from "assets/assets";
 import { AnimationManager } from "managers/animation-manager";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { StorageManager } from "managers/storage-manager";
+import { Controls } from "common/controls";
 import { SceneKeys } from "./scene-keys";
 
-export default class GameOver extends Phaser.Scene {
+export default class GameOver extends Scene {
+  private controls!: Controls;
+
   constructor() {
     super(SceneKeys.GAME_OVER);
   }
 
   create(): void {
     this.initializeUI();
+    this.controls = new Controls(this);
+  }
 
-    this.input.keyboard?.once("keydown-SPACE", () => {
+  update(): void {
+    if (this.controls.wasSpaceKeyPressed()) {
       const currentLevel = StorageManager.getLevelMetadataFromRegistry(
         this.game,
       );
+
       if (currentLevel?.key) {
         this.scene.start(currentLevel.key);
       }
-    });
+    }
   }
 
-  private initializeUI() {
+  private initializeUI(): void {
     this.setupBackground();
     this.createGameOverImage();
     this.createRestartText();
