@@ -10,6 +10,7 @@ import {
 import type { DialogData } from "types/dialog-data";
 import { AnimationManager } from "managers/animation-manager";
 import { UIComponentKeys } from "assets/assets";
+import { loadDialogData } from "managers/dialog-data-manager";
 import type { DialogConfig } from "./base-dialog";
 
 const MENU_CURSOR_POS = {
@@ -80,7 +81,7 @@ export class DialogWithOptions {
 
   constructor(config: DialogWithOptionsConfig) {
     this.scene = config.scene;
-    this.data = config.data;
+    this.data = loadDialogData(config.scene);
     this.#height = config.height || 200;
     this.#padding = config.padding || 60;
     this.#width =
