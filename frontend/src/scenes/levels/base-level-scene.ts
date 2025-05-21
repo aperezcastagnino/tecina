@@ -277,6 +277,11 @@ export abstract class BaseLevelScene extends Scene {
         dropY = this.player.y;
     }
 
+    const worldWidth = this.physics.world.bounds.width;
+    const worldHeight = this.physics.world.bounds.height;
+    dropX = Phaser.Math.Clamp(dropX, 0, worldWidth - TILE_SIZE);
+    dropY = Phaser.Math.Clamp(dropY, 0, worldHeight - TILE_SIZE);
+
     const canDrop =
       this.physics
         .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
