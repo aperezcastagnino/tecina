@@ -7,31 +7,37 @@ export const levelsConfig: LevelMetadata[] = [
     position: { x: 260, y: 420 },
     enable: true,
     nextLevel: [SceneKeys.LEVEL_2],
+    previousLevel: [],
   },
   {
     key: SceneKeys.LEVEL_2,
     position: { x: 450, y: 620 },
     nextLevel: [SceneKeys.LEVEL_3],
+    previousLevel: [SceneKeys.LEVEL_1],
   },
   {
     key: SceneKeys.LEVEL_3,
     position: { x: 820, y: 500 },
-    nextLevel: [SceneKeys.LEVEL_4],
+    nextLevel: [SceneKeys.LEVEL_4, SceneKeys.LEVEL_5],
+    previousLevel: [SceneKeys.LEVEL_2],
   },
   {
     key: SceneKeys.LEVEL_4,
     position: { x: 690, y: 260 },
     nextLevel: [SceneKeys.LEVEL_5],
+    previousLevel: [SceneKeys.LEVEL_3],
   },
   {
     key: SceneKeys.LEVEL_5,
     position: { x: 1370, y: 500 },
     nextLevel: [SceneKeys.LEVEL_6],
+    previousLevel: [SceneKeys.LEVEL_3],
   },
   {
     key: SceneKeys.LEVEL_6,
     position: { x: 1510, y: 210 },
     nextLevel: [SceneKeys.WIN_SCENE],
+    previousLevel: [SceneKeys.LEVEL_5],
   },
   /*
   {

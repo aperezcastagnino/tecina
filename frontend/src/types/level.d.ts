@@ -11,6 +11,7 @@ export type LevelMetadata = {
   completed?: boolean;
   active?: boolean;
   nextLevel?: string[];
+  previousLevel?: string[];
 };
 
 export type LevelConfig = MinimalMapConfiguration & {
