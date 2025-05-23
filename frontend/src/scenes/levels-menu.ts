@@ -11,6 +11,8 @@ export default class LevelsMenu extends Phaser.Scene {
 
   private levelMetadata: LevelMetadata[] = [];
 
+  private levelKeyMap: Map<string, LevelMetadata> = new Map();
+
   constructor() {
     super(SceneKeys.LEVELS_MENU);
   }
@@ -22,21 +24,22 @@ export default class LevelsMenu extends Phaser.Scene {
       this.levelMetadata = levelsConfig;
       StorageManager.setLevelsMetadataToStorage(levelsConfig);
     }
+
+    this.levelMetadata.forEach((level) => {
+      this.levelKeyMap.set(level.key, level);
+    });
   }
 
   create(): void {
     this.unlockLevels();
     this.initializeUI();
-  }
-
-  private startLevel(levelKey: string): void {
-    this.scene.start(levelKey, this.levelMetadata);
+    this.setupKeyboardShortcuts();
   }
 
   private initializeUI(): void {
     this.createBackground();
-    this.createTooltip();
     this.createLevelButtons();
+    this.createTooltip();
   }
 
   private createBackground(): void {
@@ -46,10 +49,7 @@ export default class LevelsMenu extends Phaser.Scene {
   }
 
   private createTooltip(): void {
-    this.tooltip = new Tooltip(
-      this,
-      "Completa el nivel anterior para desbloquear",
-    );
+    this.tooltip = new Tooltip(this, "Complete the previous level to unlock");
   }
 
   private createLevelButtons(): void {
@@ -94,7 +94,7 @@ export default class LevelsMenu extends Phaser.Scene {
       button.on("pointerover", (pointer: Phaser.Input.Pointer) => {
         this.input.setDefaultCursor("not-allowed");
         this.tooltip.show(
-          "Completa el nivel anterior para desbloquear",
+          "Complete the previous level to unlock",
           pointer.worldX,
           pointer.worldY,
         );
@@ -138,7 +138,7 @@ export default class LevelsMenu extends Phaser.Scene {
     });
 
     button.on("pointerdown", () => {
-      this.startLevel(levelKey);
+      this.scene.start(levelKey, this.levelMetadata);
     });
   }
 
@@ -146,11 +146,9 @@ export default class LevelsMenu extends Phaser.Scene {
     const levelCompleted = StorageManager.getLevelMetadataFromRegistry(
       this.game,
     );
-    if (!levelCompleted) return;
+    if (!levelCompleted || !levelCompleted.key) return;
 
-    const oldVersionLevelCompleted = this.levelMetadata.find(
-      (level) => level.key === levelCompleted.key,
-    );
+    const oldVersionLevelCompleted = this.levelKeyMap.get(levelCompleted.key);
     if (!oldVersionLevelCompleted) return;
 
     oldVersionLevelCompleted.completed = true;
@@ -158,10 +156,55 @@ export default class LevelsMenu extends Phaser.Scene {
     oldVersionLevelCompleted.active = false;
 
     oldVersionLevelCompleted.nextLevel?.forEach((key) => {
-      const nextLevel = this.levelMetadata.find((level) => level.key === key);
-      if (nextLevel) nextLevel.enable = true;
+      const nextLevel = this.levelKeyMap.get(key);
+      if (
+        nextLevel &&
+        (!nextLevel.previousLevel ||
+          this.areAllPredecessorsCompleted(nextLevel.previousLevel))
+      ) {
+        nextLevel.enable = true;
+      }
     });
 
     StorageManager.removeLevelMetadaDataFromRegistry(this.game);
+  }
+
+  private areAllPredecessorsCompleted(predecessorKeys: string[]): boolean {
+    return predecessorKeys.every(
+      (key) => this.levelKeyMap.get(key)?.completed === true,
+    );
+  }
+
+  private setupKeyboardShortcuts(): void {
+    const { keyboard } = this.input;
+    if (!keyboard) return;
+
+    const validNumberKeys = new Set([
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+    ]);
+
+    keyboard.on("keydown", (event: KeyboardEvent) => {
+      const { key } = event;
+      if (!validNumberKeys.has(key)) {
+        return;
+      }
+
+      const levelToUnlock = this.levelKeyMap.get(`LEVEL_${key}`);
+      if (!levelToUnlock || levelToUnlock.enable) {
+        return;
+      }
+
+      levelToUnlock.enable = true;
+      StorageManager.setLevelsMetadataToStorage(this.levelMetadata);
+      this.scene.restart();
+    });
   }
 }
