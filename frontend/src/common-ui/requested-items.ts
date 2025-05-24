@@ -2,6 +2,7 @@ import { BoxColors } from "assets/colors";
 import { DEPTH_1, MAP_WIDTH, TILE_SIZE } from "config";
 import { AnimationManager, FRAME_RATE } from "managers/animation-manager";
 import type { AssetConfig } from "types/asset";
+import { PRIMARY_FONT_FAMILY } from "assets/fonts";
 
 const INITIAL_CONFIG = {
   POSITION_X: MAP_WIDTH * 75 + 60,
@@ -15,11 +16,9 @@ const INITIAL_CONFIG = {
   FADE_OUT_DURATION: 200,
   MAX_ITEMS: 4,
   LABEL: {
-    TEXT: "Items to collect",
-    FONT_SIZE: 18,
-    COLOR: "#FFFFFF",
-    SHADOW_COLOR: "#000000",
-    SHADOW_DISTANCE: 2,
+    TEXT: "COLLECT:",
+    FONT_SIZE: 24,
+    COLOR: "#f8de6f",
     PADDING: 10,
   },
 };
@@ -139,6 +138,7 @@ export class RequestedItems {
         INITIAL_CONFIG.LABEL.TEXT,
         {
           fontSize: `${INITIAL_CONFIG.LABEL.FONT_SIZE}px`,
+          fontFamily: PRIMARY_FONT_FAMILY,
           color: INITIAL_CONFIG.LABEL.COLOR,
           stroke: INITIAL_CONFIG.LABEL.SHADOW_COLOR,
           strokeThickness: 1,
@@ -169,7 +169,7 @@ export class RequestedItems {
 
     // Draw the background
     const graphics = this.scene.add.graphics();
-    graphics.fillStyle(BoxColors.main, 0.8);
+    graphics.fillStyle(BoxColors.main, 0.9);
     graphics.fillRoundedRect(0, 0, totalWidth, height, 10);
     graphics.lineStyle(6, BoxColors.border, 1);
     graphics.strokeRoundedRect(0, 0, totalWidth, height, 10);
