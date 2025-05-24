@@ -42,13 +42,6 @@ export default new Level({
     },
     {
       type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.APPLE.assetKey,
-      quantity: 2,
-      initialState: ItemState.HIDDEN,
-      isAnimated: true,
-    },
-    {
-      type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.BANANAS.assetKey,
       quantity: 3,
       initialState: ItemState.HIDDEN,
@@ -56,7 +49,14 @@ export default new Level({
     },
     {
       type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.ORANGE.assetKey,
+      assetKey: ItemAssets.MELON.assetKey,
+      quantity: 2,
+      initialState: ItemState.HIDDEN,
+      isAnimated: true,
+    },
+    {
+      type: TileType.INTERACTIVE_OBJECT,
+      assetKey: ItemAssets.KIWI.assetKey,
       quantity: 1,
       initialState: ItemState.HIDDEN,
       isAnimated: true,

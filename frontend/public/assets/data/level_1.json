@@ -4,17 +4,15 @@
     {
       "description": "primer dialogo",
       "questStart": [
-        "Hello! My name is Sam. I want to make a cake",
-        "Can you help me?",
-        "I need one banana.",
-        "Can you pick it for me?"
+        "Hello! My name is Sam. I eat fruit every day. ",
+        "Today I need one apple. Can you pick it for me?"
       ],
-      "questInProgress": ["Hi friend! I need 1 banana for the cake."],
+      "questInProgress": ["Hi friend! I need 1 apple."],
       "questFinished": [
-        "Oh! Thank you! Now we can start making the cake together!"
+        "Oh! Thank you! It's super important to eat fruit every day."
       ],
-      "hints": ["Hello! I can give you a clue, what you need is yellow."],
-      "assetKey": "BANANAS",
+      "hints": ["Hello! I can give you a clue, what you need is red."],
+      "assetKey": "APPLE",
       "quantityToCollect": 1
     }
   ]

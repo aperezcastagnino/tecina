@@ -8,3 +8,7 @@ export const FontSize = {
   TITLE: "48px",
   SUBTITLE: "36px",
 };
+
+export const fontColor = {
+  YELLOW: "#cfa045",
+};

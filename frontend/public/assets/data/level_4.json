@@ -12,7 +12,7 @@
       "quantityToCollect": 1
     },
     {
-      "questStart": ["I lost my two cats!", "Can you help find them?"],
+      "questStart": ["I want to adopt two cats!", "Can you help pick them?"],
       "questInProgress": ["Still looking for two cats!"],
       "questPartiallyCompleted": [
         "Great, you found one cat! Just one more to go!"
