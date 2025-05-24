@@ -38,7 +38,7 @@ export abstract class BaseLevelScene extends Scene {
 
   protected healthBar!: HealthBar;
 
-  protected awards!: RequestedItems;
+  protected requestedItems!: RequestedItems;
 
   protected heldItem?: Phaser.GameObjects.Sprite;
 
@@ -223,11 +223,11 @@ export abstract class BaseLevelScene extends Scene {
   private initializeAwards(asset: AssetConfig, quantity: number): void {
     if (!asset || quantity === 0) return;
 
-    if (this.awards) {
-      this.awards.destroy();
+    if (this.requestedItems) {
+      this.requestedItems.destroy();
     }
 
-    this.awards = new RequestedItems({
+    this.requestedItems = new RequestedItems({
       scene: this,
       asset,
       quantity,
@@ -358,7 +358,7 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private updateQuestProgress(npc: Phaser.GameObjects.Sprite): void {
-    const quantity = this.awards.removeAward();
+    const quantity = this.requestedItems.removeItem();
     if (quantity === 0) {
       this.dialog?.setMessageComplete(npc.name);
 
