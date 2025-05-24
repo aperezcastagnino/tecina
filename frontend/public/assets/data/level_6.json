@@ -4,7 +4,7 @@
     {
       "questStart": [
         "I need three chickens for my farm!",
-        "Can you help find them?"
+        "Can you help me find them?"
       ],
       "questInProgress": ["Find the chickens please"],
       "questPartiallyCompleted": [
@@ -12,20 +12,20 @@
       ],
       "questWrongItem": ["That's not a chicken!"],
       "questFinished": ["Thank you! All the chickens are safe now!"],
-      "hints": ["Look for feathered friends with a red comb"],
+      "hints": ["Look for birds with a red comb"],
       "assetKey": "CHICKEN",
       "quantityToCollect": 3
     },
     {
       "questStart": [
-        "Oh look! A baby deer got separated from it's mother!",
+        "Oh look! A baby deer got separated from its mother!",
         "Can you help me find it?"
       ],
       "questInProgress": ["Find the baby deer please"],
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not the baby deer!"],
       "questFinished": [
-        "Thank you! Now the baby deer can return to it's mother!"
+        "Thank you! Now the baby deer can return to its mother!"
       ],
       "hints": ["Look for a brown deer in the grass"],
       "assetKey": "DEER",

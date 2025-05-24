@@ -2,17 +2,20 @@
   "title": "Level 4",
   "dialogs": [
     {
-      "questStart": ["Oh no! I lost my bunny!", "Can you help me find it?"],
-      "questInProgress": ["Have you seen my bunny?"],
+      "questStart": [
+        "Oh no! I cant find my rabbit!",
+        "Can you help me find it?"
+      ],
+      "questInProgress": ["Have you seen my rabbit?"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["That's not my bunny!"],
-      "questFinished": ["Yay! You found my bunny!"],
+      "questWrongItem": ["That's not my rabbit!"],
+      "questFinished": ["Yay! You found my rabbit!"],
       "hints": ["Look for a cute hopping animal"],
       "assetKey": "BUNNY",
       "quantityToCollect": 1
     },
     {
-      "questStart": ["I want to adopt two cats!", "Can you help pick them?"],
+      "questStart": ["I want to adopt two cats!", "Can you help me pick them?"],
       "questInProgress": ["Still looking for two cats!"],
       "questPartiallyCompleted": [
         "Great, you found one cat! Just one more to go!"

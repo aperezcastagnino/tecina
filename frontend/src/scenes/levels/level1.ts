@@ -21,7 +21,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       scene.cameras.main.width * 2,
       scene.cameras.main.height * 2,
       0x000000,
-      0.5
+      0.5,
     )
     .setOrigin(0)
     .setScrollFactor(0);
@@ -39,7 +39,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       centerY - popupHeight / 2 + i * 4,
       popupWidth,
       popupHeight,
-      cornerRadius
+      cornerRadius,
     );
   }
 
@@ -49,14 +49,14 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     centerY - popupHeight / 2 - 25,
     popupWidth,
     popupHeight,
-    cornerRadius
+    cornerRadius,
   );
 
   const howToPlayImage = scene.add
     .image(
       centerX - popupWidth / 2 - 400,
       centerY - popupHeight / 2 - 400,
-      UIComponentKeys.HOW_TO_PLAY
+      UIComponentKeys.HOW_TO_PLAY,
     )
     .setScale(0.7)
     .setScrollFactor(0);
@@ -68,7 +68,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       850,
       200,
       BoxColors.main,
-      0.9
+      0.9,
     )
     .setStrokeStyle(8, BoxColors.border, 1)
     .setScrollFactor(0);
@@ -83,7 +83,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         color: fontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 850 - 18 },
-      }
+      },
     )
     .setScrollFactor(0);
 
@@ -94,7 +94,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       400,
       300,
       BoxColors.main,
-      0.9
+      0.9,
     )
     .setStrokeStyle(8, BoxColors.border, 1)
     .setScrollFactor(0);
@@ -109,7 +109,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         color: fontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 380 - 18 },
-      }
+      },
     )
     .setScrollFactor(0);
 
@@ -117,7 +117,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     .image(
       centerX - popupWidth - 75,
       centerY - popupHeight + 600,
-      UIComponentKeys.ARROWS
+      UIComponentKeys.ARROWS,
     )
     .setScale(0.18)
     .setScrollFactor(0);
@@ -129,7 +129,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       400,
       300,
       BoxColors.main,
-      0.9
+      0.9,
     )
     .setStrokeStyle(8, BoxColors.border, 1)
     .setScrollFactor(0);
@@ -144,7 +144,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         color: fontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 380 - 18 },
-      }
+      },
     )
     .setScrollFactor(0);
 
@@ -152,7 +152,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     .image(
       centerX - popupWidth + 375,
       centerY - popupHeight + 600,
-      UIComponentKeys.SPACE
+      UIComponentKeys.SPACE,
     )
     .setScale(0.18)
     .setScrollFactor(0);
