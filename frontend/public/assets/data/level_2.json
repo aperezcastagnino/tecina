@@ -2,21 +2,23 @@
   "title": "Level 2",
   "dialogs": [
     {
-      "questStart": ["Hello my friend!", "I need one apple."],
-      "questInProgress": ["Don’t forget the apple, please!"],
+      "questStart": ["Hello my friend!", "I need one cherry."],
+      "questInProgress": ["Don’t forget the cherry, please!"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["I am sorry! But I need one apple to prepare juice."],
+      "questWrongItem": [
+        "I am sorry! But I need one cherry to prepare a dessert."
+      ],
       "questFinished": ["Oh! Perfect! Thank you!"],
-      "hints": ["The apple is red."],
-      "assetKey": "APPLE",
+      "hints": ["The cherry is red."],
+      "assetKey": "CHERRIES",
       "quantityToCollect": 1
     },
     {
-      "questStart": ["Hey there!", "Can you bring two oranges for the juice?"],
-      "questInProgress": ["Did you find the oranges?"],
+      "questStart": ["Hey there!", "Can you bring two oranges?"],
+      "questInProgress": ["Find the oranges please"],
       "questPartiallyCompleted": [],
       "questWrongItem": ["Hmm... That’s not an orange!"],
-      "questFinished": ["Awesome! This will make the juice super tasty!"],
+      "questFinished": ["Awesome! Thank you!"],
       "hints": ["The orange is round."],
       "assetKey": "ORANGE",
       "quantityToCollect": 2

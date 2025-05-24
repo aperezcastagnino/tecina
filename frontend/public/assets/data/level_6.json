@@ -2,14 +2,17 @@
   "title": "Level 6",
   "dialogs": [
     {
-      "questStart": ["My four chickens ran away!", "Can you help find them?"],
-      "questInProgress": ["Still looking for my chickens!"],
+      "questStart": [
+        "I need three chickens for my farm!",
+        "Can you help me find them?"
+      ],
+      "questInProgress": ["Find the chickens please"],
       "questPartiallyCompleted": [
         "Great progress! Keep looking for more chickens!"
       ],
       "questWrongItem": ["That's not a chicken!"],
       "questFinished": ["Thank you! All the chickens are safe now!"],
-      "hints": ["Look for feathered friends with a red comb"],
+      "hints": ["Look for birds with a red comb"],
       "assetKey": "CHICKEN",
       "quantityToCollect": 3
     },
@@ -18,13 +21,13 @@
         "Oh look! A baby deer got separated from its mother!",
         "Can you help me find it?"
       ],
-      "questInProgress": ["Have you spotted the baby deer?"],
+      "questInProgress": ["Find the baby deer please"],
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not the baby deer!"],
       "questFinished": [
         "Thank you! Now the baby deer can return to its mother!"
       ],
-      "hints": ["Look for a small spotted fawn in the grass"],
+      "hints": ["Look for a brown deer in the grass"],
       "assetKey": "DEER",
       "quantityToCollect": 1
     }

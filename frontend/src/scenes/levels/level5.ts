@@ -6,8 +6,8 @@ import { Level } from "./level-maker";
 export default new Level({
   name: SceneKeys.LEVEL_5,
   dimensions: {
-    width: 40,
-    height: 40,
+    width: 25,
+    height: 25,
   },
   tilesConfig: [
     {
@@ -74,7 +74,7 @@ export default new Level({
     {
       type: TileType.INTERACTIVE_OBJECT,
       assetKey: ItemAssets.DEER.assetKey,
-      quantity: 1,
+      quantity: 3,
       initialState: ItemState.VISIBLE,
       isAnimated: true,
     },

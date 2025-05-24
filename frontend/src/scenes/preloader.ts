@@ -49,7 +49,7 @@ export default class Preloader extends Scene {
       .text({
         x: centerX,
         y: centerY - 50,
-        text: "Cargando...",
+        text: "Loading...",
         style: LOADING_SCREEN_TEXT_STYLE,
       })
       .setOrigin(0.5, 0.5);
@@ -140,6 +140,12 @@ export default class Preloader extends Scene {
       UIComponentKeys.INSTRUCTIONS,
       "/ui-components/instructions.png",
     );
+    this.load.image(
+      UIComponentKeys.HOW_TO_PLAY,
+      "/ui-components/how_to_play.png",
+    );
+    this.load.image(UIComponentKeys.ARROWS, "/ui-components/arrows.png");
+    this.load.image(UIComponentKeys.SPACE, "/ui-components/space.png");
     this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
     this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
 

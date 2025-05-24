@@ -4,40 +4,40 @@
     {
       "questStart": [
         "Hey! We’re making a super juice!",
-        "Can you bring us 2 apples first?"
+        "Can you bring us three bananas first?"
       ],
-      "questInProgress": ["We need two apples to start!"],
+      "questInProgress": ["Find the bananas please"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["We need apples, not that!"],
-      "questFinished": ["Nice! The apples are in the blender!"],
-      "hints": ["They are red and round."],
-      "assetKey": "APPLE",
-      "quantityToCollect": 2
-    },
-    {
-      "questStart": [
-        "Great job with the apples!",
-        "Now we need three bananas."
-      ],
-      "questInProgress": ["Still waiting for the bananas!"],
-      "questPartiallyCompleted": [],
-      "questWrongItem": ["That’s not bananas!"],
-      "questFinished": ["Yes! The bananas are in. Let’s go!"],
+      "questWrongItem": ["We need bananas, not that!"],
+      "questFinished": ["Nice! The bananas are in the blender!"],
       "hints": ["They are yellow and long."],
       "assetKey": "BANANAS",
       "quantityToCollect": 3
     },
     {
-      "questStart": ["Almost done!", "One last thing: we need one orange."],
-      "questInProgress": ["Can you find the orange?"],
+      "questStart": [
+        "Great job with the bananas!",
+        "Now we need two watermelons."
+      ],
+      "questInProgress": ["Still waiting for the watermelons!"],
       "questPartiallyCompleted": [],
-      "questWrongItem": ["Hmm... That’s not an orange."],
+      "questWrongItem": ["That’s not a watermelon!"],
+      "questFinished": ["Yes! The watermelon is in. Let’s go!"],
+      "hints": ["They are green and round."],
+      "assetKey": "MELON",
+      "quantityToCollect": 2
+    },
+    {
+      "questStart": ["Almost done!", "One last thing: we need one kiwi."],
+      "questInProgress": ["Can you find the kiwi?"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["Hmm... That’s not a kiwi."],
       "questFinished": [
-        "Perfect! All fruits ready!",
+        "Perfect! All fruits are ready!",
         "Time to drink the magic juice!"
       ],
-      "hints": ["It’s orange."],
-      "assetKey": "ORANGE",
+      "hints": ["It’s green on the inside."],
+      "assetKey": "KIWI",
       "quantityToCollect": 1
     }
   ]
