@@ -140,16 +140,6 @@ export class RequestedItems {
           fontSize: `${INITIAL_CONFIG.LABEL.FONT_SIZE}px`,
           fontFamily: PRIMARY_FONT_FAMILY,
           color: INITIAL_CONFIG.LABEL.COLOR,
-          stroke: INITIAL_CONFIG.LABEL.SHADOW_COLOR,
-          strokeThickness: 1,
-          shadow: {
-            offsetX: INITIAL_CONFIG.LABEL.SHADOW_DISTANCE,
-            offsetY: INITIAL_CONFIG.LABEL.SHADOW_DISTANCE,
-            color: INITIAL_CONFIG.LABEL.SHADOW_COLOR,
-            blur: 3,
-            stroke: true,
-            fill: true,
-          },
         },
       )
       .setOrigin(0, 0)
