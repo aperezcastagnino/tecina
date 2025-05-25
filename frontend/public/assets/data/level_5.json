@@ -2,36 +2,36 @@
   "title": "Level 5",
   "dialogs": [
     {
-      "questStart": ["My two pigeons flew away!", "Can you help find them?"],
+      "questStart": ["My two pigeons flew away!", "Can you help me find them?"],
       "questInProgress": ["Still looking for my pigeons!"],
       "questPartiallyCompleted": [
         "Great, you found one pigeon! Just one more to go!"
       ],
       "questWrongItem": ["That's not a pigeon!"],
       "questFinished": ["Thank you! The pigeons are safe now!"],
-      "hints": ["Look for white birds cooing nearby"],
+      "hints": ["Look for the white flying birds"],
       "assetKey": "PIGEON",
       "quantityToCollect": 2
     },
     {
       "questStart": [
         "Hi! I'm a friendly scientist!",
-        "Can you help me find four tiny frogs?",
-        "I want to learn about how they hop!"
+        "Can you help me find three tiny frogs?",
+        "I want to learn about how they jump!"
       ],
       "questInProgress": ["Have you seen any jumping frogs?"],
       "questPartiallyCompleted": [
         "Yay! You're doing great! Let's find more frogs!"
       ],
       "questWrongItem": [
-        "Oops! That's not a frog - I'm looking for green hoppy friends!"
+        "Oops! That's not a frog - I'm looking for green jumping friends!"
       ],
       "questFinished": [
         "Wow! Thank you! Now I can watch these cute frogs jump!"
       ],
       "hints": ["Search for tiny green creatures that hop in the grass!"],
       "assetKey": "FROG",
-      "quantityToCollect": 4
+      "quantityToCollect": 3
     }
   ]
 }

@@ -7,18 +7,43 @@ import {
   ItemAssets,
 } from "assets/assets";
 import { PLAYER_KEYS } from "common/player-keys";
+import { BoxColors } from "assets/colors";
+import { FontSize, fontColor, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { Level } from "./level-maker";
 
 function showInstructionPopup(scene: Phaser.Scene): void {
   const { centerX, centerY } = scene.cameras.main;
 
+  const overlay = scene.add
+    .rectangle(
+      0,
+      0,
+      scene.cameras.main.width * 2,
+      scene.cameras.main.height * 2,
+      0x000000,
+      0.5,
+    )
+    .setOrigin(0)
+    .setScrollFactor(0);
+
   const popupBackground = scene.add.graphics();
   const popupWidth = 1100;
-  const popupHeight = 600;
-  const cornerRadius = 30;
-  const backgroundAlpha = 0.6;
+  const popupHeight = 900;
+  const cornerRadius = 0.1;
+  const backgroundAlpha = 0.8;
 
-  popupBackground.fillStyle(0xfbc455, backgroundAlpha);
+  for (let i = 0; i < 5; i += 1) {
+    popupBackground.fillStyle(0x000000, 0.1 - i * 0.015);
+    popupBackground.fillRoundedRect(
+      centerX - popupWidth / 2 + i * 4,
+      centerY - popupHeight / 2 + i * 4,
+      popupWidth,
+      popupHeight,
+      cornerRadius,
+    );
+  }
+
+  popupBackground.fillStyle(0xa37936, backgroundAlpha);
   popupBackground.fillRoundedRect(
     centerX - popupWidth / 2,
     centerY - popupHeight / 2 - 25,
@@ -27,9 +52,110 @@ function showInstructionPopup(scene: Phaser.Scene): void {
     cornerRadius,
   );
 
-  const popupImage = scene.add
-    .image(0, 0, UIComponentKeys.INSTRUCTIONS)
-    .setScale(0.6);
+  const howToPlayImage = scene.add
+    .image(
+      centerX - popupWidth / 2 - 400,
+      centerY - popupHeight / 2 - 400,
+      UIComponentKeys.HOW_TO_PLAY,
+    )
+    .setScale(0.7)
+    .setScrollFactor(0);
+
+  const instructionsBox = scene.add
+    .rectangle(
+      centerX - popupWidth / 2 - 400,
+      centerY - popupHeight / 2 - 190,
+      850,
+      200,
+      BoxColors.main,
+      0.9,
+    )
+    .setStrokeStyle(8, BoxColors.border, 1)
+    .setScrollFactor(0);
+
+  const instructionsText = scene.add
+    .text(
+      centerX - popupWidth / 2 - 790,
+      centerY - popupHeight / 2 - 250,
+      "FIND THE CHARACTER IN THE MAP, INTERACT WITH THEM AND THEY WILL TELL YOU WHAT TO DO NEXT",
+      {
+        fontFamily: PRIMARY_FONT_FAMILY,
+        color: fontColor.YELLOW,
+        fontSize: FontSize.EXTRA_LARGE,
+        wordWrap: { width: 850 - 18 },
+      },
+    )
+    .setScrollFactor(0);
+
+  const arrowsBox = scene.add
+    .rectangle(
+      centerX - popupWidth - 75,
+      centerY - popupHeight + 550,
+      400,
+      300,
+      BoxColors.main,
+      0.9,
+    )
+    .setStrokeStyle(8, BoxColors.border, 1)
+    .setScrollFactor(0);
+
+  const arrowsText = scene.add
+    .text(
+      centerX - popupWidth / 2 - 790,
+      centerY - popupHeight / 2,
+      "USE THE ARROWS TO MOVE IN THE MAP",
+      {
+        fontFamily: PRIMARY_FONT_FAMILY,
+        color: fontColor.YELLOW,
+        fontSize: FontSize.EXTRA_LARGE,
+        wordWrap: { width: 380 - 18 },
+      },
+    )
+    .setScrollFactor(0);
+
+  const arrowsImage = scene.add
+    .image(
+      centerX - popupWidth - 75,
+      centerY - popupHeight + 600,
+      UIComponentKeys.ARROWS,
+    )
+    .setScale(0.18)
+    .setScrollFactor(0);
+
+  const interactionBox = scene.add
+    .rectangle(
+      centerX - popupWidth + 375,
+      centerY - popupHeight + 550,
+      400,
+      300,
+      BoxColors.main,
+      0.9,
+    )
+    .setStrokeStyle(8, BoxColors.border, 1)
+    .setScrollFactor(0);
+
+  const interactionText = scene.add
+    .text(
+      centerX - popupWidth / 2 - 330,
+      centerY - popupHeight / 2,
+      "PRESS SPACE BAR TO INTERACT",
+      {
+        fontFamily: PRIMARY_FONT_FAMILY,
+        color: fontColor.YELLOW,
+        fontSize: FontSize.EXTRA_LARGE,
+        wordWrap: { width: 380 - 18 },
+      },
+    )
+    .setScrollFactor(0);
+
+  const spaceImage = scene.add
+    .image(
+      centerX - popupWidth + 375,
+      centerY - popupHeight + 600,
+      UIComponentKeys.SPACE,
+    )
+    .setScale(0.18)
+    .setScrollFactor(0);
 
   const closeButton = scene.add
     .image(0, 0, UIComponentKeys.CROSS)
@@ -41,13 +167,22 @@ function showInstructionPopup(scene: Phaser.Scene): void {
   closeButton.y = -popupHeight / 2 + 20;
 
   const popupContainer = scene.add.container(centerX, centerY, [
-    popupImage,
     closeButton,
+    howToPlayImage,
+    instructionsBox,
+    arrowsBox,
+    arrowsImage,
+    interactionBox,
+    instructionsText,
+    arrowsText,
+    interactionText,
+    spaceImage,
   ]);
 
   const closePopup = () => {
     popupContainer.destroy();
     popupBackground.destroy();
+    overlay.destroy();
     Object.values(PLAYER_KEYS).forEach((key) => {
       scene.input.keyboard?.off(`keydown-${key}`, closePopup);
     });
@@ -92,7 +227,7 @@ export default new Level({
     },
     {
       type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.BANANAS.assetKey,
+      assetKey: ItemAssets.APPLE.assetKey,
       quantity: 1,
       initialState: ItemState.HIDDEN,
       isAnimated: true,

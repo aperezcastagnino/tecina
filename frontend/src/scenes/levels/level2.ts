@@ -42,7 +42,7 @@ export default new Level({
     },
     {
       type: TileType.INTERACTIVE_OBJECT,
-      assetKey: ItemAssets.APPLE.assetKey,
+      assetKey: ItemAssets.CHERRIES.assetKey,
       quantity: 1,
       initialState: ItemState.HIDDEN,
       isAnimated: true,

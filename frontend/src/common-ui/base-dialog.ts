@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import type { DialogData } from "types/dialog-data";
 import { BoxColors } from "assets/colors";
-import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { FontSize, PRIMARY_FONT_FAMILY, fontColor } from "assets/fonts";
 import { loadDialogData } from "managers/dialog-data-manager";
 import { DEPTH_1 } from "config";
 
@@ -75,7 +75,7 @@ export abstract class BaseDialog {
     return this.scene.add
       .text(32, 32, "", {
         fontFamily: PRIMARY_FONT_FAMILY,
-        color: "#f8de6f",
+        color: fontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: this.width - 18 },
       })
