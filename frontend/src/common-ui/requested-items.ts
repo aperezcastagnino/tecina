@@ -1,20 +1,16 @@
 import { BoxColors } from "assets/colors";
 import { DEPTH_1, MAP_WIDTH, TILE_SIZE } from "config";
-import { AnimationManager, FRAME_RATE } from "managers/animation-manager";
+import { AnimationManager } from "managers/animation-manager";
 import type { AssetConfig } from "types/asset";
 import { PRIMARY_FONT_FAMILY } from "assets/fonts";
 
 const INITIAL_CONFIG = {
   POSITION_X: MAP_WIDTH * 75 + 60,
   POSITION_Y: TILE_SIZE / 2 + 0,
-  WIDTH: (MAP_WIDTH / 6) * TILE_SIZE,
   HEIGHT: 16,
-  // eslint-disable-next-line object-shorthand
-  FRAME_RATE: FRAME_RATE,
   SCALE: 3,
   PADDING: 35,
   FADE_OUT_DURATION: 200,
-  MAX_ITEMS: 4,
   LABEL: {
     TEXT: "COLLECT:",
     FONT_SIZE: 24,
@@ -91,11 +87,13 @@ export class RequestedItems {
           scale: this.scale * 0.8,
           duration: INITIAL_CONFIG.FADE_OUT_DURATION,
           onComplete: () => {
-            this.container.remove(sprite);
-            this.sprites.pop();
-            sprite.destroy();
+            if (this.container && this.container.active) {
+              this.container.remove(sprite);
+              this.sprites.pop();
+              sprite.destroy();
 
-            this.container.visible = this.sprites.length !== 0;
+              this.container.visible = this.sprites.length > 0;
+            }
           },
         });
       }
@@ -105,13 +103,20 @@ export class RequestedItems {
   }
 
   destroy() {
-    this.sprites.forEach((sprite) => sprite.destroy());
-    if (this.container) {
+    this.sprites.forEach((sprite) => {
+      if (sprite && sprite.active) {
+        sprite.destroy();
+      }
+    });
+    this.sprites = [];
+
+    if (this.container && this.container.active) {
       this.container.removeAll(true);
       this.container.destroy();
     }
-    if (this.background) this.background.destroy();
-    if (this.label) this.label.destroy();
+
+    if (this.label && this.label.active) this.label.destroy();
+    if (this.background && this.background.active) this.background.destroy();
   }
 
   private initializeUI(quantity: number): void {
@@ -142,18 +147,15 @@ export class RequestedItems {
           color: INITIAL_CONFIG.LABEL.COLOR,
         },
       )
-      .setOrigin(0, 0)
       .setScrollFactor(0)
       .setDepth(DEPTH_1);
   }
 
   private createBackground(countItems: number): void {
-    const maxItems =
-      countItems > INITIAL_CONFIG.MAX_ITEMS
-        ? countItems
-        : INITIAL_CONFIG.MAX_ITEMS;
     const totalWidth =
-      this.asset.frameWidth! * this.scale * maxItems + this.label.displayWidth;
+      this.asset.frameWidth! * this.scale * countItems +
+      this.label.displayWidth +
+      this.padding * 2;
     const height =
       (INITIAL_CONFIG.HEIGHT * this.scale + this.padding / 2) * 1.4;
 
@@ -165,7 +167,7 @@ export class RequestedItems {
     graphics.strokeRoundedRect(0, 0, totalWidth, height, 10);
 
     // Convert to texture and create image
-    const key = "requested-items-background";
+    const key = `requested-items-background-${this.asset.assetKey}`;
     if (!this.scene.textures.exists(key)) {
       graphics.generateTexture(key, totalWidth, height);
     }
@@ -194,7 +196,7 @@ export class RequestedItems {
 
       // Add a small delay between animations for a cascade effect
       this.scene.time.delayedCall(i * 50, () => {
-        if (sprite.active) {
+        if (sprite && sprite.active) {
           sprite.play(this.keyAnim);
         }
       });
