@@ -148,21 +148,26 @@ export default class MainMenu extends Scene {
     }
   }
 
-  // Confirmation Dialog
   private showConfirmationDialog(
     onConfirm: () => void,
     onCancel: () => void,
   ): void {
+    const overlay = this.add
+      .rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
+      .setOrigin(0)
+      .setInteractive()
+      .setDepth(999);
+  
     const dialogBg = this.add
       .rectangle(960, 540, 700, 300, BoxColors.main, 0.8)
       .setStrokeStyle(4, BoxColors.border)
       .setDepth(1000);
-
+  
     const dialogText = this.add
       .text(
         960,
         480,
-        "¿Seguro que quieres empezar de nuevo? ¡Se borrará lo que hiciste!",
+        "Are you sure you want to start again? Everything you did will be gone!",
         {
           fontFamily: PRIMARY_FONT_FAMILY,
           fontSize: FontSize.LARGE,
@@ -173,39 +178,42 @@ export default class MainMenu extends Scene {
       )
       .setOrigin(0.5)
       .setDepth(1001);
-
+  
     const yesButton = this.add
-      .image(860, 600, UIComponentKeys.BUTTON_YES)
+      .image(860, 600, UIComponentKeys.YES_BUTTON)
       .setInteractive({ useHandCursor: true })
-      .setScale(0.2)
+      .setScale(0.15)
       .setOrigin(0.5)
       .setDepth(1001);
-
-    yesButton.on("pointerover", () => yesButton.setScale(0.25));
-    yesButton.on("pointerout", () => yesButton.setScale(0.2));
+  
     const noButton = this.add
-      .image(1060, 600, UIComponentKeys.BUTTON_NO)
+      .image(1060, 600, UIComponentKeys.NO_BUTTON)
       .setInteractive({ useHandCursor: true })
-      .setScale(0.2)
+      .setScale(0.15)
       .setOrigin(0.5)
       .setDepth(1001);
-
-    yesButton.on("pointerdown", () => {
+  
+    yesButton.on("pointerover", () => yesButton.setScale(0.2));
+    yesButton.on("pointerout", () => yesButton.setScale(0.15));
+    noButton.on("pointerover", () => noButton.setScale(0.2));
+    noButton.on("pointerout", () => noButton.setScale(0.15));
+  
+    const destroyDialog = () => {
+      overlay.destroy();
       dialogBg.destroy();
       dialogText.destroy();
       yesButton.destroy();
       noButton.destroy();
+    };
+  
+    yesButton.on("pointerdown", () => {
+      destroyDialog();
       onConfirm();
     });
-
-    noButton.on("pointerover", () => noButton.setScale(0.25));
-    noButton.on("pointerout", () => noButton.setScale(0.2));
+  
     noButton.on("pointerdown", () => {
-      dialogBg.destroy();
-      dialogText.destroy();
-      yesButton.destroy();
-      noButton.destroy();
+      destroyDialog();
       onCancel();
     });
-  }
+  }  
 }
