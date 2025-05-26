@@ -167,11 +167,7 @@ export default class MainMenu extends Scene {
       .text(
         960,
         480,
-<<<<<<< HEAD
         "Are you sure you want to start again? Everything you did will be gone!",
-=======
-        "¿Seguro que quieres empezar de nuevo? ¡Se borrará la partida anterior!",
->>>>>>> 69e8437 (PR fixes)
         {
           fontFamily: PRIMARY_FONT_FAMILY,
           fontSize: FontSize.LARGE,
