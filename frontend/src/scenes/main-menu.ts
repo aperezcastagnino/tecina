@@ -192,12 +192,12 @@ export default class MainMenu extends Scene {
       .setScale(0.15)
       .setOrigin(0.5)
       .setDepth(1001);
-  
+
     yesButton.on("pointerover", () => yesButton.setScale(0.2));
     yesButton.on("pointerout", () => yesButton.setScale(0.15));
     noButton.on("pointerover", () => noButton.setScale(0.2));
     noButton.on("pointerout", () => noButton.setScale(0.15));
-  
+
     const destroyDialog = () => {
       overlay.destroy();
       dialogBg.destroy();
