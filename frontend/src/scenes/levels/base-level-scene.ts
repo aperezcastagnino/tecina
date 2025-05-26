@@ -246,45 +246,50 @@ export abstract class BaseLevelScene extends Scene {
   }
 
   private tryDropHeldItem() {
-    const playerDirection = this.player.direction;
+    const dropAreaSize = TILE_SIZE / 6;
+    const dropOffset = TILE_SIZE * 0.75;
+
     let dropX = 0;
     let dropY = 0;
-    switch (playerDirection) {
+    switch (this.player.direction) {
       case DIRECTION.UP:
         dropX = this.player.x;
-        dropY = this.player.y - TILE_SIZE;
+        dropY = this.player.y - dropOffset;
         break;
       case DIRECTION.DOWN:
         dropX = this.player.x;
-        dropY = this.player.y + TILE_SIZE;
+        dropY = this.player.y + dropOffset;
         break;
       case DIRECTION.LEFT:
-        dropX = this.player.x - TILE_SIZE;
+        dropX = this.player.x - dropOffset;
         dropY = this.player.y;
         break;
       case DIRECTION.RIGHT:
-        dropX = this.player.x + TILE_SIZE;
+        dropX = this.player.x + dropOffset;
         dropY = this.player.y;
         break;
       default:
-        console.error(`Unexpected player direction: ${playerDirection}`);
+        console.error(`Unexpected player direction: ${this.player.direction}`);
         dropX = this.player.x;
         dropY = this.player.y;
     }
 
     const worldWidth = this.physics.world.bounds.width;
     const worldHeight = this.physics.world.bounds.height;
-    dropX = Phaser.Math.Clamp(dropX, 0, worldWidth - TILE_SIZE);
-    dropY = Phaser.Math.Clamp(dropY, 0, worldHeight - TILE_SIZE);
+    dropX = Phaser.Math.Clamp(dropX, 0, worldWidth - dropAreaSize);
+    dropY = Phaser.Math.Clamp(dropY, 0, worldHeight - dropAreaSize);
 
     const canDrop =
       this.physics
-        .overlapRect(dropX, dropY, TILE_SIZE, TILE_SIZE, true, true)
+        .overlapRect(dropX, dropY, dropAreaSize, dropAreaSize, true, true)
         .filter(
           (ol) =>
             ol.gameObject instanceof GameObjects.Image &&
-            (ol.gameObject.texture.key !== TileKeys.TREE || // this should not depend on the tree tile
-              ol.gameObject.texture.key !== CharacterAssets.NPC),
+            !this.obstacles.some(
+              (obstacle) =>
+                obstacle.assetKey ===
+                (ol.gameObject as Phaser.GameObjects.Image).texture.key,
+            ),
         ).length === 0;
 
     if (canDrop) {
