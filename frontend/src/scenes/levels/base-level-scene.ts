@@ -105,7 +105,7 @@ export abstract class BaseLevelScene extends Scene {
 
       if (this.heldItem && !this.dialog?.isVisible) {
         this.tryDropHeldItem();
-      }
+      } 
 
       return;
     }
@@ -321,6 +321,7 @@ export abstract class BaseLevelScene extends Scene {
   private handleInteractionNPC(npc: Phaser.GameObjects.Sprite): void {
     if (!this.dialog?.isDialogActive()) {
       this.startDialogWithNPC(npc);
+      this.player.stop();
       return;
     }
 
