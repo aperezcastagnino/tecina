@@ -43,13 +43,13 @@ export default class MainMenu extends Scene {
       .image(1400, 580, UIComponentKeys.LOAD_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
-      .setScale(0.35);
+      .setScale(0.6);
 
     const startGameButton = this.add
       .image(1400, 400, UIComponentKeys.START_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setOrigin(0.5)
-      .setScale(0.35);
+      .setScale(0.6);
 
     this.configureLoadGameButton(loadGameButton);
     this.configureStartGameButton(startGameButton);
@@ -63,7 +63,7 @@ export default class MainMenu extends Scene {
         this.input.setDefaultCursor("pointer");
         this.tweens.add({
           targets: button,
-          scale: 0.4,
+          scale: 0.7,
           duration: 150,
           ease: "Power2",
         });
@@ -73,7 +73,7 @@ export default class MainMenu extends Scene {
         this.input.setDefaultCursor("default");
         this.tweens.add({
           targets: button,
-          scale: 0.35,
+          scale: 0.6,
           duration: 150,
           ease: "Power2",
         });
@@ -107,7 +107,7 @@ export default class MainMenu extends Scene {
       this.input.setDefaultCursor("pointer");
       this.tweens.add({
         targets: button,
-        scale: 0.4,
+        scale: 0.7,
         duration: 150,
         ease: "Power2",
       });
@@ -117,7 +117,7 @@ export default class MainMenu extends Scene {
       this.input.setDefaultCursor("default");
       this.tweens.add({
         targets: button,
-        scale: 0.35,
+        scale: 0.6,
         duration: 150,
         ease: "Power2",
       });

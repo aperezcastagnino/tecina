@@ -54,7 +54,7 @@ export default class GameOver extends Scene {
     const { width, height } = this.scale;
 
     this.add
-      .text(width / 2, height / 2 + 250, "Presiona ESPACIO para reiniciar", {
+      .text(width / 2, height / 2 + 250, "Press SPACE to start again", {
         fontFamily: PRIMARY_FONT_FAMILY,
         fontSize: FontSize.EXTRA_LARGE,
         color: fontColor.YELLOW,
