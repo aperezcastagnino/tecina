@@ -136,7 +136,6 @@ export default class Preloader extends Scene {
       "/ui-components/shadow-button.png",
     );
     this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
-
     this.load.image(
       UIComponentKeys.YES_BUTTON,
       "/ui-components/yes-button.png",
