@@ -20,4 +20,3 @@ export const MIN_ROOM_SIZE = 5; // MIN_ROOM_SIZE < MIN(MAP_WIDTH, MAP_HEIGHT) / 
 export const DEPTH_1 = 100;
 export const DEPTH_2 = 200;
 export const DEPTH_3 = 300;
-

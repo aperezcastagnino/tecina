@@ -4,9 +4,9 @@ import { levelsConfig } from "scenes/levels/levels-config";
 import { BackgroundKeys, UIComponentKeys } from "assets/assets";
 import { BoxColors, Colors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { DEPTH_1, DEPTH_2, DEPTH_3 } from "config";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
-import { DEPTH_1, DEPTH_2, DEPTH_3 } from "config";
 
 export default class MainMenu extends Scene {
   private tooltip!: Tooltip;
