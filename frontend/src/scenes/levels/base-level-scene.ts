@@ -397,7 +397,12 @@ export abstract class BaseLevelScene extends Scene {
     this.cameras.main.once(
       Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
       () => {
-        this.scene.start(SceneKeys.WIN_SCENE);
+        if (this.levelMetadata.key === "LEVEL_6") {
+          // TODO: change to level 9 when it's implemented
+          this.scene.start(SceneKeys.END_SCENE);
+        } else {
+          this.scene.start(SceneKeys.WIN_SCENE);
+        }
       },
     );
   }

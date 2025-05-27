@@ -79,6 +79,7 @@ export const UIComponentKeys = {
   SPACE: "SPACE",
   GAME_OVER: "GAME_OVER",
   WIN_TITLE: "WIN_TITLE",
+  END_TITLE: "END_TITLE",
 };
 
 export const TileKeys = {
