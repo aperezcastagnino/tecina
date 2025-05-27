@@ -137,10 +137,6 @@ export default class Preloader extends Scene {
     );
     this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
     this.load.image(
-      UIComponentKeys.INSTRUCTIONS,
-      "/ui-components/instructions.png",
-    );
-    this.load.image(
       UIComponentKeys.HOW_TO_PLAY,
       "/ui-components/how_to_play.png",
     );

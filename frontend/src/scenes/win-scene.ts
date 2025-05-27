@@ -39,11 +39,11 @@ export default class WinScene extends Scene {
     const { width, height } = this.scale;
 
     this.add
-      .image(width / 2, height / 2, UIComponentKeys.WIN_TITLE)
+      .image(width / 2, height / 2.5, UIComponentKeys.WIN_TITLE)
       .setOrigin(0.5)
       .setScale(0.7);
     this.add
-      .text(width / 2, height / 2 + 110, "Presiona ESPACIO para continuar", {
+      .text(width / 2, height / 2 + 110, "Press SPACE to continue", {
         fontFamily: PRIMARY_FONT_FAMILY,
         fontSize: FontSize.EXTRA_LARGE,
         color: fontColor.YELLOW,
