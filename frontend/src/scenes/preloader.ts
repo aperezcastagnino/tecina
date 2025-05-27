@@ -118,8 +118,8 @@ export default class Preloader extends Scene {
       "/ui-components/health-bar-fill-right.png",
     );
     this.load.image(
-      UIComponentKeys.BUTTON_CIRCLE,
-      "/ui-components/button-circle.png",
+      UIComponentKeys.CIRCLE_BUTTON,
+      "/ui-components/circle-button.png",
     );
     this.load.image(UIComponentKeys.TITLE, `/ui-components/title.png`);
 
@@ -132,10 +132,16 @@ export default class Preloader extends Scene {
       "/ui-components/load-button.png",
     );
     this.load.image(
-      UIComponentKeys.BUTTON_SHADOW,
-      "/ui-components/button-shadow.png",
+      UIComponentKeys.SHADOW_BUTTON,
+      "/ui-components/shadow-button.png",
     );
     this.load.image(UIComponentKeys.CROSS, "/ui-components/cross.png");
+    this.load.image(
+      UIComponentKeys.YES_BUTTON,
+      "/ui-components/yes-button.png",
+    );
+    this.load.image(UIComponentKeys.NO_BUTTON, "/ui-components/no-button.png");
+
     this.load.image(
       UIComponentKeys.HOW_TO_PLAY,
       "/ui-components/how_to_play.png",
