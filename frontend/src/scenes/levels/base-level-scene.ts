@@ -21,7 +21,7 @@ import { MapGenerator } from "common/map/map-generator";
 import { RequestedItems } from "common-ui/requested-items";
 import { HealthBar } from "common-ui/health-bar";
 import { DIRECTION } from "common/player-keys";
-import { TileKeys, CharacterAssets } from "assets/assets";
+import { CharacterAssets } from "assets/assets";
 import type { LevelMetadata } from "types/level";
 import { StorageManager } from "managers/storage-manager";
 import type { AssetConfig } from "types/asset";
@@ -105,7 +105,7 @@ export abstract class BaseLevelScene extends Scene {
 
       if (this.heldItem && !this.dialog?.isVisible) {
         this.tryDropHeldItem();
-      } 
+      }
 
       return;
     }
