@@ -6,6 +6,7 @@ import { BoxColors, Colors } from "assets/colors";
 import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
+import { DEPTH_1, DEPTH_2, DEPTH_3 } from "config";
 
 export default class MainMenu extends Scene {
   private tooltip!: Tooltip;
@@ -156,12 +157,12 @@ export default class MainMenu extends Scene {
       .rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.5)
       .setOrigin(0)
       .setInteractive()
-      .setDepth(999);
+      .setDepth(DEPTH_1);
 
     const dialogBg = this.add
       .rectangle(960, 540, 700, 300, BoxColors.main, 0.8)
       .setStrokeStyle(4, BoxColors.border)
-      .setDepth(1000);
+      .setDepth(DEPTH_2);
 
     const dialogText = this.add
       .text(
@@ -184,14 +185,14 @@ export default class MainMenu extends Scene {
       .setInteractive({ useHandCursor: true })
       .setScale(0.15)
       .setOrigin(0.5)
-      .setDepth(1001);
+      .setDepth(DEPTH_3);
 
     const noButton = this.add
       .image(1060, 600, UIComponentKeys.NO_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setScale(0.15)
       .setOrigin(0.5)
-      .setDepth(1001);
+      .setDepth(DEPTH_3);
 
     yesButton.on("pointerover", () => yesButton.setScale(0.2));
     yesButton.on("pointerout", () => yesButton.setScale(0.15));
@@ -207,7 +208,6 @@ export default class MainMenu extends Scene {
     };
 
     yesButton.on("pointerdown", () => {
-      destroyDialog();
       onConfirm();
     });
 
