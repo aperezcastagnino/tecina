@@ -150,7 +150,7 @@ export default class Preloader extends Scene {
     this.load.image(UIComponentKeys.SPACE, "/ui-components/space.png");
     this.load.image(UIComponentKeys.GAME_OVER, "/ui-components/game-over.png");
     this.load.image(UIComponentKeys.WIN_TITLE, "/ui-components/win-title.png");
-
+    this.load.image(UIComponentKeys.END_TITLE, "/ui-components/end-title.png");
     // Load tiles
     this.load.image(TileKeys.GRASS, "/tiles/grass.png");
     this.load.image(TileKeys.TREE, "/tiles/tree.png");

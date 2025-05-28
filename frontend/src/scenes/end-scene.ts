@@ -4,11 +4,11 @@ import { PRIMARY_FONT_FAMILY, FontSize, fontColor } from "assets/fonts";
 import { Controls } from "common/controls";
 import { SceneKeys } from "./scene-keys";
 
-export default class WinScene extends Scene {
+export default class EndScene extends Scene {
   private controls!: Controls;
 
   constructor() {
-    super(SceneKeys.WIN_SCENE);
+    super(SceneKeys.END_SCENE);
   }
 
   create(): void {
@@ -18,34 +18,33 @@ export default class WinScene extends Scene {
 
   update(): void {
     if (this.controls.wasSpaceKeyPressed()) {
-      this.scene.start(SceneKeys.LEVELS_MENU);
+      this.scene.start(SceneKeys.MAIN_MENU);
     }
   }
 
   private initializeUI(): void {
     this.createBackground();
-    this.createWinTitle();
+    this.createEndTitle();
   }
 
   private createBackground(): void {
     const background = this.add
-      .image(0, 0, BackgroundKeys.LEVELS)
+      .image(0, 0, BackgroundKeys.MAIN_MENU)
       .setOrigin(0)
       .setTint(0x888888);
-
     background.displayWidth = this.sys.canvas.width;
     background.displayHeight = this.sys.canvas.height;
   }
 
-  private createWinTitle(): void {
+  private createEndTitle(): void {
     const { width, height } = this.scale;
 
     this.add
-      .image(width / 2, height / 2, UIComponentKeys.WIN_TITLE)
+      .image(width / 2, height / 2, UIComponentKeys.END_TITLE)
       .setOrigin(0.5)
       .setScale(0.7);
     this.add
-      .text(width / 2, height / 2 + 310, "Press SPACE to continue", {
+      .text(width / 2, height / 2 + 310, "Press SPACE to return to menu", {
         fontFamily: PRIMARY_FONT_FAMILY,
         fontSize: FontSize.TITLE,
         color: fontColor.YELLOW,

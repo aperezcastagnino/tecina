@@ -11,6 +11,7 @@ import Level6 from "./scenes/levels/level6";
 import Preloader from "./scenes/preloader";
 import GameOver from "./scenes/game-over";
 import WinScene from "./scenes/win-scene";
+import EndScene from "./scenes/end-scene";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.WEBGL,
@@ -38,6 +39,7 @@ const config: Types.Core.GameConfig = {
     Level6,
     GameOver,
     WinScene,
+    EndScene,
   ],
 };
 
