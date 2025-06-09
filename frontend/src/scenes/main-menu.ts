@@ -2,8 +2,8 @@ import { Scene } from "phaser";
 import { StorageManager } from "managers/storage-manager";
 import { levelsConfig } from "scenes/levels/levels-config";
 import { BackgroundKeys, UIComponentKeys } from "assets/assets";
-import { BoxColors, Colors } from "assets/colors";
-import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { BoxColors } from "assets/colors";
+import { FontColor, FontFamily, FontSize } from "assets/fonts";
 import { DEPTH_1, DEPTH_2, DEPTH_3 } from "config";
 import { SceneKeys } from "./scene-keys";
 import { Tooltip } from "../common-ui/tooltip";
@@ -168,11 +168,11 @@ export default class MainMenu extends Scene {
       .text(
         960,
         480,
-        "Are you sure you want to start again? Everything you did will be gone!",
+        "ARE YOU SURE YOU WANT TO START AGAIN?\n\nEVERYTHING YOU DID WILL BE GONE!",
         {
-          fontFamily: PRIMARY_FONT_FAMILY,
-          fontSize: FontSize.LARGE,
-          color: Colors.White,
+          fontFamily: FontFamily.PRIMARY,
+          fontSize: FontSize.EXTRA_LARGE,
+          color: FontColor.YELLOW,
           align: "center",
           wordWrap: { width: 600 },
         },
@@ -181,14 +181,14 @@ export default class MainMenu extends Scene {
       .setDepth(1001);
 
     const yesButton = this.add
-      .image(860, 600, UIComponentKeys.YES_BUTTON)
+      .image(860, 620, UIComponentKeys.YES_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setScale(0.15)
       .setOrigin(0.5)
       .setDepth(DEPTH_3);
 
     const noButton = this.add
-      .image(1060, 600, UIComponentKeys.NO_BUTTON)
+      .image(1060, 620, UIComponentKeys.NO_BUTTON)
       .setInteractive({ useHandCursor: true })
       .setScale(0.15)
       .setOrigin(0.5)
