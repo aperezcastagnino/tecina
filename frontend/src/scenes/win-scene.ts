@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 import { UIComponentKeys, BackgroundKeys } from "assets/assets";
-import { PRIMARY_FONT_FAMILY, FontSize, fontColor } from "assets/fonts";
+import { FontFamily, FontSize, FontColor } from "assets/fonts";
 import { Controls } from "common/controls";
 import { SceneKeys } from "./scene-keys";
 
@@ -46,9 +46,9 @@ export default class WinScene extends Scene {
       .setScale(0.7);
     this.add
       .text(width / 2, height / 2 + 310, "Press SPACE to continue", {
-        fontFamily: PRIMARY_FONT_FAMILY,
+        fontFamily: FontFamily.PRIMARY,
         fontSize: FontSize.TITLE,
-        color: fontColor.YELLOW,
+        color: FontColor.YELLOW,
       })
       .setOrigin(0.5);
   }

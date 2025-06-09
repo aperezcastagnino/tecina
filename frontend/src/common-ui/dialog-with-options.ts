@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import { Colors, BoxColors } from "assets/colors";
-import { FontSize, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { BoxColors } from "assets/colors";
+import { FontSize, FontFamily, FontColor } from "assets/fonts";
 import {
   DIRECTION,
   PLAYER_KEYS,
@@ -19,8 +19,8 @@ const MENU_CURSOR_POS = {
 };
 
 export const DIALOG_TEXT_STYLE = {
-  fontFamily: PRIMARY_FONT_FAMILY,
-  color: Colors.White,
+  fontFamily: FontFamily.PRIMARY,
+  color: FontColor.YELLOW,
   fontSize: FontSize.EXTRA_LARGE,
 };
 

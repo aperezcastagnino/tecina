@@ -8,7 +8,7 @@ import {
 } from "assets/assets";
 import { PLAYER_KEYS } from "common/player-keys";
 import { BoxColors } from "assets/colors";
-import { FontSize, fontColor, PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { FontSize, FontColor, FontFamily } from "assets/fonts";
 import { Level } from "./level-maker";
 
 function showInstructionPopup(scene: Phaser.Scene): void {
@@ -79,8 +79,8 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       centerY - popupHeight / 2 - 250,
       "FIND THE CHARACTER IN THE MAP, INTERACT WITH THEM AND THEY WILL TELL YOU WHAT TO DO NEXT",
       {
-        fontFamily: PRIMARY_FONT_FAMILY,
-        color: fontColor.YELLOW,
+        fontFamily: FontFamily.PRIMARY,
+        color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 850 - 18 },
       },
@@ -105,8 +105,8 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       centerY - popupHeight / 2,
       "USE THE ARROWS TO MOVE IN THE MAP",
       {
-        fontFamily: PRIMARY_FONT_FAMILY,
-        color: fontColor.YELLOW,
+        fontFamily: FontFamily.PRIMARY,
+        color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 380 - 18 },
       },
@@ -140,8 +140,8 @@ function showInstructionPopup(scene: Phaser.Scene): void {
       centerY - popupHeight / 2,
       "PRESS SPACE BAR TO INTERACT",
       {
-        fontFamily: PRIMARY_FONT_FAMILY,
-        color: fontColor.YELLOW,
+        fontFamily: FontFamily.PRIMARY,
+        color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
         wordWrap: { width: 380 - 18 },
       },
