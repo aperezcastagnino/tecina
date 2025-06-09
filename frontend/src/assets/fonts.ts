@@ -1,5 +1,5 @@
 export const FontFamily = {
-  PRIMARY: "Courier New",
+  PRIMARY: "Pixel Code",
 };
 
 export const FontSize = {
@@ -12,5 +12,5 @@ export const FontSize = {
 };
 
 export const FontColor = {
-  YELLOW: "#cfa045",
+  YELLOW: "#CFA045",
 };
