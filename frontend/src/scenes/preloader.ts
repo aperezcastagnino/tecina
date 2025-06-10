@@ -92,6 +92,9 @@ export default class Preloader extends Scene {
     this.load.json("level_4", "/data/level_4.json");
     this.load.json("level_5", "/data/level_5.json");
     this.load.json("level_6", "/data/level_6.json");
+    this.load.json("level_7", "/data/level_7.json");
+    this.load.json("level_8", "/data/level_8.json");
+    this.load.json("level_9", "/data/level_9.json");
 
     // Load Characters
     this.load.spritesheet(CharacterAssets.PLAYER, `characters/player.png`, {
@@ -118,8 +121,40 @@ export default class Preloader extends Scene {
       "/ui-components/health-bar-fill-right.png",
     );
     this.load.image(
-      UIComponentKeys.CIRCLE_BUTTON,
-      "/ui-components/circle-button.png",
+      UIComponentKeys.LEVEL_1_BUTTON,
+      "/ui-components/level-1.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_2_BUTTON,
+      "/ui-components/level-2.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_3_BUTTON,
+      "/ui-components/level-3.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_4_BUTTON,
+      "/ui-components/level-4.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_5_BUTTON,
+      "/ui-components/level-5.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_6_BUTTON,
+      "/ui-components/level-6.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_7_BUTTON,
+      "/ui-components/level-7.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_8_BUTTON,
+      "/ui-components/level-8.png",
+    );
+    this.load.image(
+      UIComponentKeys.LEVEL_9_BUTTON,
+      "/ui-components/level-9.png",
     );
     this.load.image(UIComponentKeys.TITLE, `/ui-components/title.png`);
 
@@ -170,7 +205,7 @@ export default class Preloader extends Scene {
     // delay to see the bar
     this.time.delayedCall(1000, () => {
       this.scene.start(
-        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU,
       );
     });
   }

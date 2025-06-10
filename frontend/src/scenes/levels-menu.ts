@@ -68,8 +68,9 @@ export default class LevelsMenu extends Phaser.Scene {
       .setScale(0.2)
       .setAlpha(0.5);
 
+    const levelButton = `LEVEL_${index + 1}_BUTTON`;
     const button = this.add
-      .image(level.position.x, level.position.y, UIComponentKeys.CIRCLE_BUTTON)
+      .image(level.position.x, level.position.y, levelButton)
       .setScale(0.34)
       .setName(`${level.key}`);
 
