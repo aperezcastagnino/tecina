@@ -205,7 +205,7 @@ export default class Preloader extends Scene {
     // delay to see the bar
     this.time.delayedCall(1000, () => {
       this.scene.start(
-        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.LEVELS_MENU,
+        DEBUG_MODE_ACTIVE ? FIRST_SCENE_TO_PLAY : SceneKeys.MAIN_MENU,
       );
     });
   }
