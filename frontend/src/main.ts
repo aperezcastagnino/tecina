@@ -8,7 +8,6 @@ import Level3 from "./scenes/levels/level3";
 import Level4 from "./scenes/levels/level4";
 import Level5 from "./scenes/levels/level5";
 import Level6 from "./scenes/levels/level6";
-import Level9 from "./scenes/levels/level9";
 import Preloader from "./scenes/preloader";
 import GameOver from "./scenes/game-over";
 import WinScene from "./scenes/win-scene";
@@ -38,7 +37,6 @@ const config: Types.Core.GameConfig = {
     Level4,
     Level5,
     Level6,
-    Level9,
     GameOver,
     WinScene,
     EndScene,
