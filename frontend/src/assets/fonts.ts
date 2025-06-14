@@ -1,4 +1,6 @@
-export const PRIMARY_FONT_FAMILY = "Courier New";
+export const FontFamily = {
+  PRIMARY: "Pixel Code",
+};
 
 export const FontSize = {
   SMALL: "12px",
@@ -9,6 +11,6 @@ export const FontSize = {
   SUBTITLE: "36px",
 };
 
-export const fontColor = {
-  YELLOW: "#cfa045",
+export const FontColor = {
+  YELLOW: "#CFA045",
 };

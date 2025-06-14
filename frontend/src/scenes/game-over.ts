@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 import { ItemAssets, UIComponentKeys } from "assets/assets";
 import { AnimationManager } from "managers/animation-manager";
-import { FontSize, PRIMARY_FONT_FAMILY, fontColor } from "assets/fonts";
+import { FontSize, FontFamily, FontColor } from "assets/fonts";
 import { StorageManager } from "managers/storage-manager";
 import { Controls } from "common/controls";
 import { SceneKeys } from "./scene-keys";
@@ -55,9 +55,9 @@ export default class GameOver extends Scene {
 
     this.add
       .text(width / 2, height / 2 + 250, "Press SPACE to start again", {
-        fontFamily: PRIMARY_FONT_FAMILY,
+        fontFamily: FontFamily.PRIMARY,
         fontSize: FontSize.EXTRA_LARGE,
-        color: fontColor.YELLOW,
+        color: FontColor.YELLOW,
       })
       .setOrigin(0.5);
   }

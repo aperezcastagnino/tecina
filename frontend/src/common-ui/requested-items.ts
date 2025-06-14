@@ -2,7 +2,7 @@ import { BoxColors } from "assets/colors";
 import { DEPTH_1, MAP_WIDTH, TILE_SIZE } from "config";
 import { AnimationManager } from "managers/animation-manager";
 import type { AssetConfig } from "types/asset";
-import { PRIMARY_FONT_FAMILY } from "assets/fonts";
+import { FontFamily, FontColor } from "assets/fonts";
 
 const INITIAL_CONFIG = {
   POSITION_X: MAP_WIDTH * 75 + 60,
@@ -14,7 +14,6 @@ const INITIAL_CONFIG = {
   LABEL: {
     TEXT: "COLLECT:",
     FONT_SIZE: 24,
-    COLOR: "#f8de6f",
     PADDING: 10,
   },
 };
@@ -143,8 +142,8 @@ export class RequestedItems {
         INITIAL_CONFIG.LABEL.TEXT,
         {
           fontSize: `${INITIAL_CONFIG.LABEL.FONT_SIZE}px`,
-          fontFamily: PRIMARY_FONT_FAMILY,
-          color: INITIAL_CONFIG.LABEL.COLOR,
+          fontFamily: FontFamily.PRIMARY,
+          color: FontColor.YELLOW,
         },
       )
       .setScrollFactor(0)
