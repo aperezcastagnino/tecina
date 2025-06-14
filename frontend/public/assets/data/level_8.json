@@ -1,0 +1,33 @@
+{
+  "title": "Level 8",
+  "dialogs": [
+    {
+      "questStart": [
+        "I need three plants to decorate my house!",
+        "Can you help me find them?"
+      ],
+      "questInProgress": ["Find the plants please"],
+      "questPartiallyCompleted": [
+        "Great progress! Keep looking for more plants!"
+      ],
+      "questWrongItem": ["That's not a plant!"],
+      "questFinished": ["Thank you! Now I can decorate my house!"],
+      "hints": ["Look for green leafy plants"],
+      "assetKey": "PLANT",
+      "quantityToCollect": 3
+    },
+    {
+      "questStart": [
+        "I lost my scissors somewhere!",
+        "Can you help me find them?"
+      ],
+      "questInProgress": ["I'm still looking for my scissors."],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That's not my scissors!"],
+      "questFinished": ["Thank you! Now I can use my scissors again!"],
+      "hints": ["Their are used to cut things"],
+      "assetKey": "SCISSORS",
+      "quantityToCollect": 1
+    }
+  ]
+}

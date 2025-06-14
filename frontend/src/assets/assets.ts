@@ -250,9 +250,87 @@ export const AnimalAssets = {
   },
 } as const;
 
+export const ObjectAssets = {
+  BOOK: {
+    assetKey: "BOOK",
+    animationKey: "BOOK_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+    scale: 2,
+  },
+  CANDLE: {
+    assetKey: "CANDLE",
+    animationKey: "CANDLE_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+    scale: 2,
+  },
+  FLOWER: {
+    assetKey: "FLOWER",
+    animationKey: "FLOWER_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  LAMP: {
+    assetKey: "LAMP",
+    animationKey: "LAMP_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  MUG: {
+    assetKey: "MUG",
+    animationKey: "MUG_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  PLANT: {
+    assetKey: "PLANT",
+    animationKey: "PLANT_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  PRESENT: {
+    assetKey: "PRESENT",
+    animationKey: "PRESENT_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  RING: {
+    assetKey: "RING",
+    animationKey: "RING_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+  SCISSORS: {
+    assetKey: "SCISSORS",
+    animationKey: "SCISSORS_ANIMATION",
+    frameWidth: 32,
+    frameHeight: 32,
+    starFrame: 0,
+    endFrame: 17,
+  },
+} as const;
+
 export const ItemAssets = {
   ...FruitAssets,
   ...AnimalAssets,
+  ...ObjectAssets,
 } as const;
 
 export type AssetKey = keyof typeof ItemAssets;

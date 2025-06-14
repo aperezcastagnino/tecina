@@ -9,6 +9,7 @@ import {
   UIComponentKeys,
   AnimalAssets,
   FruitAssets,
+  ObjectAssets,
 } from "assets/assets";
 import { PlayerAnimationKeys } from "common/player";
 import {
@@ -198,6 +199,7 @@ export default class Preloader extends Scene {
     // Load elements
     this.loadFruits();
     this.loadAnimals();
+    this.loadObjects();
   }
 
   create(): void {
@@ -269,6 +271,13 @@ export default class Preloader extends Scene {
     const animals = Object.keys(AnimalAssets);
     animals.forEach((animal) =>
       this.loadContent("/items/animals", animal as keyof typeof AnimalAssets),
+    );
+  }
+
+  private loadObjects() {
+    const objects = Object.keys(ObjectAssets);
+    objects.forEach((object) =>
+      this.loadContent("/items/objects", object as keyof typeof ObjectAssets),
     );
   }
 
