@@ -1,0 +1,31 @@
+{
+  "title": "Level 9",
+  "dialogs": [
+    {
+      "questStart": [
+        "I need three candles for my house!",
+        "Can you help me find them?"
+      ],
+      "questInProgress": ["Find the candles please"],
+      "questPartiallyCompleted": ["Great! Keep looking for more candles!"],
+      "questWrongItem": ["That's not a candle!"],
+      "questFinished": ["Thank you! Now I can light up my house!"],
+      "hints": ["Look for something that gives light"],
+      "assetKey": "CANDLE",
+      "quantityToCollect": 3
+    },
+    {
+      "questStart": [
+        "I lost my favorite book somewhere!",
+        "Can you help me find it?"
+      ],
+      "questInProgress": ["Find the book please"],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That's not my book!"],
+      "questFinished": ["Thank you! Now I can read my book again!"],
+      "hints": ["Look for a book lying in the grass"],
+      "assetKey": "BOOK",
+      "quantityToCollect": 1
+    }
+  ]
+}
