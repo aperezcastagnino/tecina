@@ -1,0 +1,28 @@
+{
+  "title": "Level 7",
+  "dialogs": [
+    {
+      "questStart": [
+        "It's getting dark in here.",
+        "Can you find a lamp for me?"
+      ],
+      "questInProgress": ["I'm still waiting for a lamp."],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That's not a lamp!"],
+      "questFinished": ["Thank you! Now I can see better!"],
+      "hints": ["Look for something that gives light."],
+      "assetKey": "LAMP",
+      "quantityToCollect": 1
+    },
+    {
+      "questStart": ["I want to make a tea", "Can you find a mug for me?"],
+      "questInProgress": ["I'm still waiting for a mug."],
+      "questPartiallyCompleted": [],
+      "questWrongItem": ["That's not a mug!"],
+      "questFinished": ["Thank you! Now I can enjoy my tea!"],
+      "hints": ["Look for something you can drink from"],
+      "assetKey": "MUG",
+      "quantityToCollect": 1
+    }
+  ]
+}
