@@ -12,5 +12,5 @@ export const FontSize = {
 };
 
 export const FontColor = {
-  YELLOW: "#CFA045",
+  YELLOW: "#FFF4BC",
 };

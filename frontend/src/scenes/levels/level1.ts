@@ -82,7 +82,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         fontFamily: FontFamily.PRIMARY,
         color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
-        wordWrap: { width: 850 - 18 },
+        wordWrap: { width: 800 },
       },
     )
     .setScrollFactor(0);
@@ -90,7 +90,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
   const arrowsBox = scene.add
     .rectangle(
       centerX - popupWidth - 75,
-      centerY - popupHeight + 550,
+      centerY - popupHeight + 560,
       400,
       300,
       BoxColors.main,
@@ -108,7 +108,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         fontFamily: FontFamily.PRIMARY,
         color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
-        wordWrap: { width: 380 - 18 },
+        wordWrap: { width: 400 },
       },
     )
     .setScrollFactor(0);
@@ -125,7 +125,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
   const interactionBox = scene.add
     .rectangle(
       centerX - popupWidth + 375,
-      centerY - popupHeight + 550,
+      centerY - popupHeight + 560,
       400,
       300,
       BoxColors.main,
@@ -143,7 +143,7 @@ function showInstructionPopup(scene: Phaser.Scene): void {
         fontFamily: FontFamily.PRIMARY,
         color: FontColor.YELLOW,
         fontSize: FontSize.EXTRA_LARGE,
-        wordWrap: { width: 380 - 18 },
+        wordWrap: { width: 400 },
       },
     )
     .setScrollFactor(0);

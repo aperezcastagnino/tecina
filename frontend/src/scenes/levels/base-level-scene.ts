@@ -377,7 +377,7 @@ export abstract class BaseLevelScene extends Scene {
   private applyWrongItemPenalty(npc: Phaser.GameObjects.Sprite): void {
     this.dialog?.showWrongItemDialog(npc.name);
 
-    const isDead = this.healthBar.decreaseHealth(30);
+    const isDead = this.healthBar.decreaseHealth(35);
     if (isDead) {
       StorageManager.setLevelMetadaDataInRegistry(
         this.game,
@@ -397,9 +397,8 @@ export abstract class BaseLevelScene extends Scene {
     this.cameras.main.once(
       Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
       () => {
-        if (this.levelMetadata.key === "LEVEL_6") {
-          // TODO: change to level 9 when it's implemented
-          this.scene.start(SceneKeys.END_SCENE);
+        if (this.levelMetadata.key === "LEVEL_9") {
+          this.scene.start(SceneKeys.WIN_SCENE);
         } else {
           this.scene.start(SceneKeys.WIN_SCENE);
         }
