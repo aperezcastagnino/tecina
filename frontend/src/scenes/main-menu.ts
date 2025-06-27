@@ -168,13 +168,13 @@ export default class MainMenu extends Scene {
       .text(
         960,
         480,
-        "ARE YOU SURE YOU WANT TO START AGAIN?\n\nEVERYTHING YOU DID WILL BE GONE!",
+        "ARE YOU SURE YOU WANT TO \nSTART AGAIN?\n\nEVERYTHING YOU DID WILL BE LOST!",
         {
           fontFamily: FontFamily.PRIMARY,
           fontSize: FontSize.EXTRA_LARGE,
           color: FontColor.YELLOW,
           align: "center",
-          wordWrap: { width: 600 },
+          wordWrap: { width: 590 },
         },
       )
       .setOrigin(0.5)
