@@ -11,7 +11,7 @@
       "questFinished": [
         "Oh! Thank you! It's super important to eat fruit every day."
       ],
-      "hints": ["Hello! I can give you a clue, what you need is red."],
+      "questHints": ["Hello! I can give you a clue, what you need is red."],
       "assetKey": "APPLE",
       "quantityToCollect": 1
     }

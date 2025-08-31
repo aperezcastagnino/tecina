@@ -31,4 +31,12 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 88
-target-version = "py37"
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # errores, fallas, imports
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

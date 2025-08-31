@@ -8,7 +8,7 @@ export type DialogData = {
   questPartiallyCompleted: string[][];
   questFinished: string[][];
   questWrongItem: string[][];
-  hints?: string[][];
+  questHints?: string[][];
   options?: string[];
   correctOption?: string;
   asset?: AssetConfig;
@@ -30,7 +30,7 @@ export type RawDialogData = {
   questFinishedIAGenerated?: string[];
   questWrongItem: string[];
   questWrongItemIAGenerated?: string[];
-  hints?: string[];
+  questHints?: string[];
   hintsIAGenerated?: string[];
   options?: string[];
   correctOption?: string;

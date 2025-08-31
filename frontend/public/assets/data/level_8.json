@@ -12,7 +12,7 @@
       ],
       "questWrongItem": ["That's not a plant!"],
       "questFinished": ["Thank you! Now I can decorate my house!"],
-      "hints": ["Look for green leafy plants"],
+      "questHints": ["Look for green leafy plants"],
       "assetKey": "PLANT",
       "quantityToCollect": 3
     },
@@ -25,7 +25,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not my scissors!"],
       "questFinished": ["Thank you! Now I can use my scissors again!"],
-      "hints": ["Their are used to cut things"],
+      "questHints": ["Their are used to cut things"],
       "assetKey": "SCISSORS",
       "quantityToCollect": 1
     }

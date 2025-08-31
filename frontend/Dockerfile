@@ -2,9 +2,9 @@ FROM node:20.9.0 AS builder
 
 WORKDIR /home/tecina/client
 
-COPY *.json ./
+COPY package*.json ./
 
-RUN npm install --production --pure-lockfile --ignore-scripts
+RUN npm ci
 
 COPY . .
 

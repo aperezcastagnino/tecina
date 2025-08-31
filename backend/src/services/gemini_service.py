@@ -11,14 +11,14 @@ class GeminiService:
     @staticmethod
     def process_paraphrase(
         text_list: list[str],
-        prompt_template: str
+        prompt: str
     ) -> list[str]:
         """
         Process a list of texts and generate paraphrases for them.
 
         Args:
             text_list: List of strings to paraphrase
-            prompt_template: The template for the prompt
+            prompt: The template for the prompt
 
         Returns:
             List of paraphrased strings
@@ -26,9 +26,13 @@ class GeminiService:
         if not text_list:
             return []
 
-        full_prompt = f"{prompt_template};{';'.join(text_list)}"
+        full_prompt = f"{prompt};{';'.join(text_list)}"
         model_response = GeminiService._get_model_paraphrase(full_prompt)
-        return [x.strip() for x in model_response.split(";")]
+        return [
+            x.strip() 
+            for x in model_response.split(";") 
+            if x.strip() and x.strip().lower() not in {"none", "null"}
+        ]
 
     @staticmethod
     def _get_model_paraphrase(prompt: str) -> str:

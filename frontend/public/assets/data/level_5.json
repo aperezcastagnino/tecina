@@ -9,7 +9,7 @@
       ],
       "questWrongItem": ["That's not a pigeon!"],
       "questFinished": ["Thank you! The pigeons are safe now!"],
-      "hints": ["Look for the white flying birds"],
+      "questHints": ["Look for the white flying birds"],
       "assetKey": "PIGEON",
       "quantityToCollect": 2
     },
@@ -29,7 +29,7 @@
       "questFinished": [
         "Wow! Thank you! Now I can watch these cute frogs jump!"
       ],
-      "hints": ["Search for tiny green creatures that hop in the grass!"],
+      "questHints": ["Search for tiny green creatures that hop in the grass!"],
       "assetKey": "FROG",
       "quantityToCollect": 3
     }

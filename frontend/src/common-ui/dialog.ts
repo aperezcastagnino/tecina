@@ -113,8 +113,8 @@ export class Dialog extends BaseDialog {
   private resolveDialogsToShow(dialog: DialogData, npcId?: string): string[] {
     if (this.questGiverNpcId === npcId)
       return this.selectRandomText(dialog.questInProgress);
-    if (this.questGiverNpcId && dialog.hints)
-      return this.selectRandomText(dialog.hints);
+    if (this.questGiverNpcId && dialog.questHints)
+      return this.selectRandomText(dialog.questHints);
 
     this.questGiverNpcId = npcId || "";
     this.activeDialog = dialog;

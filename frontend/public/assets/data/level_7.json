@@ -10,7 +10,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not a lamp!"],
       "questFinished": ["Thank you! Now I can see better!"],
-      "hints": ["Look for something that gives light."],
+      "questHints": ["Look for something that gives light."],
       "assetKey": "LAMP",
       "quantityToCollect": 1
     },
@@ -20,7 +20,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not a mug!"],
       "questFinished": ["Thank you! Now I can enjoy my tea!"],
-      "hints": ["Look for something you can drink from"],
+      "questHints": ["Look for something you can drink from"],
       "assetKey": "MUG",
       "quantityToCollect": 1
     }

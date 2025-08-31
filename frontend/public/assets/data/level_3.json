@@ -10,7 +10,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["We need bananas, not that!"],
       "questFinished": ["Nice! The bananas are in the blender!"],
-      "hints": ["They are yellow and long."],
+      "questHints": ["They are yellow and long."],
       "assetKey": "BANANAS",
       "quantityToCollect": 3
     },
@@ -23,7 +23,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That’s not a watermelon!"],
       "questFinished": ["Yes! The watermelon is in. Let’s go!"],
-      "hints": ["They are green and round."],
+      "questHints": ["They are green and round."],
       "assetKey": "MELON",
       "quantityToCollect": 2
     },
@@ -36,7 +36,7 @@
         "Perfect! All fruits are ready!",
         "Time to drink the magic juice!"
       ],
-      "hints": ["It’s green on the inside."],
+      "questHints": ["It’s green on the inside."],
       "assetKey": "KIWI",
       "quantityToCollect": 1
     }

@@ -10,7 +10,7 @@
       "questPartiallyCompleted": ["Great! Keep looking for more candles!"],
       "questWrongItem": ["That's not a candle!"],
       "questFinished": ["Thank you! Now I can light up my house!"],
-      "hints": ["Look for something that gives light"],
+      "questHints": ["Look for something that gives light"],
       "assetKey": "CANDLE",
       "quantityToCollect": 3
     },
@@ -23,7 +23,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not my book!"],
       "questFinished": ["Thank you! Now I can read my book again!"],
-      "hints": ["Look for a book lying in the grass"],
+      "questHints": ["Look for a book lying in the grass"],
       "assetKey": "BOOK",
       "quantityToCollect": 1
     }

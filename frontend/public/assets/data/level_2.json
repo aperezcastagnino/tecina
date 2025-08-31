@@ -9,7 +9,7 @@
         "I am sorry! But I need one cherry to prepare a dessert."
       ],
       "questFinished": ["Oh! Perfect! Thank you!"],
-      "hints": ["The cherry is red."],
+      "questHints": ["The cherry is red."],
       "assetKey": "CHERRIES",
       "quantityToCollect": 1
     },
@@ -19,7 +19,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["Hmm... That’s not an orange!"],
       "questFinished": ["Awesome! Thank you!"],
-      "hints": ["The orange is round."],
+      "questHints": ["The orange is round."],
       "assetKey": "ORANGE",
       "quantityToCollect": 2
     }

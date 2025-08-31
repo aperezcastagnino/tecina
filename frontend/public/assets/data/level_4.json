@@ -10,7 +10,7 @@
       "questPartiallyCompleted": [],
       "questWrongItem": ["That's not my rabbit!"],
       "questFinished": ["Yay! You found my rabbit!"],
-      "hints": ["Look for a cute hopping animal"],
+      "questHints": ["Look for a cute hopping animal"],
       "assetKey": "BUNNY",
       "quantityToCollect": 1
     },
@@ -22,7 +22,7 @@
       ],
       "questWrongItem": ["That's not a cat!"],
       "questFinished": ["Thank you! The cats are safe now!"],
-      "hints": ["Look for furry felines around here"],
+      "questHints": ["Look for furry felines around here"],
       "assetKey": "CAT",
       "quantityToCollect": 2
     }

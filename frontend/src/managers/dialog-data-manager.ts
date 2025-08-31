@@ -32,7 +32,7 @@ export const loadDialogData = (scene: Phaser.Scene): DialogData[] => {
           dialog.questWrongItem ?? [],
           dialog.questWrongItemIAGenerated ?? [],
         ].filter(isNotEmpty),
-        hints: [dialog.hints ?? [], dialog.hintsIAGenerated ?? []].filter(
+        questHints: [dialog.questHints ?? [], dialog.hintsIAGenerated ?? []].filter(
           isNotEmpty,
         ),
         options: dialog.options,

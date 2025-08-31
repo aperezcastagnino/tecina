@@ -12,7 +12,7 @@
       ],
       "questWrongItem": ["That's not a chicken!"],
       "questFinished": ["Thank you! All the chickens are safe now!"],
-      "hints": ["Look for birds with a red comb"],
+      "questHints": ["Look for birds with a red comb"],
       "assetKey": "CHICKEN",
       "quantityToCollect": 3
     },
@@ -27,7 +27,7 @@
       "questFinished": [
         "Thank you! Now the baby deer can return to its mother!"
       ],
-      "hints": ["Look for a brown deer in the grass"],
+      "questHints": ["Look for a brown deer in the grass"],
       "assetKey": "DEER",
       "quantityToCollect": 1
     }
