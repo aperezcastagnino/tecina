@@ -15,19 +15,11 @@
         "Oh no! I am unable to locate my rabbit!",
         "Could you assist me in locating it?"
       ],
-      "questInProgressIA": [
-        "Have you located my bunny?"
-      ],
+      "questInProgressIA": ["Have you located my bunny?"],
       "questPartiallyCompletedIA": [],
-      "questWrongItemIA": [
-        "That rabbit does not belong to me!"
-      ],
-      "questFinishedIA": [
-        "Hooray! The bunny I own has been located by you!"
-      ],
-      "questHintsIA": [
-        "I need to find something diminutive that bounds."
-      ],
+      "questWrongItemIA": ["That rabbit does not belong to me!"],
+      "questFinishedIA": ["Hooray! The bunny I own has been located by you!"],
+      "questHintsIA": ["I need to find something diminutive that bounds."],
       "assetKey": "BUNNY",
       "quantityToCollect": 1
     },
